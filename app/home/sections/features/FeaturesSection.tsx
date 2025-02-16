@@ -43,18 +43,13 @@ export default function FeaturesSection() {
             Powerful Features
           </h2>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-            Experience the future of gym management with our comprehensive suite
-            of features
+            Experience the future of gym management with our comprehensive suite of features
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, idx) => (
-            <FlipCard
-              key={idx}
-              title={feature.title}
-              description={feature.description}
-            />
+            <FlipCard key={idx as number} title={feature.title} description={feature.description} />
           ))}
         </div>
       </div>

@@ -20,8 +20,8 @@ export default function AboutPage() {
               Revolutionizing Gym Management
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              At GymDominator, we&apos;re passionate about transforming the way
-              gyms operate and members experience fitness.
+              At GymDominator, we&apos;re passionate about transforming the way gyms operate and
+              members experience fitness.
             </p>
           </m.div>
 
@@ -48,7 +48,7 @@ export default function AboutPage() {
               },
             ].map((item, index) => (
               <m.div
-                key={index}
+                key={index as number}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
@@ -57,9 +57,7 @@ export default function AboutPage() {
                 <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
                   <item.icon className="w-6 h-6 text-blue-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {item.title}
-                </h3>
+                <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
                 <p className="text-gray-400">{item.description}</p>
               </m.div>
             ))}

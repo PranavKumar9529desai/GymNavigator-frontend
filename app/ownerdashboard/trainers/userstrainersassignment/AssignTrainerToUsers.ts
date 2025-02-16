@@ -13,15 +13,14 @@ export async function AssignTrainerToUsers(
 ): Promise<AssignTrainerResponse> {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response = await ownerAxios.post("/trainer/assigntrainer", {
+    const response = await ownerAxios.post('/trainer/assigntrainer', {
       userid: Number.parseInt(userid),
       trainerid: Number.parseInt(trainerid),
     });
     console.log('response is from the assign trainer', response.data);
     return response.data;
   } catch (error) {
-    console.error("Error assigning trainer:", error);
-    throw new Error("Failed to assign trainer");
+    console.error('Error assigning trainer:', error);
+    throw new Error('Failed to assign trainer');
   }
 }
-  

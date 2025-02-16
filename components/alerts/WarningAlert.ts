@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
 export default function WarningAlert() {
-  let Userchoice: boolean = false;
+  let Userchoice = false;
   Swal.fire({
     title: 'Are you sure ',
     text: 'You want to create new workout plan!',

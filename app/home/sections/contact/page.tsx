@@ -28,8 +28,8 @@ export default function ContactPage() {
               Get in Touch
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Have questions about GymDominator? We&apos;re here to help you
-              transform your gym management experience.
+              Have questions about GymDominator? We&apos;re here to help you transform your gym
+              management experience.
             </p>
           </m.div>
 
@@ -43,30 +43,33 @@ export default function ContactPage() {
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">
                     Name
                   </label>
                   <input
+                    id="name"
                     type="text"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">
                     Email
                   </label>
                   <input
+                    id="email"
                     type="email"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">
                     Message
                   </label>
                   <textarea
+                    id="message"
                     rows={4}
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
                     required
@@ -79,11 +82,7 @@ export default function ContactPage() {
                   <Send className="w-4 h-4 inline-block mr-2" />
                   Send Message
                 </button>
-                {formStatus && (
-                  <p className="text-green-400 text-center mt-4">
-                    {formStatus}
-                  </p>
-                )}
+                {formStatus && <p className="text-green-400 text-center mt-4">{formStatus}</p>}
               </form>
             </m.div>
 
@@ -115,16 +114,14 @@ export default function ContactPage() {
                 },
               ].map((item, index) => (
                 <div
-                  key={index}
+                  key={index as number}
                   className="flex items-start space-x-4 bg-gray-800/30 p-6 rounded-lg border border-gray-700 hover:border-blue-500 transition-all duration-300"
                 >
                   <div className="bg-blue-500/10 p-3 rounded-lg">
                     <item.icon className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white">{item.title}</h3>
                     <p className="text-blue-400">{item.details}</p>
                     <p className="text-gray-400 text-sm">{item.subtitle}</p>
                   </div>

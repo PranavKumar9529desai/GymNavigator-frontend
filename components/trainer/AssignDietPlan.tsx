@@ -1,14 +1,12 @@
 'use client';
-import React, { useState, useMemo } from 'react';
-import {
-  Search,
-  Users,
-  Utensils,
-  UtensilsCrossed,
-  ChevronDown,
-  Check,
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -19,13 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Check, ChevronDown, Search, Users, Utensils, UtensilsCrossed } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
 
 interface User {
   id: number;
@@ -76,9 +69,7 @@ export default function AssignWorkout() {
   const assignDietPlan = (userId: number, planName: string) => {
     setUsers(
       users.map((user) =>
-        user.id === userId
-          ? { ...user, assignedDietPlan: planName || null }
-          : user
+        user.id === userId ? { ...user, assignedDietPlan: planName || null } : user
       )
     );
   };
@@ -113,9 +104,7 @@ export default function AssignWorkout() {
           <CardContent className="flex items-center justify-between p-4">
             <div>
               <p className="text-sm text-gray-500">Total Users</p>
-              <p className="text-2xl font-semibold text-gray-800">
-                {totalUsers}
-              </p>
+              <p className="text-2xl font-semibold text-gray-800">{totalUsers}</p>
             </div>
             <Users className="h-10 w-10 text-blue-500" />
           </CardContent>
@@ -124,9 +113,7 @@ export default function AssignWorkout() {
           <CardContent className="flex items-center justify-between p-4">
             <div>
               <p className="text-sm text-gray-500">Assigned Diet Plans</p>
-              <p className="text-2xl font-semibold text-gray-800">
-                {assignedUsers}
-              </p>
+              <p className="text-2xl font-semibold text-gray-800">{assignedUsers}</p>
             </div>
             <Utensils className="h-10 w-10 text-green-500" />
           </CardContent>
@@ -135,9 +122,7 @@ export default function AssignWorkout() {
           <CardContent className="flex items-center justify-between p-4">
             <div>
               <p className="text-sm text-gray-500">Unassigned Users</p>
-              <p className="text-2xl font-semibold text-gray-800">
-                {unassignedUsers}
-              </p>
+              <p className="text-2xl font-semibold text-gray-800">{unassignedUsers}</p>
             </div>
             <UtensilsCrossed className="h-10 w-10 text-red-500" />
           </CardContent>
@@ -181,18 +166,13 @@ export default function AssignWorkout() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="w-[200px] justify-between"
-                          >
+                          <Button variant="outline" className="w-[200px] justify-between">
                             {user.assignedDietPlan || 'Select a diet plan'}
                             <ChevronDown className="ml-2 h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-[200px]">
-                          <DropdownMenuItem
-                            onSelect={() => assignDietPlan(user.id, '')}
-                          >
+                          <DropdownMenuItem onSelect={() => assignDietPlan(user.id, '')}>
                             Unassign
                             {user.assignedDietPlan === null && (
                               <Check className="ml-auto h-4 w-4" />
@@ -201,9 +181,7 @@ export default function AssignWorkout() {
                           {dietPlans.map((plan) => (
                             <DropdownMenuItem
                               key={plan.id}
-                              onSelect={() =>
-                                assignDietPlan(user.id, plan.name)
-                              }
+                              onSelect={() => assignDietPlan(user.id, plan.name)}
                             >
                               {plan.name}
                               {user.assignedDietPlan === plan.name && (
@@ -227,9 +205,7 @@ export default function AssignWorkout() {
                   <h3 className="font-semibold text-gray-800">{user.name}</h3>
                   <p className="text-sm text-gray-600">Gender: {user.gender}</p>
                   <p className="text-sm text-gray-600">Goal: {user.goal}</p>
-                  <Label htmlFor={`diet-plan-${user.id}`}>
-                    Assign Diet Plan
-                  </Label>
+                  <Label htmlFor={`diet-plan-${user.id}`}>Assign Diet Plan</Label>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -242,13 +218,9 @@ export default function AssignWorkout() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-[200px]">
-                      <DropdownMenuItem
-                        onSelect={() => assignDietPlan(user.id, '')}
-                      >
+                      <DropdownMenuItem onSelect={() => assignDietPlan(user.id, '')}>
                         Unassign
-                        {user.assignedDietPlan === null && (
-                          <Check className="ml-auto h-4 w-4" />
-                        )}
+                        {user.assignedDietPlan === null && <Check className="ml-auto h-4 w-4" />}
                       </DropdownMenuItem>
                       {dietPlans.map((plan) => (
                         <DropdownMenuItem

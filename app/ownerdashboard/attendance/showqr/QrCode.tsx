@@ -1,12 +1,6 @@
-import type React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QRCodeSVG } from 'qrcode.react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
+import type React from 'react';
 
 interface GymQRCodeOnboardingProps {
   qrdata: string;
@@ -14,11 +8,7 @@ interface GymQRCodeOnboardingProps {
   subtitle: string; // Add subtitle prop
 }
 
-const GymQRCode: React.FC<GymQRCodeOnboardingProps> = ({
-  qrdata,
-  title,
-  subtitle,
-}) => {
+const GymQRCode: React.FC<GymQRCodeOnboardingProps> = ({ qrdata, title, subtitle }) => {
   return (
     <Card className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden min-h-[90vh] md:min-h-0">
       <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white text-center py-8">
@@ -44,9 +34,7 @@ const GymQRCode: React.FC<GymQRCodeOnboardingProps> = ({
           </p>
 
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Having trouble? Contact our support team
-            </p>
+            <p className="text-sm text-gray-500">Having trouble? Contact our support team</p>
           </div>
         </div>
       </CardContent>

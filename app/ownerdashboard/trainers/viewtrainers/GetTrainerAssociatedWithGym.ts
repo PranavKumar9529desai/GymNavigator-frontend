@@ -1,5 +1,5 @@
-"use server";
-import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
+'use server';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 
 interface HealthProfile {
   id: number;
@@ -11,7 +11,7 @@ interface HealthProfile {
 }
 
 // Backend trainer data type
-interface TrainerFromBackend {
+export interface TrainerFromBackend {
   id: number;
   name: string;
   email: string;
@@ -41,11 +41,11 @@ interface TrainerResponse {
 export const getTrainerAssociatedWithGym = async (): Promise<TrainerForUI[]> => {
   const ownerAxios = await OwnerReqConfig();
   try {
-    const response = await ownerAxios.get<TrainerResponse>("/trainer/fetchtrainers");
-    console.log("response from fetchtrainers:", response.data);
+    const response = await ownerAxios.get<TrainerResponse>('/trainer/fetchtrainers');
+    console.log('response from fetchtrainers:', response.data);
     return response.data.trainers;
   } catch (error) {
-    console.error("Error fetching trainers:", error);
+    console.error('Error fetching trainers:', error);
     return [];
   }
 };

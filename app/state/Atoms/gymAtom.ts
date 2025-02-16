@@ -1,4 +1,4 @@
-import { atom, RecoilState } from 'recoil';
+import { type RecoilState, atom } from 'recoil';
 
 export interface GymAtomType {
   id: string;

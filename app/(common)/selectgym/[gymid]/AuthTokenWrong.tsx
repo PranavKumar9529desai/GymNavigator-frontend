@@ -1,7 +1,7 @@
 'use client';
-import { m } from 'framer-motion';
-import { XCircle, ArrowLeft, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { m } from 'framer-motion';
+import { ArrowLeft, RefreshCcw, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface AuthTokenWrongProps {
@@ -21,20 +21,14 @@ const AuthTokenWrong = ({ onRetry }: AuthTokenWrongProps) => {
         <XCircle className="h-16 w-16 text-red-500 mx-auto" />
       </div>
 
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">
-        Authentication Failed
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-3">Authentication Failed</h3>
 
       <p className="text-gray-600 mb-8">
-        The authentication token you entered is incorrect. Please try again or
-        select another gym.
+        The authentication token you entered is incorrect. Please try again or select another gym.
       </p>
 
       <div className="space-y-3">
-        <Button
-          onClick={onRetry}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6"
-        >
+        <Button onClick={onRetry} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6">
           <RefreshCcw className="w-5 h-5 mr-2" />
           Try Again
         </Button>

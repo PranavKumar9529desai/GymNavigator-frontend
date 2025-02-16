@@ -1,32 +1,26 @@
-"use client";
+'use client';
 
-import { DataCard } from "@/components/Table/UserCard";
-import { DataTable } from "@/components/Table/UsersTable";
-import { StatusCard } from "@/components/common/StatusCard";
-import { Button } from "@/components/ui/button";
+import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
+import { StatusCard } from '@/components/common/StatusCard';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  MoreVertical,
-  User,
-  UserCheck,
-  Users,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+} from '@/components/ui/dropdown-menu';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreVertical, User, UserCheck, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 interface UserType {
   id: number;
   name: string;
   startDate: Date | null;
   endDate: Date | null;
-  status: "active" | "pending" | "inactive";
+  status: 'active' | 'pending' | 'inactive';
 }
 
 interface OnboardedUsersProps {
@@ -38,23 +32,20 @@ interface OnboardedUsersProps {
   }[];
 }
 
-const calculateStatus = (
-  startDate: Date | null,
-  endDate: Date | null
-): UserType["status"] => {
+const calculateStatus = (startDate: Date | null, endDate: Date | null): UserType['status'] => {
   if (!startDate || !endDate) {
-    return "pending";
+    return 'pending';
   }
   // Active status logic - other statuses will be added later
-  return "active";
+  return 'active';
 };
 
 const formatDate = (date: Date | null): string => {
-  if (!date) return "N/A";
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
+  if (!date) return 'N/A';
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
 };
 
@@ -68,27 +59,27 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
   const router = useRouter();
 
   const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "active").length;
-  const pendingUsers = users.filter((u) => u.status === "pending").length;
+  const activeUsers = users.filter((u) => u.status === 'active').length;
+  const pendingUsers = users.filter((u) => u.status === 'pending').length;
 
   const statusCards = [
     {
-      title: "Total Users",
+      title: 'Total Users',
       value: totalUsers,
       icon: Users,
-      gradient: "blue",
+      gradient: 'blue',
     },
     {
-      title: "Active Users",
+      title: 'Active Users',
       value: activeUsers,
       icon: UserCheck,
-      gradient: "green",
+      gradient: 'green',
     },
     {
-      title: "Pending Users",
+      title: 'Pending Users',
       value: pendingUsers,
       icon: User,
-      gradient: "yellow",
+      gradient: 'yellow',
     },
   ] as const;
 
@@ -96,21 +87,19 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
     const params = new URLSearchParams({
       userid: user.id.toString(),
       username: user.name,
-      startdate: user.startDate?.toISOString() || "",
-      enddate: user.endDate?.toISOString() || "",
+      startdate: user.startDate?.toISOString() || '',
+      enddate: user.endDate?.toISOString() || '',
     });
-    router.push(
-      `/ownerdashboard/onboarding/editactiveperiod?${params.toString()}`
-    );
+    router.push(`/ownerdashboard/onboarding/editactiveperiod?${params.toString()}`);
   };
 
   const columns: ColumnDef<UserType>[] = [
     {
-      accessorKey: "name",
+      accessorKey: 'name',
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           User Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -118,36 +107,36 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       ),
     },
     {
-      accessorKey: "startDate",
-      header: "Start Date",
+      accessorKey: 'startDate',
+      header: 'Start Date',
       cell: ({ row }) => {
-        const date = row.getValue("startDate") as Date | null;
+        const date = row.getValue('startDate') as Date | null;
         return <div>{formatDate(date)}</div>;
       },
     },
     {
-      accessorKey: "endDate",
-      header: "End Date",
+      accessorKey: 'endDate',
+      header: 'End Date',
       cell: ({ row }) => {
-        const date = row.getValue("endDate") as Date | null;
+        const date = row.getValue('endDate') as Date | null;
         return <div>{formatDate(date)}</div>;
       },
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: 'status',
+      header: 'Status',
       cell: ({ row }) => {
-        const status = row.getValue("status") as string;
+        const status = row.getValue('status') as string;
         return (
           <div
             className={`
             w-fit rounded-full px-4 py-1 text-xs font-semibold text-center
             ${
-              status === "active"
-                ? "bg-green-100 text-green-800"
-                : status === "pending"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+              status === 'active'
+                ? 'bg-green-100 text-green-800'
+                : status === 'pending'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-red-100 text-red-800'
             }
           `}
           >
@@ -157,7 +146,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       cell: ({ row }) => {
         return (
           <DropdownMenu>
@@ -219,10 +208,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 
               <div className="space-y-1">
                 <p className="text-sm text-gray-500">
-                  Start: {user.startDate ? formatDate(user.startDate) : "N/A"}
+                  Start: {user.startDate ? formatDate(user.startDate) : 'N/A'}
                 </p>
                 <p className="text-sm text-gray-500">
-                  End: {user.endDate ? formatDate(user.endDate) : "N/A"}
+                  End: {user.endDate ? formatDate(user.endDate) : 'N/A'}
                 </p>
               </div>
 
@@ -231,11 +220,11 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
                   className={`
                     rounded-full px-2 py-1 text-xs font-semibold 
                     ${
-                      user.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : user.status === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                      user.status === 'active'
+                        ? 'bg-green-100 text-green-800'
+                        : user.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
                     }
                   `}
                 >

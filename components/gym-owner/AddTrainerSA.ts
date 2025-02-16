@@ -43,31 +43,22 @@ export interface UpdateTrainerTrainer {
 // Helper function to handle API requests
 // app/actions/AddTrainerSA.ts
 // Helper function to handle API requests
-const handleApiRequest = async <T>(
-  endpoint: string,
-  method: string,
-  data: unknown
-): Promise<T> => {
+const handleApiRequest = async <T>(endpoint: string, method: string, data: unknown): Promise<T> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}${endpoint}`,
-      {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${endpoint}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
     const result = await response.json();
     if (!response.ok) {
       throw new Error(result.msg || 'An error occurred during the request.');
     }
     return result;
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : 'An unknown error occurred.'
-    );
+    throw new Error(error instanceof Error ? error.message : 'An unknown error occurred.');
   }
 };
 /**
@@ -76,9 +67,7 @@ const handleApiRequest = async <T>(
  * @param data - The trainer data to be added.
  * @returns A promise resolving to the API response.
  */
-export const addTrainer = async (
-  data: AddTrainerRequest
-): Promise<AddTrainerResponse> => {
+export const addTrainer = async (data: AddTrainerRequest): Promise<AddTrainerResponse> => {
   // Handle image upload if necessary
   let imageData: string | undefined = undefined;
   if (data.image instanceof File) {
@@ -95,11 +84,7 @@ export const addTrainer = async (
     rating: data.rating,
     image: imageData,
   };
-  return await handleApiRequest<AddTrainerResponse>(
-    '/addtrainer',
-    'POST',
-    payload
-  );
+  return await handleApiRequest<AddTrainerResponse>('/addtrainer', 'POST', payload);
 };
 /**
  * Updates an existing trainer by sending a PUT request to the backend API.
@@ -107,9 +92,7 @@ export const addTrainer = async (
  * @param data - The trainer data to be updated.
  * @returns A promise resolving to the API response.
  */
-export const updateTrainer = async (
-  data: UpdateTrainerRequest
-): Promise<UpdateTrainerResponse> => {
+export const updateTrainer = async (data: UpdateTrainerRequest): Promise<UpdateTrainerResponse> => {
   // Handle image upload if necessary
   let imageData: string | undefined = undefined;
   if (data.image instanceof File) {
@@ -126,9 +109,5 @@ export const updateTrainer = async (
     image: imageData,
     trainerId: data.id,
   };
-  return await handleApiRequest<UpdateTrainerResponse>(
-    '/addtrainerdetails',
-    'PUT',
-    payload
-  );
+  return await handleApiRequest<UpdateTrainerResponse>('/addtrainerdetails', 'PUT', payload);
 };

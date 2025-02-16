@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 
 interface EmailTemplateProps {
   firstName: string;
@@ -20,12 +20,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       backgroundColor: '#f4f4f4',
     }}
   >
-    <table
-      width="100%"
-      cellPadding="0"
-      cellSpacing="0"
-      style={{ borderCollapse: 'collapse' }}
-    >
+    <table width="100%" cellPadding="0" cellSpacing="0" style={{ borderCollapse: 'collapse' }}>
       <tr>
         <td
           style={{
@@ -71,8 +66,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               fontSize: '16px',
             }}
           >
-            Thank you for joining GymNavigator. We&apos;re excited to have you
-            on board! Here&apos;s your verification code:
+            Thank you for joining GymNavigator. We&apos;re excited to have you on board! Here&apos;s
+            your verification code:
           </p>
           <div
             style={{
@@ -101,8 +96,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               fontSize: '16px',
             }}
           >
-            Please use this code to verify your account and start your fitness
-            journey with GymNavigator.
+            Please use this code to verify your account and start your fitness journey with
+            GymNavigator.
           </p>
           <div style={{ textAlign: 'center' as const, margin: '40px 0 20px' }}>
             <a
@@ -131,8 +126,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               color: '#666666',
             }}
           >
-            If you didn&apos;t request this code, please ignore this email or
-            contact our support team if you have any concerns.
+            If you didn&apos;t request this code, please ignore this email or contact our support
+            team if you have any concerns.
           </p>
         </td>
       </tr>
@@ -145,12 +140,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             color: '#666666',
           }}
         >
-          <p style={{ margin: '0 0 10px 0' }}>
-            © 2023 GymNavigator. All rights reserved.
-          </p>
+          <p style={{ margin: '0 0 10px 0' }}>© 2023 GymNavigator. All rights reserved.</p>
           <p style={{ margin: '0' }}>
-            You&apos;re receiving this email because you signed up for
-            GymNavigator.
+            You&apos;re receiving this email because you signed up for GymNavigator.
           </p>
         </td>
       </tr>

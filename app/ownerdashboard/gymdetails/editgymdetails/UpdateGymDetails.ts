@@ -1,6 +1,6 @@
-"use server";
-import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
-import type { AxiosResponse } from "axios";
+'use server';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
+import type { AxiosResponse } from 'axios';
 
 interface GymResponse {
   msg: string;
@@ -13,10 +13,7 @@ interface GymResponse {
   };
 }
 
-export default async function UpdateGymDetails(
-  formData: string,
-  image: string
-) {
+export default async function UpdateGymDetails(formData: string, image: string) {
   try {
     const formdata = JSON.parse(formData);
     const ownerAxios = await OwnerReqConfig();
@@ -29,11 +26,11 @@ export default async function UpdateGymDetails(
     };
 
     const response: AxiosResponse<GymResponse> = await ownerAxios.put(
-      "/gym/updategymdetails",
+      '/gym/updategymdetails',
       payload,
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
@@ -43,7 +40,7 @@ export default async function UpdateGymDetails(
     }
     return null;
   } catch (error) {
-    console.error("Error updating gym details:", error);
+    console.error('Error updating gym details:', error);
     return null;
   }
 }

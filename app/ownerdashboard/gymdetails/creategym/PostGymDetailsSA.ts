@@ -1,6 +1,6 @@
-"use server";
-import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
-import type { AxiosResponse } from "axios";
+'use server';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
+import type { AxiosResponse } from 'axios';
 
 interface GymResponse {
   msg: string;
@@ -22,7 +22,7 @@ interface FormData {
 }
 
 export default async function PostGymDetails(formData: string, image: string) {
-  console.log("received the request from the postgymdetails ", image, formData);
+  console.log('received the request from the postgymdetails ', image, formData);
   try {
     const formdata: FormData = JSON.parse(formData);
     const ownerAxios = await OwnerReqConfig();
@@ -34,26 +34,22 @@ export default async function PostGymDetails(formData: string, image: string) {
       Email: formdata.Email,
     };
 
-    console.log("payload is ", payload);
-    const response: AxiosResponse<GymResponse> = await ownerAxios.post(
-      "/gym/creategym",
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    console.log('payload is ', payload);
+    const response: AxiosResponse<GymResponse> = await ownerAxios.post('/gym/creategym', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (response.status === 200) {
-      console.log("Gym details submitted successfully:", response.data.gym);
-      console.log("Gym details submitted successfully:", response.data.msg);
+      console.log('Gym details submitted successfully:', response.data.gym);
+      console.log('Gym details submitted successfully:', response.data.msg);
       return response.data.gym;
     }
-    console.log("Failed to submit gym details:", response.data);
+    console.log('Failed to submit gym details:', response.data);
     return null;
   } catch (error) {
-    console.error("Error submitting the gym details:", error);
+    console.error('Error submitting the gym details:', error);
     return null;
   }
 }

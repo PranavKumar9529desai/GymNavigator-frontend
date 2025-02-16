@@ -1,28 +1,19 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Key,
-  MoreVertical,
-  Copy,
-  Check,
-  Map,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import NoGymDetails from './NoGymDetails';
-import { useState } from 'react';
 import { m } from 'framer-motion';
+import { Check, Copy, Key, Mail, MapIcon, MapPin, MoreVertical, Phone } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import NoGymDetails from './NoGymDetails';
 
 interface GymDetails {
   gym_name: string;
@@ -54,9 +45,7 @@ export default function ViewGymDetails({
       email: gymDetails.Email,
       authToken: gymDetails.gymauthtoken,
     });
-    router.push(
-      `/ownerdashboard/gymdetails/editgymdetails?${params.toString()}`
-    );
+    router.push(`/ownerdashboard/gymdetails/editgymdetails?${params.toString()}`);
   };
 
   const copyToClipboard = async (text: string) => {
@@ -75,18 +64,12 @@ export default function ViewGymDetails({
             <div className="absolute right-0 top-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full hover:bg-gray-100"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100">
                     <MoreVertical className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleEdit}>
-                    Edit Gym Details
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleEdit}>Edit Gym Details</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -207,15 +190,13 @@ export default function ViewGymDetails({
           <Card>
             <CardContent className="p-4">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Map className="h-5 w-5 text-gray-500" />
+                <MapPin className="h-5 w-5 text-gray-500" />
                 Location
               </h2>
               <div className="aspect-[16/9] sm:aspect-[21/9] rounded-lg overflow-hidden bg-gray-100 relative">
                 <div className="absolute inset-0 flex items-center justify-center flex-col gap-2">
-                  <Map className="h-8 w-8 text-gray-400" />
-                  <p className="text-gray-500 font-medium">
-                    Location feature coming soon
-                  </p>
+                  <MapPin className="h-8 w-8 text-gray-400" />
+                  <p className="text-gray-500 font-medium">Location feature coming soon</p>
                 </div>
               </div>
               <p className="text-sm text-gray-500 mt-4 flex items-start gap-2">

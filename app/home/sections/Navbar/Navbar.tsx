@@ -51,18 +51,13 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-gradient-to-r from-gray-900 to-blue-900/95 shadow-lg'
-          : 'bg-transparent'
+        isScrolled ? 'bg-gradient-to-r from-gray-900 to-blue-900/95 shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-8 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className="flex items-center gap-2 hover:scale-105 transition-transform"
-            >
+            <Link href="/" className="flex items-center gap-2 hover:scale-105 transition-transform">
               <Image
                 src="/favicon.ico"
                 alt="Logo"
@@ -91,9 +86,7 @@ const Navbar = () => {
                     className="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     {item.label}
-                    {item.dropdownItems && (
-                      <BiChevronDown className="ml-1 h-4 w-4" />
-                    )}
+                    {item.dropdownItems && <BiChevronDown className="ml-1 h-4 w-4" />}
                   </Link>
 
                   {item.dropdownItems && activeDropdown === item.label && (
@@ -121,14 +114,11 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-400 hover:text-white focus:outline-none"
             >
-              {isOpen ? (
-                <HiX className="h-6 w-6" />
-              ) : (
-                <HiMenu className="h-6 w-6" />
-              )}
+              {isOpen ? <HiX className="h-6 w-6" /> : <HiMenu className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -185,12 +175,8 @@ const Navbar = () => {
                         className="flex items-center space-x-2 text-gray-300 hover:bg-blue-500/10 hover:text-blue-400 px-5 py-3 transition-all rounded-lg mx-2"
                         onClick={() => setIsOpen(false)}
                       >
-                        <span className="text-base font-medium">
-                          {item.label}
-                        </span>
-                        {item.dropdownItems && (
-                          <BiChevronDown className="h-5 w-5" />
-                        )}
+                        <span className="text-base font-medium">{item.label}</span>
+                        {item.dropdownItems && <BiChevronDown className="h-5 w-5" />}
                       </Link>
                       {item.dropdownItems && (
                         <div className="pl-4 bg-gray-800/30 rounded-lg mx-2 my-1">

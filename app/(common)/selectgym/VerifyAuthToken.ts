@@ -1,7 +1,7 @@
 'use server';
+import type { GymAtomType } from '@/app/state/Atoms/gymAtom';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import type { AxiosResponse } from 'axios';
-import type { GymAtomType } from '@/app/state/Atoms/gymAtom';
 interface responseType {
   success: boolean;
   msg: string;
@@ -9,10 +9,11 @@ interface responseType {
 export const VerifyAuthToken = async (gym: GymAtomType, authToken: string) => {
   try {
     const trainerAxios = await TrainerReqConfig();
-    const response: AxiosResponse<responseType> = await trainerAxios.post(
-      '/authtokenverify',
-      { gymname: gym.name, gymid: gym.id, authToken: authToken }
-    );
+    const response: AxiosResponse<responseType> = await trainerAxios.post('/authtokenverify', {
+      gymname: gym.name,
+      gymid: gym.id,
+      authToken: authToken,
+    });
     const data = {
       msg: response.data.msg,
       success: response.data.success,

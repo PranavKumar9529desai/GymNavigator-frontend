@@ -1,5 +1,5 @@
 'use server';
-import axios, { AxiosResponse } from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
 export interface SignupWithGoogleReturnType {
   name: string;
@@ -20,13 +20,10 @@ export default async function SignupWithGoogle(
         email: string;
         role: 'owner' | 'trainer' | 'sales';
       };
-    }> = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/google/${role}`,
-      {
-        name,
-        email,
-      }
-    );
+    }> = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/google/${role}`, {
+      name,
+      email,
+    });
     console.log('response from the signup with google', response.data.user);
     return response.data.user;
   } catch (error) {

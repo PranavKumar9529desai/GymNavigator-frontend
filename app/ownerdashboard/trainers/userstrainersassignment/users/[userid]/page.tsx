@@ -1,37 +1,28 @@
-"use client";
+'use client';
 
-import UserprofileImage from "@/app/assests/gymd.webp";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { Award, Calendar, MapPin, Phone, TrendingUp } from "lucide-react";
-import Image from "next/image";
-import type React from "react";
-import { useState } from "react";
+import UserprofileImage from '@/app/assests/gymd.webp';
+import { Button } from '@/components/ui/button';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { Award, Calendar, MapPin, Phone, TrendingUp } from 'lucide-react';
+import Image from 'next/image';
+import type React from 'react';
+import { useState } from 'react';
 
 // TOOD send data to the backend
 export default function UserProfileCard() {
   const [userData, setUserData] = useState({
-    name: "John Doe",
-    challengeName: "30-Day Fitness Challenge",
+    name: 'John Doe',
+    challengeName: '30-Day Fitness Challenge',
     joinedDate: undefined as Date | undefined,
     completionDate: undefined as Date | undefined,
-    contact: "",
-    address: "",
+    contact: '',
+    address: '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,18 +30,15 @@ export default function UserProfileCard() {
     setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleDateChange = (
-    date: Date | undefined,
-    field: "joinedDate" | "completionDate"
-  ) => {
+  const handleDateChange = (date: Date | undefined, field: 'joinedDate' | 'completionDate') => {
     setUserData((prevData) => ({ ...prevData, [field]: date }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting user data:", userData);
+    console.log('Submitting user data:', userData);
     // Add logic to send data to backend here
-    alert("the new alert is triggred after the form submission");
+    alert('the new alert is triggred after the form submission');
   };
 
   return (
@@ -83,15 +71,15 @@ export default function UserProfileCard() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant={"outline"}
+                    variant={'outline'}
                     className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !userData.joinedDate && "text-muted-foreground"
+                      'w-full justify-start text-left font-normal',
+                      !userData.joinedDate && 'text-muted-foreground'
                     )}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     {userData.joinedDate ? (
-                      format(userData.joinedDate, "PPP")
+                      format(userData.joinedDate, 'PPP')
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -101,7 +89,7 @@ export default function UserProfileCard() {
                   <CalendarComponent
                     mode="single"
                     selected={userData.joinedDate}
-                    onSelect={(date) => handleDateChange(date, "joinedDate")}
+                    onSelect={(date) => handleDateChange(date, 'joinedDate')}
                     initialFocus
                   />
                 </PopoverContent>
@@ -112,15 +100,15 @@ export default function UserProfileCard() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant={"outline"}
+                    variant={'outline'}
                     className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !userData.completionDate && "text-muted-foreground"
+                      'w-full justify-start text-left font-normal',
+                      !userData.completionDate && 'text-muted-foreground'
                     )}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     {userData.completionDate ? (
-                      format(userData.completionDate, "PPP")
+                      format(userData.completionDate, 'PPP')
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -130,9 +118,7 @@ export default function UserProfileCard() {
                   <CalendarComponent
                     mode="single"
                     selected={userData.completionDate}
-                    onSelect={(date) =>
-                      handleDateChange(date, "completionDate")
-                    }
+                    onSelect={(date) => handleDateChange(date, 'completionDate')}
                     initialFocus
                   />
                 </PopoverContent>
@@ -169,10 +155,7 @@ export default function UserProfileCard() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button
-              type="submit"
-              className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 "
-            >
+            <Button type="submit" className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 ">
               Save Profile
               <TrendingUp className="ml-2 w-5 h-5" />
             </Button>

@@ -1,11 +1,11 @@
-import {
+import type {
   ColumnDef,
-  Table,
+  ColumnFiltersState,
   Row,
   SortingState,
-  ColumnFiltersState,
+  Table,
 } from '@tanstack/react-table';
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export type EnrollmentStatus = 'active' | 'pending' | 'inactive';
 

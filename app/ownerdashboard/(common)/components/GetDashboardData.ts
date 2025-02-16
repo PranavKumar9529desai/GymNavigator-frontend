@@ -1,6 +1,6 @@
 'use server';
-import { AxiosResponse, AxiosError } from 'axios';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
+import { AxiosError, type AxiosResponse } from 'axios';
 
 interface DashboardStats {
   totalMembers: number;
@@ -38,8 +38,7 @@ type DashboardResult = DashboardData | DashboardError;
 export async function GetDashboardData(): Promise<DashboardResult> {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response: AxiosResponse<DashboardResponse> =
-      await ownerAxios.get(`/getdashboarddata`);
+    const response: AxiosResponse<DashboardResponse> = await ownerAxios.get('/getdashboarddata');
 
     if (response.data.data) {
       return response.data.data;
@@ -59,9 +58,7 @@ export async function GetDashboardData(): Promise<DashboardResult> {
       }
 
       return {
-        error:
-          err.response?.data?.msg ||
-          'An error occurred while fetching dashboard data',
+        error: err.response?.data?.msg || 'An error occurred while fetching dashboard data',
       };
     }
 

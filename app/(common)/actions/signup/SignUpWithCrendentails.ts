@@ -1,5 +1,5 @@
 'use server';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 export interface SignupResponse {
   msg: string;
@@ -26,16 +26,13 @@ export default async function SignupSA(
   const role = Role.toLowerCase();
   console.log('role rom, the signupSa ', role, name, email, password);
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/${role}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/${role}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

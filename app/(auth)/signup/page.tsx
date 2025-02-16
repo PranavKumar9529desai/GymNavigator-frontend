@@ -1,5 +1,5 @@
-import React from 'react';
 import SignUp from '@/components/common/Signup';
+import React from 'react';
 
 export default async function page() {
   return (

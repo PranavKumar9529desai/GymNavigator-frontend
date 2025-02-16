@@ -1,6 +1,6 @@
 'use client';
 import { Card } from '@/components/ui/card';
-import { Building2, Plus, ArrowRight } from 'lucide-react';
+import { ArrowRight, Building2, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SetupScreen() {
@@ -12,9 +12,7 @@ export default function SetupScreen() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome to GymDominator
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Welcome to GymDominator</h1>
           <p className="text-gray-500">
             Let&apos;s get started by setting up your gym&apos;s profile.
           </p>

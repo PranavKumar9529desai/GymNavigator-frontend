@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || 'https://admin.gymnavigator.in/';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://admin.gymnavigator.in/';
 
   const routes = ['/ownerdashboard', '/trainerdashboard'].map((route) => ({
     url: `${baseUrl}${route}`,

@@ -1,14 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { m, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Slider } from '@/components/ui/slider';
-import { toast } from 'sonner';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import {
   Select,
   SelectContent,
@@ -16,8 +8,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createDietPlan } from './PostDietPlan';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
+import { AnimatePresence, m } from 'framer-motion';
+import { ArrowRight, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { Pie } from 'react-chartjs-2';
+import { toast } from 'sonner';
+import { createDietPlan } from './PostDietPlan';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -58,7 +58,7 @@ export default function CreateDietPlan() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(() => {
     if (typeof window !== 'undefined') {
-      return parseInt(localStorage.getItem('dietPlanStep') || '1');
+      return Number.parseInt(localStorage.getItem('dietPlanStep') || '1');
     }
     return 1;
   });
@@ -134,9 +134,7 @@ export default function CreateDietPlan() {
 
   // Add checkpoint saving logic
   const saveCheckpoint = (meal: Meal) => {
-    const checkpoints = JSON.parse(
-      localStorage.getItem('dietPlanCheckpoints') || '[]'
-    );
+    const checkpoints = JSON.parse(localStorage.getItem('dietPlanCheckpoints') || '[]');
     checkpoints.push({
       step: currentStep,
       meal: meal,
@@ -196,11 +194,7 @@ export default function CreateDietPlan() {
     labels: ['Protein', 'Carbs', 'Fats'],
     datasets: [
       {
-        data: [
-          dietPlan.macroSplit.protein,
-          dietPlan.macroSplit.carbs,
-          dietPlan.macroSplit.fats,
-        ],
+        data: [dietPlan.macroSplit.protein, dietPlan.macroSplit.carbs, dietPlan.macroSplit.fats],
         backgroundColor: ['#22c55e', '#3b82f6', '#ef4444'],
         borderWidth: 0,
       },
@@ -221,9 +215,7 @@ export default function CreateDietPlan() {
       }
 
       const total =
-        dietPlan.macroSplit.protein +
-        dietPlan.macroSplit.carbs +
-        dietPlan.macroSplit.fats;
+        dietPlan.macroSplit.protein + dietPlan.macroSplit.carbs + dietPlan.macroSplit.fats;
       if (total !== 100) {
         toast.error('Macro split percentages must add up to 100%');
         return;
@@ -327,19 +319,17 @@ export default function CreateDietPlan() {
               <h2 className="text-2xl font-bold">Diet Plan Basics</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2" htmlFor="plan-name">
                     Plan Name
                   </label>
                   <Input
                     value={dietPlan.name}
-                    onChange={(e) =>
-                      setDietPlan((prev) => ({ ...prev, name: e.target.value }))
-                    }
+                    onChange={(e) => setDietPlan((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder="e.g., Weight Loss Meal Plan"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2" htmlFor="plan-description">
                     Description
                   </label>
                   <Textarea
@@ -355,7 +345,7 @@ export default function CreateDietPlan() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2" htmlFor="plan-target-calories">
                     Target Daily Calories: {dietPlan.targetCalories}
                   </label>
                   <Slider
@@ -388,7 +378,7 @@ export default function CreateDietPlan() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-protein">
                       Protein: {dietPlan.macroSplit.protein}%
                     </label>
                     <Slider
@@ -405,7 +395,7 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-carbs">
                       Carbs: {dietPlan.macroSplit.carbs}%
                     </label>
                     <Slider
@@ -422,7 +412,7 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-fats">
                       Fats: {dietPlan.macroSplit.fats}%
                     </label>
                     <Slider
@@ -464,7 +454,7 @@ export default function CreateDietPlan() {
                 <h3 className="text-lg font-semibold">Add New Meal</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-name">
                       Meal Name
                     </label>
                     <Input
@@ -479,7 +469,7 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-time">
                       Time of Day
                     </label>
                     <Select
@@ -500,7 +490,7 @@ export default function CreateDietPlan() {
                     </Select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-calories">
                       Calories
                     </label>
                     <Input
@@ -509,14 +499,14 @@ export default function CreateDietPlan() {
                       onChange={(e) =>
                         setCurrentMeal((prev) => ({
                           ...prev,
-                          calories: parseInt(e.target.value),
+                          calories: Number.parseInt(e.target.value),
                         }))
                       }
                       placeholder="Calories"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-protein">
                       Protein (g)
                     </label>
                     <Input
@@ -525,14 +515,14 @@ export default function CreateDietPlan() {
                       onChange={(e) =>
                         setCurrentMeal((prev) => ({
                           ...prev,
-                          protein: parseInt(e.target.value),
+                          protein: Number.parseInt(e.target.value),
                         }))
                       }
                       placeholder="Protein in grams"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-carbs">
                       Carbs (g)
                     </label>
                     <Input
@@ -541,14 +531,14 @@ export default function CreateDietPlan() {
                       onChange={(e) =>
                         setCurrentMeal((prev) => ({
                           ...prev,
-                          carbs: parseInt(e.target.value),
+                          carbs: Number.parseInt(e.target.value),
                         }))
                       }
                       placeholder="Carbs in grams"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label className="block text-sm font-medium mb-2" htmlFor="plan-fats">
                       Fats (g)
                     </label>
                     <Input
@@ -557,7 +547,7 @@ export default function CreateDietPlan() {
                       onChange={(e) =>
                         setCurrentMeal((prev) => ({
                           ...prev,
-                          fats: parseInt(e.target.value),
+                          fats: Number.parseInt(e.target.value),
                         }))
                       }
                       placeholder="Fats in grams"
@@ -567,7 +557,7 @@ export default function CreateDietPlan() {
 
                 {/* Ingredients Section */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2" htmlFor="plan-ingredients">
                     Ingredients
                   </label>
                   <div className="flex gap-2">
@@ -584,13 +574,14 @@ export default function CreateDietPlan() {
                   <div className="flex flex-wrap gap-2">
                     {currentMeal.ingredients.map((ingredient, index) => (
                       <div
-                        key={index}
+                        key={index as number}
                         className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-2"
                       >
                         <span>{ingredient}</span>
                         <button
                           onClick={() => removeIngredient(index)}
                           className="text-gray-500 hover:text-red-500"
+                          type="button"
                         >
                           ×
                         </button>
@@ -601,7 +592,7 @@ export default function CreateDietPlan() {
 
                 {/* Instructions */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2" htmlFor="plan-instructions">
                     Instructions
                   </label>
                   <Textarea
@@ -627,7 +618,7 @@ export default function CreateDietPlan() {
                 <h3 className="text-lg font-semibold">Planned Meals</h3>
                 {dietPlan.meals.map((meal, index) => (
                   <m.div
-                    key={index}
+                    key={index as number}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-white p-4 rounded-lg border border-gray-200"
@@ -637,23 +628,19 @@ export default function CreateDietPlan() {
                         <h4 className="font-medium">{meal.name}</h4>
                         <p className="text-sm text-gray-600">{meal.time}</p>
                         <p className="text-sm">
-                          Calories: {meal.calories} | P: {meal.protein}g | C:{' '}
-                          {meal.carbs}g | F: {meal.fats}g
+                          Calories: {meal.calories} | P: {meal.protein}g | C: {meal.carbs}g | F:{' '}
+                          {meal.fats}g
                         </p>
                         {meal.ingredients.length > 0 && (
                           <div className="mt-2">
                             <p className="text-sm font-medium">Ingredients:</p>
-                            <p className="text-sm text-gray-600">
-                              {meal.ingredients.join(', ')}
-                            </p>
+                            <p className="text-sm text-gray-600">{meal.ingredients.join(', ')}</p>
                           </div>
                         )}
                         {meal.instructions && (
                           <div className="mt-2">
                             <p className="text-sm font-medium">Instructions:</p>
-                            <p className="text-sm text-gray-600">
-                              {meal.instructions}
-                            </p>
+                            <p className="text-sm text-gray-600">{meal.instructions}</p>
                           </div>
                         )}
                       </div>
@@ -676,9 +663,7 @@ export default function CreateDietPlan() {
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-8">
           <Button
-            onClick={() =>
-              setCurrentStep((current) => Math.max(current - 1, 1))
-            }
+            onClick={() => setCurrentStep((current) => Math.max(current - 1, 1))}
             disabled={currentStep === 1}
           >
             Previous
@@ -689,11 +674,7 @@ export default function CreateDietPlan() {
               Save Diet Plan
             </Button>
           ) : (
-            <Button
-              onClick={() =>
-                setCurrentStep((current) => Math.min(current + 1, 3))
-              }
-            >
+            <Button onClick={() => setCurrentStep((current) => Math.min(current + 1, 3))}>
               Next
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>

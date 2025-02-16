@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 interface FormErrorPropsType {
   message: string;
-  type: 'success' | 'fail';
+  type: "success" | "fail";
 }
-import { BsExclamationCircle } from 'react-icons/bs';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle } from "lucide-react";
+import { BsExclamationCircle } from "react-icons/bs";
 export default function FormError({
   FormErrorProps,
 }: {
@@ -12,7 +12,7 @@ export default function FormError({
 }) {
   return (
     <div className="text-center h-6  flex *:rounded-lg ">
-      {FormErrorProps && FormErrorProps.type == 'fail' ? (
+      {FormErrorProps && FormErrorProps.type === "fail" ? (
         <div className="w-full bg-red-100 h-full flex items-center gap-1 justify-center">
           <BsExclamationCircle className=" w-4 h-4 text-red-600 " />
           <p className="text-sm text-red-600 ">{FormErrorProps.message} </p>

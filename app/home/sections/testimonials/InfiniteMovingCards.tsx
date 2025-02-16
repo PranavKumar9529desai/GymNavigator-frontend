@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
 import { m } from 'framer-motion';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 
 export type TestimonialItem = {
   image: string;
@@ -57,13 +57,13 @@ export const InfiniteMovingCards = ({
         transition={{
           duration: speeds[speed],
           ease: 'linear',
-          repeat: Infinity,
+          repeat: Number.POSITIVE_INFINITY,
           paused: pauseOnHover && isHovered,
         }}
       >
         {[...items, ...items].map((item, idx) => (
           <div
-            key={idx}
+            key={idx as number}
             className="relative group w-[280px] sm:w-[350px] md:w-[450px] h-[350px] sm:h-[400px] md:h-[450px] bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl sm:rounded-2xl border border-gray-800 overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -72,10 +72,7 @@ export const InfiniteMovingCards = ({
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                 <div className="flex gap-0.5 sm:gap-1">
                   {[...Array(item.rating)].map((_, i) => (
-                    <span
-                      key={i}
-                      className="text-yellow-500 text-sm sm:text-base"
-                    >
+                    <span key={i as number} className="text-yellow-500 text-sm sm:text-base">
                       ★
                     </span>
                   ))}
@@ -106,15 +103,9 @@ export const InfiniteMovingCards = ({
                   />
                 </div>
                 <div>
-                  <h4 className="text-base sm:text-lg font-semibold text-white">
-                    {item.author}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-zinc-400">
-                    {item.role}
-                  </p>
-                  <p className="text-xs sm:text-sm text-blue-400">
-                    {item.location}
-                  </p>
+                  <h4 className="text-base sm:text-lg font-semibold text-white">{item.author}</h4>
+                  <p className="text-xs sm:text-sm text-zinc-400">{item.role}</p>
+                  <p className="text-xs sm:text-sm text-blue-400">{item.location}</p>
                 </div>
               </div>
             </div>

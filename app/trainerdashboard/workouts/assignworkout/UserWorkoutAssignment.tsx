@@ -1,9 +1,6 @@
 'use client';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, LucideIcon } from 'lucide-react';
-import { DataTable } from '@/components/Table/UsersTable';
 import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,10 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { WorkoutPlan } from './Getworkout';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, type LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import { attachWorkoutPlanToUser } from './AttachWorkoutplantoUser';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
+import { attachWorkoutPlanToUser } from './AttachWorkoutplantoUser';
+import type { WorkoutPlan } from './Getworkout';
 
 // Update StatusCardProps interface
 interface StatusCardProps {
@@ -49,10 +49,7 @@ interface UserWorkoutAssignmentProps {
 // Update the Select component in the columns definition to use workoutPlans
 const createColumns = (
   workoutPlans: WorkoutPlan[],
-  handleWorkoutAssignment: (
-    userId: string,
-    workoutPlanId: string
-  ) => Promise<void> // Changed userId to string
+  handleWorkoutAssignment: (userId: string, workoutPlanId: string) => Promise<void> // Changed userId to string
 ): ColumnDef<UserType>[] => [
   {
     accessorKey: 'name',
@@ -109,9 +106,7 @@ const createColumns = (
                 <SelectItem
                   key={plan.id}
                   value={plan.id.toString()}
-                  className={
-                    plan.id === user.activeWorkoutPlanId ? 'bg-green-50' : ''
-                  }
+                  className={plan.id === user.activeWorkoutPlanId ? 'bg-green-50' : ''}
                 >
                   {plan.name}
                   {plan.id === user.activeWorkoutPlanId && (
@@ -122,9 +117,7 @@ const createColumns = (
             </SelectContent>
           </Select>
           {user.hasActiveWorkoutPlan && (
-            <p className="text-xs text-green-600">
-              Active Plan: {user.activeWorkoutPlanName}
-            </p>
+            <p className="text-xs text-green-600">Active Plan: {user.activeWorkoutPlanName}</p>
           )}
         </div>
       );
@@ -138,24 +131,18 @@ export default function UserWorkoutAssignment({
   workoutPlans,
 }: UserWorkoutAssignmentProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [genderFilter, setGenderFilter] = useState<'Male' | 'Female' | 'All'>(
-    'All'
+  const [genderFilter, setGenderFilter] = useState<'Male' | 'Female' | 'All'>('All');
+  const [assignmentFilter, setAssignmentFilter] = useState<'all' | 'assigned' | 'unassigned'>(
+    'all'
   );
-  const [assignmentFilter, setAssignmentFilter] = useState<
-    'all' | 'assigned' | 'unassigned'
-  >('all');
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
   // Update handleWorkoutAssignment to use string ID
   const handleWorkoutAssignment = useCallback(
     async (userId: string, workoutPlanId: string) => {
       try {
-        const previousPlan = Users.find(
-          (u) => u.id === userId
-        )?.activeWorkoutPlanName;
-        const newPlan = workoutPlans.find(
-          (p) => p.id === parseInt(workoutPlanId)
-        );
+        const previousPlan = Users.find((u) => u.id === userId)?.activeWorkoutPlanName;
+        const newPlan = workoutPlans.find((p) => p.id === Number.parseInt(workoutPlanId));
 
         await attachWorkoutPlanToUser(userId, workoutPlanId);
 
@@ -165,7 +152,7 @@ export default function UserWorkoutAssignment({
             user.id === userId
               ? {
                   ...user,
-                  activeWorkoutPlanId: parseInt(workoutPlanId),
+                  activeWorkoutPlanId: Number.parseInt(workoutPlanId),
                   activeWorkoutPlanName: newPlan?.name || '',
                   hasActiveWorkoutPlan: true,
                 }
@@ -184,8 +171,7 @@ export default function UserWorkoutAssignment({
       } catch (error) {
         console.error('Error assigning workout plan:', error);
         toast.error('Failed to assign workout plan', {
-          description:
-            'Please try again or contact support if the issue persists.',
+          description: 'Please try again or contact support if the issue persists.',
         });
       }
     },
@@ -199,9 +185,7 @@ export default function UserWorkoutAssignment({
 
   // Helper function to get icon component
   const getIcon = (iconName: string): LucideIcon => {
-    const Icon = LucideIcons[
-      iconName as keyof typeof LucideIcons
-    ] as LucideIcon;
+    const Icon = LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcon;
     return Icon || (LucideIcons.HelpCircle as LucideIcon);
   };
 
@@ -247,9 +231,7 @@ export default function UserWorkoutAssignment({
         />
         <Select
           value={genderFilter}
-          onValueChange={(value: 'Male' | 'Female' | 'All') =>
-            setGenderFilter(value)
-          }
+          onValueChange={(value: 'Male' | 'Female' | 'All') => setGenderFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select gender" />
@@ -262,9 +244,7 @@ export default function UserWorkoutAssignment({
         </Select>
         <Select
           value={assignmentFilter}
-          onValueChange={(value: 'all' | 'assigned' | 'unassigned') =>
-            setAssignmentFilter(value)
-          }
+          onValueChange={(value: 'all' | 'assigned' | 'unassigned') => setAssignmentFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by assignment" />
@@ -296,9 +276,7 @@ export default function UserWorkoutAssignment({
                 <p className="text-sm text-gray-500">Goal: {user.goal}</p>
                 <Select
                   value={user.activeWorkoutPlanId?.toString()}
-                  onValueChange={(value) =>
-                    handleWorkoutAssignment(user.id, value)
-                  }
+                  onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
                 >
                   <SelectTrigger
                     className={`w-full ${
@@ -320,11 +298,7 @@ export default function UserWorkoutAssignment({
                       <SelectItem
                         key={plan.id}
                         value={plan.id.toString()}
-                        className={
-                          plan.id === user.activeWorkoutPlanId
-                            ? 'bg-green-50'
-                            : ''
-                        }
+                        className={plan.id === user.activeWorkoutPlanId ? 'bg-green-50' : ''}
                       >
                         {plan.name}
                         {plan.id === user.activeWorkoutPlanId && (

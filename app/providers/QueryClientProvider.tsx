@@ -1,12 +1,15 @@
-"use client";
+'use client';
 
-import { QueryClient, QueryClientProvider as TanstackQueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import {
+  QueryClient,
+  QueryClientProvider as TanstackQueryClientProvider,
+} from '@tanstack/react-query';
+import { useState } from 'react';
 
-export default function QueryClientProvider({ 
-  children 
-}: { 
-  children: React.ReactNode 
+export default function QueryClientProvider({
+  children,
+}: {
+  children: React.ReactNode;
 }) {
   const [queryClient] = useState(
     () =>
@@ -22,9 +25,5 @@ export default function QueryClientProvider({
       })
   );
 
-  return (
-    <TanstackQueryClientProvider client={queryClient}>
-      {children}
-    </TanstackQueryClientProvider>
-  );
+  return <TanstackQueryClientProvider client={queryClient}>{children}</TanstackQueryClientProvider>;
 }

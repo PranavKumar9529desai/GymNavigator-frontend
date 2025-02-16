@@ -28,6 +28,4 @@ export interface TrainerDashboardResponse {
   data: TrainerDashboardData;
 }
 
-export type TrainerDashboardResult =
-  | TrainerDashboardData
-  | TrainerDashboardError;
+export type TrainerDashboardResult = TrainerDashboardData | TrainerDashboardError;

@@ -1,4 +1,4 @@
-import { ToasterProps as SonnerToasterProps } from 'sonner';
+import type { ToasterProps as SonnerToasterProps } from 'sonner';
 
 export interface CustomToasterProps extends SonnerToasterProps {
   richColors?: boolean;

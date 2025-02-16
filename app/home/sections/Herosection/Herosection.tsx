@@ -1,14 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import {
-  Activity,
-  ArrowRight,
-  Dumbbell,
-  Sparkles,
-  UserCheck,
-  UserCog,
-  Users,
-} from 'lucide-react';
+import { Activity, ArrowRight, Dumbbell, Sparkles, UserCheck, UserCog, Users } from 'lucide-react';
 import CustomButton from '../../component/CustomButton';
 
 import { m } from 'framer-motion';
@@ -51,9 +43,7 @@ export default function Herosection() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
-                  <span className="block mb-2 sm:mb-4 text-white/90">
-                    Elevate Your
-                  </span>
+                  <span className="block mb-2 sm:mb-4 text-white/90">Elevate Your</span>
                   <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent inline-block animate-gradient">
                     Gym Management
                   </span>
@@ -65,8 +55,8 @@ export default function Herosection() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="text-base sm:text-lg text-gray-300 leading-relaxed mt-4"
               >
-                Streamline operations, enhance member experience, and drive
-                growth with our sophisticated management suite.
+                Streamline operations, enhance member experience, and drive growth with our
+                sophisticated management suite.
               </m.p>
             </div>
 
@@ -185,7 +175,7 @@ export default function Herosection() {
                   },
                 ].map((item, i) => (
                   <m.div
-                    key={i}
+                    key={i as number}
                     initial={{ opacity: 0, y: 50, rotateX: 45 }}
                     animate={{
                       opacity: 1,
@@ -212,16 +202,10 @@ export default function Herosection() {
                     >
                       <item.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white/90">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white/90">{item.title}</h3>
                     <div className="flex items-end gap-2 mt-2">
-                      <span className="text-3xl font-bold text-white">
-                        {item.value}
-                      </span>
-                      <span className="text-green-400 text-sm mb-1">
-                        {item.growth}
-                      </span>
+                      <span className="text-3xl font-bold text-white">{item.value}</span>
+                      <span className="text-green-400 text-sm mb-1">{item.growth}</span>
                     </div>
 
                     {/* Animated graph line */}
@@ -252,7 +236,7 @@ export default function Herosection() {
               <div className="absolute inset-0 pointer-events-none">
                 {[...Array(5)].map((_, i) => (
                   <m.div
-                    key={`badge-${i}`}
+                    key={`badge-${i as number}`}
                     className="absolute"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{
@@ -283,7 +267,7 @@ export default function Herosection() {
       <div className="absolute inset-0 pointer-events-none lg:hidden">
         {[...Array(3)].map((_, i) => (
           <m.div
-            key={`mobile-float-${i}`}
+            key={`mobile-float-${i as number}`}
             className="absolute"
             initial={{ opacity: 0, scale: 0 }}
             animate={{
@@ -318,9 +302,7 @@ export default function Herosection() {
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
           className="text-blue-400 text-sm flex flex-col items-center gap-2"
         >
-          <span className="hidden sm:block text-xs text-gray-400">
-            Scroll to explore
-          </span>
+          <span className="hidden sm:block text-xs text-gray-400">Scroll to explore</span>
           <ArrowRight className="w-4 h-4 rotate-90" />
         </m.div>
       </m.div>

@@ -52,9 +52,7 @@ export default auth(async function middleware(request) {
    */
   const isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  const isProtectedRoute = ProtectedRoutes.some((route) =>
-    nextUrl.pathname.startsWith(route)
-  );
+  const isProtectedRoute = ProtectedRoutes.some((route) => nextUrl.pathname.startsWith(route));
   const isAuthRoute = AuthRoutes.includes(nextUrl.pathname);
 
   // Allow API routes to pass through
@@ -66,9 +64,7 @@ export default auth(async function middleware(request) {
    */
   if (isAuthRoute) {
     if (isLoggedIn && session?.role) {
-      return NextResponse.redirect(
-        new URL(`/${session.role}dashboard`, nextUrl)
-      );
+      return NextResponse.redirect(new URL(`/${session.role}dashboard`, nextUrl));
     }
     return NextResponse.next();
   }
@@ -92,7 +88,7 @@ export default auth(async function middleware(request) {
 
     // Updated gym check to use the new GymInfo type
     if (session.role === 'trainer' && !session.gym) {
-      console.log('middleware redirects are this', session.gym);
+      console.log('middleware redirects are this and it trainer', session.gym);
       return NextResponse.redirect(new URL('/selectgym', request.url));
     }
 

@@ -1,6 +1,6 @@
-import UserWorkoutAssignment from './UserWorkoutAssignment';
-import { getAllWorkoutPlans } from './Getworkout';
 import { getUsersAssignedToTrainer } from './GetuserassignedTotrainers';
+import { getAllWorkoutPlans } from './Getworkout';
+import UserWorkoutAssignment from './UserWorkoutAssignment';
 
 export default async function Page() {
   const [users, workoutPlansResponse] = await Promise.all([

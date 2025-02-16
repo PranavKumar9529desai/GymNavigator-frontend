@@ -1,20 +1,20 @@
 'use client';
 import { m } from 'framer-motion';
-import { useState } from 'react';
 import {
-  QrCode,
-  LayoutDashboard,
-  Users,
-  Dumbbell,
   BarChart3,
-  Smartphone,
   Bell,
-  ClipboardList,
   Calendar,
+  ClipboardList,
+  Dumbbell,
+  LayoutDashboard,
   LineChart,
+  QrCode,
   Shield,
+  Smartphone,
   Target,
+  Users,
 } from 'lucide-react';
+import { useState } from 'react';
 
 // Extended icon map to include both front and back features
 const iconMap = {
@@ -48,23 +48,19 @@ const backFeatures = {
   },
   'Trainer Assignment Hub': {
     title: 'Schedule Management',
-    description:
-      'Efficient scheduling system for trainer assignments and member sessions.',
+    description: 'Efficient scheduling system for trainer assignments and member sessions.',
   },
   'Personalized Fitness Journey': {
     title: 'Progress Analytics',
-    description:
-      'Detailed tracking and visualization of member progress over time.',
+    description: 'Detailed tracking and visualization of member progress over time.',
   },
   'Advanced Analytics': {
     title: 'Multi-Role Access',
-    description:
-      'Secure, role-based access control for owners, trainers, and members.',
+    description: 'Secure, role-based access control for owners, trainers, and members.',
   },
   'Member Portal': {
     title: 'Goal Tracking',
-    description:
-      'Comprehensive goal setting and achievement tracking for members.',
+    description: 'Comprehensive goal setting and achievement tracking for members.',
   },
 };
 
@@ -128,9 +124,7 @@ export const FlipCard = ({ title, description }: FlipCardProps) => {
               <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-zinc-300 bg-clip-text text-transparent mb-4">
                 {backFeature.title}
               </h3>
-              <p className="text-zinc-400 flex-grow">
-                {backFeature.description}
-              </p>
+              <p className="text-zinc-400 flex-grow">{backFeature.description}</p>
               <div className="mt-6 text-sm text-zinc-500 flex items-center gap-2">
                 Click to flip back <span className="animate-pulse">←</span>
               </div>

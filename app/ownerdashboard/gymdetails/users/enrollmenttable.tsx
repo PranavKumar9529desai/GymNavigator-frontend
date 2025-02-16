@@ -1,17 +1,17 @@
 'use client';
-import { useState } from 'react';
 import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  getFilteredRowModel,
-  ColumnDef,
-  SortingState,
-  ColumnFiltersState,
+  useReactTable,
 } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {} from '@/components/ui/checkbox';
@@ -33,7 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Enrollment, EnrollmentStatus, EnrollmentTableProps } from './types';
+import type { Enrollment, EnrollmentStatus, EnrollmentTableProps } from './types';
 
 const statusStyles: Record<EnrollmentStatus, string> = {
   active: 'bg-green-100 text-green-800',
@@ -43,9 +43,7 @@ const statusStyles: Record<EnrollmentStatus, string> = {
 export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<
-    Record<string, boolean>
-  >({});
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
   const columns: ColumnDef<Enrollment>[] = [
@@ -62,9 +60,7 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
           </Button>
         );
       },
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('userName')}</div>
-      ),
+      cell: ({ row }) => <div className="lowercase">{row.getValue('userName')}</div>,
     },
     {
       accessorKey: 'startDate',
@@ -113,9 +109,7 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(enrollment.id.toString())
-                }
+                onClick={() => navigator.clipboard.writeText(enrollment.id.toString())}
               >
                 Copy user ID
               </DropdownMenuItem>
@@ -153,12 +147,8 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter users..."
-          value={
-            (table.getColumn('userName')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn('userName')?.setFilterValue(event.target.value)
-          }
+          value={(table.getColumn('userName')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('userName')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
@@ -177,9 +167,7 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
@@ -198,10 +186,7 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -211,26 +196,17 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

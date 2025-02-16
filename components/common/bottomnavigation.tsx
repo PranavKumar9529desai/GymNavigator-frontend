@@ -29,10 +29,7 @@ interface BottomNavigationProps {
   basePath?: string;
 }
 
-export default function BottomNavigation({
-  menuItems,
-  basePath = '',
-}: BottomNavigationProps) {
+export default function BottomNavigation({ menuItems, basePath = '' }: BottomNavigationProps) {
   const [activeRoute, setActiveRoute] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -124,13 +121,15 @@ export default function BottomNavigation({
                         variant="ghost"
                         className="w-full flex items-center justify-start p-4 hover:bg-gray-100 rounded-lg transition-colors"
                         onClick={() => {
-                          router.push(subItem.link.startsWith('/') ? subItem.link : `${basePath}${subItem.link}`);
+                          router.push(
+                            subItem.link.startsWith('/')
+                              ? subItem.link
+                              : `${basePath}${subItem.link}`
+                          );
                           setActiveRoute(null);
                         }}
                       >
-                        {subItem.icon && (
-                          <subItem.icon className="h-5 w-5 mr-3 text-blue-600" />
-                        )}
+                        {subItem.icon && <subItem.icon className="h-5 w-5 mr-3 text-blue-600" />}
                         <span>{subItem.name}</span>
                       </Button>
                     </m.div>

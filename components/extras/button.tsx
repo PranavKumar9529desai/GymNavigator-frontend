@@ -6,6 +6,7 @@ export default function Button() {
   return (
     <>
       <button
+        type="button"
         onClick={() => {
           signIn();
         }}
@@ -14,6 +15,7 @@ export default function Button() {
         Signin
       </button>
       <button
+        type="button"
         onClick={() => {
           signOut();
         }}

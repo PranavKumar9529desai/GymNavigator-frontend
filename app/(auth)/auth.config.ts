@@ -9,9 +9,7 @@ import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import SignupSA from '../(common)/actions/signup/SignUpWithCrendentails';
-import getUserByEmail, {
-  type userType,
-} from '../(common)/actions/signup/getUserByEmail';
+import getUserByEmail, { type userType } from '../(common)/actions/signup/getUserByEmail';
 import type { Rolestype } from '../types/next-auth';
 export default {
   providers: [
@@ -23,9 +21,7 @@ export default {
         role: {},
       },
       async authorize(
-        credentials: Partial<
-          Record<'name' | 'email' | 'password' | 'role', unknown>
-        >
+        credentials: Partial<Record<'name' | 'email' | 'password' | 'role', unknown>>
       ): Promise<User | null> {
         if (!credentials?.email || !credentials?.password) return null;
 
@@ -36,44 +32,27 @@ export default {
           role?: string;
         };
 
-        console.log(
-          'credentials received from the signin are ',
-          email,
-          password,
-          name,
-          role
-        );
+        console.log('credentials received from the signin are ', email, password, name, role);
 
         if (email && password) {
           const userFromDB: userType | false = await getUserByEmail(email);
           console.log('user from the db', userFromDB);
 
-          if (
-            userFromDB &&
-            userFromDB.name &&
-            userFromDB.email &&
-            userFromDB.role
-          ) {
-            const isPasswordMatch = await bcrypt.compare(
-              password,
-              userFromDB.password
-            );
-            console.log(
-              'user from the backend from the credentails provider',
-              userFromDB
-            );
+          if (userFromDB && 'name' in userFromDB && 'email' in userFromDB && 'role' in userFromDB) {
+            const isPasswordMatch = await bcrypt.compare(password, userFromDB.password);
+            console.log('user from the backend from the credentails provider', userFromDB);
             if (isPasswordMatch) {
               return {
                 id: email,
                 name: userFromDB.name,
                 email: userFromDB.email,
                 role: userFromDB.role as Rolestype,
-                gym: userFromDB.gym, // Using consistent gym type from backend
+                gym: userFromDB.gym,
               };
             }
           } else if (role && name) {
             const response = await SignupSA(role, name, email, password);
-            if (response.user && response.user.name && response.user.email) {
+            if (response?.user?.name && response?.user?.email) {
               return {
                 id: email,
                 name: response.user.name,
@@ -132,12 +111,12 @@ export default {
       return url.startsWith('/') ? `${baseUrl}${url}` : url;
     },
     async signIn({ user, account }) {
-      if (account && account.provider === 'google') {
-        if (user && user.email) {
+      if (account?.provider === 'google') {
+        if (user?.email) {
           console.log('user before the google signin', user);
           const userFromDb: userType | false = await getUserByEmail(user.email);
           console.log('user from the backend', userFromDb);
-          if (userFromDb && userFromDb.email) {
+          if (userFromDb && 'email' in userFromDb) {
             // Modify the user object to include role and gym from DB
             Object.assign(user, {
               role: userFromDb.role as Rolestype,
@@ -188,7 +167,7 @@ export default {
         }
       }
 
-      if (user && user.email && user.name) {
+      if (user?.email && user?.name) {
         token.role = user.role;
         token.gym = user.gym;
       }
@@ -203,7 +182,7 @@ export default {
       });
 
       console.log('token from the session callback ', token);
-      if (token && token.email && token.name && token.role) {
+      if (token?.email && token?.name && token?.role) {
         session.user.name = token.name;
         session.user.email = token.email;
         session.gym = token.gym as GymInfo;

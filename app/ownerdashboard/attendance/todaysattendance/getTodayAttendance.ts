@@ -1,11 +1,11 @@
-import { OwnerReqConfig } from "../../../../lib/AxiosInstance/ownerAxios";
+import { OwnerReqConfig } from '../../../../lib/AxiosInstance/ownerAxios';
 
 interface AttendanceUser {
   id: number;
   name: string;
   isPresent: boolean;
   trainerid: number | null;
-  shift: "Morning" | "Evening";
+  shift: 'Morning' | 'Evening';
   attendanceTime: string | null;
 }
 
@@ -17,15 +17,13 @@ interface TodayAttendanceResponse {
 const TodayAttendance = async (): Promise<TodayAttendanceResponse> => {
   try {
     const owneraxios = await OwnerReqConfig();
-    const response = await owneraxios.get<TodayAttendanceResponse>(
-      "/attendance/todaysattendance"
-    );
+    const response = await owneraxios.get<TodayAttendanceResponse>('/attendance/todaysattendance');
     console.log("Today's attendance data:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching today's attendance:", error);
     return {
-      msg: "Failed to fetch attendance data",
+      msg: 'Failed to fetch attendance data',
       users: [],
     };
   }

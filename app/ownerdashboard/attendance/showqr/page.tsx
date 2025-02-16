@@ -18,10 +18,7 @@ export default async function AttendanceComponent() {
           <p className="text-gray-600">Please create your gym profile first</p>
         </div>
         <Link href="/ownerdashboard/gymdetails/viewgymdetails">
-          <Button
-            variant="default"
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
+          <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
             Create Gym Profile
           </Button>
         </Link>

@@ -1,10 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { Users, UserCheck, UserX, ArrowUpDown } from 'lucide-react';
-import { DataTable } from '@/components/Table/UsersTable';
 import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, UserCheck, UserX, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface AttendanceUser {
   id: number;
@@ -32,10 +32,7 @@ const columns: ColumnDef<AttendanceUser>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         User Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -47,10 +44,7 @@ const columns: ColumnDef<AttendanceUser>[] = [
   {
     accessorKey: 'attendanceTime',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Time
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -61,7 +55,7 @@ const columns: ColumnDef<AttendanceUser>[] = [
       try {
         // Parse the UTC time and convert to IST
         const utcDate = new Date(time);
-        if (isNaN(utcDate.getTime())) return '-';
+        if (Number.isNaN(utcDate.getTime())) return '-';
 
         // Using explicit IST timezone for conversion
         return (
@@ -96,11 +90,7 @@ const columns: ColumnDef<AttendanceUser>[] = [
     cell: ({ row }) => {
       const attendance = row.getValue('todaysAttendance') as boolean;
       return (
-        <div
-          className={`font-medium ${
-            attendance ? 'text-green-600' : 'text-red-600'
-          }`}
-        >
+        <div className={`font-medium ${attendance ? 'text-green-600' : 'text-red-600'}`}>
           {attendance ? 'Present' : 'Absent'}
         </div>
       );
@@ -111,11 +101,8 @@ const columns: ColumnDef<AttendanceUser>[] = [
 export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
   const [users] = useState<AttendanceUser[]>(initialUsers);
   const [searchTerm, setSearchTerm] = useState('');
-  const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>(
-    'All'
-  );
-  const [filteredUsers, setFilteredUsers] =
-    useState<AttendanceUser[]>(initialUsers);
+  const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>('All');
+  const [filteredUsers, setFilteredUsers] = useState<AttendanceUser[]>(initialUsers);
 
   // Calculate stats
   const totalUsers = users.length;
@@ -154,9 +141,7 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <h1 className="text-2xl font-bold text-center">
-        Today&apos;s Attendance
-      </h1>
+      <h1 className="text-2xl font-bold text-center">Today&apos;s Attendance</h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -175,9 +160,7 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
         />
         <Select
           value={shiftFilter}
-          onValueChange={(value: 'Morning' | 'Evening' | 'All') =>
-            setShiftFilter(value)
-          }
+          onValueChange={(value: 'Morning' | 'Evening' | 'All') => setShiftFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select shift" />

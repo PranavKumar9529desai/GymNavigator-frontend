@@ -1,9 +1,4 @@
-import {
-  ColumnDef,
-  SortingState,
-  ColumnFiltersState,
-  Table,
-} from '@tanstack/react-table';
+import type { ColumnDef, ColumnFiltersState, SortingState, Table } from '@tanstack/react-table';
 
 interface BaseData {
   id: string | number;

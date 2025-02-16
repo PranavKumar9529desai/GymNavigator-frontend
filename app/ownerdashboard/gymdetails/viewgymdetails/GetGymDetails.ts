@@ -27,8 +27,7 @@ export default async function FetchGymDetailsSA() {
   try {
     // Initialize Axios instance with Authorization header
     const ownerAxios = await OwnerReqConfig();
-    const response: AxiosResponse<responseType> =
-      await ownerAxios.get('/gym/gymdetails');
+    const response: AxiosResponse<responseType> = await ownerAxios.get('/gym/gymdetails');
 
     console.log('Gym details fetched successfully:', response.data.gym);
     return response.data.gym;

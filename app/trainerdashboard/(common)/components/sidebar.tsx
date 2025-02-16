@@ -1,8 +1,8 @@
-'use client';
-import IconImage from '@/app/assests/gym-manager.webp';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { signOut } from '@/node_modules/next-auth/react';
+"use client";
+import IconImage from "@/app/assests/gym-manager.webp";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { signOut } from "@/node_modules/next-auth/react";
 import {
   CalendarCheck,
   ChevronDown,
@@ -11,11 +11,11 @@ import {
   LogOut,
   Users, // Add Users icon import
   UtensilsCrossedIcon,
-} from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Swal from 'sweetalert2';
+} from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 interface MenuItem {
   name: string;
@@ -27,69 +27,69 @@ interface MenuItem {
 
 export const menuItems: MenuItem[] = [
   {
-    name: 'Assigned Users',
-    label: 'assignedusers',
+    name: "Assigned Users",
+    label: "assignedusers",
     icon: Users,
-    link: '/trainerdashboard/assignedusers',
+    link: "/trainerdashboard/assignedusers",
   },
   {
-    name: 'Workouts',
-    label: 'workouts',
+    name: "Workouts",
+    label: "workouts",
     icon: Dumbbell,
-    link: '/trainerdashboard/workouts',
+    link: "/trainerdashboard/workouts",
     subItems: [
       {
-        name: 'Create Workouts',
-        label: 'createworkout',
-        link: '/trainerdashboard/workouts/createworkout',
+        name: "Create Workouts",
+        label: "createworkout",
+        link: "/trainerdashboard/workouts/createworkout",
       },
       {
-        name: 'Assign Workout',
-        label: 'assignworkout',
-        link: '/trainerdashboard/workouts/assignworkout',
+        name: "Assign Workout",
+        label: "assignworkout",
+        link: "/trainerdashboard/workouts/assignworkout",
       },
     ],
   },
   {
-    name: 'Diet',
-    label: 'diet',
+    name: "Diet",
+    label: "diet",
     icon: UtensilsCrossedIcon,
-    link: '/trainerdashboard/diet',
+    link: "/trainerdashboard/diet",
     subItems: [
       {
-        name: 'Create Diet plan',
-        label: 'createdietplan',
-        link: '/trainerdashboard/diet/createdietplan',
+        name: "Create Diet plan",
+        label: "createdietplan",
+        link: "/trainerdashboard/diet/createdietplan",
       },
       {
-        name: 'Assign Diet plan',
-        label: 'assigndietplan',
-        link: '/trainerdashboard/diet/assigndietplan',
+        name: "Assign Diet plan",
+        label: "assigndietplan",
+        link: "/trainerdashboard/diet/assigndietplan",
       },
     ],
   },
   {
-    name: 'Attendance',
+    name: "Attendance",
     icon: CalendarCheck,
-    label: 'attendance',
-    link: '/trainerdashboard/attendance',
+    label: "attendance",
+    link: "/trainerdashboard/attendance",
     subItems: [
       {
         name: "Today's Attendance",
-        label: 'todaysattendance',
-        link: '/trainerdashboard/attendance/todaysattendance',
+        label: "todaysattendance",
+        link: "/trainerdashboard/attendance/todaysattendance",
       },
       {
-        name: 'Show QR',
-        label: 'showqr',
-        link: '/trainerdashboard/attendance/showqr',
+        name: "Show QR",
+        label: "showqr",
+        link: "/trainerdashboard/attendance/showqr",
       },
     ],
   },
 ];
 
 export default function SideBar() {
-  const [activePage, setActivePage] = useState<string>('Gym Details');
+  const [activePage, setActivePage] = useState<string>("Gym Details");
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
@@ -105,11 +105,9 @@ export default function SideBar() {
   };
 
   const handleSubItemClick = (
-    event: React.MouseEvent,
-    item: MenuItem,
     subItem: { name: string; label: string; link: string }
   ) => {
-    event.stopPropagation(); // Prevent event bubbling
+    event?.stopPropagation(); // Prevent event bubbling
     setActivePage(subItem.label);
     router.push(subItem.link); // Use the full link from subItem
   };
@@ -126,7 +124,7 @@ export default function SideBar() {
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: 'Ready to leave?',
+      title: "Ready to leave?",
       html: `
         <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
           <div class="text-center">
@@ -142,13 +140,13 @@ export default function SideBar() {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: 'Yes, Logout',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
       customClass: {
         confirmButton:
-          'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
-        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
-        title: 'text-white text-xl font-semibold',
+          "bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium",
+        cancelButton: "bg-gray-600 px-6 py-2 rounded-lg text-white font-medium",
+        title: "text-white text-xl font-semibold",
       },
     });
 
@@ -156,9 +154,9 @@ export default function SideBar() {
       try {
         await signOut({ redirect: false });
         await Swal.fire({
-          title: 'See you soon!',
-          text: 'You have been successfully logged out',
-          icon: 'success',
+          title: "See you soon!",
+          text: "You have been successfully logged out",
+          icon: "success",
           timer: 1500,
           showConfirmButton: false,
           backdrop: `
@@ -168,15 +166,15 @@ export default function SideBar() {
             no-repeat
           `,
         });
-        router.push('/signin');
+        router.push("/signin");
       } catch (error) {
         Swal.fire({
-          title: 'Error!',
-          text: 'Logout failed',
-          icon: 'error',
-          color: '#fff',
+          title: "Error!",
+          text: "Logout failed",
+          icon: "error",
+          color: "#fff",
         });
-        console.error('Logout failed:', error);
+        console.error("Logout failed:", error);
       }
     }
   };
@@ -200,8 +198,8 @@ export default function SideBar() {
                   variant="ghost"
                   className={`w-full justify-start transition-colors duration-200 ${
                     isActiveParent(item)
-                      ? '!bg-blue-700 hover:text-white hover:bg-blue-700'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                      ? "!bg-blue-700 hover:text-white hover:bg-blue-700"
+                      : "text-gray-300 hover:bg-gray-800 hover:text-white"
                   }`}
                   onClick={() => handleItemClick(item)}
                 >
@@ -222,10 +220,10 @@ export default function SideBar() {
                           variant="ghost"
                           className={`w-full justify-start transition-colors duration-200 ${
                             activePage === subItem.label
-                              ? '!bg-blue-700 text-white hover:text-white hover:bg-blue-700'
-                              : 'hover:bg-gray-800 hover:text-white'
+                              ? "!bg-blue-700 text-white hover:text-white hover:bg-blue-700"
+                              : "hover:bg-gray-800 hover:text-white"
                           }`}
-                          onClick={(e) => handleSubItemClick(e, item, subItem)}
+                          onClick={() => handleSubItemClick(subItem)}
                         >
                           {subItem.name}
                         </Button>
@@ -241,6 +239,7 @@ export default function SideBar() {
 
       <div className="p-4">
         <button
+          type="button"
           className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
           onClick={handleLogout}
         >

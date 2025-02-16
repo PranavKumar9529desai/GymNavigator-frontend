@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
+// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 export default function CreateTokenButton({}: {
   existingToken: string | null;
 }) {

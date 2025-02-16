@@ -1,5 +1,5 @@
-import OnboardedUsers from "./OnbordedUsers";
-import { GetOnBoardingUser } from "./GetOnBoardingUser";
+import { GetOnBoardingUser } from './GetOnBoardingUser';
+import OnboardedUsers from './OnbordedUsers';
 
 export default async function Page() {
   // Fetch data at the server level

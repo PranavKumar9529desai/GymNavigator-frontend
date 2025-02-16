@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
+import React from 'react';
 import UserAttendance from './UserAttendance';
 import { TodayAttendance } from './getTodayAttendance';
-import React from 'react';
 
 const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
   return shift === 'MORNING' ? 'Morning' : 'Evening';

@@ -5,16 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Building2,
-  Image as ImageIcon,
-  Mail,
-  MapPin,
-  Phone,
-} from 'lucide-react';
+import { Building2, Image as ImageIcon, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -27,10 +21,7 @@ const formSchema = z.object({
   gym_logo: z.string().nonempty('Gym logo is required'),
   address: z.string().nonempty('Address is required'),
   phone_number: z.string().nonempty('Phone number is required'),
-  Email: z
-    .string()
-    .nonempty('Email is required')
-    .email('Invalid email address'),
+  Email: z.string().nonempty('Email is required').email('Invalid email address'),
 });
 
 export default function CreateGymDetails() {
@@ -103,8 +94,7 @@ export default function CreateGymDetails() {
         popup: 'rounded-xl',
         confirmButton:
           'bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-lg text-white font-medium',
-        cancelButton:
-          'bg-gray-500 hover:bg-gray-600 px-6 py-2.5 rounded-lg text-white font-medium',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 px-6 py-2.5 rounded-lg text-white font-medium',
         title: 'text-gray-900 text-xl font-semibold',
       },
     });
@@ -127,14 +117,11 @@ export default function CreateGymDetails() {
           if (response.ok) {
             finalImageUrl = responseData.url;
           } else {
-            throw new Error('Image upload failed: ' + responseData.error);
+            throw new Error(`Image upload failed: ${responseData.error}`);
           }
         }
 
-        const response = await PostGymDetails(
-          JSON.stringify(data),
-          finalImageUrl
-        );
+        const response = await PostGymDetails(JSON.stringify(data), finalImageUrl);
         if (response) {
           await Swal.fire({
             title: 'Success!',
@@ -167,9 +154,7 @@ export default function CreateGymDetails() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-center">
-          Create New Gym
-        </CardTitle>
+        <CardTitle className="text-4xl font-bold text-center">Create New Gym</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -258,7 +243,7 @@ export default function CreateGymDetails() {
                   className="pl-10"
                 />
               </div>
-              </div>
+            </div>
           </div>
 
           <Button

@@ -1,5 +1,5 @@
-"use server";
-import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+'use server';
+import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
 interface ExerciseInput {
   name: string;
@@ -55,31 +55,25 @@ export const createWorkoutPlan = async (
   const trainerAxios = await TrainerReqConfig();
 
   try {
-    const response = await trainerAxios.post(
-      "/workouts/createworkoutplans",
-      workoutPlan
-    );
+    const response = await trainerAxios.post('/workouts/createworkoutplans', workoutPlan);
 
     if (response.status === 201) {
       return {
         success: true,
-        message: "Workout plan created successfully",
+        message: 'Workout plan created successfully',
         workoutPlan: response.data.workoutPlan,
       };
     }
 
     return {
       success: false,
-      message: response.data.msg || "Failed to create workout plan",
+      message: response.data.msg || 'Failed to create workout plan',
     };
   } catch (error: unknown) {
-    console.error("Error creating workout plan:", error);
+    console.error('Error creating workout plan:', error);
     return {
       success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Failed to create workout plan",
+      message: error instanceof Error ? error.message : 'Failed to create workout plan',
     };
   }
 };

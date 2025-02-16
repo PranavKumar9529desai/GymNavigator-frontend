@@ -1,6 +1,6 @@
-import { getUsersAssignedToTrainer } from './GetuserassignedTotrainers';
-import AssignedUserToTrainer from './AssignedUserToTrainer';
 import { Suspense } from 'react';
+import AssignedUserToTrainer from './AssignedUserToTrainer';
+import { getUsersAssignedToTrainer } from './GetuserassignedTotrainers';
 
 export default async function AssignedUsersPage() {
   const users = await getUsersAssignedToTrainer();

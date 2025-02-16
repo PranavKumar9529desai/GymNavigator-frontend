@@ -1,8 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
-import GymDominatorLogo from '@/app/assests/gymheroImg.webp';
-import { Metadata } from 'next';
 import GymDomImage from '@/app/assests/gymd.webp';
+import GymDominatorLogo from '@/app/assests/gymheroImg.webp';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import type React from 'react';
 
 export const metadata: Metadata = {
   openGraph: {
@@ -37,7 +37,7 @@ export default function SignInLayout({
         <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-gray-50 to-blue-50 flex-col items-center justify-center p-8">
           <div className="max-w-xl text-center space-y-6">
             <div className="relative w-full aspect-square max-w-[500px] mx-auto">
-              <div className="absolute inset-0 bg-blue-100 opacity-50 rounded-full blur-2xl"></div>
+              <div className="absolute inset-0 bg-blue-100 opacity-50 rounded-full blur-2xl" />
               <div className="relative z-10 w-full h-full">
                 <Image
                   src={GymDominatorLogo}
@@ -55,8 +55,7 @@ export default function SignInLayout({
                 Welcome to <span className="text-blue-600">GymNavigator</span>
               </h2>
               <p className="text-base text-gray-600">
-                Your ultimate platform for fitness tracking and workout
-                management
+                Your ultimate platform for fitness tracking and workout management
               </p>
             </div>
           </div>

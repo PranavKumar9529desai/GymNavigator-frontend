@@ -13,9 +13,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           <BottomNavigation />
         </div>
         {/* another componenth */}
-        <div className="w-full h-[85vh] md:h-screen overflow-auto  ">
-          {children}
-        </div>
+        <div className="w-full h-[85vh] md:h-screen overflow-auto  ">{children}</div>
       </div>
     </>
   );

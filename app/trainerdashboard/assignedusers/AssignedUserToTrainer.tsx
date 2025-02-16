@@ -1,12 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { Users, UserCheck, Search, ArrowUpDown } from 'lucide-react';
-import { DataTable } from '@/components/Table/UsersTable';
 import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Search, UserCheck, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import type { AssignedUser } from './GetuserassignedTotrainers';
 
 interface AssignedUserToTrainerProps {
@@ -17,10 +17,7 @@ const columns: ColumnDef<AssignedUser>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         User Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -32,9 +29,7 @@ const columns: ColumnDef<AssignedUser>[] = [
     cell: ({ row }) => {
       const gender = row.original.HealthProfile?.gender;
       return (
-        <div
-          className={`text-sm ${gender ? 'text-gray-900' : 'text-gray-500 '}`}
-        >
+        <div className={`text-sm ${gender ? 'text-gray-900' : 'text-gray-500 '}`}>
           {gender || 'Not Updated'}
         </div>
       );
@@ -58,9 +53,7 @@ const columns: ColumnDef<AssignedUser>[] = [
     cell: ({ row }) => {
       const weight = row.original.HealthProfile?.weight;
       return (
-        <div
-          className={`text-sm ${weight ? 'text-gray-900' : 'text-gray-500 '}`}
-        >
+        <div className={`text-sm ${weight ? 'text-gray-900' : 'text-gray-500 '}`}>
           {weight ? `${weight} kg` : 'Not Updated'}
         </div>
       );
@@ -72,9 +65,7 @@ const columns: ColumnDef<AssignedUser>[] = [
     cell: ({ row }) => {
       const height = row.original.HealthProfile?.height;
       return (
-        <div
-          className={`text-sm ${height ? 'text-gray-900' : 'text-gray-500 '}`}
-        >
+        <div className={`text-sm ${height ? 'text-gray-900' : 'text-gray-500 '}`}>
           {height ? `${height} cm` : 'Not Updated'}
         </div>
       );
@@ -82,17 +73,13 @@ const columns: ColumnDef<AssignedUser>[] = [
   },
 ];
 
-export default function AssignedUserToTrainer({
-  users,
-}: AssignedUserToTrainerProps) {
+export default function AssignedUserToTrainer({ users }: AssignedUserToTrainerProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<AssignedUser[]>(users);
 
   // Calculate stats
   const totalUsers = users.length;
-  const activeUsers = users.filter(
-    (u) => u.membershipStatus === 'active'
-  ).length;
+  const activeUsers = users.filter((u) => u.membershipStatus === 'active').length;
   const inactiveUsers = totalUsers - activeUsers;
 
   const statusCards = [
@@ -164,54 +151,26 @@ export default function AssignedUserToTrainer({
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <p className="text-sm">
                   <span className="text-gray-600">Gender: </span>
-                  <span
-                    className={
-                      user.HealthProfile?.gender
-                        ? 'text-gray-900'
-                        : 'text-gray-500 '
-                    }
-                  >
+                  <span className={user.HealthProfile?.gender ? 'text-gray-900' : 'text-gray-500 '}>
                     {user.HealthProfile?.gender || 'Not Updated'}
                   </span>
                 </p>
                 <p className="text-sm">
                   <span className="text-gray-600">Goal: </span>
-                  <span
-                    className={
-                      user.HealthProfile?.goal
-                        ? 'text-gray-900'
-                        : 'text-gray-500 '
-                    }
-                  >
+                  <span className={user.HealthProfile?.goal ? 'text-gray-900' : 'text-gray-500 '}>
                     {user.HealthProfile?.goal || 'Not Updated'}
                   </span>
                 </p>
                 <p className="text-sm">
                   <span className="text-gray-600">Weight: </span>
-                  <span
-                    className={
-                      user.HealthProfile?.weight
-                        ? 'text-gray-900'
-                        : 'text-gray-500 '
-                    }
-                  >
-                    {user.HealthProfile?.weight
-                      ? `${user.HealthProfile.weight} kg`
-                      : 'Not Updated'}
+                  <span className={user.HealthProfile?.weight ? 'text-gray-900' : 'text-gray-500 '}>
+                    {user.HealthProfile?.weight ? `${user.HealthProfile.weight} kg` : 'Not Updated'}
                   </span>
                 </p>
                 <p className="text-sm">
                   <span className="text-gray-600">Height: </span>
-                  <span
-                    className={
-                      user.HealthProfile?.height
-                        ? 'text-gray-900'
-                        : 'text-gray-500 '
-                    }
-                  >
-                    {user.HealthProfile?.height
-                      ? `${user.HealthProfile.height} cm`
-                      : 'Not Updated'}
+                  <span className={user.HealthProfile?.height ? 'text-gray-900' : 'text-gray-500 '}>
+                    {user.HealthProfile?.height ? `${user.HealthProfile.height} cm` : 'Not Updated'}
                   </span>
                 </p>
               </div>

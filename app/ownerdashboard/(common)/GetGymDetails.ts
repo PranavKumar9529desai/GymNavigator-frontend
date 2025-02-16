@@ -1,6 +1,6 @@
-"use server";
-import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
-import type { AxiosResponse } from "axios";
+'use server';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
+import type { AxiosResponse } from 'axios';
 
 export interface sessionType {
   role: string;
@@ -27,14 +27,12 @@ export default async function FetchGymDetailsSA() {
   try {
     // Initialize Axios instance with Authorization header
     const ownerAxios = await OwnerReqConfig();
-    const response: AxiosResponse<responseType> = await ownerAxios.get(
-      "/gym/gymdetails"
-    );
+    const response: AxiosResponse<responseType> = await ownerAxios.get('/gym/gymdetails');
 
-    console.log("Gym details fetched successfully:", response.data.gym);
+    console.log('Gym details fetched successfully:', response.data.gym);
     return response.data.gym;
   } catch (err: unknown) {
-    console.error("Error fetching gym details:", err);
+    console.error('Error fetching gym details:', err);
     return null; // Return null or handle the error as needed
   }
 }

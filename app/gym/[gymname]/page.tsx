@@ -14,7 +14,7 @@ export async function generateStaticParams() {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/public/gym/allgymnames`,
       {
-        next: { revalidate: 3600 } // Revalidate gym list every hour
+        next: { revalidate: 3600 }, // Revalidate gym list every hour
       }
     );
     const data: GymNameResponse = await response.json();
@@ -65,12 +65,12 @@ export async function generateMetadata({ params }: PageProps) {
   const gymData = await FetchGymData(params.gymname);
   return {
     title: `${gymData?.name || 'Gym'} | Fitness Platform`,
-    description: gymData?.address 
+    description: gymData?.address
       ? `Visit ${gymData.name} at ${gymData.address}`
       : 'Professional fitness center',
     openGraph: {
-      images: [gymData?.img || '/default-gym.jpg']
-    }
+      images: [gymData?.img || '/default-gym.jpg'],
+    },
   };
 }
 

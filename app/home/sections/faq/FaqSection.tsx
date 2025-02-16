@@ -1,6 +1,6 @@
 'use client';
 import { m } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 const faqs = [
@@ -54,16 +54,15 @@ export default function FaqSection() {
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <m.div
-              key={index}
+              key={index as number}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className="mb-4"
             >
               <button
-                onClick={() =>
-                  setActiveIndex(activeIndex === index ? null : index)
-                }
+                type="button"
+                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
                 className="w-full bg-gradient-to-r from-gray-900 to-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500 transition-all duration-300 flex items-center justify-between group"
               >
                 <span className="text-lg font-semibold text-left text-white group-hover:text-blue-400">

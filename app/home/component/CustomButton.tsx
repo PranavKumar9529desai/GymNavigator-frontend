@@ -9,10 +9,7 @@ type CustomButtonProps = {
   text?: string;
 };
 
-export default function CustomButton({
-  className = '',
-  text = 'Get Started',
-}: CustomButtonProps) {
+export default function CustomButton({ className = '', text = 'Get Started' }: CustomButtonProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);

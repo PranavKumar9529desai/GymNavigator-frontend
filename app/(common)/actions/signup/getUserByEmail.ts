@@ -1,5 +1,5 @@
 'use server';
-import axios, { AxiosResponse } from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
 interface MinimalGymInfo {
   id: number;
@@ -25,9 +25,7 @@ interface LoginResponse {
   role?: string;
 }
 
-export default async function getUserByEmail(
-  email: string
-): Promise<userType | false> {
+export default async function getUserByEmail(email: string): Promise<userType | false> {
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/login`,

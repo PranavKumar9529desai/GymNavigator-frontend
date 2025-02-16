@@ -13,7 +13,7 @@ interface DietPlanResponse {
   // Add other diet plan fields as needed
 }
 
-interface UpdateDietPlanResponse {
+export interface UpdateDietPlanResponse {
   success: boolean;
   message: string;
   dietPlan?: DietPlanResponse;

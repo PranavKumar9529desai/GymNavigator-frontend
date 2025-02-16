@@ -1,9 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
-import { Users, UserCheck, Clock, ArrowUpDown } from 'lucide-react';
-import { DataTable } from '@/components/Table/UsersTable';
 import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Clock, UserCheck, Users } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 interface TrainerType {
   id: number;
@@ -54,11 +54,8 @@ const columns: ColumnDef<TrainerType>[] = [
 
 export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>(
-    'All'
-  );
-  const [filteredTrainers, setFilteredTrainers] =
-    useState<TrainerType[]>(Trainers);
+  const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>('All');
+  const [filteredTrainers, setFilteredTrainers] = useState<TrainerType[]>(Trainers);
 
   // Calculate stats
   const totalTrainers = Trainers.length || 0;
@@ -124,9 +121,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
         />
         <Select
           value={shiftFilter}
-          onValueChange={(value: 'Morning' | 'Evening' | 'All') =>
-            setShiftFilter(value)
-          }
+          onValueChange={(value: 'Morning' | 'Evening' | 'All') => setShiftFilter(value)}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select shift" />
@@ -141,11 +136,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
 
       {/* Desktop View */}
       <div className="hidden md:block">
-        <DataTable
-          data={filteredTrainers}
-          columns={columns}
-          filterColumn="name"
-        />
+        <DataTable data={filteredTrainers} columns={columns} filterColumn="name" />
       </div>
 
       {/* Mobile View */}
@@ -155,9 +146,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
           renderCard={(trainer) => (
             <div className="p-4">
               <h3 className="font-medium">{trainer.name}</h3>
-              <p className="text-sm text-gray-500">
-                Assigned Clients: {trainer.assignedClients}
-              </p>
+              <p className="text-sm text-gray-500">Assigned Clients: {trainer.assignedClients}</p>
               <p className="text-sm text-gray-500">Shift: {trainer.shift}</p>
             </div>
           )}

@@ -14,6 +14,7 @@ export function AuthError({ error, onDismiss }: AuthErrorProps) {
           <p className="text-sm text-red-700">{error}</p>
         </div>
         <button
+          type="button"
           onClick={onDismiss}
           className="ml-auto text-red-400 hover:text-red-500"
         >

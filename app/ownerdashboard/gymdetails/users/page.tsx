@@ -1,16 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  Users,
-  UserCheck,
-  ClockIcon as UserClock,
-  LucideIcon,
-} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { EnrollmentTable } from './enrollmenttable';
+import { type LucideIcon, UserCheck, ClockIcon as UserClock, Users } from 'lucide-react';
+import { useState } from 'react';
 import { EnrollmentCards } from './enrollmentcard';
-import { Enrollment } from './types';
+import { EnrollmentTable } from './enrollmenttable';
+import type { Enrollment } from './types';
 
 export default function GymManagement() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([
@@ -43,9 +38,7 @@ export default function GymManagement() {
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Gym Enrollment Management
-      </h1>
+      <h1 className="text-3xl font-bold text-center mb-8">Gym Enrollment Management</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
@@ -69,10 +62,7 @@ export default function GymManagement() {
       </div>
 
       <div className="hidden md:block">
-        <EnrollmentTable
-          enrollments={enrollments}
-          setEnrollments={setEnrollments}
-        />
+        <EnrollmentTable enrollments={enrollments} setEnrollments={setEnrollments} />
       </div>
 
       <div className="md:hidden">

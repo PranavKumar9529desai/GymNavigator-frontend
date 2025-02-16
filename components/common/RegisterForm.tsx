@@ -1,6 +1,6 @@
-"use client";
-import type { UserExistsFormat } from "@/app/(common)/actions/signup/SignUpWithCrendentails";
-import { UserExistsSA } from "@/app/(common)/actions/signup/SignUpWithCrendentails";
+'use client';
+import type { UserExistsFormat } from '@/app/(common)/actions/signup/SignUpWithCrendentails';
+import { UserExistsSA } from '@/app/(common)/actions/signup/SignUpWithCrendentails';
 import {
   Form,
   FormControl,
@@ -8,68 +8,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from "lucide-react";
-import { signIn } from "next-auth/react";
-import React, { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import FormError from "../ui/form-error";
-import GoogleButton from "../ui/googleButton";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import SignIn from "./Auth/Signin";
+} from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import React, { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import FormError from '../ui/form-error';
+import GoogleButton from '../ui/googleButton';
+import { Input } from '../ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import SignIn from './Auth/Signin';
 
 // type roleType = "owner" | "trainer" | "sales";
 // form schema
 const formSchema = z.object({
   email: z
     .string()
-    .email({ message: "Invalid email address." })
-    .max(40, { message: "Email must be at most 40 characters." }),
+    .email({ message: 'Invalid email address.' })
+    .max(40, { message: 'Email must be at most 40 characters.' }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." })
+    .min(6, { message: 'Password must be at least 6 characters.' })
     .regex(/[a-z]/, {
-      message: "Password must contain at least one lowercase letter.",
+      message: 'Password must contain at least one lowercase letter.',
     })
     .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter.",
+      message: 'Password must contain at least one uppercase letter.',
     })
-    .regex(/[0-9]/, { message: "Password must contain at least one number." })
+    .regex(/[0-9]/, { message: 'Password must contain at least one number.' })
     .regex(/[^a-zA-Z0-9]/, {
-      message: "Password must contain at least one special character.",
+      message: 'Password must contain at least one special character.',
     })
-    .max(40, { message: "Password must be at most 40 characters." }),
+    .max(40, { message: 'Password must be at most 40 characters.' }),
   name: z
     .string()
-    .min(4, { message: "Username must be at least 4 characters." })
-    .max(40, { message: "Username must be at most 40 characters." }),
-  role: z.enum(["owner", "trainer", "sales"], {
-    required_error: "Please select a role",
+    .min(4, { message: 'Username must be at least 4 characters.' })
+    .max(40, { message: 'Username must be at most 40 characters.' }),
+  role: z.enum(['owner', 'trainer', 'sales'], {
+    required_error: 'Please select a role',
   }),
 });
 
 export default function RegisterForm() {
-  const [error, seterror] = useState<string>("");
-  const [type, settype] = useState<"success" | "fail" | null>();
+  const [error, seterror] = useState<string>('');
+  const [type, settype] = useState<'success' | 'fail' | null>();
   const [ispending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      name: "",
+      email: '',
+      password: '',
+      name: '',
       role: undefined,
     },
   });
@@ -79,40 +73,36 @@ export default function RegisterForm() {
   } = form;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("form is submitted values", values);
+    console.log('form is submitted values', values);
     const { email, password, name, role } = values;
     startTransition(async () => {
-      const response: UserExistsFormat = await UserExistsSA(
-        email,
-        name,
-        password
-      );
+      const response: UserExistsFormat = await UserExistsSA(email, name, password);
       if (response?.msg && response?.user) {
-        settype("fail");
+        settype('fail');
         seterror(response.msg);
       } else {
-        settype("success");
-        seterror("User created Successfully");
-        await signIn("credentials", {
+        settype('success');
+        seterror('User created Successfully');
+        await signIn('credentials', {
           name,
           password,
           email,
           role,
         });
-        console.log("user is created and signed in", response);
+        console.log('user is created and signed in', response);
         // router.push("/selectgym");
       }
     });
   }
 
   async function handleGoogleSubmit() {
-    console.log("role from the form", form.getValues("role"));
+    console.log('role from the form', form.getValues('role'));
     startTransition(async () => {
-      const result = await signIn("google", {
+      const result = await signIn('google', {
         redirect: true,
-        redirectTo: "/selectrole",
+        redirectTo: '/selectrole',
       });
-      console.log("result from the google signin", result?.status);
+      console.log('result from the google signin', result?.status);
     });
   }
 
@@ -140,7 +130,7 @@ export default function RegisterForm() {
                       <div className="flex items-center space-x-2">
                         <User
                           className={`w-4 h-4 ${
-                            errors.name ? "text-destructive" : "text-primary/70"
+                            errors.name ? 'text-destructive' : 'text-primary/70'
                           }`}
                         />
                         <span>Username</span>
@@ -170,9 +160,7 @@ export default function RegisterForm() {
                         <div className="flex items-center space-x-2">
                           <Mail
                             className={`w-4 h-4 ${
-                              errors.email
-                                ? "text-destructive"
-                                : "text-primary/70"
+                              errors.email ? 'text-destructive' : 'text-primary/70'
                             }`}
                           />
                           <span>Email</span>
@@ -201,9 +189,7 @@ export default function RegisterForm() {
                         <div className="flex items-center space-x-2">
                           <Lock
                             className={`w-4 h-4 ${
-                              errors.password
-                                ? "text-destructive"
-                                : "text-primary/70"
+                              errors.password ? 'text-destructive' : 'text-primary/70'
                             }`}
                           />
                           <span>Password</span>
@@ -215,7 +201,7 @@ export default function RegisterForm() {
                             placeholder="••••••••"
                             {...field}
                             disabled={ispending}
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? 'text' : 'password'}
                             className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors pr-10"
                           />
                           <button
@@ -246,7 +232,7 @@ export default function RegisterForm() {
                       <div className="flex items-center space-x-2">
                         <UserRoundCogIcon
                           className={`w-4 h-4 ${
-                            errors.role ? "text-destructive" : "text-primary/70"
+                            errors.role ? 'text-destructive' : 'text-primary/70'
                           }`}
                         />
                         <span>Role</span>
@@ -263,16 +249,10 @@ export default function RegisterForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="z-50 bg-white">
-                        <SelectItem
-                          value="owner"
-                          className="bg-gray-50 hover:bg-gray-100"
-                        >
+                        <SelectItem value="owner" className="bg-gray-50 hover:bg-gray-100">
                           Gym Owner
                         </SelectItem>
-                        <SelectItem
-                          value="trainer"
-                          className="bg-gray-50 hover:bg-gray-100"
-                        >
+                        <SelectItem value="trainer" className="bg-gray-50 hover:bg-gray-100">
                           Trainer
                         </SelectItem>
                       </SelectContent>
@@ -293,7 +273,7 @@ export default function RegisterForm() {
                     <span>Registering...</span>
                   </div>
                 ) : (
-                  "Create Account"
+                  'Create Account'
                 )}
               </Button>
             </form>
@@ -302,7 +282,7 @@ export default function RegisterForm() {
             <FormError
               FormErrorProps={{
                 message: error,
-                type: type as "success" | "fail",
+                type: type as 'success' | 'fail',
               }}
             />
           ) : null}
@@ -311,18 +291,13 @@ export default function RegisterForm() {
               <span className="w-full border-t border-muted-foreground/20" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
+              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
             </div>
           </div>
           <GoogleButton handleSubmit={handleGoogleSubmit} />
           <div className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <a
-              href="/signin"
-              className=" hover:underline font-medium text-blue-600"
-            >
+            Already have an account?{' '}
+            <a href="/signin" className=" hover:underline font-medium text-blue-600">
               Sign In
             </a>
           </div>

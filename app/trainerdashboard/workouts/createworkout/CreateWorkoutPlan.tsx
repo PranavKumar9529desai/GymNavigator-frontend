@@ -1,27 +1,27 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { AnimatePresence, m } from 'framer-motion';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
-import { Plus, X, ChevronRight, ChevronLeft, Save } from 'lucide-react';
+"use client";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { createWorkoutPlan } from './PostCreatedWorkoutplan';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { AnimatePresence, m } from "framer-motion";
+import { ChevronLeft, ChevronRight, Plus, Save, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import {
+  DragDropContext,
+  Draggable,
+  type DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
+import { toast } from "sonner";
+import { createWorkoutPlan } from "./PostCreatedWorkoutplan";
 
 interface Exercise {
   name: string;
@@ -55,61 +55,61 @@ function isWorkoutPlanResponse(
   response: unknown
 ): response is WorkoutPlanResponse {
   return (
-    typeof response === 'object' &&
+    typeof response === "object" &&
     response !== null &&
-    'success' in response &&
-    'message' in response &&
-    typeof (response as WorkoutPlanResponse).success === 'boolean' &&
-    typeof (response as WorkoutPlanResponse).message === 'string'
+    "success" in response &&
+    "message" in response &&
+    typeof (response as WorkoutPlanResponse).success === "boolean" &&
+    typeof (response as WorkoutPlanResponse).message === "string"
   );
 }
 
 const daysOfWeek = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 const muscleGroups = [
-  'Chest',
-  'Back',
-  'Legs',
-  'Shoulders',
-  'Arms',
-  'Core',
-  'Full Body',
+  "Chest",
+  "Back",
+  "Legs",
+  "Shoulders",
+  "Arms",
+  "Core",
+  "Full Body",
 ];
 
 export default function CreateWorkoutPlan() {
   const router = useRouter();
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return parseInt(localStorage.getItem('workoutPlanStep') || '1');
+    if (typeof window !== "undefined") {
+      return Number.parseInt(localStorage.getItem("workoutPlanStep") || "1");
     }
     return 1;
   });
 
   const [planName, setPlanName] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('workoutPlanName') || '';
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("workoutPlanName") || "";
     }
-    return '';
+    return "";
   });
 
   const [planDescription, setPlanDescription] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('workoutPlanDescription') || '';
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("workoutPlanDescription") || "";
     }
-    return '';
+    return "";
   });
 
   const [schedules, setSchedules] = useState<DaySchedule[]>(() => {
-    if (typeof window !== 'undefined') {
-      const savedSchedules = localStorage.getItem('workoutSchedules');
+    if (typeof window !== "undefined") {
+      const savedSchedules = localStorage.getItem("workoutSchedules");
       return savedSchedules ? JSON.parse(savedSchedules) : [];
     }
     return [];
@@ -117,10 +117,10 @@ export default function CreateWorkoutPlan() {
 
   // Save to localStorage whenever data changes
   useEffect(() => {
-    localStorage.setItem('workoutPlanStep', currentStep.toString());
-    localStorage.setItem('workoutPlanName', planName);
-    localStorage.setItem('workoutPlanDescription', planDescription);
-    localStorage.setItem('workoutSchedules', JSON.stringify(schedules));
+    localStorage.setItem("workoutPlanStep", currentStep.toString());
+    localStorage.setItem("workoutPlanName", planName);
+    localStorage.setItem("workoutPlanDescription", planDescription);
+    localStorage.setItem("workoutSchedules", JSON.stringify(schedules));
   }, [currentStep, planName, planDescription, schedules]);
 
   const handleDragEnd = (result: DropResult) => {
@@ -153,24 +153,24 @@ export default function CreateWorkoutPlan() {
   // Add checkpoint saving logic
   const saveCheckpoint = (daySchedule: DaySchedule) => {
     const checkpoints = JSON.parse(
-      localStorage.getItem('workoutPlanCheckpoints') || '[]'
+      localStorage.getItem("workoutPlanCheckpoints") || "[]"
     );
     checkpoints.push({
       step: currentStep,
       schedule: daySchedule,
       timestamp: new Date().toISOString(),
     });
-    localStorage.setItem('workoutPlanCheckpoints', JSON.stringify(checkpoints));
-    toast.success('Progress saved');
+    localStorage.setItem("workoutPlanCheckpoints", JSON.stringify(checkpoints));
+    toast.success("Progress saved");
   };
 
   // Modify addExercise to save checkpoint when day is complete
   const addExercise = (day: string) => {
     const newExercise: Exercise = {
-      name: '',
+      name: "",
       sets: 3,
-      reps: '8-12',
-      description: '',
+      reps: "8-12",
+      description: "",
       order: schedules.find((s) => s.dayOfWeek === day)?.exercises?.length || 0,
     };
 
@@ -188,16 +188,15 @@ export default function CreateWorkoutPlan() {
         return current.map((schedule) =>
           schedule.dayOfWeek === day ? updatedSchedule : schedule
         );
-      } else {
-        const newSchedule = {
-          dayOfWeek: day,
-          muscleTarget: '',
-          duration: 60,
-          calories: 400,
-          exercises: [newExercise],
-        };
-        return [...current, newSchedule];
       }
+      const newSchedule = {
+        dayOfWeek: day,
+        muscleTarget: "",
+        duration: 60,
+        calories: 400,
+        exercises: [newExercise],
+      };
+      return [...current, newSchedule];
     });
   };
 
@@ -226,7 +225,7 @@ export default function CreateWorkoutPlan() {
     try {
       // Validate schedules data
       if (!schedules.length) {
-        toast.error('Please add at least one workout schedule');
+        toast.error("Please add at least one workout schedule");
         return;
       }
 
@@ -249,25 +248,25 @@ export default function CreateWorkoutPlan() {
       const response = await createWorkoutPlan(workoutPlanData);
 
       if (!isWorkoutPlanResponse(response)) {
-        throw new Error('Invalid response format from server');
+        throw new Error("Invalid response format from server");
       }
 
       if (response.success) {
         // Clear all stored data
-        localStorage.removeItem('workoutPlanCheckpoints');
-        localStorage.removeItem('workoutPlanStep');
-        localStorage.removeItem('workoutPlanName');
-        localStorage.removeItem('workoutPlanDescription');
-        localStorage.removeItem('workoutSchedules');
+        localStorage.removeItem("workoutPlanCheckpoints");
+        localStorage.removeItem("workoutPlanStep");
+        localStorage.removeItem("workoutPlanName");
+        localStorage.removeItem("workoutPlanDescription");
+        localStorage.removeItem("workoutSchedules");
 
         toast.success(response.message);
         // Optionally redirect to workout plans list
-        router.push('/trainerdashboard/workouts/assignworkout');
+        router.push("/trainerdashboard/workouts/assignworkout");
       } else {
         toast.error(response.message);
       }
     } catch (error) {
-      toast.error('Error submitting workout plan');
+      toast.error("Error submitting workout plan");
       console.error(error);
     }
   };
@@ -287,15 +286,15 @@ export default function CreateWorkoutPlan() {
             <div
               key={step}
               className={`flex items-center ${
-                currentStep >= step ? 'text-blue-600' : 'text-gray-400'
+                currentStep >= step ? "text-blue-600" : "text-gray-400"
               }`}
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 
                   ${
                     currentStep >= step
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-gray-300'
+                      ? "border-blue-600 bg-blue-50"
+                      : "border-gray-300"
                   }`}
               >
                 {step}
@@ -303,7 +302,7 @@ export default function CreateWorkoutPlan() {
               {step < 2 && (
                 <div
                   className={`flex-1 h-1 mx-4 ${
-                    currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
+                    currentStep > step ? "bg-blue-600" : "bg-gray-300"
                   }`}
                 />
               )}
@@ -324,20 +323,22 @@ export default function CreateWorkoutPlan() {
               <h2 className="text-2xl font-bold">Create Workout Plan</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label htmlFor="planName" className="block text-sm font-medium mb-2">
                     Plan Name
                   </label>
                   <Input
+                    id="planName"
                     value={planName}
                     onChange={(e) => setPlanName(e.target.value)}
                     placeholder="e.g., Beginner Strength Training"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label htmlFor="planDescription" className="block text-sm font-medium mb-2">
                     Description
                   </label>
                   <Textarea
+                    id="planDescription"
                     value={planDescription}
                     onChange={(e) => setPlanDescription(e.target.value)}
                     placeholder="Describe the workout plan..."
@@ -363,7 +364,7 @@ export default function CreateWorkoutPlan() {
                   <Card
                     key={day}
                     className={`p-4 cursor-pointer transition-all ${
-                      selectedDay === day ? 'ring-2 ring-blue-500' : ''
+                      selectedDay === day ? "ring-2 ring-blue-500" : ""
                     }`}
                     onClick={() => setSelectedDay(day)}
                   >
@@ -408,7 +409,7 @@ export default function CreateWorkoutPlan() {
                               schedule.dayOfWeek === selectedDay
                                 ? {
                                     ...schedule,
-                                    duration: parseInt(e.target.value),
+                                    duration: Number.parseInt(e.target.value),
                                   }
                                 : schedule
                             )
@@ -425,7 +426,7 @@ export default function CreateWorkoutPlan() {
                               schedule.dayOfWeek === selectedDay
                                 ? {
                                     ...schedule,
-                                    calories: parseInt(e.target.value),
+                                    calories: Number.parseInt(e.target.value),
                                   }
                                 : schedule
                             )
@@ -445,7 +446,7 @@ export default function CreateWorkoutPlan() {
                             .find((s) => s.dayOfWeek === selectedDay)
                             ?.exercises.map((exercise, index) => (
                               <Draggable
-                                key={index}
+                                key={`${selectedDay}-exercise-${exercise.name}-${index}`}
                                 draggableId={`exercise-${index}`}
                                 index={index}
                               >
@@ -465,7 +466,7 @@ export default function CreateWorkoutPlan() {
                                             updateExercise(
                                               selectedDay,
                                               index,
-                                              'name',
+                                              "name",
                                               e.target.value
                                             )
                                           }
@@ -480,8 +481,10 @@ export default function CreateWorkoutPlan() {
                                                 updateExercise(
                                                   selectedDay,
                                                   index,
-                                                  'sets',
-                                                  parseInt(e.target.value)
+                                                  "sets",
+                                                  Number.parseInt(
+                                                    e.target.value
+                                                  )
                                                 )
                                               }
                                             />
@@ -494,7 +497,7 @@ export default function CreateWorkoutPlan() {
                                                 updateExercise(
                                                   selectedDay,
                                                   index,
-                                                  'reps',
+                                                  "reps",
                                                   e.target.value
                                                 )
                                               }
@@ -508,7 +511,7 @@ export default function CreateWorkoutPlan() {
                                             updateExercise(
                                               selectedDay,
                                               index,
-                                              'description',
+                                              "description",
                                               e.target.value
                                             )
                                           }

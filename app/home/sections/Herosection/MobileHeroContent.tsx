@@ -45,8 +45,8 @@ export default function Herosection() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="text-base text-gray-300 leading-relaxed mt-4 px-4"
               >
-                Streamline operations, enhance member experience, and drive
-                growth with our sophisticated management suite.
+                Streamline operations, enhance member experience, and drive growth with our
+                sophisticated management suite.
               </m.p>
             </div>
 
@@ -113,7 +113,7 @@ export default function Herosection() {
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(3)].map((_, i) => (
               <m.div
-                key={`desktop-float-${i}`}
+                key={`desktop-float-${i as number}`}
                 className="absolute"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{

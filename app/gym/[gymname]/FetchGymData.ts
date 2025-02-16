@@ -7,14 +7,12 @@ interface GymDataType {
   address: string;
 }
 
-export default async function FetchGymData(
-  gymname: string
-): Promise<GymDataType | null> {
+export default async function FetchGymData(gymname: string): Promise<GymDataType | null> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/public/gym/${gymname}`,
       {
-        next: { revalidate: 3600 }
+        next: { revalidate: 3600 },
       }
     );
 

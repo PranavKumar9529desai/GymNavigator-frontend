@@ -1,5 +1,5 @@
-import { InfiniteMovingCards } from './InfiniteMovingCards';
 import { Sparkles } from 'lucide-react';
+import { InfiniteMovingCards } from './InfiniteMovingCards';
 
 const profileAvatarSrc =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iIzFFNDBBRiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTUiIHI9IjciIGZpbGw9IiM2MEE1RkEiLz48cGF0aCBkPSJNOCAzNS41QzggMzUuNSAxMSAyNSAyMCAyNUMyOSAyNSAzMiAzNS41IDMyIDM1LjUiIHN0cm9rZT0iIzYwQTVGQSIgc3Ryb2tlV2lkdGg9IjMiLz48L3N2Zz4=';
@@ -65,26 +65,20 @@ export default function TestimonialsSection() {
         <div className="text-center mb-10 sm:mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
-            <span className="text-xs sm:text-sm text-blue-400">
-              Success Stories
-            </span>
+            <span className="text-xs sm:text-sm text-blue-400">Success Stories</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 mb-4 sm:mb-6">
             Transforming Fitness Business Across India
           </h2>
           <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto px-4">
-            Join the community of successful gym owners who revolutionized their
-            business with GymNavigator
+            Join the community of successful gym owners who revolutionized their business with
+            GymNavigator
           </p>
         </div>
 
         <div className="relative h-[400px] sm:h-[500px] w-full overflow-hidden rounded-lg sm:rounded-xl">
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20 pointer-events-none" />
-          <InfiniteMovingCards
-            items={testimonials}
-            direction="right"
-            speed="slow"
-          />
+          <InfiniteMovingCards items={testimonials} direction="right" speed="slow" />
         </div>
       </div>
     </section>

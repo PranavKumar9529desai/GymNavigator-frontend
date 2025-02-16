@@ -23,8 +23,8 @@ const CtaSection = () => {
             Transform Your Gym Today
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Join thousands of successful gym owners who have revolutionized
-            their business with GymDominator
+            Join thousands of successful gym owners who have revolutionized their business with
+            GymDominator
           </p>
         </m.div>
 
@@ -48,7 +48,7 @@ const CtaSection = () => {
             },
           ].map((feature, index) => (
             <m.div
-              key={index}
+              key={index as number}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -56,9 +56,7 @@ const CtaSection = () => {
               className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
             >
               <feature.icon className="w-12 h-12 text-blue-400 mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {feature.title}
-              </h3>
+              <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
               <p className="text-gray-400">{feature.description}</p>
             </m.div>
           ))}

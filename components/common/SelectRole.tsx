@@ -4,12 +4,7 @@ import SignupWithGoogle from '@/app/(common)/actions/signup/SignupWithGoogle';
 import type { SignupWithGoogleReturnType } from '@/app/(common)/actions/signup/SignupWithGoogle';
 import type { Rolestype } from '@/app/types/next-auth';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useSession } from '@/node_modules/next-auth/react';
 import { AnimatePresence, m } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
@@ -45,22 +40,17 @@ export default function SelectRole() {
     setLoading(true);
     console.log('role is this ', role);
     try {
-      await new Promise(async (resolve) => {
-        if (session?.user?.name && session?.user?.email) {
-          const response: SignupWithGoogleReturnType = await SignupWithGoogle(
-            session?.user?.name,
-            session?.user?.email,
-            role as 'owner' | 'trainer' | 'sales'
-          );
-          if (response?.name && response.role) {
-            const result = await updateSessionWithRole(
-              response.role as Rolestype,
-              update
-            );
-            resolve(result);
-          }
+      if (session?.user?.name && session?.user?.email) {
+        const response: SignupWithGoogleReturnType = await SignupWithGoogle(
+          session?.user?.name,
+          session?.user?.email,
+          role as 'owner' | 'trainer' | 'sales'
+        );
+
+        if (response?.name && response.role) {
+          await updateSessionWithRole(response.role as Rolestype, update);
         }
-      });
+      }
 
       router.push(`/${role}dashboard`);
     } catch (error) {
@@ -99,9 +89,7 @@ export default function SelectRole() {
                   onClick={() => handleRoleSelect(role.value)}
                 >
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                      {role.title}
-                    </h3>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{role.title}</h3>
                     <p className="text-gray-600">{role.description}</p>
                   </CardContent>
                 </Card>

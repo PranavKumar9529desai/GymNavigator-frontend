@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -11,15 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { User, Mail, Lock, Briefcase } from 'lucide-react';
+import { Briefcase, Lock, Mail, User } from 'lucide-react';
+import { useState } from 'react';
 
 export default function SignupForm() {
   const [name, setName] = useState('');
@@ -52,9 +46,7 @@ export default function SignupForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Sign up
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">Sign up</CardTitle>
         <CardDescription className="text-center">
           Create your account to get started
         </CardDescription>
@@ -118,22 +110,20 @@ export default function SignupForm() {
             </div>
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
-          <Button
-            type="submit"
-            className="w-full bg-primary hover:bg-primary/90"
-          >
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
             Sign Up
           </Button>
         </form>
         <div className="mt-6">
           <Separator className="my-4" />
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleGoogleSignup}
-          >
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+          <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignup}>
+            <svg
+              className="w-5 h-5 mr-2"
+              viewBox="0 0 24 24"
+              aria-label="Google logo"
+              aria-labelledby="google-logo-title"
+            >
+              <title id="google-logo-title">Google logo</title>
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"

@@ -38,7 +38,7 @@ export const menuItems: MenuItem[] = [
     subItems: [
       {
         name: 'View Details',
-        link: "/gymdetails/viewgymdetails",
+        link: '/gymdetails/viewgymdetails',
         label: 'viewGymDetails',
       },
       // {
@@ -191,11 +191,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col bg-gray-900 text-white w-64 h-screen  ">
       <div className="px-4 w-full flex items-center justify-center ">
-        <Image
-          src={IconImage}
-          alt="Gym Manager Icon"
-          className="rounded-full "
-        />
+        <Image src={IconImage} alt="Gym Manager Icon" className="rounded-full " />
       </div>
 
       <nav className="flex-grow px-4 py-2">
@@ -203,6 +199,7 @@ export default function Sidebar() {
           {menuItems.map((item) => (
             <li key={item.name} className="whitespace-nowrap">
               <button
+                type="button"
                 onClick={() => handleItemClick(item)}
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                   ${
@@ -225,6 +222,7 @@ export default function Sidebar() {
                   {item.subItems.map((subItem) => (
                     <li key={subItem.name}>
                       <button
+                        type="button"
                         onClick={() => handleSubItemClick(subItem, item.label)}
                         className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                           ${
@@ -243,9 +241,9 @@ export default function Sidebar() {
           ))}
         </ul>
       </nav>
-
       <div className="p-4">
         <button
+          type="button"
           className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
           onClick={handleLogout}
         >

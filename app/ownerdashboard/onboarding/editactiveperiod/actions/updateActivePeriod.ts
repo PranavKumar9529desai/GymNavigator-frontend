@@ -1,6 +1,6 @@
 'use server';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 
 interface UpdateUserResponseType {
   msg: string;
@@ -30,13 +30,15 @@ export const UpdateUserActivePeriod = async ({
 }) => {
   const OwnerAxios = await OwnerReqConfig();
   try {
-    const response: AxiosResponse<UpdateUserResponseType> =
-      await OwnerAxios.post('/updateuservalidity', {
+    const response: AxiosResponse<UpdateUserResponseType> = await OwnerAxios.post(
+      '/updateuservalidity',
+      {
         userId,
         startDate,
         endDate,
         shift,
-      });
+      }
+    );
     console.log(response.data);
     return response.data;
   } catch (error) {

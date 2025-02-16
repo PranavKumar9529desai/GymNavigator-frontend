@@ -9,18 +9,11 @@ export default function NoGymDetails() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6 w-full text-center">
-        Gym Details
-      </h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6 w-full text-center">Gym Details</h1>
       <div className="relative h-[500px] w-full overflow-hidden rounded-lg bg-white shadow-lg">
         {/* Blurred Background Image */}
         <div className="absolute inset-0">
-          <Image
-            src={GymImage}
-            alt="Gym Preview"
-            fill
-            className="object-cover blur-[2px]"
-          />
+          <Image src={GymImage} alt="Gym Preview" fill className="object-cover blur-[2px]" />
           {/* Add dark overlay */}
           <div className="absolute inset-0 bg-black/50" />
         </div>
@@ -35,8 +28,7 @@ export default function NoGymDetails() {
             Your Gym Profile Awaits
           </h2>
           <p className="text-lg mb-8 text-center max-w-md text-white/90">
-            Create your gym profile to manage members, track progress, and grow
-            your business
+            Create your gym profile to manage members, track progress, and grow your business
           </p>
           <Button
             onClick={() => router.push('/ownerdashboard/gymdetails/creategym')}

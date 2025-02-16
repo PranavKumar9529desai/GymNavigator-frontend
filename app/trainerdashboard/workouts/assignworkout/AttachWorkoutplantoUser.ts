@@ -33,8 +33,6 @@ export async function attachWorkoutPlanToUser(
     return response.data;
   } catch (error) {
     console.error('Error assigning workout plan:', error);
-    throw new Error(
-      error instanceof Error ? error.message : 'Failed to assign workout plan'
-    );
+    throw new Error(error instanceof Error ? error.message : 'Failed to assign workout plan');
   }
 }

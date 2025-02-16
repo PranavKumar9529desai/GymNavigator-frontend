@@ -1,6 +1,6 @@
-"use client";
-import { Card } from "@/components/ui/card";
-import { ArrowRight, Building2 } from "lucide-react";
+'use client';
+import { Card } from '@/components/ui/card';
+import { ArrowRight, Building2 } from 'lucide-react';
 
 interface ErrorScreenProps {
   error?: string;
@@ -14,12 +14,9 @@ export default function ErrorScreen({ error }: ErrorScreenProps) {
           <Building2 className="w-8 h-8 text-red-500" />
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-800">
-          Unable to Load Dashboard
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800">Unable to Load Dashboard</h2>
         <p className="text-gray-600">
-          {error ||
-            "There was an error loading your dashboard data. Please try again later."}
+          {error || 'There was an error loading your dashboard data. Please try again later.'}
         </p>
 
         <button

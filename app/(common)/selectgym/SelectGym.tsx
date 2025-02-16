@@ -1,18 +1,13 @@
 'use client';
-import { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Search, Building2, MapPin } from 'lucide-react';
-import Swal from 'sweetalert2';
-import { useRouter } from 'next/navigation';
-import { useSetRecoilState } from 'recoil';
 import { GymAtom } from '@/app/state/Atoms/gymAtom';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Building2, MapPin, Search } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import Swal from 'sweetalert2';
 
 export interface gym {
   id: string;
@@ -101,9 +96,7 @@ export default function SelectGym({ gyms }: { gyms: gym[] }) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-2xl font-bold text-center">
-            Select Your Gym
-          </DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center">Select Your Gym</DialogTitle>
         </DialogHeader>
 
         <div className="p-6">
@@ -126,26 +119,26 @@ export default function SelectGym({ gyms }: { gyms: gym[] }) {
             ) : (
               <>
                 {filteredGyms.map((gym) => (
-                  <div
+                  <button
+                    type="button"
                     key={gym.id}
                     onClick={() => handleGymSelect(gym)}
-                    className="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-500 transition-all cursor-pointer shadow-sm hover:shadow-md"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleGymSelect(gym);
+                      }
+                    }}
+                    className="w-full text-left flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-500 transition-all cursor-pointer shadow-sm hover:shadow-md"
                   >
                     {/* Gym Image */}
                     <div className="w-16 h-16 relative rounded-lg overflow-hidden flex-shrink-0">
-                      <Image
-                        src={gym.img}
-                        alt={gym.name}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={gym.img} alt={gym.name} fill className="object-cover" />
                     </div>
 
                     {/* Gym Details */}
                     <div className="ml-4 flex-grow">
-                      <h3 className="font-semibold text-gray-900 text-lg mb-1">
-                        {gym.name}
-                      </h3>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-1">{gym.name}</h3>
                       <div className="flex items-center text-gray-500 text-sm">
                         <Building2 className="h-4 w-4 mr-1" />
                         <span>Branch</span>
@@ -153,7 +146,7 @@ export default function SelectGym({ gyms }: { gyms: gym[] }) {
                         <span>Location</span>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
 
                 {/* No Results Message */}

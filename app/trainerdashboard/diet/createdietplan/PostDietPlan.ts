@@ -1,6 +1,6 @@
 'use server';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 
 export interface MealIngredientInput {
   name: string;
@@ -55,9 +55,8 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
         message: 'Diet plan created successfully',
         data: response.data.dietPlan,
       };
-    } else {
-      throw new Error(response.data.msg || 'Failed to create diet plan');
     }
+    throw new Error(response.data.msg || 'Failed to create diet plan');
   } catch (error: unknown) {
     const axiosError = error as AxiosError<{ msg: string }>;
     console.error('Error creating diet plan:', axiosError);

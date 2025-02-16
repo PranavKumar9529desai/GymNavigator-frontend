@@ -1,5 +1,5 @@
 // next-auth.d.ts
-import { DefaultSession } from 'next-auth';
+import type { DefaultSession } from 'next-auth';
 
 export type Rolestype = 'owner' | 'trainer';
 

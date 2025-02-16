@@ -1,7 +1,7 @@
 'use client';
-import React from 'react';
-import Image from 'next/image';
 import GymImage from '@/app/assests/gymd.webp';
+import Image from 'next/image';
+import React from 'react';
 interface LoaderProps {
   size?: number;
   glowColor?: string;

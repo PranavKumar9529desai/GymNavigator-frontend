@@ -1,3 +1,7 @@
 export default function page() {
-  return <div></div>;
+  return (
+    <div>
+      <h1>Assign Custom Workouts</h1>
+    </div>
+  );
 }

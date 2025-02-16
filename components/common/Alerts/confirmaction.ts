@@ -1,6 +1,6 @@
 // components/common/alerts/confirmAction.ts
 
-import Swal, { SweetAlertResult } from 'sweetalert2';
+import Swal, { type SweetAlertResult } from 'sweetalert2';
 
 /**
  * Displays a confirmation dialog with customizable title and text.
@@ -9,10 +9,7 @@ import Swal, { SweetAlertResult } from 'sweetalert2';
  * @param text - The message/body of the confirmation dialog.
  * @returns A promise that resolves to `true` if confirmed, otherwise `false`.
  */
-export const confirmAction = async (
-  title: string,
-  text: string
-): Promise<boolean> => {
+export const confirmAction = async (title: string, text: string): Promise<boolean> => {
   const result: SweetAlertResult = await Swal.fire({
     title,
     text,
