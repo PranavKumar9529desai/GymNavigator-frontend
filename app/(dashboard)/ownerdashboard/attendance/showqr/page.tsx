@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import FetchGymDetailsSA from '../../(common)/GetGymDetails';
-import { GetAttendanceQrData } from './GetAttendanceQrData';
-import GymQRCode from './QrCode';
+import FetchGymDetailsSA from "@/app/(dashboard)/ownerdashboard/(common)/GetGymDetails";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { GetAttendanceQrData } from "./GetAttendanceQrData";
+import GymQRCode from "./QrCode";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function AttendanceComponent() {
   // First check if gym exists
@@ -18,7 +18,10 @@ export default async function AttendanceComponent() {
           <p className="text-gray-600">Please create your gym profile first</p>
         </div>
         <Link href="/ownerdashboard/gymdetails/viewgymdetails">
-          <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Create Gym Profile
           </Button>
         </Link>

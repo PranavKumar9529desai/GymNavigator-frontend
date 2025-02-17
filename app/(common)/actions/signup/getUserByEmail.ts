@@ -1,5 +1,5 @@
-'use server';
-import axios, { type AxiosResponse } from 'axios';
+"use server";
+import axios, { type AxiosResponse } from "axios";
 
 interface MinimalGymInfo {
   id: number;
@@ -25,13 +25,15 @@ interface LoginResponse {
   role?: string;
 }
 
-export default async function getUserByEmail(email: string): Promise<userType | false> {
+export default async function getUserByEmail(
+  email: string
+): Promise<userType | false> {
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/login`,
       { email },
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
 
@@ -47,7 +49,7 @@ export default async function getUserByEmail(email: string): Promise<userType | 
         }
       : false;
   } catch (error) {
-    console.log('error getting user by email', error);
+    console.log("error getting user by email", error);
     return false;
   }
 }

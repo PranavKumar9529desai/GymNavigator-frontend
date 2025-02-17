@@ -1,6 +1,6 @@
 'use server';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
-import { OwnerReqConfig } from '../../../../lib/AxiosInstance/ownerAxios';
 
 interface responseType {
   gymname: string;

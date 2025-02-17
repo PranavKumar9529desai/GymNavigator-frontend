@@ -1,6 +1,6 @@
 'use client';
 
-import { UpdateUserActivePeriod } from '@/app/ownerdashboard/onboarding/editactiveperiod/actions/updateActivePeriod';
+import { UpdateUserActivePeriod } from '@/app/(dashboard)/ownerdashboard/onboarding/editactiveperiod/actions/updateActivePeriod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';

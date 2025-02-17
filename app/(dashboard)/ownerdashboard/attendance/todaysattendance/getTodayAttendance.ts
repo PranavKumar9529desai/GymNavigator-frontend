@@ -1,4 +1,4 @@
-import { OwnerReqConfig } from '../../../../lib/AxiosInstance/ownerAxios';
+import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 
 interface AttendanceUser {
   id: number;
