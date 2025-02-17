@@ -3,113 +3,32 @@ import IconImage from "@/app/assests/gym-manager.webp";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { signOut } from "@/node_modules/next-auth/react";
-import {
-  CalendarCheck,
-  ChevronDown,
-  ChevronRight,
-  Dumbbell,
-  LogOut,
-  Users, // Add Users icon import
-  UtensilsCrossedIcon,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Swal from "sweetalert2";
-
-interface MenuItem {
-  name: string;
-  icon: React.ElementType;
-  label: string;
-  link: string;
-  subItems?: { name: string; label: string; link: string }[];
-}
-
-export const menuItems: MenuItem[] = [
-  {
-    name: "Assigned Users",
-    label: "assignedusers",
-    icon: Users,
-    link: "/trainerdashboard/assignedusers",
-  },
-  {
-    name: "Workouts",
-    label: "workouts",
-    icon: Dumbbell,
-    link: "/trainerdashboard/workouts",
-    subItems: [
-      {
-        name: "Create Workouts",
-        label: "createworkout",
-        link: "/trainerdashboard/workouts/createworkout",
-      },
-      {
-        name: "Assign Workout",
-        label: "assignworkout",
-        link: "/trainerdashboard/workouts/assignworkout",
-      },
-    ],
-  },
-  {
-    name: "Diet",
-    label: "diet",
-    icon: UtensilsCrossedIcon,
-    link: "/trainerdashboard/diet",
-    subItems: [
-      {
-        name: "Create Diet plan",
-        label: "createdietplan",
-        link: "/trainerdashboard/diet/createdietplan",
-      },
-      {
-        name: "Assign Diet plan",
-        label: "assigndietplan",
-        link: "/trainerdashboard/diet/assigndietplan",
-      },
-    ],
-  },
-  {
-    name: "Attendance",
-    icon: CalendarCheck,
-    label: "attendance",
-    link: "/trainerdashboard/attendance",
-    subItems: [
-      {
-        name: "Today's Attendance",
-        label: "todaysattendance",
-        link: "/trainerdashboard/attendance/todaysattendance",
-      },
-      {
-        name: "Show QR",
-        label: "showqr",
-        link: "/trainerdashboard/attendance/showqr",
-      },
-    ],
-  },
-];
+import type { MenuItem, SubItem } from "./menuItems";
+import { menuItems } from "./menuItems";
 
 export default function SideBar() {
-  const [activePage, setActivePage] = useState<string>("Gym Details");
+  const [activePage, setActivePage] = useState<string>("assignedusers");
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
   const handleItemClick = (item: MenuItem) => {
     if (item.subItems) {
-      // Only toggle the menu if it has subitems
       setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
     } else {
-      // If no subitems, navigate directly
       setActivePage(item.label);
-      router.push(item.link);
+      router.push(item.link as string);
     }
   };
 
-  const handleSubItemClick = (
-    subItem: { name: string; label: string; link: string }
-  ) => {
-    event?.stopPropagation(); // Prevent event bubbling
+  const handleSubItemClick = (subItem: SubItem) => {
+    event?.stopPropagation();
     setActivePage(subItem.label);
-    router.push(subItem.link); // Use the full link from subItem
+    router.push(subItem.link);
   };
 
   const isActiveParent = (item: MenuItem) => {
@@ -152,21 +71,13 @@ export default function SideBar() {
 
     if (result.isConfirmed) {
       try {
-        await signOut({ redirect: false });
-        await Swal.fire({
-          title: "See you soon!",
-          text: "You have been successfully logged out",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-          backdrop: `
-            rgba(0,0,0,0.4)
-            url("/images/waving-hand.gif")
-            right top
-            no-repeat
-          `,
+        await signOut({
+          callbackUrl: "/signin",
+          redirect: false,
         });
-        router.push("/signin");
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "/signin";
       } catch (error) {
         Swal.fire({
           title: "Error!",
@@ -181,12 +92,8 @@ export default function SideBar() {
 
   return (
     <div className="flex flex-col bg-slate-900 text-white w-64 h-screen">
-      <div className="px-4 w-full flex items-center justify-center ">
-        <Image
-          src={IconImage}
-          alt="Gym Manager Icon"
-          className="rounded-full "
-        />
+      <div className="px-4 w-full flex items-center justify-center">
+        <Image src={IconImage} alt="Gym Manager Icon" className="rounded-full" />
       </div>
 
       <ScrollArea className="flex-grow">
@@ -203,13 +110,13 @@ export default function SideBar() {
                   }`}
                   onClick={() => handleItemClick(item)}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
+                  <item.icon className="w-6 h-6 mr-3" />
                   <span>{item.name}</span>
                   {item.subItems &&
                     (openMenus[item.label] ? (
-                      <ChevronDown className="w-5 h-5 ml-auto" />
+                      <ChevronDown className="w-6 h-6 ml-auto" />
                     ) : (
-                      <ChevronRight className="w-5 h-5 ml-auto" />
+                      <ChevronRight className="w-6 h-6 ml-auto" />
                     ))}
                 </Button>
                 {item.subItems && openMenus[item.label] && (
@@ -243,7 +150,7 @@ export default function SideBar() {
           className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
           onClick={handleLogout}
         >
-          <LogOut className="w-5 h-5 mr-3" />
+          <LogOut className="w-6 h-6 mr-3" />
           <span>Logout</span>
         </button>
       </div>

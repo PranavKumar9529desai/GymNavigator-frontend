@@ -4,16 +4,18 @@ import Sidebar from './(common)/components/sidebar';
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="flex ">
-        <div className="hidden md:block h-screen ">
+      <div className="flex">
+        <div className="hidden md:block h-screen">
           <Sidebar />
         </div>
 
         <div className="block lg:hidden">
           <BottomNavigation />
         </div>
-        {/* another componenth */}
-        <div className="w-full h-[85vh] md:h-screen overflow-auto  ">{children}</div>
+        {/* Modified scroll container */}
+        <div className="w-full h-[95vh] md:h-screen overflow-y-auto relative">
+          <div className="min-h-[calc(100vh-4rem)]">{children}</div>
+        </div>
       </div>
     </>
   );
