@@ -66,7 +66,7 @@ export default function BottomNavigation({
           "supports-[height:100dvh]:bottom-[env(safe-area-inset-bottom)]"
         )}
       >
-        <div className="flex justify-around items-center h-14 px-2 max-w-md mx-auto">
+        <div className="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = isActiveRoute(item);
@@ -76,23 +76,23 @@ export default function BottomNavigation({
                 type="button"
                 key={item.label}
                 className={cn(
-                  "relative flex flex-col items-center justify-center w-14 h-14 px-1",
+                  "relative flex flex-col items-center justify-center w-16 h-16 px-1",
                   "hover:opacity-80 transition-all duration-200"
                 )}
                 onClick={() => handleNavClick(item)}
                 onKeyDown={(e) => e.key === "Enter" && handleNavClick(item)}
                 aria-label={item.name}
               >
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center space-y-1">
                   <Icon
                     className={cn(
-                      "h-5 w-5 transition-colors duration-200 mb-1",
+                      "h-6 w-6 transition-colors duration-200",
                       isActive ? "text-blue-600" : "text-gray-400"
                     )}
                   />
                   <span
                     className={cn(
-                      "text-[10px] leading-none transition-colors duration-200 max-w-full truncate",
+                      "text-xs leading-none transition-colors duration-200 max-w-full truncate",
                       isActive ? "text-blue-600 font-medium" : "text-gray-500"
                     )}
                   >
