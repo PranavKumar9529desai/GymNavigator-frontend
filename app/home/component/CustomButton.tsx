@@ -18,7 +18,7 @@ export default function CustomButton({ className = '', text = 'Get Started' }: C
     setIsLoading(true);
 
     if (status === 'authenticated' && session?.user?.role) {
-      router.push(`/${session.user.role}dashboard`);
+      router.push(`/dashboard/${session.user.role}`);
     } else {
       router.push('/signin');
     }
