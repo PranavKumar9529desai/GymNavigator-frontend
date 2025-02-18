@@ -49,7 +49,7 @@ interface UserWorkoutAssignmentProps {
 // Update the Select component in the columns definition to use workoutPlans
 const createColumns = (
   workoutPlans: WorkoutPlan[],
-  handleWorkoutAssignment: (userId: string, workoutPlanId: string) => Promise<void> // Changed userId to string
+  handleWorkoutAssignment: (userId: string, workoutPlanId: string) => Promise<void>, // Changed userId to string
 ): ColumnDef<UserType>[] => [
   {
     accessorKey: 'name',
@@ -133,7 +133,7 @@ export default function UserWorkoutAssignment({
   const [searchTerm, setSearchTerm] = useState('');
   const [genderFilter, setGenderFilter] = useState<'Male' | 'Female' | 'All'>('All');
   const [assignmentFilter, setAssignmentFilter] = useState<'all' | 'assigned' | 'unassigned'>(
-    'all'
+    'all',
   );
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
@@ -156,8 +156,8 @@ export default function UserWorkoutAssignment({
                   activeWorkoutPlanName: newPlan?.name || '',
                   hasActiveWorkoutPlan: true,
                 }
-              : user
-          )
+              : user,
+          ),
         );
 
         toast.success(
@@ -166,7 +166,7 @@ export default function UserWorkoutAssignment({
             : `Workout plan "${newPlan?.name}" assigned successfully`,
           {
             description: "The user's workout plan has been updated.",
-          }
+          },
         );
       } catch (error) {
         console.error('Error assigning workout plan:', error);
@@ -175,12 +175,12 @@ export default function UserWorkoutAssignment({
         });
       }
     },
-    [Users, workoutPlans]
+    [Users, workoutPlans],
   );
 
   const columns = useMemo(
     () => createColumns(workoutPlans, handleWorkoutAssignment),
-    [handleWorkoutAssignment, workoutPlans]
+    [handleWorkoutAssignment, workoutPlans],
   );
 
   // Helper function to get icon component
@@ -198,7 +198,7 @@ export default function UserWorkoutAssignment({
         (genderFilter === 'All' || user.gender === genderFilter) &&
         (assignmentFilter === 'all' ||
           (assignmentFilter === 'assigned' && user.hasActiveWorkoutPlan) ||
-          (assignmentFilter === 'unassigned' && !user.hasActiveWorkoutPlan))
+          (assignmentFilter === 'unassigned' && !user.hasActiveWorkoutPlan)),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, genderFilter, assignmentFilter, Users]);

@@ -18,7 +18,7 @@ export const GetOnBoardingUser = async () => {
   const ownerAxios = await OwnerReqConfig();
   try {
     const response: AxiosResponse<OnBordingUserResponse> = await ownerAxios.get(
-      '/onboarding/onbordingusers'
+      '/onboarding/onbordingusers',
     );
 
     const data = response.data;

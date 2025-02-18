@@ -13,7 +13,7 @@ export default async function FetchGymData(gymname: string): Promise<GymDataType
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/public/gym/${gymname}`,
       {
         next: { revalidate: 3600 },
-      }
+      },
     );
 
     if (!response.ok) {

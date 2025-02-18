@@ -21,14 +21,14 @@ export default {
         role: {},
       },
       async authorize(
-        credentials: Partial<Record<'name' | 'email' | 'password' | 'role', unknown>>
+        credentials: Partial<Record<'name' | 'email' | 'password' | 'role', unknown>>,
       ): Promise<User | null> {
         if (!credentials?.email || !credentials?.password) {
           throw new Error(
             JSON.stringify({
               message: 'Email and password are required',
               error: 'INVALID_CREDENTIALS',
-            })
+            }),
           );
         }
         console.log('credentials are ', credentials);
@@ -59,7 +59,7 @@ export default {
                 JSON.stringify({
                   message: 'User not found',
                   error: 'USER_NOT_FOUND',
-                })
+                }),
               );
             }
 
@@ -78,7 +78,7 @@ export default {
               JSON.stringify({
                 message: 'Invalid password',
                 error: 'INVALID_PASSWORD',
-              })
+              }),
             );
           }
 
@@ -89,7 +89,7 @@ export default {
                 JSON.stringify({
                   message: 'Role and name are required for signup',
                   error: 'INVALID_SIGNUP_DATA',
-                })
+                }),
               );
             }
 
@@ -98,7 +98,7 @@ export default {
                 JSON.stringify({
                   message: 'User already exists',
                   error: 'USER_EXISTS',
-                })
+                }),
               );
             }
 
@@ -115,7 +115,7 @@ export default {
               JSON.stringify({
                 message: 'Failed to create account',
                 error: 'SIGNUP_FAILED',
-              })
+              }),
             );
           }
         }
@@ -124,7 +124,7 @@ export default {
           JSON.stringify({
             message: 'Invalid credentials',
             error: 'INVALID_CREDENTIALS',
-          })
+          }),
         );
       },
     }),

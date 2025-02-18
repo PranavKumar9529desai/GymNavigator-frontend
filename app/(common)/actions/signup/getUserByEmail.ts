@@ -28,11 +28,11 @@ interface LoginResponse {
 export default async function getUserByEmail(email: string): Promise<userType | false> {
   try {
     const response: AxiosResponse<LoginResponse> = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/login`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/isexist`,
       { email },
       {
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
     );
 
     const { user, role } = response.data;

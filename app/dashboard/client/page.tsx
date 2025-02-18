@@ -1,9 +1,7 @@
-import React from "react";
-
-export default function page() {
+export default function Home() {
   return (
-    <div>
-      <h1>Client Dashboard</h1>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1 className="text-4xl font-bold">Welcome to GymNavigator</h1>
+    </main>
   );
 }

@@ -10,7 +10,7 @@ export interface SignupWithGoogleReturnType {
 export default async function SignupWithGoogle(
   name: string,
   email: string,
-  role: 'owner' | 'trainer' | 'client'
+  role: 'owner' | 'trainer' | 'client',
 ): Promise<SignupWithGoogleReturnType> {
   try {
     const response: AxiosResponse<{

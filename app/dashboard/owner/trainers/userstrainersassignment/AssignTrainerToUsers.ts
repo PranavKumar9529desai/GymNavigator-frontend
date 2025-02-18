@@ -9,7 +9,7 @@ interface AssignTrainerResponse {
 }
 export async function AssignTrainerToUsers(
   userid: string,
-  trainerid: string
+  trainerid: string,
 ): Promise<AssignTrainerResponse> {
   try {
     const ownerAxios = await OwnerReqConfig();

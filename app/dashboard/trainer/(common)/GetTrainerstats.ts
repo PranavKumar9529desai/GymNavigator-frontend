@@ -7,7 +7,7 @@ export default async function GetTrainerStats(): Promise<TrainerDashboardResult>
   try {
     const trainerAxios = await TrainerReqConfig();
     const response: AxiosResponse<TrainerDashboardResponse> = await trainerAxios.get(
-      '/dashboard/getdashboardstats'
+      '/dashboard/getdashboardstats',
     );
 
     // Validate response data

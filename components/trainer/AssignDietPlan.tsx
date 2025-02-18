@@ -69,8 +69,8 @@ export default function AssignWorkout() {
   const assignDietPlan = (userId: number, planName: string) => {
     setUsers(
       users.map((user) =>
-        user.id === userId ? { ...user, assignedDietPlan: planName || null } : user
-      )
+        user.id === userId ? { ...user, assignedDietPlan: planName || null } : user,
+      ),
     );
   };
 
@@ -79,7 +79,7 @@ export default function AssignWorkout() {
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.goal.toLowerCase().includes(searchTerm.toLowerCase())
+        user.goal.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [users, searchTerm]);
 

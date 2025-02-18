@@ -1,12 +1,12 @@
-import type React from "react";
-import { auth } from "../(auth)/auth";
-import DashboardBottomNav from "./_components/DashboardBottomNav";
+import type React from 'react';
+import { auth } from '../(auth)/auth';
+import DashboardBottomNav from './_components/DashboardBottomNav';
 import {
   ClientDashboardMenuItems,
   OwnerDashboardMenuItems,
   TrainerDashboardMenuItems,
-} from "./_components/menuItems";
-import Sidebar from "./_components/sidebar";
+} from './_components/menuItems';
+import Sidebar from './_components/sidebar';
 
 export default async function Layout({
   children,
@@ -16,14 +16,14 @@ export default async function Layout({
   // Server-side role detection
   const session = await auth();
   const role = session?.user?.role || session?.role;
-  console.log("role from the layout", role);
+  console.log('role from the layout', role);
   const getMenuItems = () => {
     switch (role) {
-      case "owner":
+      case 'owner':
         return OwnerDashboardMenuItems;
-      case "trainer":
+      case 'trainer':
         return TrainerDashboardMenuItems;
-      case "client":
+      case 'client':
         return ClientDashboardMenuItems;
       default:
         return [];

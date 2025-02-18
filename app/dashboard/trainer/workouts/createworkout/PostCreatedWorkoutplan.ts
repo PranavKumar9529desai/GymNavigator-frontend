@@ -50,7 +50,7 @@ interface WorkoutPlanResponse {
 }
 
 export const createWorkoutPlan = async (
-  workoutPlan: WorkoutPlanInput
+  workoutPlan: WorkoutPlanInput,
 ): Promise<WorkoutPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
 

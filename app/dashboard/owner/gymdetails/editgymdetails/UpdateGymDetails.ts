@@ -32,7 +32,7 @@ export default async function UpdateGymDetails(formData: string, image: string) 
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
 
     if (response.status === 200) {

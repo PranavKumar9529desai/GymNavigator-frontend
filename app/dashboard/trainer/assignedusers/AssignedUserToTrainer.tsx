@@ -107,7 +107,7 @@ export default function AssignedUserToTrainer({ users }: AssignedUserToTrainerPr
     const filtered = users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);

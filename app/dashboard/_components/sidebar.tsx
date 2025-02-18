@@ -26,7 +26,9 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 
   // Function to get the icon component from its name
   const getIconComponent = (iconName: string): LucideIcon => {
-    return (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle;
+    return (
+      (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle
+    );
   };
 
   const handleItemClick = (item: MenuItem) => {

@@ -18,7 +18,7 @@ const TodayAttendance = async (): Promise<TodayAttendanceResponse> => {
   try {
     const trainerAxios = await TrainerReqConfig();
     const response = await trainerAxios.get<TodayAttendanceResponse>(
-      '/attendance/todaysattendance'
+      '/attendance/todaysattendance',
     );
     console.log("Today's attendance data:", response.data);
     return response.data;

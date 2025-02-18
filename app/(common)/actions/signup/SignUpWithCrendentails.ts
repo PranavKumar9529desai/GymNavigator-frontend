@@ -15,7 +15,7 @@ export default async function SignupSA(
   Role: string,
   name: string,
   email: string,
-  password: string
+  password: string,
 ): Promise<{
   msg: string;
   user: {
@@ -73,7 +73,7 @@ export interface UserExistsFormat {
 export async function UserExistsSA(
   email: string,
   name: string,
-  password: string
+  password: string,
 ): Promise<UserExistsFormat> {
   //  return true if user exists and password is correct
 
@@ -88,7 +88,7 @@ export async function UserExistsSA(
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   );
   console.log('response is this from  signup credentails ', response.data);
   const user = response.data;

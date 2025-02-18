@@ -47,7 +47,7 @@ export default function SelectGym({ gyms }: { gyms: gym[] }) {
   const setGymAtom = useSetRecoilState(GymAtom);
   const [isLoading, setIsLoading] = useState(true);
   const filteredGyms = gyms.filter((gym) =>
-    gym.name.toLowerCase().includes(searchTerm.toLowerCase())
+    gym.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   useEffect(() => {

@@ -74,7 +74,7 @@ export default function UserProfileCard() {
                     variant={'outline'}
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !userData.joinedDate && 'text-muted-foreground'
+                      !userData.joinedDate && 'text-muted-foreground',
                     )}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
@@ -103,7 +103,7 @@ export default function UserProfileCard() {
                     variant={'outline'}
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !userData.completionDate && 'text-muted-foreground'
+                      !userData.completionDate && 'text-muted-foreground',
                     )}
                   >
                     <Calendar className="mr-2 h-4 w-4" />

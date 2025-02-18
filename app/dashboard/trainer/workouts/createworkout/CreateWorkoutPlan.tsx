@@ -120,8 +120,8 @@ export default function CreateWorkoutPlan() {
                 order: index,
               })),
             }
-          : schedule
-      )
+          : schedule,
+      ),
     );
   };
 
@@ -175,7 +175,7 @@ export default function CreateWorkoutPlan() {
     dayOfWeek: string,
     index: number,
     field: keyof Exercise,
-    value: string | number
+    value: string | number,
   ) => {
     setSchedules((current) =>
       current.map((schedule) =>
@@ -183,11 +183,11 @@ export default function CreateWorkoutPlan() {
           ? {
               ...schedule,
               exercises: schedule.exercises.map((ex, i) =>
-                i === index ? { ...ex, [field]: value } : ex
+                i === index ? { ...ex, [field]: value } : ex,
               ),
             }
-          : schedule
-      )
+          : schedule,
+      ),
     );
   };
 
@@ -350,8 +350,8 @@ export default function CreateWorkoutPlan() {
                             current.map((schedule) =>
                               schedule.dayOfWeek === selectedDay
                                 ? { ...schedule, muscleTarget: value }
-                                : schedule
-                            )
+                                : schedule,
+                            ),
                           )
                         }
                       >
@@ -378,8 +378,8 @@ export default function CreateWorkoutPlan() {
                                     ...schedule,
                                     duration: Number.parseInt(e.target.value),
                                   }
-                                : schedule
-                            )
+                                : schedule,
+                            ),
                           )
                         }
                       />
@@ -395,8 +395,8 @@ export default function CreateWorkoutPlan() {
                                     ...schedule,
                                     calories: Number.parseInt(e.target.value),
                                   }
-                                : schedule
-                            )
+                                : schedule,
+                            ),
                           )
                         }
                       />
@@ -434,7 +434,7 @@ export default function CreateWorkoutPlan() {
                                               selectedDay,
                                               index,
                                               'name',
-                                              e.target.value
+                                              e.target.value,
                                             )
                                           }
                                         />
@@ -449,7 +449,7 @@ export default function CreateWorkoutPlan() {
                                                   selectedDay,
                                                   index,
                                                   'sets',
-                                                  Number.parseInt(e.target.value)
+                                                  Number.parseInt(e.target.value),
                                                 )
                                               }
                                             />
@@ -463,7 +463,7 @@ export default function CreateWorkoutPlan() {
                                                   selectedDay,
                                                   index,
                                                   'reps',
-                                                  e.target.value
+                                                  e.target.value,
                                                 )
                                               }
                                             />
@@ -477,7 +477,7 @@ export default function CreateWorkoutPlan() {
                                               selectedDay,
                                               index,
                                               'description',
-                                              e.target.value
+                                              e.target.value,
                                             )
                                           }
                                           rows={2}
@@ -494,11 +494,11 @@ export default function CreateWorkoutPlan() {
                                                 ? {
                                                     ...schedule,
                                                     exercises: schedule.exercises.filter(
-                                                      (_, i) => i !== index
+                                                      (_, i) => i !== index,
                                                     ),
                                                   }
-                                                : schedule
-                                            )
+                                                : schedule,
+                                            ),
                                           );
                                         }}
                                       >

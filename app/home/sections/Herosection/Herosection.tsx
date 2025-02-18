@@ -1,19 +1,11 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import {
-  Activity,
-  ArrowRight,
-  Dumbbell,
-  Sparkles,
-  UserCheck,
-  UserCog,
-  Users,
-} from "lucide-react";
-import CustomButton from "../../component/CustomButton";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Activity, ArrowRight, Dumbbell, Sparkles, UserCheck, UserCog, Users } from 'lucide-react';
+import CustomButton from '../../component/CustomButton';
 
-import { m } from "framer-motion";
-import { useEffect, useState } from "react";
-import { BackgroundBeams } from "../../../../components/extras/beams";
+import { m } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { BackgroundBeams } from '../../../../components/extras/beams';
 
 export default function Herosection() {
   const [isClient, setIsClient] = useState(false);
@@ -51,9 +43,7 @@ export default function Herosection() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
-                  <span className="block mb-2 sm:mb-4 text-white/90">
-                    Elevate Your
-                  </span>
+                  <span className="block mb-2 sm:mb-4 text-white/90">Elevate Your</span>
                   <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent inline-block animate-gradient">
                     Gym Management
                   </span>
@@ -65,8 +55,8 @@ export default function Herosection() {
                 transition={{ delay: 0.6, duration: 0.8 }}
                 className="text-base sm:text-lg text-gray-300 leading-relaxed mt-4"
               >
-                Streamline operations, enhance member experience, and drive
-                growth with our sophisticated management suite.
+                Streamline operations, enhance member experience, and drive growth with our
+                sophisticated management suite.
               </m.p>
             </div>
 
@@ -78,8 +68,8 @@ export default function Herosection() {
               className="grid grid-cols-2 gap-3 my-8 lg:hidden"
             >
               {[
-                { label: "Partner Gyms", value: "10+", icon: Users },
-                { label: "Active Members", value: "100+", icon: UserCheck },
+                { label: 'Partner Gyms', value: '10+', icon: Users },
+                { label: 'Active Members', value: '100+', icon: UserCheck },
               ].map((stat, i) => (
                 <m.div
                   key={stat.label}
@@ -103,7 +93,7 @@ export default function Herosection() {
                 transition={{ delay: 0.7 }}
                 className="flex flex-wrap gap-2 justify-center my-6"
               >
-                {["Easy Setup", "24/7 Support", "Secure"].map((feature, i) => (
+                {['Easy Setup', '24/7 Support', 'Secure'].map((feature, i) => (
                   <m.span
                     key={feature}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -148,7 +138,7 @@ export default function Herosection() {
           <m.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1, ease: 'easeOut' }}
             className="hidden lg:flex justify-end"
           >
             <div className="relative w-[600px] h-[600px] perspective-1000">
@@ -157,31 +147,31 @@ export default function Herosection() {
                 {[
                   {
                     icon: Users,
-                    title: "Onboarded Users",
-                    value: "1,847",
-                    color: "from-blue-500 to-blue-600",
-                    growth: "+22%",
+                    title: 'Onboarded Users',
+                    value: '1,847',
+                    color: 'from-blue-500 to-blue-600',
+                    growth: '+22%',
                   },
                   {
                     icon: UserCheck,
                     title: "Today's Attendance",
-                    value: "234",
-                    color: "from-green-500 to-green-600",
-                    growth: "+18%",
+                    value: '234',
+                    color: 'from-green-500 to-green-600',
+                    growth: '+18%',
                   },
                   {
                     icon: UserCog,
-                    title: "Trainer Dashboard",
-                    value: "16",
-                    color: "from-purple-500 to-purple-600",
-                    growth: "+5%",
+                    title: 'Trainer Dashboard',
+                    value: '16',
+                    color: 'from-purple-500 to-purple-600',
+                    growth: '+5%',
                   },
                   {
                     icon: Activity,
-                    title: "Active Users",
-                    value: "1,392",
-                    color: "from-orange-500 to-orange-600",
-                    growth: "+15%",
+                    title: 'Active Users',
+                    value: '1,392',
+                    color: 'from-orange-500 to-orange-600',
+                    growth: '+15%',
                   },
                 ].map((item, i) => (
                   <m.div
@@ -202,7 +192,7 @@ export default function Herosection() {
                     transition={{
                       delay: i * 0.1,
                       duration: 0.8,
-                      type: "spring",
+                      type: 'spring',
                       stiffness: 100,
                     }}
                     className="bg-gradient-to-br border border-white/10 rounded-xl p-6 transform-style-3d shadow-xl"
@@ -212,35 +202,29 @@ export default function Herosection() {
                     >
                       <item.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white/90">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white/90">{item.title}</h3>
                     <div className="flex items-end gap-2 mt-2">
-                      <span className="text-3xl font-bold text-white">
-                        {item.value}
-                      </span>
-                      <span className="text-green-400 text-sm mb-1">
-                        {item.growth}
-                      </span>
+                      <span className="text-3xl font-bold text-white">{item.value}</span>
+                      <span className="text-green-400 text-sm mb-1">{item.growth}</span>
                     </div>
 
                     {/* Animated graph line */}
                     <m.div
                       className="h-1 bg-white/10 mt-4 rounded-full overflow-hidden"
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
                       transition={{ delay: i * 0.2 + 0.5, duration: 1 }}
                     >
                       <m.div
                         className={`h-full bg-gradient-to-r ${item.color}`}
                         animate={{
-                          x: ["-100%", "0%"],
+                          x: ['-100%', '0%'],
                           opacity: [0.5, 1],
                         }}
                         transition={{
                           duration: 1.5,
                           delay: i * 0.2 + 0.5,
-                          ease: "easeOut",
+                          ease: 'easeOut',
                         }}
                       />
                     </m.div>
@@ -265,7 +249,7 @@ export default function Herosection() {
                       duration: 3,
                       delay: i * 0.5,
                       repeat: Number.POSITIVE_INFINITY,
-                      repeatType: "reverse",
+                      repeatType: 'reverse',
                     }}
                   >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -296,7 +280,7 @@ export default function Herosection() {
               duration: 3,
               delay: i * 0.5,
               repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
+              repeatType: 'reverse',
             }}
           >
             <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -318,9 +302,7 @@ export default function Herosection() {
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
           className="text-blue-400 text-sm flex flex-col items-center gap-2"
         >
-          <span className="hidden sm:block text-xs text-gray-400">
-            Scroll to explore
-          </span>
+          <span className="hidden sm:block text-xs text-gray-400">Scroll to explore</span>
           <ArrowRight className="w-4 h-4 rotate-90" />
         </m.div>
       </m.div>

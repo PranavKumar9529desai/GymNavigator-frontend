@@ -134,7 +134,7 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
     const filtered = users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (shiftFilter === 'All' || user.shift === shiftFilter)
+        (shiftFilter === 'All' || user.shift === shiftFilter),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, shiftFilter, users]);

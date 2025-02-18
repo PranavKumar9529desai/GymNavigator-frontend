@@ -37,7 +37,7 @@ export const UpdateUserActivePeriod = async ({
         startDate,
         endDate,
         shift,
-      }
+      },
     );
     console.log(response.data);
     return response.data;

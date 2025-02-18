@@ -38,7 +38,7 @@ interface DietAssignmentResult {
 
 const createColumns = (
   dietPlans: DietPlan[],
-  handleAssignment: (userId: string, dietPlanId: string, currentPlanId?: number) => Promise<void>
+  handleAssignment: (userId: string, dietPlanId: string, currentPlanId?: number) => Promise<void>,
 ): ColumnDef<AssignedUser>[] => [
   {
     accessorKey: 'name',
@@ -159,8 +159,8 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
                     dietPlanName: dietPlans.find((p) => p.id === Number.parseInt(dietPlanId))?.name,
                     userDietPlanId: result.dietPlan?.id,
                   }
-                : user
-            )
+                : user,
+            ),
           );
         } else {
           toast.error(result.message || 'Failed to update diet plan');
@@ -170,19 +170,19 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
         toast.error('Error managing diet plan');
       }
     },
-    [dietPlans]
+    [dietPlans],
   );
 
   const columns = useMemo(
     () => createColumns(dietPlans, handleDietAssignment),
-    [dietPlans, handleDietAssignment]
+    [dietPlans, handleDietAssignment],
   );
 
   useEffect(() => {
     const filtered = users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);

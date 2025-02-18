@@ -87,7 +87,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
     const filtered = Trainers.filter(
       (trainer) =>
         trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (shiftFilter === 'All' || trainer.shift === shiftFilter)
+        (shiftFilter === 'All' || trainer.shift === shiftFilter),
     );
     setFilteredTrainers(filtered);
   }, [searchTerm, shiftFilter, Trainers]);

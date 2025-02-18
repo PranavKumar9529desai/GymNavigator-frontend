@@ -11,7 +11,7 @@ export const GetAttendanceQrData = async () => {
   const trainerAxios = await TrainerReqConfig();
   try {
     const response: AxiosResponse<responseType> = await trainerAxios.get(
-      '/attendance/attendanceqrdata'
+      '/attendance/attendanceqrdata',
     );
     console.log('response from the attendance', response.data);
     return {

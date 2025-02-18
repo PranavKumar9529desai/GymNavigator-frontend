@@ -17,7 +17,7 @@ interface AssignWorkoutPlanResponse {
 
 export async function attachWorkoutPlanToUser(
   userId: string,
-  workoutPlanId: string
+  workoutPlanId: string,
 ): Promise<AssignWorkoutPlanResponse> {
   try {
     const trainerAxios = await TrainerReqConfig();

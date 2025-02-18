@@ -20,7 +20,7 @@ export interface UpdateDietPlanResponse {
 }
 
 export const updateAssignedDietPlan = async (
-  data: UpdateDietPlanInput
+  data: UpdateDietPlanInput,
 ): Promise<UpdateDietPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
   try {

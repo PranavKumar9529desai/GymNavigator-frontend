@@ -44,7 +44,7 @@ export default function SelectRole() {
         const response: SignupWithGoogleReturnType = await SignupWithGoogle(
           session?.user?.name,
           session?.user?.email,
-          role as 'owner' | 'trainer' | 'client'
+          role as 'owner' | 'trainer' | 'client',
         );
 
         if (response?.name && response.role) {

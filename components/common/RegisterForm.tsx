@@ -24,7 +24,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import SignIn from './Auth/Signin';
 
-// type roleType = "owner" | "trainer" | "sales";
+// type roleType = "owner" | "trainer" | "client";
 // form schema
 const formSchema = z.object({
   email: z
@@ -49,7 +49,7 @@ const formSchema = z.object({
     .string()
     .min(4, { message: 'Username must be at least 4 characters.' })
     .max(40, { message: 'Username must be at most 40 characters.' }),
-  role: z.enum(['owner', 'trainer', 'sales'], {
+  role: z.enum(['owner', 'trainer', 'client'], {
     required_error: 'Please select a role',
   }),
 });
@@ -291,6 +291,9 @@ export default function RegisterForm() {
                         </SelectItem>
                         <SelectItem value="trainer" className="bg-gray-50 hover:bg-gray-100">
                           Trainer
+                        </SelectItem>
+                        <SelectItem value="client" className="bg-gray-50 hover:bg-gray-100">
+                          Client
                         </SelectItem>
                       </SelectContent>
                     </Select>

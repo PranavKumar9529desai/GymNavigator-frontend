@@ -1,7 +1,5 @@
 'use client';
-import type {
-  MenuItem as BaseMenuItem,
-} from '@/app/dashboard/_components/menuItems';
+import type { MenuItem as BaseMenuItem } from '@/app/dashboard/_components/menuItems';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import * as LucideIcons from 'lucide-react';
@@ -30,7 +28,9 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
 
   // Function to get the icon component from its name
   const getIconComponent = (iconName: string): LucideIcon => {
-    return (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle;
+    return (
+      (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle
+    );
   };
 
   const isActiveRoute = (item: MenuItem) => {
@@ -55,7 +55,7 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
         className={cn(
           'fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg pb-safe transform transition-all duration-300 ease-in-out',
           !isVisible && 'translate-y-full opacity-0',
-          'supports-[height:100dvh]:bottom-[env(safe-area-inset-bottom)]'
+          'supports-[height:100dvh]:bottom-[env(safe-area-inset-bottom)]',
         )}
       >
         <div className="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
@@ -70,7 +70,8 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
                 className={cn(
                   'relative flex flex-col items-center justify-center w-16 h-16 px-1',
                   'hover:opacity-80 transition-all duration-200',
-                  isActive && 'before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-10 before:h-0.5 before:bg-blue-600 before:rounded-full'
+                  isActive &&
+                    'before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-10 before:h-0.5 before:bg-blue-600 before:rounded-full',
                 )}
                 onClick={() => handleNavClick(item)}
                 onKeyDown={(e) => e.key === 'Enter' && handleNavClick(item)}
@@ -80,13 +81,13 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
                   <Icon
                     className={cn(
                       'h-6 w-6 transition-colors duration-200',
-                      isActive ? 'text-blue-600' : 'text-gray-400'
+                      isActive ? 'text-blue-600' : 'text-gray-400',
                     )}
                   />
                   <span
                     className={cn(
                       'text-xs leading-none transition-colors duration-200 max-w-full truncate',
-                      isActive ? 'text-blue-600 font-medium' : 'text-gray-500'
+                      isActive ? 'text-blue-600 font-medium' : 'text-gray-500',
                     )}
                   >
                     {item.name}
@@ -132,7 +133,7 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
                           router.push(
                             subItem.link.startsWith('/')
                               ? subItem.link
-                              : `${basePath}${subItem.link}`
+                              : `${basePath}${subItem.link}`,
                           );
                           setActiveRoute(null);
                         }}

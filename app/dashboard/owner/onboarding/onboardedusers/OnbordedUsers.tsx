@@ -54,7 +54,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
     initialUsers.map((user) => ({
       ...user,
       status: calculateStatus(user.startDate, user.endDate),
-    }))
+    })),
   );
   const router = useRouter();
 

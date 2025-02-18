@@ -15,7 +15,7 @@ interface AttachDietPlanResponse {
 
 export const attachDietPlanToUser = async (
   userId: string,
-  dietPlanId: string
+  dietPlanId: string,
 ): Promise<AttachDietPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
   try {

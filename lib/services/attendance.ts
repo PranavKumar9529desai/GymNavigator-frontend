@@ -18,7 +18,7 @@ export const getTodaysAttendance = async (): Promise<AttendanceResponse> => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwt')}`,
       },
-    }
+    },
   );
   return response.data;
 };

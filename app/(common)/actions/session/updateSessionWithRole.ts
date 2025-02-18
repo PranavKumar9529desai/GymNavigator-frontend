@@ -2,7 +2,7 @@
 
 export async function updateSessionWithRole(
   role: Rolestype,
-  update: (data: unknown) => Promise<unknown>
+  update: (data: unknown) => Promise<unknown>,
 ) {
   try {
     const newRole = role;

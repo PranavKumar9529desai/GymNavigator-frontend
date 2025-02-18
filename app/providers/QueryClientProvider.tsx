@@ -22,7 +22,7 @@ export default function QueryClientProvider({
             retry: 1, // Only retry failed requests once
           },
         },
-      })
+      }),
   );
 
   return <TanstackQueryClientProvider client={queryClient}>{children}</TanstackQueryClientProvider>;

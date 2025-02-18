@@ -15,7 +15,7 @@ export async function generateStaticParams() {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/public/gym/allgymnames`,
       {
         next: { revalidate: 3600 }, // Revalidate gym list every hour
-      }
+      },
     );
     const data: GymNameResponse = await response.json();
     if (data.msg === 'success' && data.gyms) {

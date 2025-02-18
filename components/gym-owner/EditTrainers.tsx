@@ -37,7 +37,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
   const [name, setName] = useState<string>(addTrainerProps.name || '');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
-    typeof addTrainerProps.image === 'string' ? addTrainerProps.image : null
+    typeof addTrainerProps.image === 'string' ? addTrainerProps.image : null,
   );
   const [rating, setRating] = useState<number>(addTrainerProps.rating || 0);
   const [shift, setShift] = useState<ShiftType>(addTrainerProps.shift || 'morning');
