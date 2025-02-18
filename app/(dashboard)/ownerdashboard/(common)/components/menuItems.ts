@@ -1,9 +1,4 @@
-import {
-  Building2,
-  CalendarCheck,
-  ClipboardList,
-  UserCheck,
-} from 'lucide-react';
+import { Building2, CalendarCheck, ClipboardList, UserCheck } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface SubItem {
@@ -78,11 +73,11 @@ export const menuItems: MenuItem[] = [
         link: '/ownerdashboard/attendance/todaysattendance',
         label: 'todaysAttendance',
       },
-      { 
-        name: 'Show QR', 
-        link: '/ownerdashboard/attendance/showqr', 
-        label: 'showQR' 
+      {
+        name: 'Show QR',
+        link: '/ownerdashboard/attendance/showqr',
+        label: 'showQR',
       },
     ],
   },
-]; 
+];

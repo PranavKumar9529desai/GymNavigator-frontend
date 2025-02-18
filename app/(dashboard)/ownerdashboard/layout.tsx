@@ -12,8 +12,8 @@ export default function layout({ children }: { children: React.ReactNode }) {
         <div className="block lg:hidden">
           <BottomNavigation />
         </div>
-        {/* Modified scroll container */}
-        <div className="w-full h-[95vh] md:h-screen overflow-y-auto relative">
+        {/* Modified scroll container with added class */}
+        <div className="w-full h-[95vh] md:h-screen overflow-y-auto scroll-container relative">
           <div className="min-h-[calc(100vh-4rem)]">{children}</div>
         </div>
       </div>

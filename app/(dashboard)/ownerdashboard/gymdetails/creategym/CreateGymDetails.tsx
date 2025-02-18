@@ -1,36 +1,27 @@
-"use client";
-import Loader from "@/app/(dashboard)/ownerdashboard/gymdetails/editgymdetails/loading";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
+'use client';
+import Loader from '@/app/(dashboard)/ownerdashboard/gymdetails/editgymdetails/loading';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from 'react-hook-form';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Building2,
-  Image as ImageIcon,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import { z } from "zod";
-import PostGymDetails from "./PostGymDetailsSA";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Building2, Image as ImageIcon, Mail, MapPin, Phone } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
+import { z } from 'zod';
+import PostGymDetails from './PostGymDetailsSA';
 
 const formSchema = z.object({
-  gym_name: z.string().nonempty("Gym name is required"),
-  gym_logo: z.string().nonempty("Gym logo is required"),
-  address: z.string().nonempty("Address is required"),
-  phone_number: z.string().nonempty("Phone number is required"),
-  Email: z
-    .string()
-    .nonempty("Email is required")
-    .email("Invalid email address"),
+  gym_name: z.string().nonempty('Gym name is required'),
+  gym_logo: z.string().nonempty('Gym logo is required'),
+  address: z.string().nonempty('Address is required'),
+  phone_number: z.string().nonempty('Phone number is required'),
+  Email: z.string().nonempty('Email is required').email('Invalid email address'),
 });
 
 export default function CreateGymDetails() {
@@ -41,18 +32,18 @@ export default function CreateGymDetails() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      gym_name: "",
-      gym_logo: "",
-      address: "",
-      phone_number: "",
-      Email: "",
+      gym_name: '',
+      gym_logo: '',
+      address: '',
+      phone_number: '',
+      Email: '',
     },
   });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      form.setValue("gym_logo", file.name);
+      form.setValue('gym_logo', file.name);
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result as string);
@@ -63,33 +54,25 @@ export default function CreateGymDetails() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const result = await Swal.fire({
-      title: "Review Your Gym Details",
+      title: 'Review Your Gym Details',
       html: `
         <div class="bg-white p-6 rounded-xl shadow-sm">
           <div class="space-y-3">
             <div class="flex items-center border-b border-gray-100 py-3">
               <span class="text-gray-600 font-medium w-32 shrink-0">Gym Name:</span>
-              <span class="text-gray-900 ml-4 truncate text-left">${
-                data.gym_name
-              }</span>
+              <span class="text-gray-900 ml-4 truncate text-left">${data.gym_name}</span>
             </div>
             <div class="flex items-center border-b border-gray-100 py-3">
               <span class="text-gray-600 font-medium w-32 shrink-0">Address:</span>
-              <span class="text-gray-900 ml-4 truncate text-left">${
-                data.address
-              }</span>
+              <span class="text-gray-900 ml-4 truncate text-left">${data.address}</span>
             </div>
             <div class="flex items-center border-b border-gray-100 py-3">
               <span class="text-gray-600 font-medium w-32 shrink-0">Phone:</span>
-              <span class="text-gray-900 ml-4 truncate text-left">${
-                data.phone_number
-              }</span>
+              <span class="text-gray-900 ml-4 truncate text-left">${data.phone_number}</span>
             </div>
             <div class="flex items-center border-b border-gray-100 py-3">
               <span class="text-gray-600 font-medium w-32 shrink-0">Email:</span>
-              <span class="text-gray-900 ml-4 truncate text-left">${
-                data.Email
-              }</span>
+              <span class="text-gray-900 ml-4 truncate text-left">${data.Email}</span>
             </div>
             ${
               logoPreview
@@ -99,38 +82,37 @@ export default function CreateGymDetails() {
                 <img src="${logoPreview}" alt="Gym Logo" class="max-w-[150px] rounded-lg border border-gray-200">
               </div>
             `
-                : ""
+                : ''
             }
           </div>
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: "Create Gym",
-      cancelButtonText: "Edit Again",
+      confirmButtonText: 'Create Gym',
+      cancelButtonText: 'Edit Again',
       customClass: {
-        popup: "rounded-xl",
+        popup: 'rounded-xl',
         confirmButton:
-          "bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-lg text-white font-medium",
-        cancelButton:
-          "bg-gray-500 hover:bg-gray-600 px-6 py-2.5 rounded-lg text-white font-medium",
-        title: "text-gray-900 text-xl font-semibold",
+          'bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-lg text-white font-medium',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 px-6 py-2.5 rounded-lg text-white font-medium',
+        title: 'text-gray-900 text-xl font-semibold',
       },
     });
 
     if (result.isConfirmed) {
       setLoading(true);
       try {
-        let finalImageUrl = "";
+        let finalImageUrl = '';
 
         if (logoPreview) {
-          const response = await fetch("/api/uploadimage", {
-            method: "POST",
+          const response = await fetch('/api/uploadimage', {
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({ image: logoPreview }),
           });
-          console.log("response from the image upload", response);
+          console.log('response from the image upload', response);
           const responseData = await response.json();
           if (response.ok) {
             finalImageUrl = responseData.url;
@@ -138,29 +120,26 @@ export default function CreateGymDetails() {
             throw new Error(`Image upload failed: ${responseData.error}`);
           }
         }
-        console.log("finalImageUrl", finalImageUrl);
-        const response = await PostGymDetails(
-          JSON.stringify(data),
-          finalImageUrl
-        );
+        console.log('finalImageUrl', finalImageUrl);
+        const response = await PostGymDetails(JSON.stringify(data), finalImageUrl);
         if (response) {
           await Swal.fire({
-            title: "Success!",
-            text: "Gym created successfully",
-            icon: "success",
+            title: 'Success!',
+            text: 'Gym created successfully',
+            icon: 'success',
             timer: 2000,
             showConfirmButton: false,
           });
-          router.push("/ownerdashboard/gymdetails/viewgymdetails");
+          router.push('/ownerdashboard/gymdetails/viewgymdetails');
         } else {
-          throw new Error("Failed to create gym");
+          throw new Error('Failed to create gym');
         }
       } catch (error) {
         Swal.fire({
-          title: "Error!",
+          title: 'Error!',
           text: `An error occurred: ${(error as Error).message}`,
-          icon: "error",
-          confirmButtonColor: "#3085d6",
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
         });
       } finally {
         setLoading(false);
@@ -175,9 +154,7 @@ export default function CreateGymDetails() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-center">
-          Create New Gym
-        </CardTitle>
+        <CardTitle className="text-4xl font-bold text-center">Create New Gym</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -188,7 +165,7 @@ export default function CreateGymDetails() {
               <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
                 id="gym_name"
-                {...form.register("gym_name")}
+                {...form.register('gym_name')}
                 placeholder="Enter gym name"
                 className="pl-10"
               />
@@ -231,7 +208,7 @@ export default function CreateGymDetails() {
               <MapPin className="absolute left-3 top-3 text-gray-400" />
               <Textarea
                 id="address"
-                {...form.register("address")}
+                {...form.register('address')}
                 placeholder="Enter gym address"
                 className="pl-10 min-h-[80px]"
               />
@@ -246,7 +223,7 @@ export default function CreateGymDetails() {
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
                   id="phone_number"
-                  {...form.register("phone_number")}
+                  {...form.register('phone_number')}
                   type="tel"
                   placeholder="Enter phone number"
                   className="pl-10"
@@ -260,7 +237,7 @@ export default function CreateGymDetails() {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
                   id="Email"
-                  {...form.register("Email")}
+                  {...form.register('Email')}
                   type="email"
                   placeholder="Enter email address"
                   className="pl-10"

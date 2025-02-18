@@ -1,7 +1,7 @@
-"use client";
-import { signOut } from "@/node_modules/next-auth/react";
-import { m } from "framer-motion";
-import React, { useState } from "react";
+'use client';
+import { signOut } from '@/node_modules/next-auth/react';
+import { m } from 'framer-motion';
+import React, { useState } from 'react';
 
 export default function Signout() {
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -15,7 +15,7 @@ export default function Signout() {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          signOut({ callbackUrl: "/signin" });
+          signOut({ callbackUrl: '/signin' });
         }
         return prev - 1;
       });
@@ -31,14 +31,12 @@ export default function Signout() {
         className="space-y-4"
       >
         <h1 className="text-3xl font-bold text-gray-800">
-          {isSigningOut
-            ? "Signing you out..."
-            : "Are you sure you want to sign out?"}
+          {isSigningOut ? 'Signing you out...' : 'Are you sure you want to sign out?'}
         </h1>
         <p className="text-gray-600 max-w-md mx-auto">
           {isSigningOut
             ? `Redirecting in ${countdown} seconds...`
-            : "You will need to sign in again to access your account."}
+            : 'You will need to sign in again to access your account.'}
         </p>
       </m.div>
 

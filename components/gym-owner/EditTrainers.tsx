@@ -1,27 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Star, Upload, User } from "lucide-react";
-import Image from "next/image";
-import type React from "react";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import Loader from "../Skeltons/loaders";
-import { addTrainer, updateTrainer } from "./AddTrainerSA";
-import type {
-  AddTrainerRequest,
-  ShiftType,
-  UpdateTrainerRequest,
-} from "./AddTrainerSA";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Star, Upload, User } from 'lucide-react';
+import Image from 'next/image';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+import Loader from '../Skeltons/loaders';
+import { addTrainer, updateTrainer } from './AddTrainerSA';
+import type { AddTrainerRequest, ShiftType, UpdateTrainerRequest } from './AddTrainerSA';
 interface AddTrainerProps {
   addTrainerProps: {
     id?: number;
@@ -34,32 +24,30 @@ interface AddTrainerProps {
 
 const ShiftArray = [
   {
-    name: "Morning",
-    label: "morning",
+    name: 'Morning',
+    label: 'morning',
   },
   {
-    name: "Evening",
-    label: "evening",
+    name: 'Evening',
+    label: 'evening',
   },
 ];
 
 export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
-  const [name, setName] = useState<string>(addTrainerProps.name || "");
+  const [name, setName] = useState<string>(addTrainerProps.name || '');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
-    typeof addTrainerProps.image === "string" ? addTrainerProps.image : null
+    typeof addTrainerProps.image === 'string' ? addTrainerProps.image : null
   );
   const [rating, setRating] = useState<number>(addTrainerProps.rating || 0);
-  const [shift, setShift] = useState<ShiftType>(
-    addTrainerProps.shift || "morning"
-  );
-  const [imageError, setImageError] = useState<string>("");
+  const [shift, setShift] = useState<ShiftType>(addTrainerProps.shift || 'morning');
+  const [imageError, setImageError] = useState<string>('');
   const [isLoading, setLoading] = useState<boolean>(false);
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
-      setImageError("");
+      setImageError('');
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -72,13 +60,13 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
   useEffect(() => {
     if (addTrainerProps) {
       Swal.fire({
-        title: "Warning",
-        text: "Do you want to edit the trainer details?",
-        icon: "warning",
+        title: 'Warning',
+        text: 'Do you want to edit the trainer details?',
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes",
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
       });
     }
   }, [addTrainerProps]);
@@ -86,22 +74,22 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setImageError("");
+    setImageError('');
 
     const isEditing = !!addTrainerProps.id;
 
     if (!isEditing && !name.trim()) {
       Swal.fire({
-        title: "Error!",
+        title: 'Error!',
         text: "Please enter the trainer's name.",
-        icon: "error",
-        confirmButtonText: "OK",
+        icon: 'error',
+        confirmButtonText: 'OK',
       });
       return;
     }
 
     if (!image && !imagePreview && !isEditing) {
-      setImageError("Please upload an image.");
+      setImageError('Please upload an image.');
       return;
     }
 
@@ -110,12 +98,12 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
       setLoading(true);
       if (image) {
         const formData = new FormData();
-        formData.append("image", image);
+        formData.append('image', image);
 
-        const response = await fetch("/api/uploadimage", {
-          method: "POST",
+        const response = await fetch('/api/uploadimage', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ image: imagePreview }),
         });
@@ -125,7 +113,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
         if (response.ok) {
           imageUrl = result.url;
         } else {
-          throw new Error(result.error || "Failed to upload image.");
+          throw new Error(result.error || 'Failed to upload image.');
         }
       } else if (imagePreview) {
         imageUrl = imagePreview;
@@ -149,32 +137,24 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
         ? await updateTrainer(requestData as UpdateTrainerRequest)
         : await addTrainer(requestData as AddTrainerRequest);
 
-      if (
-        (isEditing && responseData.trainer) ||
-        (!isEditing && responseData.trainer)
-      ) {
+      if ((isEditing && responseData.trainer) || (!isEditing && responseData.trainer)) {
         setLoading(false);
         Swal.fire({
-          title: isEditing ? "Updated!" : "Added!",
-          text: isEditing
-            ? "Trainer details have been updated."
-            : "Trainer has been added.",
-          icon: "success",
-          confirmButtonText: "OK",
+          title: isEditing ? 'Updated!' : 'Added!',
+          text: isEditing ? 'Trainer details have been updated.' : 'Trainer has been added.',
+          icon: 'success',
+          confirmButtonText: 'OK',
         }).then(() => {});
         // Optionally reset the form or redirect
       } else {
-        throw new Error(responseData.msg || "An error occurred.");
+        throw new Error(responseData.msg || 'An error occurred.');
       }
     } catch (error) {
       Swal.fire({
-        title: "Error!",
-        text:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred.",
-        icon: "error",
-        confirmButtonText: "OK",
+        title: 'Error!',
+        text: error instanceof Error ? error.message : 'An unexpected error occurred.',
+        icon: 'error',
+        confirmButtonText: 'OK',
       });
     }
   };
@@ -192,7 +172,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
     <Card className="w-full h-full">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
-          {addTrainerProps.id ? "Edit Trainer" : "Add Trainer"}
+          {addTrainerProps.id ? 'Edit Trainer' : 'Add Trainer'}
         </CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
@@ -261,22 +241,16 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => document.getElementById("image")?.click()}
+                onClick={() => document.getElementById('image')?.click()}
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Upload Image
               </Button>
               <span className="text-sm text-gray-500">
-                {image
-                  ? image.name
-                  : imagePreview
-                  ? "Image Selected"
-                  : "No file chosen"}
+                {image ? image.name : imagePreview ? 'Image Selected' : 'No file chosen'}
               </span>
             </div>
-            {imageError && (
-              <p className="text-red-500 text-sm mt-1">{imageError}</p>
-            )}
+            {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
           </div>
 
           <div>
@@ -286,9 +260,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
                 <Star
                   key={star}
                   className={`w-6 h-6 cursor-pointer ${
-                    star <= rating
-                      ? "text-yellow-400 fill-current"
-                      : "text-gray-300"
+                    star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
                   }`}
                   onClick={() => setRating(star)}
                 />
@@ -297,9 +269,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit">
-            {addTrainerProps.id ? "Update Trainer" : "Add Trainer"}
-          </Button>
+          <Button type="submit">{addTrainerProps.id ? 'Update Trainer' : 'Add Trainer'}</Button>
         </CardFooter>
       </form>
     </Card>

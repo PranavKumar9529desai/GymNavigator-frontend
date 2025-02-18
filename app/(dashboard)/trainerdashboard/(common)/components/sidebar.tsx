@@ -1,18 +1,18 @@
-"use client";
-import IconImage from "@/app/assests/gym-manager.webp";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { signOut } from "@/node_modules/next-auth/react";
-import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import type { MenuItem, SubItem } from "./menuItems";
-import { menuItems } from "./menuItems";
+'use client';
+import IconImage from '@/app/assests/gym-manager.webp';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { signOut } from '@/node_modules/next-auth/react';
+import { ChevronDown, ChevronRight, LogOut } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
+import type { MenuItem, SubItem } from './menuItems';
+import { menuItems } from './menuItems';
 
 export default function SideBar() {
-  const [activePage, setActivePage] = useState<string>("assignedusers");
+  const [activePage, setActivePage] = useState<string>('assignedusers');
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
@@ -34,8 +34,7 @@ export default function SideBar() {
   const isActiveParent = (item: MenuItem) => {
     if (item.subItems) {
       return (
-        item.subItems.some((subItem) => subItem.label === activePage) ||
-        activePage === item.label
+        item.subItems.some((subItem) => subItem.label === activePage) || activePage === item.label
       );
     }
     return activePage === item.label;
@@ -43,7 +42,7 @@ export default function SideBar() {
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: "Ready to leave?",
+      title: 'Ready to leave?',
       html: `
         <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
           <div class="text-center">
@@ -59,33 +58,33 @@ export default function SideBar() {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: "Yes, Logout",
-      cancelButtonText: "Cancel",
+      confirmButtonText: 'Yes, Logout',
+      cancelButtonText: 'Cancel',
       customClass: {
         confirmButton:
-          "bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium",
-        cancelButton: "bg-gray-600 px-6 py-2 rounded-lg text-white font-medium",
-        title: "text-white text-xl font-semibold",
+          'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
+        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
+        title: 'text-white text-xl font-semibold',
       },
     });
 
     if (result.isConfirmed) {
       try {
         await signOut({
-          callbackUrl: "/signin",
+          callbackUrl: '/signin',
           redirect: false,
         });
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = "/signin";
+        window.location.href = '/signin';
       } catch (error) {
         Swal.fire({
-          title: "Error!",
-          text: "Logout failed",
-          icon: "error",
-          color: "#fff",
+          title: 'Error!',
+          text: 'Logout failed',
+          icon: 'error',
+          color: '#fff',
         });
-        console.error("Logout failed:", error);
+        console.error('Logout failed:', error);
       }
     }
   };
@@ -105,8 +104,8 @@ export default function SideBar() {
                   variant="ghost"
                   className={`w-full justify-start transition-colors duration-200 ${
                     isActiveParent(item)
-                      ? "!bg-blue-700 hover:text-white hover:bg-blue-700"
-                      : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                      ? '!bg-blue-700 hover:text-white hover:bg-blue-700'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                   }`}
                   onClick={() => handleItemClick(item)}
                 >
@@ -127,8 +126,8 @@ export default function SideBar() {
                           variant="ghost"
                           className={`w-full justify-start transition-colors duration-200 ${
                             activePage === subItem.label
-                              ? "!bg-blue-700 text-white hover:text-white hover:bg-blue-700"
-                              : "hover:bg-gray-800 hover:text-white"
+                              ? '!bg-blue-700 text-white hover:text-white hover:bg-blue-700'
+                              : 'hover:bg-gray-800 hover:text-white'
                           }`}
                           onClick={() => handleSubItemClick(subItem)}
                         >

@@ -1,16 +1,16 @@
-"use client";
-import IconImage from "@/app/assests/gym-manager.webp";
-import { signOut } from "@/node_modules/next-auth/react";
-import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import type { MenuItem, SubItem } from "./menuItems";
-import { menuItems } from "./menuItems";
+'use client';
+import IconImage from '@/app/assests/gym-manager.webp';
+import { signOut } from '@/node_modules/next-auth/react';
+import { ChevronDown, ChevronRight, LogOut } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
+import type { MenuItem, SubItem } from './menuItems';
+import { menuItems } from './menuItems';
 
 export default function Sidebar() {
-  const [activePage, setActivePage] = useState<string>("viewGymDetails");
+  const [activePage, setActivePage] = useState<string>('viewGymDetails');
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
 
@@ -41,7 +41,7 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: "Ready to leave?",
+      title: 'Ready to leave?',
       html: `
         <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
           <div class="text-center">
@@ -57,33 +57,33 @@ export default function Sidebar() {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: "Yes, Logout",
-      cancelButtonText: "Cancel",
+      confirmButtonText: 'Yes, Logout',
+      cancelButtonText: 'Cancel',
       customClass: {
         confirmButton:
-          "bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium",
-        cancelButton: "bg-gray-600 px-6 py-2 rounded-lg text-white font-medium",
-        title: "text-white text-xl font-semibold",
+          'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
+        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
+        title: 'text-white text-xl font-semibold',
       },
     });
 
     if (result.isConfirmed) {
       try {
         await signOut({
-          callbackUrl: "/signin",
+          callbackUrl: '/signin',
           redirect: false,
         });
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = "/signin";
+        window.location.href = '/signin';
       } catch (error) {
         Swal.fire({
-          title: "Error!",
-          text: "Logout failed",
-          icon: "error",
-          color: "#fff",
+          title: 'Error!',
+          text: 'Logout failed',
+          icon: 'error',
+          color: '#fff',
         });
-        console.error("Logout failed:", error);
+        console.error('Logout failed:', error);
       }
     }
   };
@@ -91,11 +91,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col bg-gray-900 text-white w-64 h-screen">
       <div className="px-4 w-full flex items-center justify-center">
-        <Image
-          src={IconImage}
-          alt="Gym Manager Icon"
-          className="rounded-full"
-        />
+        <Image src={IconImage} alt="Gym Manager Icon" className="rounded-full" />
       </div>
 
       <nav className="flex-grow px-4 py-2">
@@ -108,8 +104,8 @@ export default function Sidebar() {
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                   ${
                     isActiveParent(item)
-                      ? "bg-blue-700 text-white"
-                      : "text-gray-300 hover:bg-gray-800"
+                      ? 'bg-blue-700 text-white'
+                      : 'text-gray-300 hover:bg-gray-800'
                   }`}
               >
                 <item.icon className="w-6 h-6 mr-3" />
@@ -131,8 +127,8 @@ export default function Sidebar() {
                         className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                           ${
                             activePage === subItem.label
-                              ? "bg-blue-600 text-white"
-                              : "text-gray-300 hover:bg-gray-800"
+                              ? 'bg-blue-600 text-white'
+                              : 'text-gray-300 hover:bg-gray-800'
                           }`}
                       >
                         <span>{subItem.name}</span>

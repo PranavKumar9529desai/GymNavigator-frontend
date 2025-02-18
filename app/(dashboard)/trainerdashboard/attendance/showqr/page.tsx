@@ -1,6 +1,6 @@
-import GymQRCode from "@/app/(dashboard)/ownerdashboard/attendance/showqr/QrCode";
-import React from "react";
-import { GetAttendanceQrData } from "./GetAttendanceQrData";
+import GymQRCode from '@/app/(dashboard)/ownerdashboard/attendance/showqr/QrCode';
+import React from 'react';
+import { GetAttendanceQrData } from './GetAttendanceQrData';
 
 export default async function ShowQRPage() {
   const gymData = await GetAttendanceQrData();

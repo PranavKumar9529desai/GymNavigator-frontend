@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import { AuthError } from "@/components/Auth/AuthError";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { signIn } from "@/node_modules/next-auth/react";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { AuthError } from '@/components/Auth/AuthError';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { signIn } from '@/node_modules/next-auth/react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +25,7 @@ export default function SignIn() {
     setError(null);
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
@@ -41,30 +35,30 @@ export default function SignIn() {
         try {
           const errorData = JSON.parse(result.error);
           switch (errorData.error) {
-            case "USER_NOT_FOUND":
-              setError("No account found with this email address");
+            case 'USER_NOT_FOUND':
+              setError('No account found with this email address');
               break;
-            case "INVALID_PASSWORD":
-              setError("Invalid password. Please try again");
+            case 'INVALID_PASSWORD':
+              setError('Invalid password. Please try again');
               break;
-            case "SERVER_ERROR":
-              setError("An error occurred. Please try again later");
+            case 'SERVER_ERROR':
+              setError('An error occurred. Please try again later');
               break;
             default:
-              setError(errorData.message || "Failed to sign in");
+              setError(errorData.message || 'Failed to sign in');
           }
         } catch {
-          setError("Failed to sign in");
+          setError('Failed to sign in');
         }
       } else if (result?.ok) {
-        toast.success("Successfully signed in!", {
-          description: "Redirecting to dashboard...",
+        toast.success('Successfully signed in!', {
+          description: 'Redirecting to dashboard...',
         });
         router.refresh();
       }
     } catch (error) {
-      console.error("Failed to sign in:", error);
-      setError("An unexpected error occurred");
+      console.error('Failed to sign in:', error);
+      setError('An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -73,10 +67,10 @@ export default function SignIn() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signIn("google", {});
+      await signIn('google', {});
     } catch (error) {
-      console.error("Failed to sign in with Google:", error);
-      setError("Failed to sign in with Google");
+      console.error('Failed to sign in with Google:', error);
+      setError('Failed to sign in with Google');
       setLoading(false);
     }
   };
@@ -93,9 +87,7 @@ export default function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && (
-            <AuthError error={error} onDismiss={() => setError(null)} />
-          )}
+          {error && <AuthError error={error} onDismiss={() => setError(null)} />}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -123,7 +115,7 @@ export default function SignIn() {
                 <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   className="pl-10 pr-10"
                   required
                   value={password}
@@ -134,19 +126,15 @@ export default function SignIn() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 focus:outline-none"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 
@@ -155,9 +143,7 @@ export default function SignIn() {
               <span className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                Or continue with
-              </span>
+              <span className="px-2 bg-white text-gray-500">Or continue with</span>
             </div>
           </div>
 
@@ -197,11 +183,8 @@ export default function SignIn() {
           </Button>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
-            <a
-              href="/signup"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
+            Don&apos;t have an account?{' '}
+            <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Sign up
             </a>
           </div>
