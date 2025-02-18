@@ -212,12 +212,12 @@ export default {
       session?: Session;
     }) {
       console.log('user is this from jwt callback', user);
-      console.log('JWT Callback - Input:', {
-        tokenEmail: token.email,
-        userName: user?.name,
-        trigger,
-        sessionData: session,
-      });
+      // console.log('JWT Callback - Input:', {
+      //   tokenEmail: token.email,
+      //   userName: user?.name,
+      //   trigger,
+      //   sessionData: session,
+      // });
 
       if (account && user) {
         token.accessToken = account.access_token;
@@ -235,23 +235,23 @@ export default {
         token.gym = user.gym;
       }
 
-      console.log('JWT Callback - Output:', token);
+      // console.log('JWT Callback - Output:', token);
       return token;
     },
     async session({ token, session }) {
-      console.log('Session Callback - Input:', {
-        tokenData: token,
-        sessionData: session,
-      });
+      // console.log('Session Callback - Input:', {
+      //   tokenData: token,
+      //   sessionData: session,
+      // });
 
-      console.log('token from the session callback ', token);
+      //  console.log('token from the session callback ', token);
       if (token?.email && token?.name && token?.role) {
         session.user.name = token.name;
         session.user.email = token.email;
         session.gym = token.gym as GymInfo;
         session.role = token.role as Rolestype;
-        console.log('updated sesion from the session callback ', session);
-        console.log('Session Callback - Output:', session);
+        // console.log('updated sesion from the session callback ', session);
+        // console.log('Session Callback - Output:', session);
         return session;
       }
       console.log('Session Callback - Output:', session);

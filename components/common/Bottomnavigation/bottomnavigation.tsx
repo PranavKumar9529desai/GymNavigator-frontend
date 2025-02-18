@@ -1,14 +1,21 @@
 'use client';
 import type {
-  MenuItem,
-} from '@/app/(dashboard)/ownerdashboard/(common)/components/menuItems';
+  MenuItem as BaseMenuItem,
+} from '@/app/dashboard/_components/menuItems';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import * as LucideIcons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { useScrollDirection } from './useScrollDirection';
+
+// Extend the MenuItem type to use iconName instead of icon
+interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
+  iconName: string;
+}
 
 interface BottomNavigationProps {
   menuItems: MenuItem[];
@@ -20,6 +27,11 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
   const isVisible = useScrollDirection(10, 100);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Function to get the icon component from its name
+  const getIconComponent = (iconName: string): LucideIcon => {
+    return (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle;
+  };
 
   const isActiveRoute = (item: MenuItem) => {
     if (item.link && pathname.includes(item.link)) {
@@ -48,7 +60,7 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
       >
         <div className="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
           {menuItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = getIconComponent(item.iconName);
             const isActive = isActiveRoute(item);
 
             return (

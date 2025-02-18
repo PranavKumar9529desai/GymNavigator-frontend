@@ -4,13 +4,13 @@ import axios, { type AxiosResponse } from 'axios';
 export interface SignupWithGoogleReturnType {
   name: string;
   email: string;
-  role: 'owner' | 'trainer' | 'sales';
+  role: 'owner' | 'trainer' | 'client';
 }
 
 export default async function SignupWithGoogle(
   name: string,
   email: string,
-  role: 'owner' | 'trainer' | 'sales'
+  role: 'owner' | 'trainer' | 'client'
 ): Promise<SignupWithGoogleReturnType> {
   try {
     const response: AxiosResponse<{
@@ -18,7 +18,7 @@ export default async function SignupWithGoogle(
       user: {
         name: string;
         email: string;
-        role: 'owner' | 'trainer' | 'sales';
+        role: 'owner' | 'trainer' | 'client';
       };
     }> = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/google/${role}`, {
       name,

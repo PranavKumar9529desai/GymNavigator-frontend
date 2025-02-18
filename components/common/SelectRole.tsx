@@ -21,11 +21,11 @@ const roles = [
     description: 'Manage your clients and training sessions',
     value: 'trainer',
   },
-  // {
-  //   title: "Sales",
-  //   description: "Access your sales plans and track progress",
-  //   value: "sales",
-  // },
+  {
+    title: 'Client',
+    description: 'Access your sales plans and track progress',
+    value: 'client',
+  },
 ];
 
 export default function SelectRole() {
@@ -44,15 +44,16 @@ export default function SelectRole() {
         const response: SignupWithGoogleReturnType = await SignupWithGoogle(
           session?.user?.name,
           session?.user?.email,
-          role as 'owner' | 'trainer' | 'sales'
+          role as 'owner' | 'trainer' | 'client'
         );
 
         if (response?.name && response.role) {
+          // @ts-ignore
           await updateSessionWithRole(response.role as Rolestype, update);
         }
       }
 
-      router.push(`/${role}dashboard`);
+      router.push(`/dashboard/${role}`);
     } catch (error) {
       console.error('Error selecting role:', error);
     } finally {
