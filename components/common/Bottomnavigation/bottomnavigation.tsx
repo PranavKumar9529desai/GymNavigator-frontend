@@ -57,7 +57,8 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
                 key={item.label}
                 className={cn(
                   'relative flex flex-col items-center justify-center w-16 h-16 px-1',
-                  'hover:opacity-80 transition-all duration-200'
+                  'hover:opacity-80 transition-all duration-200',
+                  isActive && 'before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-10 before:h-0.5 before:bg-blue-600 before:rounded-full'
                 )}
                 onClick={() => handleNavClick(item)}
                 onKeyDown={(e) => e.key === 'Enter' && handleNavClick(item)}
