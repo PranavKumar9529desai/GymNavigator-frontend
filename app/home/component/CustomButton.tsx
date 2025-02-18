@@ -1,15 +1,18 @@
-'use client';
-import { useSession } from '@/node_modules/next-auth/react';
-import { ArrowRight, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+"use client";
+import { useSession } from "@/node_modules/next-auth/react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type CustomButtonProps = {
   className?: string;
   text?: string;
 };
 
-export default function CustomButton({ className = '', text = 'Get Started' }: CustomButtonProps) {
+export default function CustomButton({
+  className = "",
+  text = "Get Started",
+}: CustomButtonProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -17,10 +20,11 @@ export default function CustomButton({ className = '', text = 'Get Started' }: C
   const handleClick = async () => {
     setIsLoading(true);
 
-    if (status === 'authenticated' && session?.user?.role) {
-      router.push(`/dashboard/${session.user.role}`);
+    console.log("session from the custom button", session);
+    if (status === "authenticated" && session?.role) {
+      router.push(`/dashboard/${session.role}`);
     } else {
-      router.push('/signin');
+      router.push("/signin");
     }
   };
   return (
