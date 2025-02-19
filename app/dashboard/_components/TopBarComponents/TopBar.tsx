@@ -61,7 +61,7 @@ export default function TopBar({ menuItems }: TopBarProps) {
         <BottomSection
           className={cn(
             "transition-all duration-300",
-            currentSubItems?.length > 0 ? "h-[6.5rem]" : "h-[4.5rem]"
+            currentSubItems?.length > 0 ? "h-[9.5rem]" : "h-[4.5rem]"
           )}
           menuItems={menuItems}
         />

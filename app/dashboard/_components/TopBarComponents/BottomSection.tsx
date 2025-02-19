@@ -102,7 +102,7 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
       {currentSubItems.length > 0 && (
         <nav className="flex flex-col items-center gap-2 mt-3">
           {/* Icons Row */}
-          <div className="flex justify-center gap-4 w-full">
+          <div className="flex justify-center gap-4 w-full relative pb-3">
             {currentSubItems.map((subItem) => {
               const IconComponent = iconMap[subItem.parentIcon as keyof typeof iconMap];
               return (
@@ -121,9 +121,9 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
                   </button>
                   <span
                     className={cn(
-                      "text-xs text-center mt-1.5 px-1 font-medium",
+                      "relative text-xs text-center mt-1.5 px-1 font-medium pb-2",
                       pathname === subItem.link
-                        ? "text-indigo-700" 
+                        ? "text-indigo-700 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-indigo-600 after:rounded-full" 
                         : ""
                     )}
                   >

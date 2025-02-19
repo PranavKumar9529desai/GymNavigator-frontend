@@ -43,7 +43,7 @@ export default async function Layout({
           <div className="md:hidden">
             <TopBar menuItems={getMenuItems()} />
           </div>
-          <div className="h-[95vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 md:pt-6 pt-[50px]">
+          <div className="h-[100vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 md:pt-6 ">
             {children}
           </div>
         </div>
