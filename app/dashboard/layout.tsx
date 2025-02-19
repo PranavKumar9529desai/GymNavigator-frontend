@@ -1,7 +1,7 @@
 import type React from "react";
 import { auth } from "../(auth)/auth";
 import DashboardBottomNav from "./_components/DashboardBottomNav";
-import TopBar from "./_components/Topbar/TopBar";
+import TopBar from "./_components/TopBarComponents/TopBar";
 import {
   ClientDashboardMenuItems,
   OwnerDashboardMenuItems,
@@ -35,21 +35,21 @@ export default async function Layout({
     <>
       <div className="flex">
         {/* Server-rendered sidebar - visible only on desktop */}
-        <div className="hidden md:block h-screen ">
+        <div className="hidden md:block h-screen">
           <Sidebar menuItems={getMenuItems()} />
         </div>
         <div className="w-full">
           {/* TopBar - visible only on mobile */}
           <div className="md:hidden">
-            <TopBar />
+            <TopBar menuItems={getMenuItems()} />
           </div>
-          <div className="h-[95vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 pt-[120px] md:pt-6">
+          <div className="h-[95vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 md:pt-6 pt-[50px]">
             {children}
           </div>
         </div>
 
         {/* Bottom navigation - visible only on mobile */}
-        <div className="md:hidden ">
+        <div className="md:hidden">
           <DashboardBottomNav menuItems={getMenuItems()} />
         </div>
       </div>
