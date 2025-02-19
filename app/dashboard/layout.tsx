@@ -39,8 +39,11 @@ export default async function Layout({
           <Sidebar menuItems={getMenuItems()} />
         </div>
         <div className="w-full">
-          <TopBar />
-          <div className="h-[95vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 pt-[120px]">
+          {/* TopBar - visible only on mobile */}
+          <div className="md:hidden">
+            <TopBar />
+          </div>
+          <div className="h-[95vh] md:h-screen overflow-y-auto scroll-container relative pb-16 lg:pb-0 pt-[120px] md:pt-6">
             {children}
           </div>
         </div>

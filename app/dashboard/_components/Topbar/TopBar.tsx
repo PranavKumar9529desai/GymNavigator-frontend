@@ -6,7 +6,6 @@ import CompactSearchBar from "./CompactSearchBar";
 import FullTopBar from "./FullTopBar";
 
 export default function TopBar() {
-  const isVisible = useScrollDirection(10, 100);
   const [isCompact, setIsCompact] = useState(false);
 
   useEffect(() => {
@@ -39,7 +38,7 @@ export default function TopBar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out",
-        "transform-gpu bg-gradient-to-r from-slate-50 via-slate-100 to-slate-50 shadow-sm border-b border-slate-200",
+        "transform-gpu bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 ",
         isCompact ? "h-16" : "h-[160px]"
       )}
     >
