@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
-import { useScrollDirection } from './useScrollDirection';
+import { useScrollDirection } from '../../../lib/hooks/useScrollDirection';
 
 // Extend the MenuItem type to use iconName instead of icon
 interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
