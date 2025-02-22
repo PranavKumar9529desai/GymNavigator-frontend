@@ -40,7 +40,9 @@ export default function BottomNavigation({ menuItems, basePath = '' }: BottomNav
     if (item.subItems && item.subItems.length > 0) {
       // Navigate to the first subroute
       const firstSubItem = item.subItems[0];
-      router.push(firstSubItem.link.startsWith('/') ? firstSubItem.link : `${basePath}${firstSubItem.link}`);
+      router.push(
+        firstSubItem.link.startsWith('/') ? firstSubItem.link : `${basePath}${firstSubItem.link}`,
+      );
     } else if (item.link) {
       router.push(item.link.startsWith('/') ? item.link : `${basePath}${item.link}`);
     }

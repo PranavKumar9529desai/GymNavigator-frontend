@@ -1,6 +1,9 @@
-'use client';
+"use client";
 
-import SelectRole from '@/components/common/SelectRole';
+import SelectRole from "@/components/common/SelectRole";
+
+// Prevent static generation
+export const dynamic = "force-dynamic";
 
 export default function SelectRolePage() {
   return (

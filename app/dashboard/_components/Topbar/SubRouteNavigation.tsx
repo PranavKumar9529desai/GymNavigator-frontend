@@ -1,9 +1,9 @@
-import type { MenuItem, SubItem } from "@/app/dashboard/_components/menuItems";
+import type { MenuItem, SubItem } from '@/app/dashboard/_components/menuItems';
 import {
   ClientDashboardMenuItems,
   OwnerDashboardMenuItems,
   TrainerDashboardMenuItems,
-} from "@/app/dashboard/_components/menuItems";
+} from '@/app/dashboard/_components/menuItems';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -24,7 +24,7 @@ const getMenuItemsByRole = (role: 'owner' | 'trainer' | 'client') => {
 const findActiveMenuItem = (pathname: string, menuItems: MenuItem[]): MenuItem | undefined => {
   const pathParts = pathname.split('/');
   const section = pathParts[3]; // dashboard/role/section
-  return menuItems.find(item => item.name.toLowerCase() === section?.toLowerCase());
+  return menuItems.find((item) => item.name.toLowerCase() === section?.toLowerCase());
 };
 
 const SubNavigation = () => {
@@ -46,7 +46,7 @@ const SubNavigation = () => {
               href={route.link}
               className={cn(
                 'px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors',
-                pathname === route.link && 'bg-gray-200 text-gray-900'
+                pathname === route.link && 'bg-gray-200 text-gray-900',
               )}
             >
               {route.name}

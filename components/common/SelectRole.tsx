@@ -1,30 +1,35 @@
-'use client';
-import { updateSessionWithRole } from '@/app/(common)/actions/session/updateSessionWithRole';
-import SignupWithGoogle from '@/app/(common)/actions/signup/SignupWithGoogle';
-import type { SignupWithGoogleReturnType } from '@/app/(common)/actions/signup/SignupWithGoogle';
-import type { Rolestype } from '@/app/types/next-auth';
-import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useSession } from '@/node_modules/next-auth/react';
-import { AnimatePresence, m } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+"use client";
+import { updateSessionWithRole } from "@/app/(common)/_actions/session/updateSessionWithRole";
+import SignupWithGoogle from "@/app/(common)/_actions/signup/SignupWithGoogle";
+import type { SignupWithGoogleReturnType } from "@/app/(common)/_actions/signup/SignupWithGoogle";
+import type { Rolestype } from "@/app/types/next-auth";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useSession } from "@/node_modules/next-auth/react";
+import { AnimatePresence, m } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 const roles = [
   {
-    title: 'Gym Owner',
-    description: 'Manage your gym facilities and operations',
-    value: 'owner',
+    title: "Gym Owner",
+    description: "Manage your gym facilities and operations",
+    value: "owner",
   },
   {
-    title: 'Trainer',
-    description: 'Manage your clients and training sessions',
-    value: 'trainer',
+    title: "Trainer",
+    description: "Manage your clients and training sessions",
+    value: "trainer",
   },
   {
-    title: 'Client',
-    description: 'Access your sales plans and track progress',
-    value: 'client',
+    title: "Client",
+    description: "Access your sales plans and track progress",
+    value: "client",
   },
 ];
 
@@ -38,13 +43,13 @@ export default function SelectRole() {
   const handleRoleSelect = async (role: string) => {
     setSelectedRole(role);
     setLoading(true);
-    console.log('role is this ', role);
+    console.log("role is this ", role);
     try {
       if (session?.user?.name && session?.user?.email) {
         const response: SignupWithGoogleReturnType = await SignupWithGoogle(
           session?.user?.name,
           session?.user?.email,
-          role as 'owner' | 'trainer' | 'client',
+          role as "owner" | "trainer" | "client"
         );
 
         if (response?.name && response.role) {
@@ -55,7 +60,7 @@ export default function SelectRole() {
 
       router.push(`/dashboard/${role}`);
     } catch (error) {
-      console.error('Error selecting role:', error);
+      console.error("Error selecting role:", error);
     } finally {
       setLoading(false);
     }
@@ -83,14 +88,16 @@ export default function SelectRole() {
                   className={`cursor-pointer transition-all duration-300 hover:scale-105 
                     ${
                       selectedRole === role.value
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                        ? "border-blue-500 bg-blue-50"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                     }
-                    ${loading ? 'pointer-events-none opacity-50' : ''}`}
+                    ${loading ? "pointer-events-none opacity-50" : ""}`}
                   onClick={() => handleRoleSelect(role.value)}
                 >
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{role.title}</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                      {role.title}
+                    </h3>
                     <p className="text-gray-600">{role.description}</p>
                   </CardContent>
                 </Card>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BiChevronDown } from 'react-icons/bi';
 import { HiMenu, HiX } from 'react-icons/hi';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../_component/CustomButton';
 
 // Add type definition
 type MenuItem = {
@@ -35,16 +35,16 @@ const Navbar = () => {
 
   const menuItems: MenuItem[] = [
     {
-      label: 'Home',
-      href: '/',
+      label: 'Contact Us',
+      href: '/contact',
     },
     {
       label: 'About',
       href: '/about',
     },
     {
-      label: 'Features',
-      href: '/#features',
+      label: 'Pricing',
+      href: '/pricing',
     },
   ];
 

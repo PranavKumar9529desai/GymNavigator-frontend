@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
-import NotificationBell from "./NotificationBell";
-import ProfileButton from "./ProfileButton";
-import QRCodeButton from "./QRCodeButton";
+import { cn } from '@/lib/utils';
+import { Search } from 'lucide-react';
+import NotificationBell from './NotificationBell';
+import ProfileButton from './ProfileButton';
+import QRCodeButton from './QRCodeButton';
 
 interface CompactSearchBarProps {
   isCompact: boolean;
@@ -11,7 +11,7 @@ interface CompactSearchBarProps {
   onProfileClick: () => void;
 }
 
-export default function CompactSearchBar({ 
+export default function CompactSearchBar({
   isCompact,
   onNotificationClick,
   onQRCodeClick,
@@ -22,7 +22,7 @@ export default function CompactSearchBar({
       className={cn(
         'absolute inset-0 transition-all duration-300',
         'flex items-center justify-between px-4',
-        !isCompact && 'opacity-0 pointer-events-none'
+        !isCompact && 'opacity-0 pointer-events-none',
       )}
     >
       <div className="relative w-96">
@@ -39,11 +39,8 @@ export default function CompactSearchBar({
       <div className="flex items-center gap-2">
         <NotificationBell count={2} onClick={onNotificationClick} />
         <QRCodeButton onClick={onQRCodeClick} />
-        <ProfileButton
-          name="John Doe"
-          onClick={onProfileClick}
-        />
+        <ProfileButton name="John Doe" onClick={onProfileClick} />
       </div>
     </div>
   );
-} 
+}

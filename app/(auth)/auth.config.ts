@@ -8,8 +8,8 @@ import type { JWT } from 'next-auth/jwt';
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
-import SignupSA from '../(common)/actions/signup/SignUpWithCrendentails';
-import getUserByEmail, { type userType } from '../(common)/actions/signup/getUserByEmail';
+import SignupSA from '../(common)/_actions/signup/SignUpWithCrendentails';
+import getUserByEmail, { type userType } from '../(common)/_actions/signup/getUserByEmail';
 import type { Rolestype } from '../types/next-auth';
 export default {
   providers: [

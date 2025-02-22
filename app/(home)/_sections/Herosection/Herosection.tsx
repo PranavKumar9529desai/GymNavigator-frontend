@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Activity, ArrowRight, Dumbbell, Sparkles, UserCheck, UserCog, Users } from 'lucide-react';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../_component/CustomButton';
 
 import { m } from 'framer-motion';
 import { useEffect, useState } from 'react';

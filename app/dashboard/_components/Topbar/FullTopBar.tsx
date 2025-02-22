@@ -1,8 +1,8 @@
-import { Search } from "lucide-react";
-import Image from "next/image";
-import NotificationBell from "./NotificationBell";
-import ProfileButton from "./ProfileButton";
-import QRCodeButton from "./QRCodeButton";
+import { Search } from 'lucide-react';
+import Image from 'next/image';
+import NotificationBell from './NotificationBell';
+import ProfileButton from './ProfileButton';
+import QRCodeButton from './QRCodeButton';
 
 interface FullTopBarProps {
   onNotificationClick: () => void;
@@ -29,9 +29,7 @@ export default function FullTopBar({
               className="object-contain"
             />
             <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-gray-800">
-                GymNavigator
-              </h1>
+              <h1 className="text-lg font-semibold text-gray-800">GymNavigator</h1>
               <p className="text-sm text-gray-500">Gym management</p>
             </div>
           </div>

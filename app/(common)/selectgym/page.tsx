@@ -1,6 +1,9 @@
-import SelectGym from '@/app/(common)/selectgym/SelectGym';
-import React from 'react';
-import FetchallGyms from './FetchallGyms';
+import SelectGym from "@/app/(common)/selectgym/SelectGym";
+import React from "react";
+import FetchallGyms from "./FetchallGyms";
+
+// Prevent static generation
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const gyms: gym[] | [] = await FetchallGyms();

@@ -1,4 +1,4 @@
-import uploadImage from '@/app/(common)/actions/clouldnary/UploadImageSA';
+import uploadImage from '@/app/(common)/_actions/clouldnary/UploadImageSA';
 // app/api/upload/route.ts
 import { type NextRequest, NextResponse } from 'next/server';
 

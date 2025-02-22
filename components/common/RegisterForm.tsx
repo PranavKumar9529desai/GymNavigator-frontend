@@ -1,6 +1,6 @@
 'use client';
-import type { UserExistsFormat } from '@/app/(common)/actions/signup/SignUpWithCrendentails';
-import { UserExistsSA } from '@/app/(common)/actions/signup/SignUpWithCrendentails';
+import type { UserExistsFormat } from '@/app/(common)/_actions/signup/SignUpWithCrendentails';
+import { UserExistsSA } from '@/app/(common)/_actions/signup/SignUpWithCrendentails';
 import {
   Form,
   FormControl,

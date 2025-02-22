@@ -1,5 +1,5 @@
 'use client';
-import { updateSesionWithGym } from '@/app/(common)/actions/session/updateSessionWithGym';
+import { updateSesionWithGym } from '@/app/(common)/_actions/session/updateSessionWithGym';
 import { GymAtom, type GymAtomType } from '@/app/state/Atoms/gymAtom';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';

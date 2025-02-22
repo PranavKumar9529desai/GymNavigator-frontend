@@ -1,5 +1,5 @@
-"use client";
-import { cn } from "@/lib/utils";
+'use client';
+import { cn } from '@/lib/utils';
 import {
   Bell,
   Building2,
@@ -12,10 +12,10 @@ import {
   UserCheck,
   Users,
   UtensilsCrossed,
-} from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import type { MenuItem, SubItem } from "../menuItems";
+} from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import type { MenuItem, SubItem } from '../menuItems';
 
 const iconMap = {
   Building2,
@@ -42,23 +42,25 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
     const pathParts = pathname.split('/');
     const currentSection = pathParts[3];
     const currentMenuItem = menuItems.find(
-      item => item.name.toLowerCase() === currentSection?.toLowerCase()
+      (item) => item.name.toLowerCase() === currentSection?.toLowerCase(),
     );
 
     if (currentMenuItem) {
-      setCurrentSubItems((currentMenuItem.subItems || []).map(subItem => ({
-        ...subItem,
-        parentIcon: currentMenuItem.iconName
-      })));
+      setCurrentSubItems(
+        (currentMenuItem.subItems || []).map((subItem) => ({
+          ...subItem,
+          parentIcon: currentMenuItem.iconName,
+        })),
+      );
     }
   }, [pathname, menuItems]);
 
   return (
-    <div 
+    <div
       className={cn(
-        "px-4 transform-gpu transition-all duration-300 ease-in-out",
-        currentSubItems.length > 0 ? "py-3" : "py-2",
-        className
+        'px-4 transform-gpu transition-all duration-300 ease-in-out',
+        currentSubItems.length > 0 ? 'py-3' : 'py-2',
+        className,
       )}
     >
       {/* Search Bar and Action Buttons Container */}
@@ -77,16 +79,16 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <button 
+          <button
             type="button"
-            onClick={() => console.log("QR Code clicked")}
+            onClick={() => console.log('QR Code clicked')}
             className="p-2.5 bg-white/90 hover:bg-white rounded-xl transition-all duration-200 text-gray-600 hover:text-gray-800 shadow-sm ring-1 ring-indigo-200/30 hover:shadow-md"
           >
             <QrCode className="w-5 h-5" />
           </button>
-          <button 
+          <button
             type="button"
-            onClick={() => console.log("Notification clicked")}
+            onClick={() => console.log('Notification clicked')}
             className="p-2.5 bg-white/90 hover:bg-white rounded-xl transition-all duration-200 text-gray-600 hover:text-gray-800 shadow-sm ring-1 ring-indigo-200/30 hover:shadow-md"
           >
             <Bell className="w-5 h-5" />
@@ -102,30 +104,30 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
             {currentSubItems.map((subItem) => {
               const IconComponent = iconMap[subItem.parentIcon as keyof typeof iconMap];
               const isActive = pathname === subItem.link;
-              
+
               return (
-                <div 
-                  key={subItem.label} 
+                <div
+                  key={subItem.label}
                   className="flex flex-col items-center w-28 transform-gpu transition-transform duration-200 ease-out"
                 >
                   <button
                     type="button"
                     onClick={() => router.push(subItem.link)}
                     className={cn(
-                      "w-12 h-12 rounded-xl transform-gpu transition-all duration-200 ease-out flex items-center justify-center hover:scale-105",
+                      'w-12 h-12 rounded-xl transform-gpu transition-all duration-200 ease-out flex items-center justify-center hover:scale-105',
                       isActive
-                        ? "bg-white text-gray-800 shadow-md ring-1 ring-gray-200/50" 
-                        : "bg-white/80 text-gray-500 hover:bg-white hover:text-gray-800 hover:shadow-sm"
+                        ? 'bg-white text-gray-800 shadow-md ring-1 ring-gray-200/50'
+                        : 'bg-white/80 text-gray-500 hover:bg-white hover:text-gray-800 hover:shadow-sm',
                     )}
                   >
                     {IconComponent && <IconComponent className="w-6 h-6" />}
                   </button>
                   <span
                     className={cn(
-                      "relative text-xs text-center mt-1.5 px-1 font-medium pb-2 transition-colors duration-200",
+                      'relative text-xs text-center mt-1.5 px-1 font-medium pb-2 transition-colors duration-200',
                       isActive
-                        ? "text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-gray-800 after:rounded-full after:transition-transform after:duration-200" 
-                        : "text-gray-500"
+                        ? 'text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-gray-800 after:rounded-full after:transition-transform after:duration-200'
+                        : 'text-gray-500',
                     )}
                   >
                     {subItem.name}
@@ -138,4 +140,4 @@ export default function BottomSection({ className, menuItems }: BottomSectionPro
       )}
     </div>
   );
-} 
+}

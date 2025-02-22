@@ -2,7 +2,7 @@
 import { m } from 'framer-motion';
 import { ArrowRight, Clock, Shield, Zap } from 'lucide-react';
 import Link from 'next/link';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../_component/CustomButton';
 
 const CtaSection = () => {
   return (

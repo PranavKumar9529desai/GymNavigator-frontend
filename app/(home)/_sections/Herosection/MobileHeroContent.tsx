@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import { ArrowRight, Dumbbell, Sparkles, UserCheck, Users } from 'lucide-react';
-import CustomButton from '../../component/CustomButton';
+import CustomButton from '../../_component/CustomButton';
 import MobileHeroContent from './MobileHeroContent';
 
 export default function Herosection() {

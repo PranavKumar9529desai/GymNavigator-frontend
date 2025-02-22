@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface ProfileButtonProps {
   imageUrl?: string;
@@ -29,4 +29,4 @@ export default function ProfileButton({ imageUrl, name, onClick }: ProfileButton
       )}
     </button>
   );
-} 
+}

@@ -1,6 +1,6 @@
-"use client";
-import { cn } from "@/lib/utils";
-import { User } from "lucide-react";
+'use client';
+import { cn } from '@/lib/utils';
+import { User } from 'lucide-react';
 
 interface TopSectionProps {
   className?: string;
@@ -8,7 +8,7 @@ interface TopSectionProps {
 
 export default function TopSection({ className }: TopSectionProps) {
   return (
-    <div className={cn("px-4 flex items-center justify-between", className)}>
+    <div className={cn('px-4 flex items-center justify-between', className)}>
       {/* Logo Section with Title and Subtitle */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-blue-600" />
@@ -19,13 +19,13 @@ export default function TopSection({ className }: TopSectionProps) {
       </div>
 
       {/* Profile Button */}
-      <button 
+      <button
         type="button"
-        onClick={() => console.log("Profile clicked")}
+        onClick={() => console.log('Profile clicked')}
         className="p-2 hover:bg-gray-100 rounded-full transition-colors"
       >
         <User className="w-5 h-5 text-gray-600" />
       </button>
     </div>
   );
-} 
+}
