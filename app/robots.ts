@@ -11,10 +11,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/home', '/gym'],
+        allow: ['/', '/home', '/gym', '/dashboard'],
         disallow: [
           '/api/*',
-          '/dashboard/*',
           '/_next/*',
           '/static/*',
           '/auth/*',
@@ -24,8 +23,8 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/api/', '/dashboard/', '/_next/', '/static/', '/auth/'],
+        allow: ['/', '/dashboard'],
+        disallow: ['/api/', '/_next/', '/static/', '/auth/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
