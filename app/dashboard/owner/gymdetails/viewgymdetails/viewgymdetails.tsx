@@ -55,7 +55,7 @@ export default function ViewGymDetails({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 border  mx-auto">
+    <div className="min-h-screen bg-gray-50   mx-auto">
       {/* Simplified Hero Section with Fixed Menu Position */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-6">
