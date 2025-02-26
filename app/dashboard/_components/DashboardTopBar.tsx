@@ -3,25 +3,24 @@
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import TopBar from './TopBar';
-import { 
+import {
   ClientDashboardMenuItems,
   type MenuItem,
-  OwnerDashboardMenuItems, 
-  TrainerDashboardMenuItems 
+  OwnerDashboardMenuItems,
+  TrainerDashboardMenuItems,
 } from './menuItems';
 
 export default function DashboardTopBar() {
   const { data: session } = useSession();
-  const pathname = usePathname();
-  
+
   // Determine which menu items to show based on user role
   let menuItems: MenuItem[] = ClientDashboardMenuItems; // Default
-  
-  if (session?.user?.role === 'owner') {
+
+  if (session?.role === 'owner') {
     menuItems = OwnerDashboardMenuItems;
-  } else if (session?.user?.role === 'trainer') {
+  } else if (session?.role === 'trainer') {
     menuItems = TrainerDashboardMenuItems;
   }
 
-  return <TopBar menuItems={menuItems} userRole={session?.user?.role} />;
+  return <TopBar menuItems={menuItems} userRole={session?.role} />;
 }

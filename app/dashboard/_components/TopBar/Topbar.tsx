@@ -1,11 +1,11 @@
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import type { FC } from "react";
-import type { MenuItem, SubItem } from "../menuItems";
-import NotificationButton from "./NotificationButton";
-import QRCodeButton from "./QRCodeButton";
-import SubrouteNav from "./SubrouteNav";
-import UserMenuButton from "./UserMenuButton";
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import type { FC } from 'react';
+import type { MenuItem, SubItem } from '../menuItems';
+import NotificationButton from './NotificationButton';
+import QRCodeButton from './QRCodeButton';
+import SubrouteNav from './SubrouteNav';
+import UserMenuButton from './UserMenuButton';
 
 interface TopbarProps {
   gymName?: string;
@@ -13,25 +13,36 @@ interface TopbarProps {
   menuItems: MenuItem[];
 }
 
-const Topbar: FC<TopbarProps> = ({ 
-  gymName = "Gym Navigator", 
-  userRole,
-  menuItems 
-}) => {
+const Topbar: FC<TopbarProps> = ({ gymName = 'Gym Navigator', userRole, menuItems }) => {
   const pathname = usePathname();
-  
-  // Find the active main menu item based on the current path
-  const activeMenuItem = menuItems.find(item => 
-    pathname.includes(item.link || '') || 
-    (item.subItems?.some(subItem => pathname.includes(subItem.link)) ?? false)
-  );
-  
+
+  // First, extract the main route segment from the pathname
+  // For example, from "/dashboard/owner/onboarding/onboardingqr" we want to extract "onboarding"
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const mainRouteSegment = pathSegments.length >= 3 ? pathSegments[2] : '';
+
+  // Find the active menu item by matching the main route segment with menu items
+  const activeMenuItem = menuItems.find((item) => {
+    // Extract the main route segment from the menu item link
+    const itemLinkSegments = (item.link || '').split('/').filter(Boolean);
+    const itemMainSegment = itemLinkSegments.length >= 3 ? itemLinkSegments[2] : '';
+
+    // Check if the main route segment matches
+    return (
+      mainRouteSegment === itemMainSegment ||
+      // Also check if any of the subitems match the current path
+      (item.subItems?.some((subItem) => pathname.includes(subItem.link)) ?? false)
+    );
+  });
+
   // Get subroutes from the active menu item
-  const subroutes = activeMenuItem?.subItems?.map(subItem => ({
-    name: subItem.name,
-    href: subItem.link,
-    icon: subItem.iconName.toLowerCase()
-  })) || [];
+  const subroutes =
+    activeMenuItem?.subItems?.map((subItem) => ({
+      name: subItem.name,
+      href: subItem.link,
+      // Ensure iconName is passed correctly
+      icon: subItem.iconName ? subItem.iconName.toLowerCase() : 'home',
+    })) || [];
 
   return (
     <>

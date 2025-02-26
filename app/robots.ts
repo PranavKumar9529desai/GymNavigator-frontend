@@ -12,14 +12,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: ['/', '/home', '/gym', '/dashboard'],
-        disallow: [
-          '/api/*',
-          '/_next/*',
-          '/static/*',
-          '/auth/*',
-          '/*.json',
-          '/*.xml',
-        ],
+        disallow: ['/api/*', '/_next/*', '/static/*', '/auth/*', '/*.json', '/*.xml'],
       },
       {
         userAgent: 'Googlebot',

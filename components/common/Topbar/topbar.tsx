@@ -16,9 +16,10 @@ export default function TopBar({ menuItems, basePath = '' }: TopBarProps) {
   const router = useRouter();
 
   // Find the active main menu item based on the current path
-  const activeMenuItem = menuItems.find((item) => 
-    (item.link && pathname.includes(item.link)) || 
-    item.subItems?.some((sub) => pathname.includes(sub.link))
+  const activeMenuItem = menuItems.find(
+    (item) =>
+      (item.link && pathname.includes(item.link)) ||
+      item.subItems?.some((sub) => pathname.includes(sub.link)),
   );
 
   // Function to get the icon component from its name
@@ -47,23 +48,18 @@ export default function TopBar({ menuItems, basePath = '' }: TopBarProps) {
 
             return (
               <button
-              type='button'
+                type="button"
                 key={subItem.name}
                 onClick={() => handleSubItemClick(subItem.link)}
                 className={cn(
                   'flex items-center px-3 py-2 text-sm rounded-full transition-colors',
                   'hover:bg-gray-100',
-                  isActive 
-                    ? 'bg-blue-50 text-blue-600 font-medium' 
-                    : 'text-gray-600'
+                  isActive ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600',
                 )}
               >
                 {Icon && (
-                  <Icon 
-                    className={cn(
-                      'mr-1.5 h-4 w-4',
-                      isActive ? 'text-blue-600' : 'text-gray-500'
-                    )}
+                  <Icon
+                    className={cn('mr-1.5 h-4 w-4', isActive ? 'text-blue-600' : 'text-gray-500')}
                   />
                 )}
                 <span>{subItem.name}</span>

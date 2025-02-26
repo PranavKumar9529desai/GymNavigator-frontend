@@ -10,6 +10,6 @@ export function findActiveMenuItem(menuItems: MenuItem[], pathname: string): Men
   return menuItems.find(
     (item) =>
       (item.link && pathname.includes(item.link)) ||
-      item.subItems?.some((sub) => pathname.includes(sub.link))
+      item.subItems?.some((sub) => pathname.includes(sub.link)),
   );
 }

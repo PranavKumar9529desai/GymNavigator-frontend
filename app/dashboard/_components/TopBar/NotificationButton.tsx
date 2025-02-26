@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import { Bell } from "lucide-react";
-import { type FC, useState } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bell } from 'lucide-react';
+import { type FC, useState } from 'react';
 
 interface Notification {
   id: string;
@@ -14,29 +14,28 @@ interface Notification {
 // Mock notifications for testing UI
 const mockNotifications: Notification[] = [
   {
-    id: "1",
-    message: "New booking request from Alex",
-    time: "2 min ago",
+    id: '1',
+    message: 'New booking request from Alex',
+    time: '2 min ago',
     read: false,
   },
   {
-    id: "2",
-    message: "Your schedule has been updated for tomorrow",
-    time: "1 hour ago",
+    id: '2',
+    message: 'Your schedule has been updated for tomorrow',
+    time: '1 hour ago',
     read: false,
   },
   {
-    id: "3",
-    message: "Payment received from client #1204",
-    time: "Yesterday",
+    id: '3',
+    message: 'Payment received from client #1204',
+    time: 'Yesterday',
     read: true,
   },
 ];
 
 const NotificationButton: FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -45,9 +44,7 @@ const NotificationButton: FC = () => {
   };
 
   const markAsRead = (id: string) => {
-    setNotifications(
-      notifications.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)));
   };
 
   const markAllAsRead = () => {
@@ -94,9 +91,9 @@ const NotificationButton: FC = () => {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ type: "spring", duration: 0.3 }}
+              transition={{ type: 'spring', duration: 0.3 }}
               className="absolute right-0 mt-2 w-80 md:max-w-sm bg-white rounded-lg shadow-lg z-20 border overflow-hidden"
-              style={{ maxHeight: "calc(100vh - 180px)" }}
+              style={{ maxHeight: 'calc(100vh - 180px)' }}
             >
               <div className="p-3 border-b flex justify-between items-center">
                 <h3 className="font-medium">Notifications</h3>
@@ -123,28 +120,22 @@ const NotificationButton: FC = () => {
                     <motion.div
                       key={notification.id}
                       initial={{
-                        backgroundColor: notification.read
-                          ? "white"
-                          : "#eff6ff",
+                        backgroundColor: notification.read ? 'white' : '#eff6ff',
                       }}
                       animate={{
-                        backgroundColor: notification.read
-                          ? "white"
-                          : "#eff6ff",
+                        backgroundColor: notification.read ? 'white' : '#eff6ff',
                       }}
                       whileTap={{ scale: 0.98 }}
-                      className={`p-3 border-b hover:bg-gray-50 cursor-pointer transition-all`}
+                      className={'p-3 border-b hover:bg-gray-50 cursor-pointer transition-all'}
                       onClick={() => markAsRead(notification.id)}
                     >
                       <div className="flex items-start">
                         <div className="flex-1">
                           <div className="text-sm">{notification.message}</div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            {notification.time}
-                          </div>
+                          <div className="text-xs text-gray-500 mt-1">{notification.time}</div>
                         </div>
                         {!notification.read && (
-                          <div className="h-2 w-2 rounded-full bg-blue-500 mt-1.5"></div>
+                          <div className="h-2 w-2 rounded-full bg-blue-500 mt-1.5" />
                         )}
                       </div>
                     </motion.div>

@@ -12,7 +12,7 @@ export default function ClientSideProvider({ children }: ClientSideProviderProps
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   useEffect(() => {
     if (session?.user) {
       const { role } = session.user;
