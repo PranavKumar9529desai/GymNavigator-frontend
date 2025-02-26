@@ -1,7 +1,8 @@
 'use client';
 
-import BottomNavigation from '@/components/common/Bottomnavigation/bottomnavigation';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+import TopBar from './TopBar';
 import { 
   ClientDashboardMenuItems,
   type MenuItem,
@@ -9,17 +10,18 @@ import {
   TrainerDashboardMenuItems 
 } from './menuItems';
 
-export default function DashboardBottomNav() {
+export default function DashboardTopBar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   
   // Determine which menu items to show based on user role
   let menuItems: MenuItem[] = ClientDashboardMenuItems; // Default
   
-  if (session?.role === 'owner') {
+  if (session?.user?.role === 'owner') {
     menuItems = OwnerDashboardMenuItems;
-  } else if (session?.role === 'trainer') {
+  } else if (session?.user?.role === 'trainer') {
     menuItems = TrainerDashboardMenuItems;
   }
 
-  return <BottomNavigation menuItems={menuItems} />;
+  return <TopBar menuItems={menuItems} userRole={session?.user?.role} />;
 }

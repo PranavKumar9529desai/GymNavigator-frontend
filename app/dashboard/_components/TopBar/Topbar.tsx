@@ -1,6 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { FC } from "react";
+import type { MenuItem, SubItem } from "../menuItems";
 import NotificationButton from "./NotificationButton";
 import QRCodeButton from "./QRCodeButton";
 import SubrouteNav from "./SubrouteNav";
@@ -9,22 +10,34 @@ import UserMenuButton from "./UserMenuButton";
 interface TopbarProps {
   gymName?: string;
   userRole?: string;
+  menuItems: MenuItem[];
 }
 
-const Topbar: FC<TopbarProps> = ({ gymName = "Gym Navigator", userRole }) => {
-  // Define subroutes with icons for better mobile navigation
-  const subroutes = [
-    { name: "Dashboard", href: "/dashboard", icon: "home" },
-    { name: "Schedule", href: "/dashboard/subroute1", icon: "calendar" },
-    { name: "Members", href: "/dashboard/subroute2", icon: "users" },
-    { name: "Analytics", href: "/dashboard/subroute3", icon: "chart-bar" },
-  ];
+const Topbar: FC<TopbarProps> = ({ 
+  gymName = "Gym Navigator", 
+  userRole,
+  menuItems 
+}) => {
+  const pathname = usePathname();
+  
+  // Find the active main menu item based on the current path
+  const activeMenuItem = menuItems.find(item => 
+    pathname.includes(item.link || '') || 
+    (item.subItems?.some(subItem => pathname.includes(subItem.link)) ?? false)
+  );
+  
+  // Get subroutes from the active menu item
+  const subroutes = activeMenuItem?.subItems?.map(subItem => ({
+    name: subItem.name,
+    href: subItem.link,
+    icon: subItem.iconName.toLowerCase()
+  })) || [];
 
   return (
     <>
-      <div className="w-full bg-white shadow-sm flex flex-col sticky top-0 z-10 px-4 py-2">
+      <div className="w-full flex flex-col sticky top-0 z-10 shadow-md bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 pt-2">
         {/* Top section with logo, name, and buttons */}
-        <div className="h-12 md:h-16 flex items-center justify-between bg-white px-4">
+        <div className="h-12 md:h-16 flex items-center justify-between px-4 border-b border-blue-100">
           <div className="flex items-center space-x-3">
             <div className="relative h-9 w-9 rounded-md overflow-hidden shadow-sm">
               <Image
@@ -36,11 +49,11 @@ const Topbar: FC<TopbarProps> = ({ gymName = "Gym Navigator", userRole }) => {
               />
             </div>
             <div>
-              <h1 className="font-bold text-lg tracking-tight">{gymName}</h1>
+              <h1 className="font-bold text-lg tracking-tight text-blue-900">{gymName}</h1>
               {userRole && (
                 <div className="flex items-center">
                   <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5" />
-                  <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+                  <p className="text-xs text-blue-700 capitalize">{userRole}</p>
                 </div>
               )}
             </div>
@@ -54,7 +67,7 @@ const Topbar: FC<TopbarProps> = ({ gymName = "Gym Navigator", userRole }) => {
         </div>
 
         {/* Subroute navigation with smooth animations */}
-        <SubrouteNav subroutes={subroutes} />
+        {subroutes.length > 0 && <SubrouteNav subroutes={subroutes} />}
       </div>
     </>
   );

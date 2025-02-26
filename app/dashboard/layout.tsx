@@ -1,11 +1,15 @@
+import { SessionProvider } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import type React from "react";
 import { auth } from "../(auth)/auth";
+import ClientSideProvider from './_components/ClientSideProvider';
 import DashboardBottomNav from "./_components/DashboardBottomNav";
-import Topbar from "./_components/TopBar";
+import DashboardTopBar from "./_components/DashboardTopBar";
 import {
   ClientDashboardMenuItems,
+  type MenuItem,
   OwnerDashboardMenuItems,
-  TrainerDashboardMenuItems,
+  TrainerDashboardMenuItems
 } from "./_components/menuItems";
 import Sidebar from "./_components/sidebar";
 
@@ -14,11 +18,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  // Server-side role detection
   const session = await auth();
+  
+ 
+
   const role = session?.user?.role || session?.role;
-  console.log("role from the layout", role);
-  const getMenuItems = () => {
+
+  const getMenuItems = (): MenuItem[] => {
     switch (role) {
       case "owner":
         return OwnerDashboardMenuItems;
@@ -32,31 +38,32 @@ export default async function Layout({
   };
 
   return (
-    <>
-      <div className="flex h-screen bg-gray-50">
-        {/* Server-rendered sidebar - visible only on desktop */}
-        <div className="hidden md:block h-screen">
-          <Sidebar menuItems={getMenuItems()} />
-        </div>
-        <div className="w-full flex flex-col overflow-hidden">
-          {/* Topbar with logo and subroute navigation - visible only on mobile */}
-          <div className="md:hidden">
-            <Topbar gymName="Gym Navigator" userRole={role} />
+   
+        <div className="flex h-screen bg-gray-50">
+          {/* Server-rendered sidebar - visible only on desktop */}
+          <div className="hidden md:block h-screen">
+            <Sidebar menuItems={getMenuItems()} />
           </div>
           
-          {/* Main content area with proper height calculations */}
-          <div className="flex-1 overflow-y-auto scroll-container relative pb-16 md:pb-0">
-            <div className="container mx-auto px-4 py-4 md:py-6 max-w-7xl">
-              {children}
+          <div className="w-full flex flex-col overflow-hidden">
+            {/* Topbar with logo and subroute navigation - visible only on mobile */}
+            <div className="md:hidden">
+              <DashboardTopBar />
+            </div>
+            
+            {/* Main content area with proper height calculations */}
+            <div className="flex-1 overflow-y-auto scroll-container relative pb-16 md:pb-0">
+              <div className="container mx-auto px-4 py-4 md:py-6 max-w-7xl">
+                {children}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom navigation - visible only on mobile */}
-        <div className="md:hidden">
-          <DashboardBottomNav menuItems={getMenuItems()} />
+          {/* Bottom navigation - visible only on mobile */}
+          <div className="md:hidden">
+            <DashboardBottomNav />
+          </div>
         </div>
-      </div>
-    </>
+   
   );
 }
