@@ -3,6 +3,7 @@ import RecoilContextProvider from '@/lib/RecoilContextProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Toaster } from 'sonner';
 import type { ToasterProps } from 'sonner';
 import QueryClientProvider from './providers/QueryClientProvider';
@@ -78,6 +79,11 @@ export default function RootLayout({
         <meta
           name="google-site-verification"
           content="LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI"
+        />
+        <Script 
+          src="https://cdn.countvisits.com/script.js" 
+          data-website-id="c9e33597-c501-44cd-93fe-482ca6253783"
+          strategy="afterInteractive"
         />
       </head>
       <body>

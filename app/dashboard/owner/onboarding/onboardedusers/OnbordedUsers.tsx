@@ -10,10 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreVertical, User, UserCheck, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
+import { updateActivePeriod } from './mutations';
 
 interface UserType {
   id: number;
@@ -50,13 +53,80 @@ const formatDate = (date: Date | null): string => {
 };
 
 export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
-  const [users] = useState(
-    initialUsers.map((user) => ({
-      ...user,
-      status: calculateStatus(user.startDate, user.endDate),
-    })),
-  );
+  console.log('OnboardedUsers received initialUsers:', initialUsers);
+
+  const users = initialUsers.map((user) => ({
+    ...user,
+    status: calculateStatus(user.startDate, user.endDate),
+  }));
+  
   const router = useRouter();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const updateActivePeriodMutation = useMutation({
+    mutationFn: updateActivePeriod,
+    onMutate: async ({ userId, startDate, endDate }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['onboardedUsers'] });
+
+      // Snapshot the previous value
+      const previousUsers = queryClient.getQueryData(['onboardedUsers']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['onboardedUsers'], (old: UserType[] | undefined) => {
+        if (!old) return [];
+        return old.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              startDate: startDate ? new Date(startDate) : null,
+              endDate: endDate ? new Date(endDate) : null,
+              status: calculateStatus(
+                startDate ? new Date(startDate) : null,
+                endDate ? new Date(endDate) : null
+              ),
+            };
+          }
+          return user;
+        });
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousUsers };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousUsers) {
+        queryClient.setQueryData(['onboardedUsers'], context.previousUsers);
+      }
+      toast({
+        title: 'Error',
+        description: 'Failed to update active period. Please try again.',
+        variant: 'destructive',
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Success',
+        description: 'Active period updated successfully.',
+      });
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we're up to date
+      queryClient.invalidateQueries({ queryKey: ['onboardedUsers'] });
+    },
+  });
+
+  const handleRowClick = (user: UserType) => {
+    const params = new URLSearchParams({
+      userid: user.id.toString(),
+      username: user.name,
+      startdate: user.startDate?.toISOString() || '',
+      enddate: user.endDate?.toISOString() || '',
+    });
+    router.push(`/ownerdashboard/onboarding/editactiveperiod?${params.toString()}`);
+  };
 
   const totalUsers = users.length;
   const activeUsers = users.filter((u) => u.status === 'active').length;
@@ -82,16 +152,6 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       gradient: 'yellow',
     },
   ] as const;
-
-  const handleRowClick = (user: UserType) => {
-    const params = new URLSearchParams({
-      userid: user.id.toString(),
-      username: user.name,
-      startdate: user.startDate?.toISOString() || '',
-      enddate: user.endDate?.toISOString() || '',
-    });
-    router.push(`/ownerdashboard/onboarding/editactiveperiod?${params.toString()}`);
-  };
 
   const columns: ColumnDef<UserType>[] = [
     {
@@ -167,6 +227,21 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
     },
   ];
 
+  if (users.length === 0) {
+    return (
+      <div className="container mx-auto p-6 space-y-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Onboarding Users</h1>
+        <div className="text-center py-12">
+          <Users className="mx-auto h-12 w-12 text-gray-400" />
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">No Users Found</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            There are no onboarded users to display at the moment.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-center mb-8">Onboarding Users</h1>
@@ -230,16 +305,6 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
                 >
                   {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                 </div>
-
-                {/* Mobile action button alternative */}
-                {/* <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleRowClick(user)}
-                  className="text-xs"
-                >
-                  Edit Period
-                </Button> */}
               </div>
             </div>
           )}
