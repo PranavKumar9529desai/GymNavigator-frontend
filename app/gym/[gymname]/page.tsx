@@ -31,12 +31,13 @@ export async function generateStaticParams() {
 }
 
 interface PageProps {
-  params: {
+  params: Promise<{
     gymname: string;
-  };
+  }>;
 }
 
-const GymPage = async ({ params }: PageProps) => {
+const GymPage = async (props: PageProps) => {
+  const params = await props.params;
   const { gymname } = params;
   console.log('gymname received:', gymname);
 
@@ -61,7 +62,8 @@ const GymPage = async ({ params }: PageProps) => {
 export const revalidate = 3600; // Revalidate all pages every hour
 
 // Add metadata for SEO
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   const gymData = await FetchGymData(params.gymname);
   return {
     title: `${gymData?.name || 'Gym'} | Fitness Platform`,

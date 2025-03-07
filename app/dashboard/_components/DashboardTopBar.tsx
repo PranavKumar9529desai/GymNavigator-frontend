@@ -1,26 +1,32 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
-import TopBar from './TopBar';
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import TopBar from "./TopBar";
 import {
   ClientDashboardMenuItems,
   type MenuItem,
   OwnerDashboardMenuItems,
   TrainerDashboardMenuItems,
-} from './menuItems';
+} from "./menuItems";
+import { Suspense } from "react";
+import { Skeleton } from "../../../components/ui/skeleton";
 
 export default function DashboardTopBar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   // Determine which menu items to show based on user role
   let menuItems: MenuItem[] = ClientDashboardMenuItems; // Default
 
-  if (session?.role === 'owner') {
+  if (session?.role === "owner") {
     menuItems = OwnerDashboardMenuItems;
-  } else if (session?.role === 'trainer') {
+  } else if (session?.role === "trainer") {
     menuItems = TrainerDashboardMenuItems;
   }
 
-  return <TopBar menuItems={menuItems} userRole={session?.role} />;
+  return (
+    <Suspense fallback={<Skeleton className="h-10 w-64 mx-auto" />}>
+      <TopBar menuItems={menuItems} userRole={session?.role} status={status} />
+    </Suspense>
+  );
 }

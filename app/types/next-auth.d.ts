@@ -22,6 +22,7 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
   }
   interface JWT {
+    id?: string;
     role?: Rolestype;
     gym?: GymInfo;
     accessToken?: string;
@@ -30,6 +31,7 @@ declare module 'next-auth' {
 
 declare module 'next-auth' {
   interface User {
+    id: string;
     name: string;
     email: string;
     role: Rolestype;

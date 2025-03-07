@@ -1,8 +1,12 @@
+import { Suspense } from "react";
+import MarkAttendanceLoading from "./loading";
+import AttendanceContent from "./_components/AttendanceContent";
+
+// This remains a server component
 export default function MarkAttendancePage() {
   return (
-    <div className="py-8">
-      <h1 className="text-3xl font-bold">Mark Attendance</h1>
-      <div className="mt-6">{/* Add attendance marking form here */}</div>
-    </div>
+    <Suspense fallback={<MarkAttendanceLoading />}>
+      <AttendanceContent />
+    </Suspense>
   );
 }

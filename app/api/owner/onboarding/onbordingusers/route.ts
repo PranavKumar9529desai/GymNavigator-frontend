@@ -1,4 +1,4 @@
-import { getOnboardingUsersServer } from '@/app/dashboard/owner/onboarding/onboardedusers/GetOnBoardingUser';
+import { getOnboardingUsersServer } from '@/app/dashboard/owner/onboarding/onboardedusers/actions/GetOnBoardingUser';
 import { NextResponse } from 'next/server';
 
 export async function GET() {

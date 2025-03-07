@@ -39,7 +39,7 @@ const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(request) {
   const { nextUrl } = request;
   const session = request.auth as Session | null; // Use auth session instead of getToken
-  console.log('session', session);
+  console.log('session from the middleware', session);
   /**
    * Check if the user is currently logged in
    * @type {boolean}

@@ -1,0 +1,16 @@
+"use server";
+import { auth } from "@/app/(auth)/auth";
+import axios, { type AxiosInstance } from "axios";
+
+export const ClientReqConfig = async (): Promise<AxiosInstance> => {
+  const session = await auth();
+  console.log("session from the client axios", session);
+  const clientAxios: AxiosInstance = await axios.create({
+    baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/protected`,
+    headers: {
+      Authorization: `${JSON.stringify(session)}`,
+    },
+  });
+
+  return clientAxios;
+};
