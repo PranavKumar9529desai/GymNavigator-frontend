@@ -1,26 +1,29 @@
 "use client";
 
-import type { Excercisetype } from "../actions/getSIngleMuscle";
 import { m } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, Search, X } from "lucide-react";
+import { ArrowRight, Dumbbell, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import type { Excercisetype } from "../actions/getSIngleMuscle";
 import { useExercises } from "./hooks/useExercises";
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
+    y: 0,
     transition: {
-      duration: 0.3,
+      duration: 0.5,
+      staggerChildren: 0.1
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
+    y: 0,
   },
 };
 
@@ -35,7 +38,6 @@ export const SingleMuscles = ({
 }: SingleMusclesProps) => {
   const { data: exercises = initialExercises } = useExercises(muscleName);
 
-  // Filter exercises by muscle name
   const filteredExercises = exercises.filter(
     (exercise) =>
       exercise?.MuscleGroup?.name?.toLowerCase() === muscleName?.toLowerCase()
@@ -46,31 +48,30 @@ export const SingleMuscles = ({
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen "
+      className="min-h-screen bg-gray-50/50"
     >
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white mt-4 mx-4 rounded-2xl shadow-lg">
-        <div className="max-w-7xl mx-auto px-8 py-16 lg:py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtNi42MjcgMC0xMiA1LjM3My0xMiAxMnM1LjM3MyAxMiAxMiAxMiAxMi01LjM3MyAxMi0xMi01LjM3My0xMi0xMi0xMnptLTExLjk5NyAwYy02LjYyNyAwLTEyIDUuMzczLTEyIDEyczUuMzczIDEyIDEyIDEyIDEyLTUuMzczIDEyLTEyLTUuMzczLTEyLTEyLTEyeiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9nPjwvc3ZnPg==')] opacity-10" />
+      <div className="relative overflow-hidden bg-white border-b border-gray-100">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50/50" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <m.div
             variants={itemVariants}
-            className="relative flex flex-col items-center"
+            className="flex flex-col items-center text-center space-y-6"
           >
-            <span className="px-4 py-1.5 bg-blue-500/20 rounded-full text-blue-100 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+              <Dumbbell className="w-4 h-4 mr-2" />
               Workout Guide
-            </span>
-            <div className="space-y-4 text-center">
-              <h1 className="text-4xl lg:text-6xl font-bold tracking-tight">
-                <span className="bg-gradient-to-r from-blue-100 to-white bg-clip-text text-transparent">
-                  {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)}
-                </span>
-                <span className="ml-4 text-blue-100">Exercises</span>
-              </h1>
-              <p className="text-blue-100 text-lg max-w-2xl mx-auto leading-relaxed">
-                Discover professional-grade exercises designed to target and
-                strengthen your {muscleName?.toLowerCase()} muscles effectively.
-              </p>
             </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight max-w-4xl">
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)}
+              </span>
+              <span className="ml-2 sm:ml-4">Exercises</span>
+            </h1>
+            <p className="text-gray-600 text-lg sm:text-xl max-w-2xl">
+              Discover professional-grade exercises designed to target and strengthen 
+              your {muscleName?.toLowerCase()} muscles effectively.
+            </p>
           </m.div>
         </div>
       </div>
@@ -92,9 +93,9 @@ const RecommenedExcercise = ({
   const [difficultyFilter, setDifficultyFilter] = useState<string>("");
 
   const difficultyOptions = [
-    { value: "Beginner", icon: "🟢" },
-    { value: "Intermediate", icon: "🟡" },
-    { value: "Advanced", icon: "🔴" },
+    { value: "Beginner", icon: "🟢", color: "emerald" },
+    { value: "Intermediate", icon: "🟡", color: "yellow" },
+    { value: "Advanced", icon: "🔴", color: "red" },
   ];
 
   const filteredExercises = Excercises.filter((exercise) => {
@@ -112,27 +113,27 @@ const RecommenedExcercise = ({
   });
 
   return (
-    <div className="space-y-6">
-      {/* Search and Filter Bar */}
-      <div className=" rounded-2xl ">
-        <div className="p-4 space-y-4">
-          {/* Search and Filter Container */}
+    <m.div variants={containerVariants} className="space-y-8">
+      {/* Search and Filter Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <div className="p-6">
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search exercises..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                className="w-full pl-12 pr-4 py-3 text-base border border-gray-200 rounded-xl 
+                         focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
             </div>
 
-            {/* Simple Difficulty Filter */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              <span className="text-sm text-gray-600 whitespace-nowrap">
+            {/* Difficulty Filter */}
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600 font-medium whitespace-nowrap">
                 Difficulty:
               </span>
               <div className="flex gap-2">
@@ -144,8 +145,9 @@ const RecommenedExcercise = ({
                         difficultyFilter === option.value ? "" : option.value
                       )
                     }
-                    className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium
-                      transition-colors duration-200 border
+                    type="button"
+                    className={`inline-flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium
+                      transition-all duration-200 border
                       ${
                         difficultyFilter === option.value
                           ? "bg-blue-50 border-blue-200 text-blue-700"
@@ -159,46 +161,26 @@ const RecommenedExcercise = ({
               </div>
             </div>
           </div>
-
-          {/* Active Filter Indicator */}
-          {difficultyFilter && (
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">
-                Showing{" "}
-                <span className="font-medium text-blue-700">
-                  {difficultyFilter}
-                </span>{" "}
-                exercises
-              </span>
-              <button
-                type="button"
-                onClick={() => setDifficultyFilter("")}
-                className="text-red-500 hover:text-red-700 font-medium text-sm"
-              >
-                Clear filter
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Exercise Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 px-2 sm:px-6 lg:px-8">
-        {filteredExercises.map((excercise) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredExercises.map((exercise) => (
           <m.div
-            key={`${excercise.name}-${excercise.MuscleGroup.id}`}
+            key={`${exercise.name}-${exercise.MuscleGroup.id}`}
             variants={itemVariants}
             className="h-full"
           >
             <ExcerciseCard
-              name={excercise.name}
-              img={excercise.img}
-              instructions={excercise.instructions}
+              name={exercise.name}
+              img={exercise.img}
+              instructions={exercise.instructions}
             />
           </m.div>
         ))}
       </div>
-    </div>
+    </m.div>
   );
 };
 
@@ -213,8 +195,7 @@ const ExcerciseCard = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-
-  // Calculate difficulty based on instruction length
+  
   const difficulty =
     instructions.length > 500
       ? "Advanced"
@@ -222,39 +203,42 @@ const ExcerciseCard = ({
       ? "Intermediate"
       : "Beginner";
 
-  const handleClick = () => {
-    router.push(`${pathname}/${name}`);
+  const difficultyColors = {
+    Beginner: "bg-emerald-50 text-emerald-700",
+    Intermediate: "bg-yellow-50 text-yellow-700",
+    Advanced: "bg-red-50 text-red-700",
   };
 
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md 
-                 transition-all duration-200 border border-gray-100 h-full flex flex-col"
+      className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md 
+                 transition-all duration-300 border border-gray-100 h-full flex flex-col"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         <img
           src={img}
           alt={`${name} exercise`}
-          className="w-full h-full object-cover transition-transform duration-200 hover:scale-102"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute bottom-2 right-2 px-3 py-1 text-sm font-medium rounded-full backdrop-blur-sm bg-white/50">
+        <div className={`absolute bottom-3 right-3 px-3 py-1.5 text-sm font-medium rounded-full 
+                        ${difficultyColors[difficulty as keyof typeof difficultyColors]}`}>
           {difficulty}
         </div>
       </div>
-      <div className="p-4 flex flex-col flex-1 justify-between">
+      <div className="p-5 flex flex-col flex-1 justify-between">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-1">
           {name}
         </h3>
         <button
           type="button"
-          onClick={handleClick}
+          onClick={() => router.push(`${pathname}/${name}`)}
           className="inline-flex items-center justify-between px-4 py-2.5 text-sm font-medium
-                   text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl
-                   hover:from-blue-700 hover:to-blue-800 transition-colors duration-200
-                   shadow-sm"
+                   text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl
+                   hover:from-blue-700 hover:to-indigo-700 transition-all duration-300
+                   shadow-sm hover:shadow group"
         >
-          <span>View Exercise</span>
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <span>View Details</span>
+          <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
         </button>
       </div>
     </div>

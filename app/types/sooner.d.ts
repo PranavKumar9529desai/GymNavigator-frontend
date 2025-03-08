@@ -14,6 +14,7 @@ declare module "sonner" {
 
   export const Toaster: React.FC<ToasterProps>;
   export const toast: {
+    [x: string]: any;
     (message: string): void;
     success: (message: string, options?: { description?: string }) => void;
     loading: (message: string, options?: { description?: string }) => void;

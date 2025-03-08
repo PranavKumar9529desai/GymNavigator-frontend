@@ -1,6 +1,10 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Allworkouts } from "./_components/allworkouts";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import getAllMuscles from "./actions/getAllMuscles";
 
 export const metadata: Metadata = {
@@ -11,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function AllWorkoutsPage() {
   const queryClient = new QueryClient();
-  
+
   // Prefetch the muscles data with a long cache time (24 hours)
   await queryClient.prefetchQuery({
     queryKey: ["muscles"],
@@ -24,7 +28,7 @@ export default async function AllWorkoutsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50">
+    <main className="min-h-screen ">
       <div className="max-w-7xl mx-auto py-8">
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900">All Workouts</h1>

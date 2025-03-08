@@ -2,7 +2,7 @@
 
 import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
 
-interface AttendanceData {
+export interface AttendanceData {
   isMarked: boolean;
   attendance?: {
     id: number;
@@ -14,11 +14,13 @@ interface AttendanceData {
   };
 }
 
-export async function checkUserAttendance(): Promise<{
+export interface AttendanceResponse {
   success: boolean;
   data?: AttendanceData;
   error?: string;
-}> {
+}
+
+export async function checkUserAttendance(): Promise<AttendanceResponse> {
   try {
     const clientAxios = await ClientReqConfig();
     const response = await clientAxios.get("/check-attendance");
@@ -31,8 +33,7 @@ export async function checkUserAttendance(): Promise<{
     console.error("Error checking attendance:", error);
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to check attendance",
+      error: error instanceof Error ? error.message : "Failed to check attendance",
     };
   }
 }

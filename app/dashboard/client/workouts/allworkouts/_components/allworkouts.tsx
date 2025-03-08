@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import getAllMuscles, { type MuscleGroup } from "../actions/getAllMuscles";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Simplified animations for better mobile performance
 const fadeIn = {
@@ -34,6 +35,17 @@ const upperBodyMuscles = [
 ];
 const lowerBodyMuscles = ["Quads", "Hamstrings", "Calves", "Glutes"];
 const coreMuscles = ["Abs", "Obliques", "Lower Back"];
+
+const MuscleCardSkeleton = () => (
+  <div className="rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm">
+    <Skeleton className="aspect-video w-full" />
+    <div className="p-4 space-y-3">
+      <Skeleton className="h-7 w-1/3" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-5 w-1/4 mt-4" />
+    </div>
+  </div>
+);
 
 export const Allworkouts = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -132,15 +144,13 @@ export const Allworkouts = () => {
 
       {/* Loading State */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-32">
-          <m.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <MuscleCardSkeleton key={index} />
+          ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
           {filteredMuscles?.length === 0 ? (
             <p className="col-span-full text-center py-8 text-gray-500">
               No workouts found matching your criteria
@@ -160,7 +170,7 @@ export const Allworkouts = () => {
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center flex-wrap gap-2">
                     <span className="px-3 py-1 bg-blue-500/90 rounded-full text-sm text-white">
                       {selectedCategory}
                     </span>
@@ -170,16 +180,16 @@ export const Allworkouts = () => {
                   </div>
                 </div>
 
-                <div className="p-4">
-                  <h2 className="text-xl font-bold text-gray-800 group-hover:text-blue-500 transition-colors">
+                <div className="p-4 flex flex-col min-h-[160px]">
+                  <h2 className="text-xl font-bold text-gray-800 group-hover:text-blue-500 transition-colors break-words line-clamp-2">
                     {muscle.name.charAt(0).toUpperCase() +
                       muscle.name.slice(1).toLowerCase()}
                   </h2>
-                  <p className="text-gray-600 mt-2 mb-4">
+                  <p className="text-gray-600 mt-2 mb-4 line-clamp-2 flex-grow">
                     Master your {muscle.name.toLowerCase()} with our curated
                     exercises
                   </p>
-                  <div className="flex items-center text-blue-500 group-hover:text-blue-600">
+                  <div className="flex items-center text-blue-500 group-hover:text-blue-600 mt-auto">
                     Explore Workouts
                     <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                   </div>
