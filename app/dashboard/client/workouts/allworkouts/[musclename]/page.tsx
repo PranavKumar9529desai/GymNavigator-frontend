@@ -14,9 +14,11 @@ export default async function Page({
 }: {
   params: { musclename: string };
 }) {
-  // Await the params here as well for consistency
-  const musclename = await params.musclename;
-  const muscleName = musclename.charAt(0).toUpperCase() + musclename.slice(1);
+  // Decode the URL parameter and remove any potential encoding artifacts
+  const musclename = decodeURIComponent(params.musclename).replace(/%20/g, ' ');
+  const muscleName = musclename.split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 
   // Initialize QueryClient
   const queryClient = new QueryClient();
@@ -30,7 +32,7 @@ export default async function Page({
   return (
     <main aria-labelledby="page-title">
       <header className="sr-only border-4 border-red-400">
-        <h1 id="page-title">{muscleName} </h1>
+        <h1 id="page-title">{muscleName}</h1>
       </header>
 
       <Suspense fallback={<Loading />}>

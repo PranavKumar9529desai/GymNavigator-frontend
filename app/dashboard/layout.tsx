@@ -37,7 +37,6 @@ export default async function Layout({
   };
 
   return (
-    <QueryClientProvider>
       <div className="flex h-screen bg-gray-50">
         {/* Server-rendered sidebar - visible only on desktop */}
         <div className="hidden md:block h-screen">
@@ -63,6 +62,5 @@ export default async function Layout({
           <DashboardBottomNav />
         </div>
       </div>
-    </QueryClientProvider>
   );
 }

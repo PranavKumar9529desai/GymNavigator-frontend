@@ -1,6 +1,7 @@
 "use server";
 
 import axios, { type AxiosResponse } from "axios";
+import { unstable_cache } from 'next/cache';
 import { ClientReqConfig } from "../../../../../../lib/AxiosInstance/clientAxios";
 
 interface FetchedMusclesResponse {
@@ -31,22 +32,12 @@ export interface Exercise {
   muscle_group: string;
 }
 
-export default async function getAllMuscles(): Promise<{
-  muscles: MuscleGroup[];
-}> {
-  console.log(
-    "process.env.NEXT_PUBLIC_BACKEND_URL",
-    process.env.NEXT_PUBLIC_BACKEND_URL
-  );
-  // TODO later will be replaced withe clientAxios once the backend is ready
+export const fetchMuscles = async () => {
   try {
     const response: AxiosResponse<FetchedMusclesResponse> = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/`
     );
-    // let print first 10 muscles
-
-    const muscles = response.data.muscleGroups;
-    return { muscles };
+    return { muscles: response.data.muscleGroups };
   } catch (error) {
     console.error("Error in getAllMuscles:", error);
     if (axios.isAxiosError(error)) {
@@ -59,6 +50,19 @@ export default async function getAllMuscles(): Promise<{
         },
       });
     }
-    throw error; // Let the component handle the error
+    throw error;
   }
-}
+};
+
+// export default async function getAllMuscles(): Promise<{
+//   muscles: MuscleGroup[];
+// }> {
+//   return unstable_cache(
+//     fetchMuscles,
+//     ["all-muscles-cache"],
+//     {
+//       revalidate: 3600, // Cache for 1 hour
+//       tags: ["muscles"]
+//     }
+//   )();
+// }

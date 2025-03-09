@@ -1,45 +1,41 @@
+import {
+	HydrationBoundary,
+	QueryClient,
+	dehydrate,
+} from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Allworkouts } from "./_components/allworkouts";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import getAllMuscles from "./actions/getAllMuscles";
+import fetchMuscles from "./actions/getAllMuscles";
 
 export const metadata: Metadata = {
-  title: "All Workouts | Gym Navigator",
-  description:
-    "Explore our comprehensive collection of workouts organized by muscle groups. Find exercises tailored to your fitness goals.",
+	title: "All Workouts | Gym Navigator",
+	description:
+		"Explore our comprehensive collection of workouts organized by muscle groups. Find exercises tailored to your fitness goals.",
 };
 
 export default async function AllWorkoutsPage() {
-  const queryClient = new QueryClient();
+	// Fetch data server-side
+	const { muscles } = await fetchMuscles();
+	const queryClient = new QueryClient();
 
-  // Prefetch the muscles data with a long cache time (24 hours)
-  await queryClient.prefetchQuery({
-    queryKey: ["muscles"],
-    queryFn: async () => {
-      const data = await getAllMuscles();
-      return data;
-    },
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
-  });
+	await queryClient.prefetchQuery({
+		queryKey: ["muscles"],
+		queryFn: fetchMuscles,
+	});
 
-  return (
-    <main className="min-h-screen ">
-      <div className="max-w-7xl mx-auto py-8">
-        <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">All Workouts</h1>
-          <p className="mt-2 text-gray-600">
-            Discover exercises tailored to your fitness journey
-          </p>
-        </header>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <Allworkouts />
-        </HydrationBoundary>
-      </div>
-    </main>
-  );
+	return (
+		<main className="min-h-screen">
+			<div className="max-w-7xl mx-auto py-8">
+				<header className="mb-8 text-center">
+					<h1 className="text-3xl font-bold text-gray-900">All Workouts</h1>
+					<p className="mt-2 text-gray-600">
+						Discover exercises tailored to your fitness journey
+					</p>
+				</header>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<Allworkouts initialMuscles={muscles} />
+				</HydrationBoundary>
+			</div>
+		</main>
+	);
 }

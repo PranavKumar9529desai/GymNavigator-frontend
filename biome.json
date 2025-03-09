@@ -4,7 +4,15 @@
     "enabled": true
   },
   "files": {
-    "ignore": ["dist/**", "build/**", "node_modules/**", ".next/**", "coverage/**"]
+    "ignore": [
+      "dist/**",
+      "build/**",
+      "node_modules/**",
+      ".next/**",
+      "coverage/**",
+      "html5-qrcode/**",
+      "index.d.ts"
+    ]
   },
   "linter": {
     "enabled": true,

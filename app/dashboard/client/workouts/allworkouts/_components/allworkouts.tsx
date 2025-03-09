@@ -1,14 +1,14 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { m } from "framer-motion";
 import { Activity, ArrowRight, Dumbbell, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import getAllMuscles, { type MuscleGroup } from "../actions/getAllMuscles";
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import fetchMuscles, { type MuscleGroup } from "../actions/getAllMuscles";
 
 // Simplified animations for better mobile performance
 const fadeIn = {
@@ -47,23 +47,31 @@ const MuscleCardSkeleton = () => (
   </div>
 );
 
-export const Allworkouts = () => {
+interface AllworkoutsProps {
+  initialMuscles: MuscleGroup[];
+}
+
+export const Allworkouts = ({ initialMuscles }: AllworkoutsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [filteredMuscles, setFilteredMuscles] = useState<MuscleGroup[]>([]);
+  const [filteredMuscles, setFilteredMuscles] =
+    useState<MuscleGroup[]>(initialMuscles);
   const Router = useRouter();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["muscles"],
     queryFn: async () => {
-      const data = await getAllMuscles();
+      const data = await fetchMuscles();
       return data;
     },
+    initialData: { muscles: initialMuscles },
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
-  const muscles = data?.muscles || [];
+  const muscles = data?.muscles || initialMuscles;
 
   useEffect(() => {
     if (!muscles.length) return;
@@ -146,7 +154,7 @@ export const Allworkouts = () => {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
           {Array.from({ length: 6 }).map((_, index) => (
-            <MuscleCardSkeleton key={index} />
+            <MuscleCardSkeleton key={index as number} />
           ))}
         </div>
       ) : (
@@ -161,6 +169,11 @@ export const Allworkouts = () => {
                 key={muscle.name}
                 onClick={() => handleMuscleClick(muscle.name)}
                 className="group cursor-pointer rounded-lg overflow-hidden bg-white border border-gray-200 hover:border-blue-500 transition-colors shadow-sm hover:shadow-md"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleMuscleClick(muscle.name);
+                  }
+                }}
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
