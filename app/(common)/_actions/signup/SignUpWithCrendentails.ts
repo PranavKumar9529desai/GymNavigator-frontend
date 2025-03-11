@@ -44,7 +44,10 @@ export default async function SignupSA(
     return data;
   } catch (error) {
     console.error("Error signing up:", error);
-    return { msg: "Error signing up", user: null };
+    return {
+      msg: "Error signing up",
+      user: { id: "", name: "", email: "", password: "" },
+    };
   }
 }
 

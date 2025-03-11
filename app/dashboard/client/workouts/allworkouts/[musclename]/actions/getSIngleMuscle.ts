@@ -1,3 +1,4 @@
+"use server";
 import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
 import type { AxiosResponse } from "axios";
 

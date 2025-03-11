@@ -1,21 +1,16 @@
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import type { Metadata } from "next";
+import { queryClient } from "@/lib/getQueryClient";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { SingleMuscles } from "./_components/singleMuscle";
 import { getSingleMuscle } from "./actions/getSIngleMuscle";
 import Loading from "./loading";
-import { queryClient } from "@/lib/getQueryClient";
 export default async function Page({
   params,
 }: {
-  params: { musclename: string };
+  params: Promise<{ musclename: string }>;
 }) {
   // Decode the URL parameter and remove any potential encoding artifacts
-  const musclename = decodeURIComponent(params.musclename).replace(/%20/g, " ");
+  const { musclename } = await params;
   const muscleName = musclename
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
