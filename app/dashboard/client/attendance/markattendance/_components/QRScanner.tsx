@@ -10,8 +10,8 @@ import { CheckCircle2, QrCode } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { checkUserAttendance } from "../_actions/CheckUserAttendance";
-import { markAttendance } from "../_actions/MarkAttendance";
+import { markAttendance } from "../_actions/mark-attendance";
+import { checkUserAttendance } from "../_actions/check-attedance";
 
 interface QrValueType {
   AttendanceAction: {

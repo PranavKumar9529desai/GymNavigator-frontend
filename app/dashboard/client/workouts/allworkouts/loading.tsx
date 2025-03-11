@@ -25,7 +25,7 @@ export default function Loading() {
           <nav className="mb-4">
             <div className="grid grid-cols-2 md:flex md:flex-row gap-2">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full md:w-32" />
+                <Skeleton key={i as number} className="h-10 w-full md:w-32" />
               ))}
             </div>
           </nav>
@@ -37,10 +37,10 @@ export default function Loading() {
         {/* Muscle Cards Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 mt-8">
           {Array.from({ length: 6 }).map((_, index) => (
-            <LoadingSkeleton key={index} />
+            <LoadingSkeleton key={index as number} />
           ))}
         </div>
       </div>
     </main>
   );
-} 
+}

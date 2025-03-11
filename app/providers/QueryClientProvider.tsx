@@ -1,36 +1,23 @@
 "use client";
-
-import { experimental_createPersister } from "@tanstack/query-persist-client-core";
-import {
-  QueryClient,
-  QueryClientProvider as TanstackQueryClientProvider,
-} from "@tanstack/react-query";
+import { queryClient } from "@/lib/getQueryClient";
+import { experimental_createPersister } from '@tanstack/query-persist-client-core'
+// import { experimental_createPersister } from "@tanstack/react-persist-client-core";
+import { HydrationBoundary, QueryClientProvider as TanstackQueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode, useEffect, useState } from "react";
 
 export default function QueryClientProvider({
   children,
+  dehydratedState, // receive the dehydrated state, if available
 }: {
   children: ReactNode;
+  dehydratedState?: unknown;
 }) {
   const [mounted, setMounted] = useState(false);
-  const [queryClient] = useState(() => {
-    return new QueryClient({
-      defaultOptions: {
-        queries: {
-          gcTime: 1000 * 60 * 5,
-          staleTime: 1000 * 60,
-          refetchOnWindowFocus: false,
-          refetchOnMount: false,
-          refetchOnReconnect: false,
-        },
-      },
-    });
-  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const initializePersister = async () => {
+      (async () => {
         try {
           const { createStore, del, get, set } = await import("idb-keyval");
           const store = createStore("tanstack-query", "persisted-queries");
@@ -74,11 +61,9 @@ export default function QueryClientProvider({
           console.error("Error initializing IndexedDB persister:", error);
         }
         setMounted(true);
-      };
-
-      initializePersister();
+      })();
     }
-  }, [queryClient]);
+  }, []);
 
   if (!mounted) {
     return null;
@@ -86,7 +71,9 @@ export default function QueryClientProvider({
 
   return (
     <TanstackQueryClientProvider client={queryClient}>
-      {children}
+      <HydrationBoundary state={dehydratedState ?? {}}>
+        {children}
+      </HydrationBoundary>
       <ReactQueryDevtools initialIsOpen={false} />
     </TanstackQueryClientProvider>
   );

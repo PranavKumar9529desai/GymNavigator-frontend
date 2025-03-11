@@ -1,4 +1,5 @@
-import axios, { type AxiosResponse } from "axios";
+import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
+import type { AxiosResponse } from "axios";
 
 export interface MuscleGroupType {
   id: number;
@@ -25,7 +26,7 @@ export interface ExerciseWithMuscle extends Exercise {
   };
 }
 
-export interface SingleExerciseResponse {
+export interface SingleMuscleResponse {
   msg: string;
   exercises: ExerciseWithMuscle[];
 }
@@ -48,14 +49,16 @@ interface ResponseType {
   Excercises: Excercisetype[];
 }
 
-export const getSingleMuscle = async (muscle: string): Promise<Excercisetype[]> => {
+export const getSingleMuscle = async (
+  muscle: string
+): Promise<Excercisetype[]> => {
   try {
-    const response: AxiosResponse<SingleExerciseResponse> = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/${muscle}`
+    const clientAxios = await ClientReqConfig();
+    const response: AxiosResponse<SingleMuscleResponse> = await clientAxios.get(
+      `/workout/${muscle}`
     );
-
     // Transform the data to match Excercisetype
-    return response.data.exercises.map((exercise) => ({
+    return response.data.exercises.map((exercise: ExerciseWithMuscle) => ({
       name: exercise.name,
       img: exercise.image_url || "",
       instructions: exercise.instructions,

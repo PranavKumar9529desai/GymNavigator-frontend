@@ -1,8 +1,8 @@
+import { queryClient } from "@/lib/getQueryClient";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import {
-  fetchAttendanceData,
-} from "./_actions/GetAttendandedDays";
+import { type AttendanceData, fetchAttendanceData } from "./_actions/get-attendance";
 import CalendarSkeleton from "./_components/CalendarSkeleton";
 import MonthAttendance from "./_components/MonthAttendance";
 
@@ -13,11 +13,21 @@ export const metadata: Metadata = {
 };
 
 export default async function ViewAttendancePage() {
-  // Fetch data on the server
-  const attendanceDates = await fetchAttendanceData();
+  // Get cached data if available
+  const cachedData = queryClient.getQueryData<AttendanceData>(["attendanceDays"]);
+  
+  // If no cached data, prefetch it
+  if (!cachedData) {
+    await queryClient.prefetchQuery({
+      queryKey: ["attendanceDays"],
+      queryFn: fetchAttendanceData,
+      staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    });
+  }
 
-  // Convert Date objects to ISO strings for serialization
-  const serializedDates = attendanceDates.map((date) => date.toISOString());
+  // Get the data after prefetching (if it was needed)
+  const initialData = queryClient.getQueryData<AttendanceData>(["attendanceDays"]);
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <main className="py-4">
@@ -29,7 +39,9 @@ export default async function ViewAttendancePage() {
 
       <section className="">
         <Suspense fallback={<CalendarSkeleton />}>
-          <MonthAttendance initialAttendanceDates={serializedDates} />
+          <HydrationBoundary state={dehydratedState}>
+            <MonthAttendance initialData={initialData?.attendanceDays} />
+          </HydrationBoundary>
         </Suspense>
       </section>
     </main>

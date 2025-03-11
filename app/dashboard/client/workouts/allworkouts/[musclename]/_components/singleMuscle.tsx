@@ -14,7 +14,7 @@ const containerVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      staggerChildren: 0.1
+      staggerChildren: 0.1,
     },
   },
 };
@@ -63,14 +63,14 @@ export const SingleMuscles = ({
               Workout Guide
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight max-w-4xl">
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent break-words whitespace-normal">
+                {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)}{" "}
+                Exercises
               </span>
-              <span className="ml-2 sm:ml-4">Exercises</span>
             </h1>
             <p className="text-gray-600 text-lg sm:text-xl max-w-2xl">
-              Discover professional-grade exercises designed to target and strengthen 
-              your {muscleName?.toLowerCase()} muscles effectively.
+              Discover professional-grade exercises designed to target and
+              strengthen your {muscleName?.toLowerCase()} muscles effectively.
             </p>
           </m.div>
         </div>
@@ -195,7 +195,6 @@ const ExcerciseCard = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  
   const difficulty =
     instructions.length > 500
       ? "Advanced"
@@ -220,8 +219,14 @@ const ExcerciseCard = ({
           alt={`${name} exercise`}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className={`absolute bottom-3 right-3 px-3 py-1.5 text-sm font-medium rounded-full 
-                        ${difficultyColors[difficulty as keyof typeof difficultyColors]}`}>
+        <div
+          className={`absolute bottom-3 right-3 px-3 py-1.5 text-sm font-medium rounded-full 
+                        ${
+                          difficultyColors[
+                            difficulty as keyof typeof difficultyColors
+                          ]
+                        }`}
+        >
           {difficulty}
         </div>
       </div>

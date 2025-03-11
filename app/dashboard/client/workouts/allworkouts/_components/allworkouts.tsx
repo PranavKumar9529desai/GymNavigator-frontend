@@ -2,13 +2,14 @@
 
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { queryClient } from "@/lib//getQueryClient";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { m } from "framer-motion";
 import { Activity, ArrowRight, Dumbbell, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import fetchMuscles, { type MuscleGroup } from "../actions/getAllMuscles";
+import { type MuscleGroup, fetchMuscles } from "../actions/get-muscles";
 
 // Simplified animations for better mobile performance
 const fadeIn = {
@@ -48,34 +49,27 @@ const MuscleCardSkeleton = () => (
 );
 
 interface AllworkoutsProps {
-  initialMuscles: MuscleGroup[];
+  initialData?: MuscleGroup[];
 }
 
-export const Allworkouts = ({ initialMuscles }: AllworkoutsProps) => {
+export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [filteredMuscles, setFilteredMuscles] =
-    useState<MuscleGroup[]>(initialMuscles);
+  const [filteredMuscles, setFilteredMuscles] = useState<MuscleGroup[]>([]);
   const Router = useRouter();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["muscles"],
-    queryFn: async () => {
-      const data = await fetchMuscles();
-      return data;
-    },
-    initialData: { muscles: initialMuscles },
+    queryFn: fetchMuscles,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    initialData: initialData ? { muscles: initialData } : undefined,
   });
 
-  const muscles = data?.muscles || initialMuscles;
+  const muscles = data?.muscles || []; // Provide a default empty array
 
   useEffect(() => {
-    if (!muscles.length) return;
-
+    if (!muscles || muscles.length === 0) return;
     let filtered = [...muscles];
 
     if (selectedCategory === "Upper Body") {
@@ -159,7 +153,7 @@ export const Allworkouts = ({ initialMuscles }: AllworkoutsProps) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-          {filteredMuscles?.length === 0 ? (
+          {filteredMuscles.length === 0 ? (
             <p className="col-span-full text-center py-8 text-gray-500">
               No workouts found matching your criteria
             </p>

@@ -16,6 +16,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'source.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.muscleandstrength.com',
+      },
     ],
   },
 
@@ -60,10 +64,9 @@ const nextConfig = {
             value: 'max-age=31536000; includeSubDomains',
           },
           {
-            // Additional recommended security header
+            // Additional recommended security header with YouTube frame support
             key: 'Content-Security-Policy',
-            value:
-              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+            value: "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
           },
           {
             // Prevent XSS attacks

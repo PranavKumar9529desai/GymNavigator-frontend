@@ -2,7 +2,7 @@ import AttendanceFailure from "@/app/dashboard/client/attendance/markattendance/
 import AttendanceSuccess from "@/app/dashboard/client/attendance/markattendance/_components/AttendanceSuccess";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { checkUserAttendance } from "./_actions/CheckUserAttendance";
+import { checkUserAttendance } from "./_actions/check-attedance";
 import ClientQRWrapper from "./_components/ClientQRWrapper";
 import MarkAttendanceLoading from "./loading";
 
