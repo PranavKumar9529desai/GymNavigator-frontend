@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { m } from 'framer-motion';
+import React from 'react';
 
 type PricingCardProps = {
   plan: {

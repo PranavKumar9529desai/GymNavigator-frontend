@@ -1,46 +1,39 @@
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import type { FC } from "react";
-import { Skeleton } from "../../../../components/ui/skeleton";
-import type { MenuItem, SubItem } from "../menuItems";
-import NotificationButton from "./NotificationButton";
-import QRCodeButton from "./QRCodeButton";
-import SubrouteNav from "./SubrouteNav";
-import UserMenuButton from "./UserMenuButton";
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import type { FC } from 'react';
+import { Skeleton } from '../../../../components/ui/skeleton';
+import type { MenuItem, SubItem } from '../menuItems';
+import NotificationButton from './NotificationButton';
+import QRCodeButton from './QRCodeButton';
+import SubrouteNav from './SubrouteNav';
+import UserMenuButton from './UserMenuButton';
 
 interface TopbarProps {
   gymName?: string;
   userRole?: string;
   menuItems: MenuItem[];
-  status: "loading" | "unauthenticated" | "authenticated";
+  status: 'loading' | 'unauthenticated' | 'authenticated';
 }
 
-const Topbar: FC<TopbarProps> = ({
-  gymName = "GymNavigator",
-  userRole,
-  menuItems,
-  status,
-}) => {
+const Topbar: FC<TopbarProps> = ({ gymName = 'GymNavigator', userRole, menuItems, status }) => {
   const pathname = usePathname();
 
   // First, extract the main route segment from the pathname
   // For example, from "/dashboard/owner/onboarding/onboardingqr" we want to extract "onboarding"
-  const pathSegments = pathname.split("/").filter(Boolean);
-  const mainRouteSegment = pathSegments.length >= 3 ? pathSegments[2] : "";
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const mainRouteSegment = pathSegments.length >= 3 ? pathSegments[2] : '';
 
   // Find the active menu item by matching the main route segment with menu items
   const activeMenuItem = menuItems.find((item) => {
     // Extract the main route segment from the menu item link
-    const itemLinkSegments = (item.link || "").split("/").filter(Boolean);
-    const itemMainSegment =
-      itemLinkSegments.length >= 3 ? itemLinkSegments[2] : "";
+    const itemLinkSegments = (item.link || '').split('/').filter(Boolean);
+    const itemMainSegment = itemLinkSegments.length >= 3 ? itemLinkSegments[2] : '';
 
     // Check if the main route segment matches
     return (
       mainRouteSegment === itemMainSegment ||
       // Also check if any of the subitems match the current path
-      (item.subItems?.some((subItem) => pathname.includes(subItem.link)) ??
-        false)
+      (item.subItems?.some((subItem) => pathname.includes(subItem.link)) ?? false)
     );
   });
 
@@ -50,7 +43,7 @@ const Topbar: FC<TopbarProps> = ({
       name: subItem.name,
       href: subItem.link,
       // Ensure iconName is passed correctly
-      icon: subItem.iconName ? subItem.iconName.toLowerCase() : "home",
+      icon: subItem.iconName ? subItem.iconName.toLowerCase() : 'home',
     })) || [];
 
   return (
@@ -69,9 +62,7 @@ const Topbar: FC<TopbarProps> = ({
               />
             </div>
             <div>
-              <h1 className="font-bold text-lg tracking-tight text-blue-900">
-                {gymName}
-              </h1>
+              <h1 className="font-bold text-lg tracking-tight text-blue-900">{gymName}</h1>
               {userRole ? (
                 <div className="flex items-center">
                   <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5" />
@@ -91,7 +82,7 @@ const Topbar: FC<TopbarProps> = ({
         </div>
 
         {/* Subroute navigation with smooth animations */}
-        {status === "loading" ? (
+        {status === 'loading' ? (
           <Skeleton className="h-10 w-64 mx-auto bg-transparent" />
         ) : (
           <SubrouteNav subroutes={subroutes} status={status} />

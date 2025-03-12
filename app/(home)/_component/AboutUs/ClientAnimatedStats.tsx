@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { m } from 'framer-motion';
+import React from 'react';
 
 type StatsProps = {
   stat: {

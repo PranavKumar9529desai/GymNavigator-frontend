@@ -1,6 +1,6 @@
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
-import { ContactForm } from './ContactForm';
 import { ClientAnimatedContactInfo } from './ClientAnimatedContactInfo';
+import { ContactForm } from './ContactForm';
 
 const contactInfo = [
   {

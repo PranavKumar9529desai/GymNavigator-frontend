@@ -1,6 +1,6 @@
-"use server";
-import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
-import type { AxiosResponse } from "axios";
+'use server';
+import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import type { AxiosResponse } from 'axios';
 
 export interface MuscleGroupType {
   id: number;
@@ -45,34 +45,32 @@ export interface Excercisetype {
   };
 }
 
-interface ResponseType {
-  msg: string;
-  Excercises: Excercisetype[];
-}
+// interface ResponseType {
+//   msg: string;
+//   Excercises: Excercisetype[];
+// }
 
-export const getSingleMuscle = async (
-  muscle: string
-): Promise<Excercisetype[]> => {
+export const getSingleMuscle = async (muscle: string): Promise<Excercisetype[]> => {
   try {
     const clientAxios = await ClientReqConfig();
     const response: AxiosResponse<SingleMuscleResponse> = await clientAxios.get(
-      `/workout/${muscle}`
+      `/workout/${muscle}`,
     );
     // Transform the data to match Excercisetype
     return response.data.exercises.map((exercise: ExerciseWithMuscle) => ({
       name: exercise.name,
-      img: exercise.image_url || "",
+      img: exercise.image_url || '',
       instructions: exercise.instructions,
-      videolink: exercise.video_url || "",
+      videolink: exercise.video_url || '',
       MuscleGroup: {
         id: exercise.MuscleGroup.id,
         name: exercise.MuscleGroup.name,
-        img: exercise.MuscleGroup.image_url || "",
-        fullimage: exercise.muscle_image || "",
+        img: exercise.MuscleGroup.image_url || '',
+        fullimage: exercise.muscle_image || '',
       },
     }));
   } catch (error) {
-    console.log("error from the getSingleMuscle", error);
+    console.log('error from the getSingleMuscle', error);
     return [];
   }
 };

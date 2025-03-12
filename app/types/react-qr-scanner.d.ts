@@ -1,4 +1,4 @@
-declare module "@yudiel/react-qr-scanner" {
+declare module '@yudiel/react-qr-scanner' {
   export interface Result {
     getText(): string;
   }
@@ -9,4 +9,4 @@ declare module "@yudiel/react-qr-scanner" {
   }
 
   export const Scanner: React.ComponentType<ScannerProps>;
-} 
+}

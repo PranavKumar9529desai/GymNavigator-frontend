@@ -1,9 +1,9 @@
-import { queryClient } from "@/lib/getQueryClient";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { SingleMuscles } from "./_components/singleMuscle";
-import { getSingleMuscle } from "./actions/getSIngleMuscle";
-import Loading from "./loading";
+import { queryClient } from '@/lib/getQueryClient';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { SingleMuscles } from './_components/singleMuscle';
+import { getSingleMuscle } from './actions/getSIngleMuscle';
+import Loading from './loading';
 export default async function Page({
   params,
 }: {
@@ -12,15 +12,15 @@ export default async function Page({
   // Decode the URL parameter and remove any potential encoding artifacts
   const { musclename } = await params;
   const muscleName = musclename
-    .split(" ")
+    .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+    .join(' ');
 
   // Initialize QueryClient
 
   // Prefetch the data
   await queryClient.prefetchQuery({
-    queryKey: ["exercises", muscleName],
+    queryKey: ['exercises', muscleName],
     queryFn: () => getSingleMuscle(muscleName),
   });
 

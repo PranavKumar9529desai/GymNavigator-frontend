@@ -1,35 +1,29 @@
-"use client";
+'use client';
 
-import { DataCard } from "@/components/Table/UserCard";
-import { DataTable } from "@/components/Table/UsersTable";
-import { StatusCard } from "@/components/common/StatusCard";
-import { Button } from "@/components/ui/button";
+import { DataCard } from '@/components/Table/UserCard';
+import { DataTable } from '@/components/Table/UsersTable';
+import { StatusCard } from '@/components/common/StatusCard';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useToast } from "@/hooks/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  MoreVertical,
-  User,
-  UserCheck,
-  Users,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { updateActivePeriod } from "./actions/mutations";
+} from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreVertical, User, UserCheck, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { updateActivePeriod } from './actions/mutations';
 
 interface UserType {
   id: number;
   name: string;
   startDate: Date | null;
   endDate: Date | null;
-  status: "active" | "pending" | "inactive";
+  status: 'active' | 'pending' | 'inactive';
 }
 
 interface OnboardedUsersProps {
@@ -41,28 +35,25 @@ interface OnboardedUsersProps {
   }[];
 }
 
-const calculateStatus = (
-  startDate: Date | null,
-  endDate: Date | null
-): UserType["status"] => {
+const calculateStatus = (startDate: Date | null, endDate: Date | null): UserType['status'] => {
   if (!startDate || !endDate) {
-    return "pending";
+    return 'pending';
   }
   // Active status logic - other statuses will be added later
-  return "active";
+  return 'active';
 };
 
 const formatDate = (date: Date | null): string => {
-  if (!date) return "N/A";
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
+  if (!date) return 'N/A';
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
 };
 
 export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
-  console.log("OnboardedUsers received initialUsers:", initialUsers);
+  console.log('OnboardedUsers received initialUsers:', initialUsers);
 
   const users = initialUsers.map((user) => ({
     ...user,
@@ -73,60 +64,57 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const updateActivePeriodMutation = useMutation({
+  const _updateActivePeriodMutation = useMutation({
     mutationFn: updateActivePeriod,
     onMutate: async ({ userId, startDate, endDate }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["onboardedUsers"] });
+      await queryClient.cancelQueries({ queryKey: ['onboardedUsers'] });
 
       // Snapshot the previous value
-      const previousUsers = queryClient.getQueryData(["onboardedUsers"]);
+      const previousUsers = queryClient.getQueryData(['onboardedUsers']);
 
       // Optimistically update to the new value
-      queryClient.setQueryData(
-        ["onboardedUsers"],
-        (old: UserType[] | undefined) => {
-          if (!old) return [];
-          return old.map((user) => {
-            if (user.id === userId) {
-              return {
-                ...user,
-                startDate: startDate ? new Date(startDate) : null,
-                endDate: endDate ? new Date(endDate) : null,
-                status: calculateStatus(
-                  startDate ? new Date(startDate) : null,
-                  endDate ? new Date(endDate) : null
-                ),
-              };
-            }
-            return user;
-          });
-        }
-      );
+      queryClient.setQueryData(['onboardedUsers'], (old: UserType[] | undefined) => {
+        if (!old) return [];
+        return old.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              startDate: startDate ? new Date(startDate) : null,
+              endDate: endDate ? new Date(endDate) : null,
+              status: calculateStatus(
+                startDate ? new Date(startDate) : null,
+                endDate ? new Date(endDate) : null,
+              ),
+            };
+          }
+          return user;
+        });
+      });
 
       // Return a context object with the snapshotted value
       return { previousUsers };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousUsers) {
-        queryClient.setQueryData(["onboardedUsers"], context.previousUsers);
+        queryClient.setQueryData(['onboardedUsers'], context.previousUsers);
       }
       toast({
-        title: "Error",
-        description: "Failed to update active period. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update active period. Please try again.',
+        variant: 'destructive',
       });
     },
     onSuccess: () => {
       toast({
-        title: "Success",
-        description: "Active period updated successfully.",
+        title: 'Success',
+        description: 'Active period updated successfully.',
       });
     },
     onSettled: () => {
       // Always refetch after error or success to ensure we're up to date
-      queryClient.invalidateQueries({ queryKey: ["onboardedUsers"] });
+      queryClient.invalidateQueries({ queryKey: ['onboardedUsers'] });
     },
   });
 
@@ -134,46 +122,44 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
     const params = new URLSearchParams({
       userid: user.id.toString(),
       username: user.name,
-      startdate: user.startDate?.toISOString() || "",
-      enddate: user.endDate?.toISOString() || "",
+      startdate: user.startDate?.toISOString() || '',
+      enddate: user.endDate?.toISOString() || '',
     });
-    router.push(
-      `/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`
-    );
+    router.push(`/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`);
   };
 
   const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "active").length;
-  const pendingUsers = users.filter((u) => u.status === "pending").length;
+  const activeUsers = users.filter((u) => u.status === 'active').length;
+  const pendingUsers = users.filter((u) => u.status === 'pending').length;
 
   const statusCards = [
     {
-      title: "Total Users",
+      title: 'Total Users',
       value: totalUsers,
       icon: Users,
-      gradient: "blue",
+      gradient: 'blue',
     },
     {
-      title: "Active Users",
+      title: 'Active Users',
       value: activeUsers,
       icon: UserCheck,
-      gradient: "green",
+      gradient: 'green',
     },
     {
-      title: "Pending Users",
+      title: 'Pending Users',
       value: pendingUsers,
       icon: User,
-      gradient: "yellow",
+      gradient: 'yellow',
     },
   ] as const;
 
   const columns: ColumnDef<UserType>[] = [
     {
-      accessorKey: "name",
+      accessorKey: 'name',
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           User Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -181,36 +167,36 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       ),
     },
     {
-      accessorKey: "startDate",
-      header: "Start Date",
+      accessorKey: 'startDate',
+      header: 'Start Date',
       cell: ({ row }) => {
-        const date = row.getValue("startDate") as Date | null;
+        const date = row.getValue('startDate') as Date | null;
         return <div>{formatDate(date)}</div>;
       },
     },
     {
-      accessorKey: "endDate",
-      header: "End Date",
+      accessorKey: 'endDate',
+      header: 'End Date',
       cell: ({ row }) => {
-        const date = row.getValue("endDate") as Date | null;
+        const date = row.getValue('endDate') as Date | null;
         return <div>{formatDate(date)}</div>;
       },
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: 'status',
+      header: 'Status',
       cell: ({ row }) => {
-        const status = row.getValue("status") as string;
+        const status = row.getValue('status') as string;
         return (
           <div
             className={`
             w-fit rounded-full px-4 py-1 text-xs font-semibold text-center
             ${
-              status === "active"
-                ? "bg-green-100 text-green-800"
-                : status === "pending"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+              status === 'active'
+                ? 'bg-green-100 text-green-800'
+                : status === 'pending'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-red-100 text-red-800'
             }
           `}
           >
@@ -220,7 +206,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       cell: ({ row }) => {
         return (
           <DropdownMenu>
@@ -246,9 +232,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
       <div className="container mx-auto p-6 space-y-8">
         <div className="text-center py-12">
           <Users className="mx-auto h-12 w-12 text-gray-400" />
-          <h2 className="mt-4 text-lg font-semibold text-gray-900">
-            No Users Found
-          </h2>
+          <h2 className="mt-4 text-lg font-semibold text-gray-900">No Users Found</h2>
           <p className="mt-2 text-sm text-gray-600">
             There are no onboarded users to display at the moment.
           </p>
@@ -296,10 +280,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 
               <div className="space-y-1">
                 <p className="text-sm text-gray-500">
-                  Start: {user.startDate ? formatDate(user.startDate) : "N/A"}
+                  Start: {user.startDate ? formatDate(user.startDate) : 'N/A'}
                 </p>
                 <p className="text-sm text-gray-500">
-                  End: {user.endDate ? formatDate(user.endDate) : "N/A"}
+                  End: {user.endDate ? formatDate(user.endDate) : 'N/A'}
                 </p>
               </div>
 
@@ -308,11 +292,11 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
                   className={`
                     rounded-full px-2 py-1 text-xs font-semibold 
                     ${
-                      user.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : user.status === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                      user.status === 'active'
+                        ? 'bg-green-100 text-green-800'
+                        : user.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
                     }
                   `}
                 >

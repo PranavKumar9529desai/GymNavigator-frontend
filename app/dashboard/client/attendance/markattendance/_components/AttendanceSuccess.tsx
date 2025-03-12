@@ -1,14 +1,14 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Clock } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AttendanceSuccess() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const scanTime = searchParams.get('scanTime');
-  
+
   // Parse the ISO string to a Date object only if we have a scanTime
   const attendanceTime = scanTime ? new Date(scanTime) : null;
 
@@ -41,13 +41,13 @@ export default function AttendanceSuccess() {
           {attendanceTime && (
             <div className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-full mb-8">
               <Clock className="w-5 h-5 text-gray-500" />
-              <time 
+              <time
                 dateTime={attendanceTime.toISOString()}
                 className="text-base text-gray-600 dark:text-gray-300"
               >
-                {attendanceTime.toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                {attendanceTime.toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
                   hour12: true,
                 })}
               </time>
@@ -56,14 +56,14 @@ export default function AttendanceSuccess() {
 
           <div className="space-y-3 px-4 sm:px-0">
             <Button
-              onClick={() => router.replace("/dashboard/myprogress/month")}
+              onClick={() => router.replace('/dashboard/myprogress/month')}
               className="w-full h-12 text-base bg-green-500 hover:bg-green-600 text-white"
             >
               View Monthly Progress
             </Button>
             <Button
               variant="outline"
-              onClick={() => router.replace("/dashboard")}
+              onClick={() => router.replace('/dashboard')}
               className="w-full h-12 text-base"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />

@@ -1,6 +1,6 @@
-"use server";
-import type { AxiosResponse } from "axios";
-import axios from "axios";
+'use server';
+import type { AxiosResponse } from 'axios';
+import axios from 'axios';
 export interface SignupResponse {
   msg: string;
   user: {
@@ -15,38 +15,35 @@ export default async function SignupSA(
   Role: string,
   name: string,
   email: string,
-  password: string
+  password: string,
 ): Promise<SignupResponse> {
   const role = Role.toLowerCase();
-  console.log("role rom, the signupSa ", role, name, email, password);
+  console.log('role rom, the signupSa ', role, name, email, password);
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/${role}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/${role}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = (await response.json()) as SignupResponse;
-    console.log("data from the signupsa", data);
+    console.log('data from the signupsa', data);
     if (!data) {
-      throw new Error("No data received");
+      throw new Error('No data received');
     }
 
     return data;
   } catch (error) {
-    console.error("Error signing up:", error);
+    console.error('Error signing up:', error);
     return {
-      msg: "Error signing up",
-      user: { id: "", name: "", email: "", password: "" },
+      msg: 'Error signing up',
+      user: { id: '', name: '', email: '', password: '' },
     };
   }
 }
@@ -73,7 +70,7 @@ export interface UserExistsFormat {
 export async function UserExistsSA(
   email: string,
   name: string,
-  password: string
+  password: string,
 ): Promise<UserExistsFormat> {
   //  return true if user exists and password is correct
 
@@ -86,11 +83,11 @@ export async function UserExistsSA(
     },
     {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    }
+    },
   );
-  console.log("response is this from  signup credentails ", response.data);
+  console.log('response is this from  signup credentails ', response.data);
   const user = response.data;
 
   if (user.user === false) {

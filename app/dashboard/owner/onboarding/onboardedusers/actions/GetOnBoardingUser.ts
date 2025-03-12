@@ -25,7 +25,7 @@ export const getOnboardingUsersServer = async () => {
 
     const data = response.data;
     console.log('Onboarding users response (server):', data);
-    
+
     if (!data.users || !Array.isArray(data.users)) {
       console.error('Invalid users data received:', data);
       return { users: [] };

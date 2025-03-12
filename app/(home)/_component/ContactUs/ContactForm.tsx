@@ -1,7 +1,7 @@
 'use client';
 
-import type React from 'react';
 import { Box, Button, TextField } from '@mui/material';
+import type React from 'react';
 import { useState } from 'react';
 
 export const ContactForm = () => {

@@ -7,9 +7,6 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.error('API Route Error:', error);
-    return NextResponse.json(
-      { message: 'Failed to fetch onboarding users' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Failed to fetch onboarding users' }, { status: 500 });
   }
-} 
+}

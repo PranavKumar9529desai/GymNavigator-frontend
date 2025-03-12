@@ -1,14 +1,16 @@
 import NextAuth from 'next-auth';
 import type { Session } from 'next-auth';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { auth } from './app/(auth)/auth';
 import authConfig from './app/(auth)/auth.config';
-import { IsOwner } from './lib/isGymOwner';
-import { IsTrainer } from './lib/isTrainer';
+import { IsOwner } from './lib/is-owner';
+import { IsTrainer } from './lib/is-trainer';
 /**
  * Public routes that are accessible without authentication
  * @type {string[]}
  */
-const publicRoutes: string[] = []; // Remove "/" from public routes
+const publicRoutes: string[] = ['/', '/about', '/contact', '/pricing'];
 
 /**
  * Prefix for all authentication-related API routes
@@ -26,93 +28,93 @@ const AuthRoutes: string[] = ['/signin', '/signup'];
  * Protected routes that require authentication and specific roles
  * @type {string[]}
  */
-const ProtectedRoutes: string[] = ['/owner', '/trainer', '/sales'];
-
-const { auth } = NextAuth(authConfig);
+const ProtectedRoutes: string[] = ['/dashboard', '/settings', '/profile'];
 
 /**
- * Middleware function to handle authentication and authorization
- * @param {NextRequest} request - The incoming request object
- * @returns {Promise<NextResponse>} The response object with appropriate redirects or access
+ * Main middleware function to handle authentication and authorization
  */
+export default async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const session = await auth();
 
-export default auth(async function middleware(request) {
-  const { nextUrl } = request;
-  const session = request.auth as Session | null; // Use auth session instead of getToken
-  console.log('session from the middleware', session);
-  /**
-   * Check if the user is currently logged in
-   * @type {boolean}
-   */
+  // Check authentication status
   const isLoggedIn = !!session;
 
-  /**
-   * Route type checks
-   * @type {boolean}
-   */
-  const isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  const isProtectedRoute = ProtectedRoutes.some((route) => nextUrl.pathname.startsWith(route));
-  const isAuthRoute = AuthRoutes.includes(nextUrl.pathname);
+  // Check route types
+  const isApiRoute = pathname.startsWith(ApiRoutesPrefix);
+  const isPublicRoute = publicRoutes.some((route) => pathname === route);
+  const isAuthRoute = AuthRoutes.some((route) => pathname === route);
+  const isProtectedRoute = ProtectedRoutes.some((route) => pathname.startsWith(route));
 
-  // Allow API routes to pass through
-  if (isApiRoute) return NextResponse.next();
+  // 1. API Routes - Always pass through
+  if (isApiRoute) {
+    return NextResponse.next();
+  }
 
-  /**
-   * Handle authentication routes (signin/signup)
-   * Redirect to role-specific dashboard if already authenticated
-   */
+  // 2. Authentication Routes (signin/signup)
   if (isAuthRoute) {
+    // If user is already logged in, redirect to their role-specific dashboard
     if (isLoggedIn && session?.role) {
-      return NextResponse.redirect(new URL(`dashboard/${session.role}`, nextUrl));
+      return NextResponse.redirect(
+        new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
+      );
     }
     return NextResponse.next();
   }
 
-  // Allow access to public routes
-  if (isPublicRoute) return NextResponse.next();
+  // 3. Public Routes - Always accessible
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
-  /**
-   * Handle protected routes with role-based access control
-   */
+  // 4. Protected Routes - Requires authentication
   if (isProtectedRoute) {
-    // Redirect to signin if not authenticated
+    // Not logged in - redirect to signin
     if (!isLoggedIn || !session) {
-      return NextResponse.redirect(new URL('/signin', request.url));
+      const redirectUrl = new URL('/signin', request.url);
+      redirectUrl.searchParams.set('callbackUrl', request.url);
+      return NextResponse.redirect(redirectUrl);
     }
 
-    // Redirect to role selection only if the role in the token is empty if no role is assigned
-    if (!session?.role) {
+    // Role selection required
+    if (!session.role) {
       return NextResponse.redirect(new URL('/selectrole', request.url));
     }
 
-    // Updated gym check to use the new GymInfo type
+    // Trainer needs to select a gym
     if (session.role === 'trainer' && !session.gym) {
-      console.log('middleware redirects are this and it trainer', session.gym);
       return NextResponse.redirect(new URL('/selectgym', request.url));
     }
 
-    /**
-     * Check role-based access permissions
-     * Redirect to unauthorized page if role doesn't match the route
-     */
-    const path = request.nextUrl.pathname;
-    if (
-      (path.startsWith('/owner') && !IsOwner(session)) ||
-      (path.startsWith('/trainer') && !IsTrainer(session))
-    ) {
-      console.log('middleware redirects are this and it trainer', session.gym);
-      return NextResponse.rewrite(new URL('/unauthorized', request.url));
+    // Role-based access control for specific dashboard paths
+    if (pathname.startsWith('/dashboard/owner')) {
+      if (!IsOwner(session)) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+    } else if (pathname.startsWith('/dashboard/trainer')) {
+      if (!IsTrainer(session)) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+    }
+
+    // If accessing general dashboard, redirect to role-specific dashboard
+    if (pathname === '/dashboard') {
+      return NextResponse.redirect(
+        new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
+      );
     }
 
     return NextResponse.next();
   }
-});
+
+  // 5. Default behavior - allow access to any other routes
+  return NextResponse.next();
+}
 
 /**
  * Matcher configuration for the middleware
  * Excludes specific paths from middleware processing
  */
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };

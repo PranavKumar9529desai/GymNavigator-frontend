@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const LoadingSkeleton = () => (
   <div className="rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm">

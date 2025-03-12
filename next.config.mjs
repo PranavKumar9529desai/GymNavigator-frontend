@@ -66,7 +66,8 @@ const nextConfig = {
           {
             // Additional recommended security header with YouTube frame support
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
+            value:
+              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
           },
           {
             // Prevent XSS attacks
@@ -76,6 +77,12 @@ const nextConfig = {
         ],
       },
     ];
+  },
+
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'admin.gymnavigator.in'],
+    },
   },
 };
 

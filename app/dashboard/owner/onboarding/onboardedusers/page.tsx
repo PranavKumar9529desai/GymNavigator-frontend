@@ -1,10 +1,10 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { RefreshCw } from "lucide-react";
-import OnboardedUsers from "./OnbordedUsers";
-import { fetchOnboardingUsers } from "./actions/api";
-import Loading from "./loading";
+'use client';
+import { Button } from '@/components/ui/button';
+import { useQuery } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
+import OnboardedUsers from './OnbordedUsers';
+import { fetchOnboardingUsers } from './actions/api';
+import Loading from './loading';
 
 export default function Page() {
   const {
@@ -13,7 +13,7 @@ export default function Page() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["onboardedUsers"],
+    queryKey: ['onboardedUsers'],
     queryFn: fetchOnboardingUsers,
     staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
     refetchOnWindowFocus: true,
@@ -21,13 +21,11 @@ export default function Page() {
   });
 
   if (error) {
-    console.error("Error in onboarding users page:", error);
+    console.error('Error in onboarding users page:', error);
     return (
       <div className="container mx-auto p-6 text-center">
         <h2 className="text-2xl font-bold text-red-600">Error loading users</h2>
-        <p className="text-gray-600 mt-2 mb-4">
-          There was a problem loading the data
-        </p>
+        <p className="text-gray-600 mt-2 mb-4">There was a problem loading the data</p>
         <Button onClick={() => refetch()} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           Try Again
@@ -47,14 +45,8 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-center pt-4  ">
-        Onboarding Users
-      </h1>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <OnboardedUsers initialUsers={transformedUsers} />
-      )}
+      <h1 className="text-3xl font-bold text-center pt-4  ">Onboarding Users</h1>
+      {isLoading ? <Loading /> : <OnboardedUsers initialUsers={transformedUsers} />}
     </>
   );
 }

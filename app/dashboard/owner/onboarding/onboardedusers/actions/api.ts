@@ -15,15 +15,18 @@ interface OnBordingUserResponse {
 export const fetchOnboardingUsers = async () => {
   try {
     console.log('Fetching onboarding users...');
-    const response = await axios.get<OnBordingUserResponse>('/api/owner/onboarding/onbordingusers', {
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await axios.get<OnBordingUserResponse>(
+      '/api/owner/onboarding/onbordingusers',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
 
     const data = response.data;
     console.log('Onboarding users response:', data);
-    
+
     if (!data.users || !Array.isArray(data.users)) {
       console.error('Invalid users data received:', data);
       return { users: [] };
@@ -34,4 +37,4 @@ export const fetchOnboardingUsers = async () => {
     console.error('Error fetching onboarding users:', error);
     throw error; // Let React Query handle the error
   }
-}; 
+};

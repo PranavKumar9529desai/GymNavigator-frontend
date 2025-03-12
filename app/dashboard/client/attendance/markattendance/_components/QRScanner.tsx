@@ -1,17 +1,13 @@
-"use client";
-import { Skeleton } from "@/components/ui/skeleton";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Html5QrcodeScanType,
-  Html5QrcodeScanner,
-  Html5QrcodeSupportedFormats,
-} from "html5-qrcode";
-import { CheckCircle2, QrCode } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { markAttendance } from "../_actions/mark-attendance";
-import { checkUserAttendance } from "../_actions/check-attedance";
+'use client';
+import { Skeleton } from '@/components/ui/skeleton';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { Html5QrcodeScanType, Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { CheckCircle2, QrCode } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { checkUserAttendance } from '../_actions/check-attedance';
+import { markAttendance } from '../_actions/mark-attendance';
 
 interface QrValueType {
   AttendanceAction: {
@@ -29,11 +25,11 @@ export default function AttendanceQRScanner() {
 
   // Prefetch attendance status
   const { data: attendanceStatus, isLoading: isCheckingAttendance } = useQuery({
-    queryKey: ["attendance-status"],
+    queryKey: ['attendance-status'],
     queryFn: async () => {
       const result = await checkUserAttendance();
       if (!result.success) {
-        throw new Error(result.error || "Failed to check attendance");
+        throw new Error(result.error || 'Failed to check attendance');
       }
       return result.data;
     },
@@ -42,7 +38,7 @@ export default function AttendanceQRScanner() {
   // If attendance is already marked, redirect to success page
   useEffect(() => {
     if (attendanceStatus?.isMarked) {
-      router.replace("/dashboard/client/attendance/success");
+      router.replace('/dashboard/client/attendance/success');
     }
   }, [attendanceStatus, router]);
 
@@ -50,27 +46,26 @@ export default function AttendanceQRScanner() {
     mutationFn: async () => {
       return await markAttendance();
     },
-    onSuccess: (response) => {
+    onSuccess: (_response) => {
       toast.dismiss();
-      toast.success("Attendance marked successfully!");
-      queryClient.invalidateQueries({ queryKey: ["attendanceDays"] });
+      toast.success('Attendance marked successfully!');
+      queryClient.invalidateQueries({ queryKey: ['attendanceDays'] });
       router.refresh();
     },
     onError: (error) => {
       toast.dismiss();
-      console.error("Error marking attendance:", error);
-      toast.error("Failed to mark attendance", {
-        description:
-          error instanceof Error ? error.message : "Unknown error occurred",
+      console.error('Error marking attendance:', error);
+      toast.error('Failed to mark attendance', {
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
       });
-      router.push("/dashboard/client/attendance/failure");
+      router.push('/dashboard/client/attendance/failure');
     },
   });
 
   useEffect(() => {
-    if (typeof window !== "undefined" && isScanning && !isCheckingAttendance) {
+    if (typeof window !== 'undefined' && isScanning && !isCheckingAttendance) {
       scannerRef.current = new Html5QrcodeScanner(
-        "qr-reader",
+        'qr-reader',
         {
           fps: 10,
           qrbox: { width: 300, height: 300 },
@@ -80,10 +75,10 @@ export default function AttendanceQRScanner() {
           showTorchButtonIfSupported: false,
           formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
           videoConstraints: {
-            facingMode: "environment",
+            facingMode: 'environment',
           },
         },
-        /* verbose= */ false
+        /* verbose= */ false,
       );
 
       scannerRef.current.render(
@@ -96,7 +91,7 @@ export default function AttendanceQRScanner() {
               now.getUTCFullYear(),
               now.getUTCMonth(),
               now.getUTCDate(),
-              now.getUTCHours()
+              now.getUTCHours(),
             );
 
             const scannedTime = new Date(parsedData.AttendanceAction.timestamp);
@@ -104,38 +99,34 @@ export default function AttendanceQRScanner() {
               scannedTime.getUTCFullYear(),
               scannedTime.getUTCMonth(),
               scannedTime.getUTCDate(),
-              scannedTime.getUTCHours()
+              scannedTime.getUTCHours(),
             );
 
             const toleranceInHours = 1;
-            const timeDiff =
-              Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
+            const timeDiff = Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
 
             if (timeDiff <= toleranceInHours) {
-              toast.loading("Marking attendance...");
+              toast.loading('Marking attendance...');
               await markAttendanceMutation.mutateAsync();
               if (scannerRef.current) {
                 scannerRef.current.clear();
               }
             } else {
-              throw new Error("QR code has expired");
+              throw new Error('QR code has expired');
             }
           } catch (error) {
-            console.error("Error processing QR code:", error);
-            toast.error("Failed to process QR code", {
-              description:
-                error instanceof Error
-                  ? error.message
-                  : "Unknown error occurred",
+            console.error('Error processing QR code:', error);
+            toast.error('Failed to process QR code', {
+              description: error instanceof Error ? error.message : 'Unknown error occurred',
             });
             setIsScanning(true);
           }
         },
         (error: string) => {
-          if (!error.includes("NotFoundException")) {
-            console.error("QR scan error:", error);
+          if (!error.includes('NotFoundException')) {
+            console.error('QR scan error:', error);
           }
-        }
+        },
       );
     }
 
@@ -183,9 +174,7 @@ export default function AttendanceQRScanner() {
             {markAttendanceMutation.isPending && (
               <div className="flex flex-col items-center justify-center p-8 space-y-4">
                 <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-muted-foreground">
-                  Processing your attendance...
-                </p>
+                <p className="text-sm text-muted-foreground">Processing your attendance...</p>
               </div>
             )}
 

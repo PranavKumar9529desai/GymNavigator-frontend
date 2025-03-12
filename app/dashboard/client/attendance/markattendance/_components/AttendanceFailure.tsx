@@ -1,8 +1,8 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, RefreshCcw, XCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ArrowLeft, RefreshCcw, XCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function AttendanceFailure() {
   const router = useRouter();
@@ -27,9 +27,7 @@ export default function AttendanceFailure() {
 
           <div className="space-y-3 px-4 sm:px-0">
             <Button
-              onClick={() =>
-                router.replace("/dashboard/client/attendance/markattendance")
-              }
+              onClick={() => router.replace('/dashboard/client/attendance/markattendance')}
               className="w-full h-12 text-base bg-red-500 hover:bg-red-600 text-white"
             >
               <RefreshCcw className="w-5 h-5 mr-2" />
@@ -37,7 +35,7 @@ export default function AttendanceFailure() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => router.replace("/dashboard")}
+              onClick={() => router.replace('/dashboard')}
               className="w-full h-12 text-base"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />

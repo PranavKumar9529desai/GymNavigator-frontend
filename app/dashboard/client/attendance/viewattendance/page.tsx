@@ -1,32 +1,32 @@
-import { queryClient } from "@/lib/getQueryClient";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import { type AttendanceData, fetchAttendanceData } from "./_actions/get-attendance";
-import CalendarSkeleton from "./_components/CalendarSkeleton";
-import MonthAttendance from "./_components/MonthAttendance";
+import { queryClient } from '@/lib/getQueryClient';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { type AttendanceData, fetchAttendanceData } from './_actions/get-attendance';
+import CalendarSkeleton from './_components/CalendarSkeleton';
+import MonthAttendance from './_components/MonthAttendance';
 
 export const metadata: Metadata = {
-  title: "Attendance History | GymNavigator",
+  title: 'Attendance History | GymNavigator',
   description:
-    "View and track your gym attendance history with detailed calendar view and progress statistics.",
+    'View and track your gym attendance history with detailed calendar view and progress statistics.',
 };
 
 export default async function ViewAttendancePage() {
   // Get cached data if available
-  const cachedData = queryClient.getQueryData<AttendanceData>(["attendanceDays"]);
-  
+  const cachedData = queryClient.getQueryData<AttendanceData>(['attendanceDays']);
+
   // If no cached data, prefetch it
   if (!cachedData) {
     await queryClient.prefetchQuery({
-      queryKey: ["attendanceDays"],
+      queryKey: ['attendanceDays'],
       queryFn: fetchAttendanceData,
       staleTime: 1000 * 60 * 60 * 24, // 24 hours
     });
   }
 
   // Get the data after prefetching (if it was needed)
-  const initialData = queryClient.getQueryData<AttendanceData>(["attendanceDays"]);
+  const initialData = queryClient.getQueryData<AttendanceData>(['attendanceDays']);
   const dehydratedState = dehydrate(queryClient);
 
   return (

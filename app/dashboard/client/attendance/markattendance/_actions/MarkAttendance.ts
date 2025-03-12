@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
+import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
 
 interface AttendanceResponse {
   success: boolean;
@@ -23,12 +23,12 @@ export async function markAttendance(): Promise<AttendanceResponse> {
       now.getUTCFullYear(),
       now.getUTCMonth(),
       now.getUTCDate(),
-      now.getUTCHours()
+      now.getUTCHours(),
     );
     const truncatedUtcDate = new Date(clientUTC);
 
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.post("/mark-attendance", {
+    const response = await clientAxios.post('/mark-attendance', {
       clientDate: truncatedUtcDate.toISOString(),
     });
 
@@ -37,11 +37,10 @@ export async function markAttendance(): Promise<AttendanceResponse> {
       data: response.data.data,
     };
   } catch (error) {
-    console.error("Error marking attendance:", error);
+    console.error('Error marking attendance:', error);
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to mark attendance",
+      error: error instanceof Error ? error.message : 'Failed to mark attendance',
     };
   }
 }

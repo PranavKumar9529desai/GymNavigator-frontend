@@ -1,28 +1,24 @@
-"use client";
+'use client';
 
-import { UpdateUserActivePeriod } from "@/app/dashboard/owner/onboarding/editactiveperiod/actions/updateActivePeriod";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { UpdateUserActivePeriod } from '@/app/dashboard/owner/onboarding/editactiveperiod/actions/updateActivePeriod';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { addMonths, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { Toaster, toast } from "react-hot-toast";
-import Swal from "sweetalert2";
-import { validateUserValidity } from "./actions/typecheck";
+} from '@/components/ui/select';
+import { addMonths, format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
+import { validateUserValidity } from './actions/typecheck';
 
 interface UserValidityPeriodProps {
   userId: string;
@@ -41,14 +37,10 @@ export function UserValidityPeriod({
 }: UserValidityPeriodProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [startDate, setStartDate] = useState<Date>(
-    initialStartDate || new Date()
-  );
-  const [endDate, setEndDate] = useState<Date>(
-    initialEndDate || addMonths(new Date(), 1)
-  );
-  const [shift, setShift] = useState<"morning" | "evening">("morning");
-  const defaultImage = "https://randomuser.me/api/portraits";
+  const [startDate, setStartDate] = useState<Date>(initialStartDate || new Date());
+  const [endDate, setEndDate] = useState<Date>(initialEndDate || addMonths(new Date(), 1));
+  const [shift, setShift] = useState<'morning' | 'evening'>('morning');
+  const defaultImage = 'https://randomuser.me/api/portraits';
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
@@ -66,12 +58,12 @@ export function UserValidityPeriod({
       };
 
       const formatDisplayDate = (date: Date) => {
-        return format(date, "dd-MM-yyyy");
+        return format(date, 'dd-MM-yyyy');
       };
 
       const result = await Swal.fire({
-        title: "Update Gym Session Period",
-        position: "center",
+        title: 'Update Gym Session Period',
+        position: 'center',
         html: `
           <div class="text-left p-4">
         <div class="border-b pb-2 mb-4">
@@ -93,15 +85,15 @@ export function UserValidityPeriod({
         </div>
           </div>
         `,
-        icon: "info",
+        icon: 'info',
         showCancelButton: true,
-        confirmButtonColor: "#2563eb",
-        cancelButtonColor: "#dc2626",
-        confirmButtonText: "Confirm Update",
-        cancelButtonText: "Cancel",
+        confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#dc2626',
+        confirmButtonText: 'Confirm Update',
+        cancelButtonText: 'Cancel',
         customClass: {
-          popup: "rounded-lg",
-          title: "text-xl font-medium text-gray-900",
+          popup: 'rounded-lg',
+          title: 'text-xl font-medium text-gray-900',
         },
       });
 
@@ -120,23 +112,23 @@ export function UserValidityPeriod({
         });
 
         if (updateResult.user) {
-          console.log("before toast");
+          console.log('before toast');
           toast.success(`Validity period updated for ${userName}`, {
             duration: 3000,
-            position: "top-center",
+            position: 'top-center',
           });
 
           // Add delay before navigation to show the success toast
           setTimeout(() => {
-            router.push("/dashboard/owner/onboarding/onboardedusers");
+            router.push('/dashboard/owner/onboarding/onboardedusers');
           }, 1500);
         } else {
-          toast.error(updateResult.msg || "Failed to update validity period");
+          toast.error(updateResult.msg || 'Failed to update validity period');
         }
       } else {
         const errorMessages = Object.entries(validationResult.errors || {})
-          .map(([field, errors]) => `${field}: ${errors?.join(", ")}`)
-          .join("\n");
+          .map(([field, errors]) => `${field}: ${errors?.join(', ')}`)
+          .join('\n');
         toast.error(errorMessages);
       }
     });
@@ -149,21 +141,16 @@ export function UserValidityPeriod({
       {/* Header Section with Avatar - Made responsive */}
       <div className="flex flex-col sm:flex-row items-center sm:space-x-6 pb-4 sm:pb-6 border-b border-gray-100">
         <Avatar className="w-20 h-20 sm:w-24 sm:h-24 ring-2 ring-gray-100 mb-4 sm:mb-0">
-          <AvatarImage
-            src={userImage ? userImage : defaultImage}
-            alt={userName}
-          />
+          <AvatarImage src={userImage ? userImage : defaultImage} alt={userName} />
           <AvatarFallback className="bg-blue-50 text-blue-700 text-xl font-medium">
             {userName
-              .split(" ")
+              .split(' ')
               .map((n) => n[0])
-              .join("")}
+              .join('')}
           </AvatarFallback>
         </Avatar>
         <div className="text-center sm:text-left">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
-            {userName}
-          </h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">{userName}</h2>
           <p className="text-sm text-gray-500">Membership Details</p>
         </div>
       </div>
@@ -172,10 +159,7 @@ export function UserValidityPeriod({
       <div className="space-y-4 sm:space-y-6">
         {/* Start Date - Modified for mobile */}
         <div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
-          <label
-            htmlFor="startDate"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="startDate" className="text-sm font-medium text-gray-700">
             Start Date
           </label>
           <div className="w-full sm:col-span-2">
@@ -187,13 +171,10 @@ export function UserValidityPeriod({
                   className="w-full h-12 sm:h-10 justify-start text-left font-normal hover:bg-gray-50 active:scale-[0.98] transition-transform"
                 >
                   <CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500" />
-                  {format(startDate, "PPP")}
+                  {format(startDate, 'PPP')}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                className="w-[calc(100vw-2rem)] sm:w-auto p-0"
-                align="center"
-              >
+              <PopoverContent className="w-[calc(100vw-2rem)] sm:w-auto p-0" align="center">
                 <Calendar
                   mode="single"
                   selected={startDate}
@@ -203,32 +184,29 @@ export function UserValidityPeriod({
                       setStartDateOpen(false); // Auto close after selection
                     }
                   }}
-                  disabled={(date) =>
-                    date < new Date() || date < new Date("1900-01-01")
-                  }
+                  disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
                   initialFocus
                   className="rounded-md border shadow-lg mx-auto"
                   classNames={{
-                    months: "space-y-4 sm:space-y-0",
-                    month: "space-y-4",
-                    caption: "flex justify-center pt-1 relative items-center",
-                    caption_label: "text-sm font-medium",
-                    nav: "space-x-1 flex items-center",
-                    table: "w-full border-collapse space-y-1",
-                    head_row: "flex justify-around",
-                    head_cell:
-                      "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-                    row: "flex w-full justify-around mt-2",
-                    cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+                    months: 'space-y-4 sm:space-y-0',
+                    month: 'space-y-4',
+                    caption: 'flex justify-center pt-1 relative items-center',
+                    caption_label: 'text-sm font-medium',
+                    nav: 'space-x-1 flex items-center',
+                    table: 'w-full border-collapse space-y-1',
+                    head_row: 'flex justify-around',
+                    head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                    row: 'flex w-full justify-around mt-2',
+                    cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+                    day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
                     day_selected:
-                      "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                    day_today: "bg-accent text-accent-foreground",
-                    day_outside: "text-muted-foreground opacity-50",
-                    day_disabled: "text-muted-foreground opacity-50",
+                      'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+                    day_today: 'bg-accent text-accent-foreground',
+                    day_outside: 'text-muted-foreground opacity-50',
+                    day_disabled: 'text-muted-foreground opacity-50',
                     day_range_middle:
-                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                    day_hidden: "invisible",
+                      'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                    day_hidden: 'invisible',
                   }}
                 />
               </PopoverContent>
@@ -238,10 +216,7 @@ export function UserValidityPeriod({
 
         {/* End Date - Modified for mobile */}
         <div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
-          <label
-            htmlFor="endDate"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="endDate" className="text-sm font-medium text-gray-700">
             End Date
           </label>
           <div className="w-full sm:col-span-2">
@@ -252,13 +227,10 @@ export function UserValidityPeriod({
                   className="w-full h-12 sm:h-10 justify-start text-left font-normal hover:bg-gray-50 active:scale-[0.98] transition-transform"
                 >
                   <CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500" />
-                  {format(endDate, "PPP")}
+                  {format(endDate, 'PPP')}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                className="w-[calc(100vw-2rem)] sm:w-auto p-0"
-                align="center"
-              >
+              <PopoverContent className="w-[calc(100vw-2rem)] sm:w-auto p-0" align="center">
                 <Calendar
                   mode="single"
                   selected={endDate}
@@ -269,32 +241,29 @@ export function UserValidityPeriod({
                       setEndDateOpen(false); // Auto close after selection
                     }
                   }}
-                  disabled={(date) =>
-                    date <= startDate || date < new Date("1900-01-01")
-                  }
+                  disabled={(date) => date <= startDate || date < new Date('1900-01-01')}
                   initialFocus
                   className="rounded-md border shadow-lg mx-auto"
                   classNames={{
-                    months: "space-y-4 sm:space-y-0",
-                    month: "space-y-4",
-                    caption: "flex justify-center pt-1 relative items-center",
-                    caption_label: "text-sm font-medium",
-                    nav: "space-x-1 flex items-center",
-                    table: "w-full border-collapse space-y-1",
-                    head_row: "flex justify-around",
-                    head_cell:
-                      "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-                    row: "flex w-full justify-around mt-2",
-                    cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+                    months: 'space-y-4 sm:space-y-0',
+                    month: 'space-y-4',
+                    caption: 'flex justify-center pt-1 relative items-center',
+                    caption_label: 'text-sm font-medium',
+                    nav: 'space-x-1 flex items-center',
+                    table: 'w-full border-collapse space-y-1',
+                    head_row: 'flex justify-around',
+                    head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                    row: 'flex w-full justify-around mt-2',
+                    cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+                    day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
                     day_selected:
-                      "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                    day_today: "bg-accent text-accent-foreground",
-                    day_outside: "text-muted-foreground opacity-50",
-                    day_disabled: "text-muted-foreground opacity-50",
+                      'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+                    day_today: 'bg-accent text-accent-foreground',
+                    day_outside: 'text-muted-foreground opacity-50',
+                    day_disabled: 'text-muted-foreground opacity-50',
                     day_range_middle:
-                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                    day_hidden: "invisible",
+                      'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                    day_hidden: 'invisible',
                   }}
                 />
               </PopoverContent>
@@ -309,7 +278,7 @@ export function UserValidityPeriod({
           </label>
           <div className="w-full sm:col-span-2">
             <Select
-              onValueChange={(value: "morning" | "evening") => setShift(value)}
+              onValueChange={(value: 'morning' | 'evening') => setShift(value)}
               defaultValue={shift}
             >
               <SelectTrigger className="w-full h-12 sm:h-10 hover:bg-gray-50">
@@ -359,7 +328,7 @@ export function UserValidityPeriod({
               Updating...
             </span>
           ) : (
-            "Update Membership"
+            'Update Membership'
           )}
         </Button>
       </div>

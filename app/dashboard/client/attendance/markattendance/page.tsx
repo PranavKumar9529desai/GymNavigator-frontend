@@ -1,16 +1,16 @@
-import AttendanceFailure from "@/app/dashboard/client/attendance/markattendance/_components/AttendanceFailure";
-import AttendanceSuccess from "@/app/dashboard/client/attendance/markattendance/_components/AttendanceSuccess";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { checkUserAttendance } from "./_actions/check-attedance";
-import ClientQRWrapper from "./_components/ClientQRWrapper";
-import MarkAttendanceLoading from "./loading";
+import AttendanceFailure from '@/app/dashboard/client/attendance/markattendance/_components/AttendanceFailure';
+import AttendanceSuccess from '@/app/dashboard/client/attendance/markattendance/_components/AttendanceSuccess';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { checkUserAttendance } from './_actions/check-attedance';
+import ClientQRWrapper from './_components/ClientQRWrapper';
+import MarkAttendanceLoading from './loading';
 
 export default async function MarkAttendancePage() {
   const result = await checkUserAttendance();
 
   if (!result.success) {
-    if (result.error?.includes("not found")) {
+    if (result.error?.includes('not found')) {
       notFound();
     }
     return <AttendanceFailure />;

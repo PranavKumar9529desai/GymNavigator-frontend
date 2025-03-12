@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from 'framer-motion';
 import {
   Building2,
   CalendarCheck,
@@ -19,11 +19,11 @@ import {
   UserPlus,
   Users,
   UtensilsCrossed,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Skeleton } from "../../../../components/ui/skeleton";
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '../../../../components/ui/skeleton';
 
 // Map of icon names to Lucide React components
 const iconComponents: Record<string, LucideIcon> = {
@@ -51,7 +51,7 @@ interface SubrouteNavProps {
     href: string;
     icon: string;
   }[];
-  status: "loading" | "unauthenticated" | "authenticated";
+  status: 'loading' | 'unauthenticated' | 'authenticated';
 }
 
 const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
@@ -59,7 +59,7 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
   const [, setIsScrolled] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
 
-  if (status === "loading")
+  if (status === 'loading')
     return (
       <div className="flex items-center justify-center h-14">
         <Skeleton className="h-10 w-64 mx-auto" />
@@ -80,8 +80,8 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [showLabels]);
 
   if (subroutes.length === 0) return null;
@@ -100,7 +100,7 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
               key={route.href}
               href={route.href}
               className={`relative flex flex-col items-center justify-center h-full px-3 transition-all ${
-                isActive ? "text-blue-700" : "text-gray-600 hover:text-blue-600"
+                isActive ? 'text-blue-700' : 'text-gray-600 hover:text-blue-600'
               }`}
             >
               <div className="flex flex-col items-center">
@@ -112,7 +112,7 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
                   {showLabels && (
                     <m.span
                       initial={{ opacity: 0, y: -5, height: 0 }}
-                      animate={{ opacity: 1, y: 0, height: "auto" }}
+                      animate={{ opacity: 1, y: 0, height: 'auto' }}
                       exit={{ opacity: 0, y: -5, height: 0 }}
                       transition={{ duration: 0.2 }}
                       className="text-xs mt-1 whitespace-nowrap"
@@ -128,7 +128,7 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
                 <m.div
                   layoutId="activeRoute"
                   className="absolute bottom-0 w-1.5 h-1.5 bg-blue-700 rounded-full"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
             </Link>

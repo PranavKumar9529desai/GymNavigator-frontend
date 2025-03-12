@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from 'axios';
 import { unstable_cache } from 'next/cache';
-import { ClientReqConfig } from "../../../../../../lib/AxiosInstance/clientAxios";
+import { ClientReqConfig } from '../../../../../../lib/AxiosInstance/clientAxios';
 
 interface FetchedMusclesResponse {
   msg: string;
@@ -35,13 +35,13 @@ export interface Exercise {
 export const fetchMuscles = async () => {
   try {
     const response: AxiosResponse<FetchedMusclesResponse> = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/`,
     );
     return { muscles: response.data.muscleGroups };
   } catch (error) {
-    console.error("Error in getAllMuscles:", error);
+    console.error('Error in getAllMuscles:', error);
     if (axios.isAxiosError(error)) {
-      console.error("Axios error details:", {
+      console.error('Axios error details:', {
         status: error.response?.status,
         data: error.response?.data,
         config: {

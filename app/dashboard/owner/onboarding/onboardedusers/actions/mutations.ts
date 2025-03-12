@@ -25,7 +25,7 @@ export const updateActivePeriod = async (data: UpdateActivePeriodData) => {
       {
         startDate: data.startDate,
         endDate: data.endDate,
-      }
+      },
     );
 
     return response.data;
@@ -33,4 +33,4 @@ export const updateActivePeriod = async (data: UpdateActivePeriodData) => {
     console.error('Error updating active period:', error);
     throw error;
   }
-}; 
+};

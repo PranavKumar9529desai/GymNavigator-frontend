@@ -5,7 +5,7 @@ export type Rolestype = 'owner' | 'trainer' | 'client';
 
 // Matches the backend response
 export interface GymInfo {
-  id: number;
+  id: string;
   gym_name: string;
 }
 

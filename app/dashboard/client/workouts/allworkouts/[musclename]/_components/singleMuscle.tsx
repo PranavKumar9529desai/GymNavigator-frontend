@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { m } from "framer-motion";
-import { ArrowRight, Dumbbell, Search } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import type { Excercisetype } from "../actions/getSIngleMuscle";
-import { useExercises } from "./hooks/useExercises";
+import { m } from 'framer-motion';
+import { ArrowRight, Dumbbell, Search } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import type { Excercisetype } from '../actions/getSIngleMuscle';
+import { useExercises } from './hooks/useExercises';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -32,15 +32,11 @@ interface SingleMusclesProps {
   muscleName: string;
 }
 
-export const SingleMuscles = ({
-  initialExercises,
-  muscleName,
-}: SingleMusclesProps) => {
+export const SingleMuscles = ({ initialExercises, muscleName }: SingleMusclesProps) => {
   const { data: exercises = initialExercises } = useExercises(muscleName);
 
   const filteredExercises = exercises.filter(
-    (exercise) =>
-      exercise?.MuscleGroup?.name?.toLowerCase() === muscleName?.toLowerCase()
+    (exercise) => exercise?.MuscleGroup?.name?.toLowerCase() === muscleName?.toLowerCase(),
   );
 
   return (
@@ -64,13 +60,12 @@ export const SingleMuscles = ({
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight max-w-4xl">
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent break-words whitespace-normal">
-                {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)}{" "}
-                Exercises
+                {muscleName?.charAt(0)?.toUpperCase() + muscleName?.slice(1)} Exercises
               </span>
             </h1>
             <p className="text-gray-600 text-lg sm:text-xl max-w-2xl">
-              Discover professional-grade exercises designed to target and
-              strengthen your {muscleName?.toLowerCase()} muscles effectively.
+              Discover professional-grade exercises designed to target and strengthen your{' '}
+              {muscleName?.toLowerCase()} muscles effectively.
             </p>
           </m.div>
         </div>
@@ -89,25 +84,22 @@ const RecommenedExcercise = ({
 }: {
   Excercises: Excercisetype[];
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('');
 
   const difficultyOptions = [
-    { value: "Beginner", icon: "🟢", color: "emerald" },
-    { value: "Intermediate", icon: "🟡", color: "yellow" },
-    { value: "Advanced", icon: "🔴", color: "red" },
+    { value: 'Beginner', icon: '🟢', color: 'emerald' },
+    { value: 'Intermediate', icon: '🟡', color: 'yellow' },
+    { value: 'Advanced', icon: '🔴', color: 'red' },
   ];
 
   const filteredExercises = Excercises.filter((exercise) => {
-    const matchesSearch = exercise.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesDifficulty =
       !difficultyFilter ||
-      (exercise.instructions.length > 500 && difficultyFilter === "Advanced") ||
-      (exercise.instructions.length > 200 &&
-        difficultyFilter === "Intermediate") ||
-      (exercise.instructions.length <= 200 && difficultyFilter === "Beginner");
+      (exercise.instructions.length > 500 && difficultyFilter === 'Advanced') ||
+      (exercise.instructions.length > 200 && difficultyFilter === 'Intermediate') ||
+      (exercise.instructions.length <= 200 && difficultyFilter === 'Beginner');
 
     return matchesSearch && matchesDifficulty;
   });
@@ -141,17 +133,15 @@ const RecommenedExcercise = ({
                   <button
                     key={option.value}
                     onClick={() =>
-                      setDifficultyFilter(
-                        difficultyFilter === option.value ? "" : option.value
-                      )
+                      setDifficultyFilter(difficultyFilter === option.value ? '' : option.value)
                     }
                     type="button"
                     className={`inline-flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium
                       transition-all duration-200 border
                       ${
                         difficultyFilter === option.value
-                          ? "bg-blue-50 border-blue-200 text-blue-700"
-                          : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+                          ? 'bg-blue-50 border-blue-200 text-blue-700'
+                          : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
                       }`}
                   >
                     <span>{option.icon}</span>
@@ -197,15 +187,15 @@ const ExcerciseCard = ({
   const router = useRouter();
   const difficulty =
     instructions.length > 500
-      ? "Advanced"
+      ? 'Advanced'
       : instructions.length > 200
-      ? "Intermediate"
-      : "Beginner";
+        ? 'Intermediate'
+        : 'Beginner';
 
   const difficultyColors = {
-    Beginner: "bg-emerald-50 text-emerald-700",
-    Intermediate: "bg-yellow-50 text-yellow-700",
-    Advanced: "bg-red-50 text-red-700",
+    Beginner: 'bg-emerald-50 text-emerald-700',
+    Intermediate: 'bg-yellow-50 text-yellow-700',
+    Advanced: 'bg-red-50 text-red-700',
   };
 
   return (
@@ -221,19 +211,13 @@ const ExcerciseCard = ({
         />
         <div
           className={`absolute bottom-3 right-3 px-3 py-1.5 text-sm font-medium rounded-full 
-                        ${
-                          difficultyColors[
-                            difficulty as keyof typeof difficultyColors
-                          ]
-                        }`}
+                        ${difficultyColors[difficulty as keyof typeof difficultyColors]}`}
         >
           {difficulty}
         </div>
       </div>
       <div className="p-5 flex flex-col flex-1 justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-1">
-          {name}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 line-clamp-1">{name}</h3>
         <button
           type="button"
           onClick={() => router.push(`${pathname}/${name}`)}

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 export default function Error({
@@ -37,4 +37,4 @@ export default function Error({
       </div>
     </div>
   );
-} 
+}

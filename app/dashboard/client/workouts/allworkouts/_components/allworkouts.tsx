@@ -1,41 +1,33 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { queryClient } from "@/lib//getQueryClient";
-import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { m } from "framer-motion";
-import { Activity, ArrowRight, Dumbbell, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { type MuscleGroup, fetchMuscles } from "../actions/get-muscles";
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { queryClient } from '@/lib//getQueryClient';
+import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { m } from 'framer-motion';
+import { Activity, ArrowRight, Dumbbell, Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { type MuscleGroup, fetchMuscles } from '../actions/get-muscles';
 
 // Simplified animations for better mobile performance
-const fadeIn = {
+const _fadeIn = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
 const categories = [
-  { name: "All", icon: Activity },
-  { name: "Upper Body", icon: Dumbbell },
-  { name: "Lower Body", icon: Dumbbell },
-  { name: "Core", icon: Dumbbell },
+  { name: 'All', icon: Activity },
+  { name: 'Upper Body', icon: Dumbbell },
+  { name: 'Lower Body', icon: Dumbbell },
+  { name: 'Core', icon: Dumbbell },
 ];
 
-const upperBodyMuscles = [
-  "Chest",
-  "Back",
-  "Shoulders",
-  "Biceps",
-  "Triceps",
-  "Traps",
-  "Forearms",
-];
-const lowerBodyMuscles = ["Quads", "Hamstrings", "Calves", "Glutes"];
-const coreMuscles = ["Abs", "Obliques", "Lower Back"];
+const upperBodyMuscles = ['Chest', 'Back', 'Shoulders', 'Biceps', 'Triceps', 'Traps', 'Forearms'];
+const lowerBodyMuscles = ['Quads', 'Hamstrings', 'Calves', 'Glutes'];
+const coreMuscles = ['Abs', 'Obliques', 'Lower Back'];
 
 const MuscleCardSkeleton = () => (
   <div className="rounded-lg overflow-hidden bg-white border border-gray-200 shadow-sm">
@@ -53,13 +45,13 @@ interface AllworkoutsProps {
 }
 
 export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredMuscles, setFilteredMuscles] = useState<MuscleGroup[]>([]);
   const Router = useRouter();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["muscles"],
+    queryKey: ['muscles'],
     queryFn: fetchMuscles,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
@@ -72,28 +64,26 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
     if (!muscles || muscles.length === 0) return;
     let filtered = [...muscles];
 
-    if (selectedCategory === "Upper Body") {
+    if (selectedCategory === 'Upper Body') {
       filtered = filtered.filter((m) => upperBodyMuscles.includes(m.name));
-    } else if (selectedCategory === "Lower Body") {
+    } else if (selectedCategory === 'Lower Body') {
       filtered = filtered.filter((m) => lowerBodyMuscles.includes(m.name));
-    } else if (selectedCategory === "Core") {
+    } else if (selectedCategory === 'Core') {
       filtered = filtered.filter((m) => coreMuscles.includes(m.name));
     }
 
     filtered = filtered.filter((muscle) =>
-      muscle.name.toLowerCase().includes(searchTerm.toLowerCase())
+      muscle.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     setFilteredMuscles(filtered);
   }, [searchTerm, muscles, selectedCategory]);
 
   const handleMuscleClick = (muscleName: string) => {
-    Router.push(
-      `/dashboard/client/workouts/allworkouts/${muscleName.toLowerCase()}`
-    );
+    Router.push(`/dashboard/client/workouts/allworkouts/${muscleName.toLowerCase()}`);
   };
 
-  console.log("filteredMuscles", filteredMuscles);
+  console.log('filteredMuscles', filteredMuscles);
 
   return (
     <section className="space-y-8">
@@ -106,11 +96,11 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
                 key={category.name}
                 onClick={() => setSelectedCategory(category.name)}
                 className={cn(
-                  "px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors",
-                  "w-full md:w-auto",
+                  'px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-colors',
+                  'w-full md:w-auto',
                   selectedCategory === category.name
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200',
                 )}
                 type="button"
               >
@@ -138,9 +128,7 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
       {error && (
         <div role="alert" className="p-4 text-center text-red-500">
           <p className="text-xl font-semibold">Error loading workouts</p>
-          <p className="text-sm">
-            {error instanceof Error ? error.message : error}
-          </p>
+          <p className="text-sm">{error instanceof Error ? error.message : error}</p>
         </div>
       )}
 
@@ -164,7 +152,7 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
                 onClick={() => handleMuscleClick(muscle.name)}
                 className="group cursor-pointer rounded-lg overflow-hidden bg-white border border-gray-200 hover:border-blue-500 transition-colors shadow-sm hover:shadow-md"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     handleMuscleClick(muscle.name);
                   }
                 }}
@@ -189,12 +177,10 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
 
                 <div className="p-4 flex flex-col min-h-[160px]">
                   <h2 className="text-xl font-bold text-gray-800 group-hover:text-blue-500 transition-colors break-words line-clamp-2">
-                    {muscle.name.charAt(0).toUpperCase() +
-                      muscle.name.slice(1).toLowerCase()}
+                    {muscle.name.charAt(0).toUpperCase() + muscle.name.slice(1).toLowerCase()}
                   </h2>
                   <p className="text-gray-600 mt-2 mb-4 line-clamp-2 flex-grow">
-                    Master your {muscle.name.toLowerCase()} with our curated
-                    exercises
+                    Master your {muscle.name.toLowerCase()} with our curated exercises
                   </p>
                   <div className="flex items-center text-blue-500 group-hover:text-blue-600 mt-auto">
                     Explore Workouts
