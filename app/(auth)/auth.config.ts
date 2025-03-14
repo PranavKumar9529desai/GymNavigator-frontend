@@ -49,21 +49,24 @@ const authHandlers = {
       throw createError('User not found', 'USER_NOT_FOUND');
     }
 
-    const response: SigninResponseType | null = await SigninSA(email, password);
-    const NewUser = response?.user;
-    if (!NewUser) {
-      throw createError('Failed to login', 'LOGIN_FAILED');
+    const result = await SigninSA(email, password);
+    
+    if (!result.success || !result.data) {
+      throw createError(result.error?.message || 'Failed to login', result.error?.code || 'LOGIN_FAILED');
     }
-    console.log('NewUser is from the signin handler', NewUser);
+    
+    const userData = result.data;
+    console.log('User data from signin handler', userData);
+    
     return {
-      id: NewUser?.id,
-      name: NewUser?.name,
-      email: NewUser?.email,
-      role: NewUser?.role as Rolestype,
-      gym: NewUser?.gym
+      id: userData.user.id,
+      name: userData.user.name,
+      email: userData.user.email,
+      role: userData.user.role as Rolestype,
+      gym: userData.user.gym
         ? {
-            gym_name: NewUser.gym.name,
-            id: String(NewUser.gym.id),
+            gym_name: userData.user.gym.name,
+            id: String(userData.user.gym.id),
           }
         : undefined,
     };

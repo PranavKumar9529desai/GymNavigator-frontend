@@ -1,4 +1,6 @@
 'use client';
+import SigninSA from '@/app/(common)/_actions/auth/signin-with-credentials';
+import SigninGoogleSA from '@/app/(common)/_actions/auth/signin-with-google';
 import { AuthError } from '@/components/Auth/AuthError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,41 +26,47 @@ export default function SignInForm() {
     setError(null);
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+      // Use our server action instead of Next Auth directly
+      const result = await SigninSA(email, password);
 
-      if (result?.error) {
-        try {
-          const errorData = JSON.parse(result.error);
-          switch (errorData.error) {
-            case 'USER_NOT_FOUND':
-              setError('No account found with this email address');
-              toast.error('Sign in failed', {
-                description: 'No account found with this email address',
-              });
-              break;
-            case 'INVALID_PASSWORD':
-              setError('Invalid password. Please try again');
-              toast.error('Sign in failed', { description: 'Invalid password. Please try again' });
-              break;
-            case 'SERVER_ERROR':
-              setError('An error occurred. Please try again later');
-              toast.error('Server error', { description: 'Please try again later' });
-              break;
-            default:
-              setError(errorData.message || 'Failed to sign in');
-              toast.error('Sign in failed', {
-                description: errorData.message || 'Please check your credentials',
-              });
-          }
-        } catch {
-          setError('Failed to sign in');
-          toast.error('Sign in failed', { description: 'Please check your credentials' });
+      if (!result.success) {
+        const errorCode = result.error?.code || 'UNKNOWN_ERROR';
+        const errorMessage = result.error?.message || 'Failed to sign in';
+        
+        setError(errorMessage);
+        
+        // Map error codes to user-friendly toast messages
+        switch (errorCode) {
+          case 'USER_NOT_FOUND':
+            toast.error('Account not found', {
+              description: 'No account found with this email address',
+            });
+            break;
+          case 'INVALID_CREDENTIALS':
+            toast.error('Invalid credentials', {
+              description: 'The email or password you entered is incorrect',
+            });
+            break;
+          case 'SERVER_ERROR':
+            toast.error('Server error', {
+              description: 'Please try again later',
+            });
+            break;
+          default:
+            toast.error('Sign in failed', {
+              description: errorMessage,
+            });
         }
-      } else if (result?.ok) {
+      } else if (result.data) {
+        // Handle successful login
+        await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+          // Additional data to store in session if needed
+          userData: JSON.stringify(result.data),
+        });
+        
         toast.success('Welcome back!', {
           description: 'Redirecting to dashboard...',
         });
@@ -77,7 +85,48 @@ export default function SignInForm() {
     setLoading(true);
     try {
       toast.loading('Connecting to Google...');
-      await signIn('google', {});
+      
+      // First attempt Google authentication through NextAuth
+      const authResult = await signIn('google', {
+        redirect: false,
+      });
+      
+      // If we get the email from Google auth, validate with our backend
+      if (authResult?.ok && authResult?.user?.email) {
+        const googleEmail = authResult.user.email;
+        const result = await SigninGoogleSA(googleEmail);
+        
+        if (!result.success) {
+          const errorMessage = result.error?.message || 'Failed to sign in with Google';
+          setError(errorMessage);
+          
+          switch (result.error?.code) {
+            case 'USER_NOT_FOUND':
+              toast.error('Account not found', {
+                description: 'No account exists with this Google email',
+              });
+              break;
+            default:
+              toast.error('Google Sign-in failed', {
+                description: errorMessage,
+              });
+          }
+          setLoading(false);
+        } else {
+          // Successful Google login
+          toast.success('Signed in with Google!', {
+            description: 'Redirecting to dashboard...',
+          });
+          router.refresh();
+        }
+      } else {
+        // Google authentication itself failed
+        setError('Failed to authenticate with Google');
+        toast.error('Google Sign-in failed', {
+          description: 'Could not authenticate with Google',
+        });
+        setLoading(false);
+      }
     } catch (error) {
       console.error('Failed to sign in with Google:', error);
       setError('Failed to sign in with Google');

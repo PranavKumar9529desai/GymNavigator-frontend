@@ -1,6 +1,6 @@
 'use server';
 
-import { SigninReqConfig } from '../../../../lib/AxiosInstance/sign-in-axios';
+import { SigninReqConfig } from '@/lib/AxiosInstance/sign-in-axios';
 
 export interface BaseUser {
   id: string;
@@ -33,10 +33,19 @@ export interface SigninResponseType {
   };
 }
 
+export interface SigninResult {
+  success: boolean;
+  data?: SigninResponseType;
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
 export default async function SigninSA(
   email: string,
   password: string,
-): Promise<SigninResponseType | null> {
+): Promise<SigninResult> {
   try {
     const axiosInstance = await SigninReqConfig();
     const response = await axiosInstance.get('/login', {
@@ -50,13 +59,32 @@ export default async function SigninSA(
 
     if (!responseData || !responseData.success) {
       console.error('Login failed:', responseData?.message || 'Unknown error');
-      return null;
+      return {
+        success: false,
+        error: {
+          code: responseData?.error || 'UNKNOWN_ERROR',
+          message: responseData?.message || '\An unknown error occurred',
+        },
+      };
     }
 
     // Extract the data object from the API response wrapper
-    return responseData.data as SigninResponseType;
-  } catch (error) {
+    return {
+      success: true,
+      data: responseData.data as SigninResponseType,
+    };
+  } catch (error: any) {
     console.error('Error signing in:', error);
-    return null;
+    
+    // Handle axios error responses
+    const errorResponse = error.response?.data;
+    
+    return {
+      success: false,
+      error: {
+        code: errorResponse?.error || 'SERVER_ERROR',
+        message: errorResponse?.message || 'Failed to connect to authentication service',
+      },
+    };
   }
 }
