@@ -76,13 +76,13 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ">
-      <Card className="w-full max-w-md bg-gradient-to-b from-background to-background/80 backdrop-blur-sm ">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md bg-gradient-to-b from-blue-900/40 to-black/60 backdrop-blur-md border border-blue-500/20 shadow-xl">
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight text-gray-900">
+          <CardTitle className="text-3xl font-bold tracking-tight text-white">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardDescription className="text-gray-300">
             Please sign in to your account
           </CardDescription>
         </CardHeader>
@@ -92,14 +92,14 @@ export default function SignIn() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               {/* @ts-ignore */}
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="text-gray-300">Email Address</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-3 top-3 h-5 w-5 text-blue-400" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  className="pl-10"
+                  className="pl-10 bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -110,13 +110,13 @@ export default function SignIn() {
 
             <div className="space-y-2">
               {/* @ts-ignore */}
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-gray-300">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-3 top-3 h-5 w-5 text-blue-400" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  className="pl-10 pr-10"
+                  className="pl-10 pr-10 bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -125,7 +125,7 @@ export default function SignIn() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  className="absolute right-3 top-3 text-blue-400 hover:text-blue-300 focus:outline-none"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -133,24 +133,28 @@ export default function SignIn() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" 
+              disabled={loading}
+            >
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300" />
+              <span className="w-full border-t border-blue-500/30" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-blue-950/20 text-gray-300">Or continue with</span>
             </div>
           </div>
 
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="w-full border-blue-500/30 text-gray-200 hover:bg-blue-900/30"
             onClick={handleGoogleSignIn}
             disabled={loading}
           >
@@ -182,9 +186,9 @@ export default function SignIn() {
             Sign in with Google
           </Button>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="mt-6 text-center text-sm text-gray-300">
             Don&apos;t have an account?{' '}
-            <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+            <a href="/signup" className="font-medium text-blue-400 hover:text-blue-300">
               Sign up
             </a>
           </div>
