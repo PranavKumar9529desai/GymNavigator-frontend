@@ -1,4 +1,4 @@
-import RegisterForm from "./Registration Form/RegisterForm";
+import RegisterForm from './Registration Form/RegisterForm';
 
 export default function SignUp() {
   return (

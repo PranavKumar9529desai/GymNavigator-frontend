@@ -1,21 +1,21 @@
-import GymDomImage from "@/app/assests/gymd.webp";
-import type { Metadata } from "next";
-import Image from "next/image";
-import type React from "react";
+import GymDomImage from '@/app/assests/gymd.webp';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import type React from 'react';
 
 export const metadata: Metadata = {
   openGraph: {
-    title: "GymNavigator",
-    description: "Professional gym management solution",
+    title: 'GymNavigator',
+    description: 'Professional gym management solution',
     images: [
       {
         url: GymDomImage.src,
         width: 1200,
         height: 630,
-        alt: "GymNavigator Preview",
+        alt: 'GymNavigator Preview',
       },
     ],
-    type: "website",
+    type: 'website',
   },
 };
 
@@ -31,11 +31,11 @@ export default function AuthLayout({
         {/* Centered Logo with Name */}
         <div className="mb-10 flex flex-col items-center">
           <div className="relative h-16 w-16 mb-4">
-            <Image 
-              src="/android-chrome-512x512.png" 
-              alt="GymNavigator Logo" 
-              fill 
-              priority 
+            <Image
+              src="/android-chrome-512x512.png"
+              alt="GymNavigator Logo"
+              fill
+              priority
               className="object-contain"
             />
           </div>
@@ -46,13 +46,11 @@ export default function AuthLayout({
             </span>
           </h1>
         </div>
-        
+
         {/* Auth Form */}
-        <div className="w-full max-w-md relative z-10">
-          {children}
-        </div>
+        <div className="w-full max-w-md relative z-10">{children}</div>
       </div>
-      
+
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-3xl -top-[250px] -left-[250px]" />

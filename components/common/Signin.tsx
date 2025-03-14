@@ -1,4 +1,4 @@
-import SignInForm from "./Auth/SigninForm";
+import SignInForm from './Auth/SigninForm';
 
 export default function SignIn() {
   return (

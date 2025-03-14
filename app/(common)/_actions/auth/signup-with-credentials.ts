@@ -1,7 +1,7 @@
-"use server";
-import type { AxiosResponse } from "axios";
-import axios from "axios";
-import { SignupReqConfig } from "../../../../lib/AxiosInstance/sign-up-axios";
+'use server';
+import type { AxiosResponse } from 'axios';
+import axios from 'axios';
+import { SignupReqConfig } from '../../../../lib/AxiosInstance/sign-up-axios';
 
 export interface BaseUser {
   id: string;
@@ -28,11 +28,11 @@ export default async function SignupSA(
   role: string,
   name: string,
   email: string,
-  password: string
+  password: string,
 ): Promise<SignupResponseType | null> {
   try {
     const axiosInstance = await SignupReqConfig();
-    const response = await axiosInstance.post("/createaccount", {
+    const response = await axiosInstance.post('/createaccount', {
       name,
       email,
       password,
@@ -42,7 +42,7 @@ export default async function SignupSA(
     const responseData = response.data;
 
     if (!responseData || !responseData.success) {
-      console.error("Signup failed:", responseData?.message || "Unknown error");
+      console.error('Signup failed:', responseData?.message || 'Unknown error');
       return null;
     }
 
@@ -50,7 +50,7 @@ export default async function SignupSA(
     const userData = responseData.data;
 
     if (!userData) {
-      throw new Error("No user data received");
+      throw new Error('No user data received');
     }
 
     // Return properly structured SignupResponseType
@@ -61,7 +61,7 @@ export default async function SignupSA(
       role: role.toLowerCase(),
     };
   } catch (error) {
-    console.error("Error signing up:", error);
+    console.error('Error signing up:', error);
     return null;
   }
 }

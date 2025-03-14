@@ -1,5 +1,5 @@
-"use server";
-import axios, { type AxiosResponse } from "axios";
+'use server';
+import axios, { type AxiosResponse } from 'axios';
 
 interface MinimalGymInfo {
   id: string;
@@ -29,21 +29,19 @@ interface LoginResponse {
   role?: string;
 }
 
-export default async function GetUserAndLogin(
-  email: string
-): Promise<userType | false> {
+export default async function GetUserAndLogin(email: string): Promise<userType | false> {
   try {
-    console.log("this is the response", process.env.NEXT_PUBLIC_BACKEND_URL);
+    console.log('this is the response', process.env.NEXT_PUBLIC_BACKEND_URL);
     const response: AxiosResponse<LoginResponse> = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/isexist`,
       { email },
       {
-        headers: { "Content-Type": "application/json" },
-      }
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
 
     const { user, role } = response.data;
-    console.log("response from the backend isiexists", response.data);
+    console.log('response from the backend isiexists', response.data);
     if (!user) return false;
 
     // Extract and format the gym data if it exists
@@ -54,7 +52,7 @@ export default async function GetUserAndLogin(
         }
       : undefined;
 
-    console.log("user from the db from the getUserByEmail", gymData);
+    console.log('user from the db from the getUserByEmail', gymData);
     const UserResponse: userType = {
       id: String(user.id), // Ensure id is always a string
       name: user.name,
@@ -64,10 +62,10 @@ export default async function GetUserAndLogin(
       gym_id: user.gym_id,
       gym: gymData,
     };
-    console.log("return from the getusermail", UserResponse);
+    console.log('return from the getusermail', UserResponse);
     return UserResponse;
   } catch (error) {
-    console.log("error getting user by email", error);
+    console.log('error getting user by email', error);
     return false;
   }
 }

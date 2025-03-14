@@ -1,12 +1,15 @@
+import { Skeleton } from '@/components/ui/skeleton';
+
 export default function GroceryListLoading() {
   return (
     <div className="py-8">
-      <div className="h-9 bg-gray-200 animate-pulse rounded w-60 mb-6"></div>
+      <Skeleton className="h-9 w-60 mb-6" />
+
       <div className="space-y-4 mt-6">
         {[...Array(5)].map((_, i) => (
-          <div key={`skeleton-${i}`} className="flex items-center space-x-3">
-            <div className="h-5 w-5 bg-gray-200 animate-pulse rounded"></div>
-            <div className="h-6 bg-gray-200 animate-pulse rounded w-full max-w-md"></div>
+          <div key={`grocery-skeleton-${i as number}`} className="flex items-center space-x-3">
+            <Skeleton className="h-5 w-5 rounded" />
+            <Skeleton className="h-6 w-full max-w-md" />
           </div>
         ))}
       </div>

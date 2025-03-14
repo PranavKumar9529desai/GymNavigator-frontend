@@ -14,6 +14,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "../../ui/button";
 import FormError from "../../ui/form-error";
 import GoogleButton from "../../ui/googleButton";
@@ -62,10 +63,12 @@ export default function RegisterForm() {
           // If the call was successful, it means the user exists
           settype("fail");
           seterror("Email is already registered");
+          toast.error("Registration failed", { description: "Email is already registered" });
           return;
         }
 
         // If we reach here, the user doesn't exist, so we can proceed with registration
+        toast.loading("Creating your account...");
         settype("success");
         const signInResult = await signIn("credentials", {
           name,
@@ -82,26 +85,33 @@ export default function RegisterForm() {
             switch (errorData.error) {
               case "USER_NOT_FOUND":
                 seterror("Registration failed: Account not found");
+                toast.error("Registration error", { description: "Account not found" });
                 break;
               case "INVALID_PASSWORD":
                 seterror("Registration failed: Password error");
+                toast.error("Registration error", { description: "Password error" });
                 break;
               case "SERVER_ERROR":
                 seterror("Registration failed: Please try again later");
+                toast.error("Server error", { description: "Please try again later" });
                 break;
               default:
                 seterror(errorData.message || "Registration failed");
+                toast.error("Registration failed", { description: errorData.message || "Please try again" });
             }
           } catch {
             seterror("Registration failed");
+            toast.error("Registration failed", { description: "Please try again" });
           }
         } else {
           seterror("Account created successfully");
+          toast.success("Welcome to GymNavigator!", { description: "Your account has been created successfully" });
           router.refresh();
         }
       } catch (error) {
         settype("fail");
         seterror("An unexpected error occurred");
+        toast.error("Registration error", { description: "An unexpected error occurred" });
         console.error("Registration error:", error);
       }
     });
@@ -110,6 +120,7 @@ export default function RegisterForm() {
   async function handleGoogleSubmit() {
     console.log("role from the form", form.getValues("role"));
     startTransition(async () => {
+      toast.loading("Connecting to Google...");
       const result = await signIn("google", {
         redirect: true,
         redirectTo: "/selectrole",

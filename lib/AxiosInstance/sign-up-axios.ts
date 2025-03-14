@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance } from "axios";
+import axios, { type AxiosInstance } from 'axios';
 
 /**
  * Axios instance for unauthenticated requests related to signup/login
@@ -15,8 +15,8 @@ export const SignupReqConfig = async (): Promise<AxiosInstance> => {
   const SignupAxios: AxiosInstance = await axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup`,
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     timeout: 10000, // 10 second timeout
   });
@@ -25,9 +25,9 @@ export const SignupReqConfig = async (): Promise<AxiosInstance> => {
   SignupAxios.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.error("API request failed:", error);
+      console.error('API request failed:', error);
       return Promise.reject(error);
-    }
+    },
   );
 
   return SignupAxios;

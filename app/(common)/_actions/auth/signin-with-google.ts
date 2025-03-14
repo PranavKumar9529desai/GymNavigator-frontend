@@ -35,16 +35,17 @@ export default async function SigninGoogleSA(
   email: string
 ): Promise<SigninGoogleResponseType | null> {
   try {
+    console.log("siginin with the gooogle is called ", email);
     const axiosInstance: AxiosInstance = await SigninReqConfig();
-    const response: AxiosResponse<SigninGoogleResponseType> =
-      await axiosInstance.get("/google", {
-        params: {
-          email: encodeURIComponent(email),
-        },
-      });
-
-    const data = response.data;
-
+    const response = await axiosInstance.get(
+      `/google?email=${encodeURIComponent(email)}`
+    );
+    console.log(
+      "response is from the signin with google server action",
+      response
+    );
+    const data = await response.data.data;
+    console.log("response.data is", data);
     if (!data) {
       throw new Error("No data received");
     }

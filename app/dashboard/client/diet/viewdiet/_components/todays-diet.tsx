@@ -16,7 +16,9 @@ export default async function TodaysDiet() {
             </h3>
             <ul className="mt-2 list-disc list-inside">
               {meal.items.map((item) => (
-                <li key={`${meal.type}-${item}`} className="text-gray-600">{item}</li>
+                <li key={`${meal.type}-${item}`} className="text-gray-600">
+                  {item}
+                </li>
               ))}
             </ul>
           </div>

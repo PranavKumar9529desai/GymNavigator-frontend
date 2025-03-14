@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { SigninReqConfig } from "../../../../lib/AxiosInstance/sign-in-axios";
+import { SigninReqConfig } from '../../../../lib/AxiosInstance/sign-in-axios';
 
 export interface BaseUser {
   id: string;
@@ -16,7 +16,7 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-export type Rolestype = "owner" | "trainer" | "client"; 
+export type Rolestype = 'owner' | 'trainer' | 'client';
 
 export interface SigninResponseType {
   token: string;
@@ -35,11 +35,11 @@ export interface SigninResponseType {
 
 export default async function SigninSA(
   email: string,
-  password: string
+  password: string,
 ): Promise<SigninResponseType | null> {
   try {
     const axiosInstance = await SigninReqConfig();
-    const response = await axiosInstance.get("/login", {
+    const response = await axiosInstance.get('/login', {
       params: {
         email,
         password,
@@ -49,14 +49,14 @@ export default async function SigninSA(
     const responseData = response.data;
 
     if (!responseData || !responseData.success) {
-      console.error("Login failed:", responseData?.message || "Unknown error");
+      console.error('Login failed:', responseData?.message || 'Unknown error');
       return null;
     }
 
     // Extract the data object from the API response wrapper
     return responseData.data as SigninResponseType;
   } catch (error) {
-    console.error("Error signing in:", error);
+    console.error('Error signing in:', error);
     return null;
   }
 }

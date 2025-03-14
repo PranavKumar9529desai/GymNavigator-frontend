@@ -1,6 +1,6 @@
-import { AlertTriangle } from "lucide-react";
-import Image from "next/image";
-import NoWorkoutAssignedImage from "../_assests/no-workout-assigned-2.webp";
+import { AlertTriangle } from 'lucide-react';
+import Image from 'next/image';
+import NoWorkoutAssignedImage from '../_assests/no-workout-assigned-2.webp';
 
 export const WorkoutNotAssigned = () => {
   return (
@@ -11,9 +11,9 @@ export const WorkoutNotAssigned = () => {
           alt="No workouts assigned"
           fill
           className="object-contain mix-blend-multiply"
-          style={{ 
-            filter: "contrast(1.1) brightness(1.05)",
-            transform: "scale(1.2)" // Zoom in the image by 40%
+          style={{
+            filter: 'contrast(1.1) brightness(1.05)',
+            transform: 'scale(1.2)', // Zoom in the image by 40%
           }}
           priority
         />
@@ -25,8 +25,8 @@ export const WorkoutNotAssigned = () => {
       </div>
 
       <p className="text-gray-500 max-w-md">
-        Your trainer hasn't assigned any workouts to you yet. Check back later
-        or contact your trainer for more information.
+        Your trainer hasn't assigned any workouts to you yet. Check back later or contact your
+        trainer for more information.
       </p>
     </div>
   );
