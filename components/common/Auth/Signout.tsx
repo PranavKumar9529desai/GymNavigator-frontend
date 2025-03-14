@@ -23,7 +23,7 @@ export default function Signout() {
   };
 
   return (
-    <div className="text-center space-y-6">
+    <div className="w-full max-w-md mx-auto backdrop-blur-md p-8 rounded-xl border border-blue-500/20 shadow-xl text-center space-y-8">
       <m.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
