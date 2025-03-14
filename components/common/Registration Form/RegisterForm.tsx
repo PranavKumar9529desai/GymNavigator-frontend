@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
-import SignIn from "../Auth/Signin";
+import SignIn from "../Auth/SigninForm";
 import { type RegisterFormValues, registerSchema } from "./register-schema";
 
 // Remove the formSchema definition as it's now in register-schema.ts
@@ -119,17 +119,17 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto backdrop-blur-md p-8 rounded-xl border border-blue-500/20 shadow-xl">
-      <div className="space-y-3 text-center mb-8">
+    <div className="w-full max-w-md mx-auto  p-8 rounded-xl  shadow-xl">
+      {/* <div className="space-y-3 text-center mb-8">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
           Create Account
         </h1>
         <p className="text-sm text-gray-300">
           Enter your details to create your account
         </p>
-      </div>
-      
-      <div className="space-y-8">
+      </div> */}
+
+      <div className="space-y-8 ">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -154,14 +154,14 @@ export default function RegisterForm() {
                       {...field}
                       disabled={ispending}
                       type="text"
-                      className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
+                      className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
                     />
                   </FormControl>
                   <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -173,9 +173,7 @@ export default function RegisterForm() {
                       <div className="flex items-center space-x-2">
                         <Mail
                           className={`w-4 h-4 ${
-                            errors.email
-                              ? "text-destructive"
-                              : "text-blue-400"
+                            errors.email ? "text-destructive" : "text-blue-400"
                           }`}
                         />
                         <span>Email</span>
@@ -187,14 +185,14 @@ export default function RegisterForm() {
                         {...field}
                         type="email"
                         disabled={ispending}
-                        className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
+                        className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -220,7 +218,7 @@ export default function RegisterForm() {
                           {...field}
                           disabled={ispending}
                           type={showPassword ? "text" : "password"}
-                          className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 pr-10"
+                          className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 pr-10 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
                         />
                         <button
                           type="button"
@@ -240,7 +238,7 @@ export default function RegisterForm() {
                 )}
               />
             </div>
-            
+
             <FormField
               control={form.control}
               name="role"
@@ -263,7 +261,7 @@ export default function RegisterForm() {
                     disabled={ispending}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full bg-blue-950/30 border-blue-500/30 text-white">
+                      <SelectTrigger className="w-full bg-blue-950/30 border-blue-500/30 text-white focus:ring-blue-500/20 focus:ring-offset-blue-900/20">
                         <SelectValue placeholder="Select your Role" />
                       </SelectTrigger>
                     </FormControl>
@@ -292,7 +290,7 @@ export default function RegisterForm() {
                 </FormItem>
               )}
             />
-            
+
             <Button
               className="w-full font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg relative z-10"
               type="submit"
@@ -310,7 +308,7 @@ export default function RegisterForm() {
             </Button>
           </form>
         </Form>
-        
+
         {error && type ? (
           <FormError
             FormErrorProps={{
@@ -319,7 +317,7 @@ export default function RegisterForm() {
             }}
           />
         ) : null}
-        
+
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-blue-500/30" />
@@ -330,9 +328,9 @@ export default function RegisterForm() {
             </span>
           </div>
         </div>
-        
+
         <GoogleButton handleSubmit={handleGoogleSubmit} />
-        
+
         <div className="text-center text-sm text-gray-300">
           Already have an account?{" "}
           <a

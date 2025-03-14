@@ -26,10 +26,11 @@ export default function AuthLayout({
 }) {
   return (
     <main className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
-      <div className="min-h-screen flex flex-col items-center">
-        {/* Logo Section */}
-        <div className="w-full flex justify-center py-6">
-          <div className="relative h-14 w-14 md:h-20 md:w-20">
+      {/* Centered Content */}
+      <div className="min-h-screen md:flex flex-col items-center justify-center px-4 py-10">
+        {/* Centered Logo with Name */}
+        <div className="mb-10 flex flex-col items-center">
+          <div className="relative h-16 w-16 mb-4">
             <Image 
               src="/android-chrome-512x512.png" 
               alt="GymNavigator Logo" 
@@ -38,41 +39,17 @@ export default function AuthLayout({
               className="object-contain"
             />
           </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm">
+            <span className="font-black">Gym</span>
+            <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-black">
+              Navigator
+            </span>
+          </h1>
         </div>
         
-        <div className="flex flex-1 w-full">
-          {/* Left side - Auth Form */}
-          <div className="lg:w-1/2 sm:w-full flex items-center justify-center p-8 bg-transparent">
-            <div className="w-full max-w-md relative z-10">{children}</div>
-          </div>
-
-          {/* Right side - Branding */}
-          <div className="hidden lg:flex w-1/2 flex-col items-center justify-center p-8">
-            <div className="max-w-xl text-center space-y-6">
-              <div className="relative w-full aspect-square max-w-[450px] mx-auto">
-                <div className="absolute inset-0 bg-blue-400/20 opacity-50 rounded-full blur-3xl" />
-                <div className="relative z-10 w-full h-full flex items-center justify-center">
-                  <Image
-                    src="/android-chrome-512x512.png"
-                    alt="GymNavigator Logo"
-                    height={300}
-                    width={300}
-                    className="p-6"
-                    priority
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-white">
-                  Welcome to <span className="text-blue-400">GymNavigator</span>
-                </h2>
-                <p className="text-base text-gray-300">
-                  Your ultimate platform for fitness tracking and workout management
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Auth Form */}
+        <div className="w-full max-w-md relative z-10">
+          {children}
         </div>
       </div>
       
