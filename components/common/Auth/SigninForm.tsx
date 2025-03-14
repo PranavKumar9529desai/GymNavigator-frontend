@@ -36,7 +36,9 @@ export default function SignInForm() {
           switch (errorData.error) {
             case 'USER_NOT_FOUND':
               setError('No account found with this email address');
-              toast.error('Sign in failed', { description: 'No account found with this email address' });
+              toast.error('Sign in failed', {
+                description: 'No account found with this email address',
+              });
               break;
             case 'INVALID_PASSWORD':
               setError('Invalid password. Please try again');
@@ -48,7 +50,9 @@ export default function SignInForm() {
               break;
             default:
               setError(errorData.message || 'Failed to sign in');
-              toast.error('Sign in failed', { description: errorData.message || 'Please check your credentials' });
+              toast.error('Sign in failed', {
+                description: errorData.message || 'Please check your credentials',
+              });
           }
         } catch {
           setError('Failed to sign in');

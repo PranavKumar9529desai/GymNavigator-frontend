@@ -1,6 +1,6 @@
-"use server";
-import type { AxiosInstance, AxiosResponse } from "axios";
-import { SigninReqConfig } from "../../../../lib/AxiosInstance/sign-in-axios";
+'use server';
+import type { AxiosInstance, AxiosResponse } from 'axios';
+import { SigninReqConfig } from '../../../../lib/AxiosInstance/sign-in-axios';
 
 export interface BaseUser {
   id: string;
@@ -32,29 +32,24 @@ export interface SigninGoogleResponseType {
 }
 
 export default async function SigninGoogleSA(
-  email: string
+  email: string,
 ): Promise<SigninGoogleResponseType | null> {
   try {
-    console.log("siginin with the gooogle is called ", email);
+    console.log('siginin with the gooogle is called ', email);
     const axiosInstance: AxiosInstance = await SigninReqConfig();
-    const response = await axiosInstance.get(
-      `/google?email=${encodeURIComponent(email)}`
-    );
-    console.log(
-      "response is from the signin with google server action",
-      response
-    );
+    const response = await axiosInstance.get(`/google?email=${encodeURIComponent(email)}`);
+    console.log('response is from the signin with google server action', response);
     const data = await response.data.data;
-    console.log("response.data is", data);
+    console.log('response.data is', data);
     if (!data) {
-      throw new Error("No data received");
+      throw new Error('No data received');
     }
 
-    console.log("data is from the signin with google ", data);
+    console.log('data is from the signin with google ', data);
 
     return data as SigninGoogleResponseType;
   } catch (error) {
-    console.error("Error signing up:", error);
+    console.error('Error signing up:', error);
     return null;
   }
 }
