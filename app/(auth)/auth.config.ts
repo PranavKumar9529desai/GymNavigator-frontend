@@ -1,15 +1,27 @@
-import bcrypt from 'bcryptjs';
-import type { NextAuthConfig } from 'next-auth';
-import type { User } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
-import SignupSA from '../(common)/_actions/signup/SignUpWithCrendentails';
-import getUserByEmail, { type userType } from '../(common)/_actions/signup/getUserByEmail';
-import type { GymInfo, Rolestype } from '../types/next-auth';
+import type { AdapterUser } from "@auth/core/adapters";
+import type { Profile } from "@auth/core/types";
+import bcrypt from "bcryptjs";
+import type { Account, NextAuthConfig, User } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import GetUserAndLogin, {
+  type userType,
+} from "../(common)/_actions/auth/get-userby-email";
+import { getUserByEmail } from "../(common)/_actions/auth/get-userinfo";
+import SigninSA, {
+  type SigninResponseType,
+} from "../(common)/_actions/auth/signin-with-credentials";
+import SigninGoogleSA, {
+  type SigninGoogleResponseType,
+} from "../(common)/_actions/auth/signin-with-google";
+import SignupSA, {
+  type SignupResponseType,
+} from "../(common)/_actions/auth/signup-with-credentials";
+import type { GymInfo, Rolestype } from "../types/next-auth";
 
 // Environment configuration
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 // Centralized logger that respects environment
 const logger = {
@@ -30,45 +42,57 @@ const authHandlers = {
   async handleSignIn(email: string, password: string): Promise<User> {
     const userFromDB = await getUserByEmail(email);
 
-    if (!userFromDB || !('password' in userFromDB)) {
-      throw createError('User not found', 'USER_NOT_FOUND');
+    if (!userFromDB || !userFromDB.success) {
+      throw createError("User not found", "USER_NOT_FOUND");
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, userFromDB.password);
-    if (!isPasswordMatch) {
-      throw createError('Invalid password', 'INVALID_PASSWORD');
+    const response: SigninResponseType | null = await SigninSA(email, password);
+    const NewUser = response?.user;
+    if (!NewUser) {
+      throw createError("Failed to login", "LOGIN_FAILED");
     }
-
+    console.log("NewUser is from the signin handler", NewUser);
     return {
-      id: userFromDB.id,
-      name: userFromDB.name,
-      email: userFromDB.email,
-      role: userFromDB.role as Rolestype,
-      gym: userFromDB.gym
+      id: NewUser?.id,
+      name: NewUser?.name,
+      email: NewUser?.email,
+      role: NewUser?.role as Rolestype,
+      gym: NewUser?.gym
         ? {
-            gym_name: userFromDB.gym.gym_name,
-            id: String(userFromDB.gym.id),
+            gym_name: NewUser.gym.name,
+            id: String(NewUser.gym.id),
           }
         : undefined,
     };
   },
 
   // Handle sign-up attempt
-  async handleSignUp(role: string, name: string, email: string, password: string): Promise<User> {
+  async handleSignUp(
+    role: string,
+    name: string,
+    email: string,
+    password: string
+  ): Promise<User> {
+    console.log("signup handler is called");
     const userExists = await getUserByEmail(email);
-    if (userExists) {
-      throw createError('User already exists', 'USER_EXISTS');
+    if (userExists.success) {
+      throw createError("User already exists", "USER_EXISTS");
     }
 
-    const response = await SignupSA(role, name, email, password);
-    if (!response?.user?.id) {
-      throw createError('Failed to create account', 'SIGNUP_FAILED');
+    const response: SignupResponseType | null = await SignupSA(
+      role,
+      name,
+      email,
+      password
+    );
+    if (!response?.name || !response?.email) {
+      throw createError("Failed to create account", "SIGNUP_FAILED");
     }
-
+    console.log("response is from the signup handler", response);
     return {
-      id: response.user.id,
-      name: response.user.name,
-      email: response.user.email,
+      id: response.id,
+      name: response.name,
+      email: response.email,
       role: role as Rolestype,
     };
   },
@@ -87,7 +111,10 @@ export default {
       },
       async authorize(credentials): Promise<User | null> {
         if (!credentials?.email || !credentials?.password) {
-          throw createError('Email and password are required', 'INVALID_CREDENTIALS');
+          throw createError(
+            "Email and password are required",
+            "INVALID_CREDENTIALS"
+          );
         }
 
         const { email, password, name, role } = credentials as {
@@ -96,11 +123,15 @@ export default {
           name?: string;
           role?: string;
         };
+        console.log("credentials are", credentials);
 
         // Determine if this is sign-up or sign-in
         const isSignUp = Boolean(role && name);
-        logger.log(`Attempting ${isSignUp ? 'sign-up' : 'sign-in'} for email:`, email);
-
+        console.log(
+          `Attempting ${isSignUp ? "sign-up" : "sign-in"} for email:`,
+          email
+        );
+        console.log("isSignUp is", isSignUp);
         try {
           // Route to appropriate handler
           if (isSignUp && role && name) {
@@ -108,7 +139,7 @@ export default {
           }
           return await authHandlers.handleSignIn(email, password);
         } catch (error) {
-          logger.error('Authentication error:', error);
+          logger.error("Authentication error:", error);
           throw error;
         }
       },
@@ -122,18 +153,18 @@ export default {
   ],
 
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 7 * 24 * 60 * 60, // 7 days
   },
 
   cookies: {
     sessionToken: {
-      name: 'next-auth.session-token',
+      name: "next-auth.session-token",
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
+        sameSite: "lax",
+        path: "/",
         secure: isProduction,
       },
     },
@@ -142,36 +173,58 @@ export default {
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Simplified redirect logic
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
 
-    async signIn({ user, account }) {
+    async signIn(params: {
+      user: User | AdapterUser;
+      account: Account | null;
+      profile?: Profile;
+      email?: { verificationRequest?: boolean };
+      credentials?: Record<string, unknown>;
+    }) {
+      const { user, account } = params;
+      console.log("user is received from the signin callback", user);
+
       // Only process special cases (like Google)
-      if (account?.provider !== 'google' || !user?.email) {
+      if (!account || account.provider !== "google" || !user?.email) {
         return true;
       }
 
-      // Optimize by fetching user data only once for Google sign-in
-      const userFromDb = await getUserByEmail(user.email);
+      try {
+        // Optimize by fetching user data only once for Google sign-in
+        const userFromDb = await getUserByEmail(user.email);
+        if (!userFromDb) {
+          throw createError("User not found", "USER_NOT_FOUND");
+        }
 
-      if (userFromDb && 'email' in userFromDb) {
-        // Merge DB data with user profile
-        Object.assign(user, {
-          role: userFromDb.role as Rolestype,
-          gym: userFromDb.gym
-            ? {
-                gym_name: userFromDb.gym.gym_name,
-                id: String(userFromDb.gym.id),
-              }
-            : undefined,
-          name: userFromDb.name,
-          email: userFromDb.email,
-        });
+        if (userFromDb && "email" in userFromDb) {
+          const response: SigninGoogleResponseType | null =
+            await SigninGoogleSA(user.email);
+          console.log("response is ", response);
+          if (response?.user) {
+            Object.assign(user, {
+              id: response.user.id,
+              role: response.user.role as Rolestype,
+              gym: response.user.gym
+                ? {
+                    gym_name: response.user.gym.name,
+                    id: String(response.user.gym.id),
+                  }
+                : undefined,
+              name: response.user.name,
+              email: response.user.email,
+            });
+          }
+        }
+
+        return true;
+      } catch (error) {
+        logger.error("Google sign-in error:", error);
+        return false;
       }
-
-      return true;
     },
 
     async jwt({ token, user, trigger, session }) {
@@ -190,10 +243,10 @@ export default {
       }
 
       // Handle session updates
-      if (trigger === 'update' && session) {
+      if (trigger === "update" && session) {
         return { ...token, ...session };
       }
-
+      console.log("token is from the jwt callback", token);
       return token;
     },
 
@@ -215,8 +268,8 @@ export default {
 
   trustHost: true,
   pages: {
-    signIn: '/signin',
-    error: '/auth/error',
+    signIn: "/signin",
+    error: "/auth/error",
   },
   debug: !isProduction,
 } satisfies NextAuthConfig;

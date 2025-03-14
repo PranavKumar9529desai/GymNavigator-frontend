@@ -1,7 +1,7 @@
 'use client';
 import { updateSessionWithRole } from '@/app/(common)/_actions/session/updateSessionWithRole';
-import SignupWithGoogle from '@/app/(common)/_actions/signup/SignupWithGoogle';
-import type { SignupWithGoogleReturnType } from '@/app/(common)/_actions/signup/SignupWithGoogle';
+import SignupWithGoogle from '@/app/(common)/_actions/auth/signup-with-google';
+import type { SignupWithGoogleReturnType } from '@/app/(common)/_actions/auth/signup-with-google';
 import type { Rolestype } from '@/app/types/next-auth';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
