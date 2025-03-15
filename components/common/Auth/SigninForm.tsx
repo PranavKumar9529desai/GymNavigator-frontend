@@ -1,12 +1,10 @@
 'use client';
-import SigninSA from '@/app/(common)/_actions/auth/signin-with-credentials';
-import SigninGoogleSA from '@/app/(common)/_actions/auth/signin-with-google';
 import { AuthError } from '@/components/Auth/AuthError';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signIn } from '@/node_modules/next-auth/react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -18,7 +16,6 @@ export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,15 +23,29 @@ export default function SignInForm() {
     setError(null);
 
     try {
-      // Use our server action instead of Next Auth directly
-      const result = await SigninSA(email, password);
+      // Use NextAuth's signIn directly - auth.config.ts handles the authentication logic
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
 
-      if (!result.success) {
-        const errorCode = result.error?.code || 'UNKNOWN_ERROR';
-        const errorMessage = result.error?.message || 'Failed to sign in';
-        
+      if (result?.error) {
+        // Parse the error JSON if it exists
+        toast.dismiss();
+        let errorMessage = 'Failed to sign in';
+        let errorCode = 'UNKNOWN_ERROR';
+
+        try {
+          const parsedError = JSON.parse(result.error);
+          errorMessage = parsedError.message || errorMessage;
+          errorCode = parsedError.error || errorCode;
+        } catch {
+          errorMessage = result.error;
+        }
+
         setError(errorMessage);
-        
+
         // Map error codes to user-friendly toast messages
         switch (errorCode) {
           case 'USER_NOT_FOUND':
@@ -57,25 +68,21 @@ export default function SignInForm() {
               description: errorMessage,
             });
         }
-      } else if (result.data) {
-        // Handle successful login
-        await signIn('credentials', {
-          redirect: false,
-          email,
-          password,
-          // Additional data to store in session if needed
-          userData: JSON.stringify(result.data),
-        });
-        
+      } else if (result?.ok) {
+        toast.dismiss();
+
         toast.success('Welcome back!', {
           description: 'Redirecting to dashboard...',
         });
-        router.refresh();
+        // router.refresh();
       }
     } catch (error) {
+      toast.dismiss();
       console.error('Failed to sign in:', error);
       setError('An unexpected error occurred');
-      toast.error('Sign in error', { description: 'An unexpected error occurred' });
+      toast.error('Sign in error', {
+        description: 'An unexpected error occurred',
+      });
     } finally {
       setLoading(false);
     }
@@ -85,59 +92,31 @@ export default function SignInForm() {
     setLoading(true);
     try {
       toast.loading('Connecting to Google...');
-      
-      // First attempt Google authentication through NextAuth
-      const authResult = await signIn('google', {
-        redirect: false,
+
+      // Use NextAuth's Google provider directly
+      // auth.config.ts handles the verification with our backend
+      await signIn('google', {
+        callbackUrl: '/dashboard',
       });
-      
-      // If we get the email from Google auth, validate with our backend
-      if (authResult?.ok && authResult?.user?.email) {
-        const googleEmail = authResult.user.email;
-        const result = await SigninGoogleSA(googleEmail);
-        
-        if (!result.success) {
-          const errorMessage = result.error?.message || 'Failed to sign in with Google';
-          setError(errorMessage);
-          
-          switch (result.error?.code) {
-            case 'USER_NOT_FOUND':
-              toast.error('Account not found', {
-                description: 'No account exists with this Google email',
-              });
-              break;
-            default:
-              toast.error('Google Sign-in failed', {
-                description: errorMessage,
-              });
-          }
-          setLoading(false);
-        } else {
-          // Successful Google login
-          toast.success('Signed in with Google!', {
-            description: 'Redirecting to dashboard...',
-          });
-          router.refresh();
-        }
-      } else {
-        // Google authentication itself failed
-        setError('Failed to authenticate with Google');
-        toast.error('Google Sign-in failed', {
-          description: 'Could not authenticate with Google',
-        });
-        setLoading(false);
-      }
+
+      // Note: No need for additional logic here since the page will redirect
+      // and the signIn callback in auth.config.ts handles the verification
     } catch (error) {
       console.error('Failed to sign in with Google:', error);
       setError('Failed to sign in with Google');
       toast.error('Google Sign-in failed', { description: 'Please try again' });
       setLoading(false);
+    } finally {
+      toast.success('Welcome back!', {
+        description: 'Redirecting to dashboard...',
+      });
     }
   };
 
+  // Rest of the component UI remains unchanged
   return (
-    <div className=" md:flex  justify-center  px-4 sm:px-6 lg:px-8 ">
-      <div className="w-full max-w-md  p-8 rounded-xl ">
+    <div className="md:flex justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md p-8 rounded-xl">
         {error && <AuthError error={error} onDismiss={() => setError(null)} />}
 
         <form onSubmit={handleSubmit} className="space-y-6">

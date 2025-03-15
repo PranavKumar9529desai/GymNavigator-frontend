@@ -1,6 +1,7 @@
 'use server';
 
 import { SigninReqConfig } from '@/lib/AxiosInstance/sign-in-axios';
+import type { AxiosError } from 'axios';
 
 export interface BaseUser {
   id: string;
@@ -42,10 +43,7 @@ export interface SigninResult {
   };
 }
 
-export default async function SigninSA(
-  email: string,
-  password: string,
-): Promise<SigninResult> {
+export default async function SigninSA(email: string, password: string): Promise<SigninResult> {
   try {
     const axiosInstance = await SigninReqConfig();
     const response = await axiosInstance.get('/login', {
@@ -63,7 +61,7 @@ export default async function SigninSA(
         success: false,
         error: {
           code: responseData?.error || 'UNKNOWN_ERROR',
-          message: responseData?.message || '\An unknown error occurred',
+          message: responseData?.message || 'An unknown error occurred',
         },
       };
     }
@@ -73,12 +71,13 @@ export default async function SigninSA(
       success: true,
       data: responseData.data as SigninResponseType,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error signing in:', error);
-    
+
     // Handle axios error responses
-    const errorResponse = error.response?.data;
-    
+    const axiosError = error as AxiosError<{ error?: string; message?: string }>;
+    const errorResponse = axiosError.response?.data;
+
     return {
       success: false,
       error: {

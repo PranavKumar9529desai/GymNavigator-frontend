@@ -1,6 +1,6 @@
 'use server';
-import type { AxiosInstance, AxiosResponse } from 'axios';
-import { SigninReqConfig } from '../../../../lib/AxiosInstance/sign-in-axios';
+import { SigninReqConfig } from '@/lib/AxiosInstance/sign-in-axios';
+import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export interface BaseUser {
   id: string;
@@ -40,17 +40,14 @@ export interface SigninGoogleResult {
   };
 }
 
-export default async function SigninGoogleSA(
-  email: string,
-): Promise<SigninGoogleResult> {
+export default async function SigninGoogleSA(email: string): Promise<SigninGoogleResult> {
   try {
     console.log('siginin with the gooogle is called ', email);
     const axiosInstance: AxiosInstance = await SigninReqConfig();
     const response = await axiosInstance.get(`/google?email=${encodeURIComponent(email)}`);
-    console.log('response is from the signin with google server action', response);
-    
+
     const responseData = response.data;
-    
+
     if (!responseData || !responseData.success) {
       return {
         success: false,
@@ -65,12 +62,19 @@ export default async function SigninGoogleSA(
       success: true,
       data: responseData.data as SigninGoogleResponseType,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error signing up with Google:', error);
-    
-    // Handle axios error responses
-    const errorResponse = error.response?.data;
-    
+
+    // Create a type guard for axios error
+    const isAxiosError = (err: unknown): err is AxiosError => {
+      return typeof err === 'object' && err !== null && 'response' in err;
+    };
+
+    // Handle axios error responses with proper type checking
+    const errorResponse = isAxiosError(error)
+      ? (error.response?.data as { error?: string; message?: string })
+      : undefined;
+
     return {
       success: false,
       error: {

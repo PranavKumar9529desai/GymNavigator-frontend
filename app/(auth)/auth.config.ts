@@ -11,6 +11,7 @@ import SigninSA, {
   type SigninResponseType,
 } from '../(common)/_actions/auth/signin-with-credentials';
 import SigninGoogleSA, {
+  type SigninGoogleResult,
   type SigninGoogleResponseType,
 } from '../(common)/_actions/auth/signin-with-google';
 import SignupSA, {
@@ -50,14 +51,17 @@ const authHandlers = {
     }
 
     const result = await SigninSA(email, password);
-    
+
     if (!result.success || !result.data) {
-      throw createError(result.error?.message || 'Failed to login', result.error?.code || 'LOGIN_FAILED');
+      throw createError(
+        result.error?.message || 'Failed to login',
+        result.error?.code || 'LOGIN_FAILED',
+      );
     }
-    
+
     const userData = result.data;
     console.log('User data from signin handler', userData);
-    
+
     return {
       id: userData.user.id,
       name: userData.user.name,
@@ -193,25 +197,28 @@ export default {
         }
 
         if (userFromDb?.success) {
-          const response: SigninGoogleResponseType | null = await SigninGoogleSA(user.email);
+          const response: SigninGoogleResult = await SigninGoogleSA(user.email);
           console.log('response is from the sigin with google', response);
 
-          if (response) {
+          if (response.success && response.data) {
             // Store the user data from the backend in the user object
             // This will be available in the JWT callback
-            user.id = response.user.id;
-            user.role = response.user.role as Rolestype;
-            user.name = response.user.name;
-            user.email = response.user.email;
+            user.id = response.data.user.id;
+            user.role = response.data.user.role as Rolestype;
+            user.name = response.data.user.name;
+            user.email = response.data.user.email;
 
             // Add custom properties for gym info
-            (user as ExtendedUser).gymInfo = response.user.gym
+            (user as ExtendedUser).gymInfo = response.data.user.gym
               ? {
-                  gym_name: response.user.gym.name,
-                  id: String(response.user.gym.id),
+                  gym_name: response.data.user.gym.name,
+                  id: String(response.data.user.gym.id),
                 }
               : undefined;
           }
+        } else {
+          // Return false if user doesn't exist
+          return false;
         }
 
         return true;
