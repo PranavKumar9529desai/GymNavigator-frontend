@@ -1,21 +1,21 @@
-import GymDomImage from '@/app/assests/gymd.webp';
-import type { Metadata } from 'next';
-import Image from 'next/image';
-import type React from 'react';
+import GymDomImage from "@/app/assests/gymd.webp";
+import type { Metadata } from "next";
+import Image from "next/image";
+import type React from "react";
 
 export const metadata: Metadata = {
   openGraph: {
-    title: 'GymNavigator',
-    description: 'Professional gym management solution',
+    title: "GymNavigator",
+    description: "Professional gym management solution",
     images: [
       {
         url: GymDomImage.src,
         width: 1200,
         height: 630,
-        alt: 'GymNavigator Preview',
+        alt: "GymNavigator Preview",
       },
     ],
-    type: 'website',
+    type: "website",
   },
 };
 
@@ -45,6 +45,7 @@ export default function AuthLayout({
               Navigator
             </span>
           </h1>
+          <span className="text-white/45 text-sm py-1">Your Gym Manager</span>
         </div>
 
         {/* Auth Form */}

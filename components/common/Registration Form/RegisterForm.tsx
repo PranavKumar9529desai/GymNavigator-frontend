@@ -1,5 +1,5 @@
-'use client';
-import { getUserByEmail } from '@/app/(common)/_actions/auth/get-userinfo';
+"use client";
+import { getUserByEmail } from "@/app/(common)/_actions/auth/get-userinfo";
 import {
   Form,
   FormControl,
@@ -7,36 +7,42 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import React, { useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { Button } from '../../ui/button';
-import FormError from '../../ui/form-error';
-import GoogleButton from '../../ui/googleButton';
-import { Input } from '../../ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
-import SignIn from '../Auth/SigninForm';
-import { type RegisterFormValues, registerSchema } from './register-schema';
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "../../ui/button";
+import FormError from "../../ui/form-error";
+import GoogleButton from "../../ui/googleButton";
+import { Input } from "../../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
+import SignIn from "../Auth/SigninForm";
+import { type RegisterFormValues, registerSchema } from "./register-schema";
 
 // Remove the formSchema definition as it's now in register-schema.ts
 
 export default function RegisterForm() {
-  const [error, seterror] = useState<string>('');
-  const [type, settype] = useState<'success' | 'fail' | null>();
+  const [error, seterror] = useState<string>("");
+  const [type, settype] = useState<"success" | "fail" | null>();
   const [ispending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      name: '',
+      email: "",
+      password: "",
+      name: "",
       role: undefined,
     },
   });
@@ -46,8 +52,12 @@ export default function RegisterForm() {
   } = form;
 
   async function onSubmit(values: RegisterFormValues) {
-    console.log('form is submitted values', values);
+    console.log("form is submitted values", values);
     const { email, password, name, role } = values;
+
+    // Store the loading toast ID so we can dismiss it later
+    const loadingToastId = toast.loading("Processing registration...");
+
     startTransition(async () => {
       try {
         // Check if the user already exists using the new getUserByEmail function
@@ -55,16 +65,17 @@ export default function RegisterForm() {
 
         if (userExistsResponse.success) {
           // If the call was successful, it means the user exists
-          settype('fail');
-          seterror('Email is already registered');
-          toast.error('Registration failed', { description: 'Email is already registered' });
+          settype("fail");
+          seterror("Email is already registered");
+          toast.error("Registration failed", {
+            description: "Email is already registered",
+          });
           return;
         }
 
         // If we reach here, the user doesn't exist, so we can proceed with registration
-        toast.loading('Creating your account...');
-        settype('success');
-        const signInResult = await signIn('credentials', {
+        settype("success");
+        const signInResult = await signIn("credentials", {
           name,
           password,
           email,
@@ -73,57 +84,84 @@ export default function RegisterForm() {
         });
 
         if (signInResult?.error) {
-          settype('fail');
+          settype("fail");
           try {
             const errorData = JSON.parse(signInResult.error);
             switch (errorData.error) {
-              case 'USER_NOT_FOUND':
-                seterror('Registration failed: Account not found');
-                toast.error('Registration error', { description: 'Account not found' });
+              case "USER_NOT_FOUND":
+                seterror("Registration failed: Account not found");
+                toast.error("Registration error", {
+                  description: "Account not found",
+                });
                 break;
-              case 'INVALID_PASSWORD':
-                seterror('Registration failed: Password error');
-                toast.error('Registration error', { description: 'Password error' });
+              case "INVALID_PASSWORD":
+                seterror("Registration failed: Password error");
+                toast.error("Registration error", {
+                  description: "Password error",
+                });
                 break;
-              case 'SERVER_ERROR':
-                seterror('Registration failed: Please try again later');
-                toast.error('Server error', { description: 'Please try again later' });
+              case "SERVER_ERROR":
+                seterror("Registration failed: Please try again later");
+                toast.error("Server error", {
+                  description: "Please try again later",
+                });
                 break;
               default:
-                seterror(errorData.message || 'Registration failed');
-                toast.error('Registration failed', {
-                  description: errorData.message || 'Please try again',
+                seterror(errorData.message || "Registration failed");
+                toast.error("Registration failed", {
+                  description: errorData.message || "Please try again",
                 });
             }
           } catch {
-            seterror('Registration failed');
-            toast.error('Registration failed', { description: 'Please try again' });
+            seterror("Registration failed");
+            toast.error("Registration failed", {
+              description: "Please try again",
+            });
           }
         } else {
-          seterror('Account created successfully');
-          toast.success('Welcome to GymNavigator!', {
-            description: 'Your account has been created successfully',
+          seterror("Account created successfully");
+          toast.success("Welcome to GymNavigator!", {
+            description: "Your account has been created successfully",
           });
           router.refresh();
         }
       } catch (error) {
-        settype('fail');
-        seterror('An unexpected error occurred');
-        toast.error('Registration error', { description: 'An unexpected error occurred' });
-        console.error('Registration error:', error);
+        settype("fail");
+        seterror("An unexpected error occurred");
+        toast.error("Registration error", {
+          description: "An unexpected error occurred",
+        });
+        console.error("Registration error:", error);
+      } finally {
+        // Always dismiss the loading toast when the operation completes
+        toast.dismiss();
       }
     });
   }
 
   async function handleGoogleSubmit() {
-    console.log('role from the form', form.getValues('role'));
+    console.log("role from the form", form.getValues("role"));
+
+    // Store the loading toast ID so we can dismiss it later
+    const loadingToastId = toast.loading("Connecting to Google...");
+
     startTransition(async () => {
-      toast.loading('Connecting to Google...');
-      const result = await signIn('google', {
-        redirect: true,
-        redirectTo: '/selectrole',
-      });
-      console.log('result from the google signin', result?.status);
+      try {
+        const result = await signIn("google", {
+          redirect: true,
+          redirectTo: "/selectrole",
+        });
+        console.log("result from the google signin", result?.status);
+      } catch (error) {
+        toast.error("Google sign-in failed", {
+          description: "Could not connect to Google. Please try again.",
+        });
+        console.error("Google sign-in error:", error);
+      } finally {
+        // Dismiss loading toast when the operation completes
+        // Note: For redirect operations, this might execute before redirect completes
+        toast.dismiss();
+      }
     });
   }
 
@@ -150,7 +188,9 @@ export default function RegisterForm() {
                   <FormLabel className="text-sm font-medium text-gray-300">
                     <div className="flex items-center space-x-2">
                       <User
-                        className={`w-4 h-4 ${errors.name ? 'text-destructive' : 'text-blue-400'}`}
+                        className={`w-4 h-4 ${
+                          errors.name ? "text-destructive" : "text-blue-400"
+                        }`}
                       />
                       <span>Username</span>
                     </div>
@@ -180,7 +220,7 @@ export default function RegisterForm() {
                       <div className="flex items-center space-x-2">
                         <Mail
                           className={`w-4 h-4 ${
-                            errors.email ? 'text-destructive' : 'text-blue-400'
+                            errors.email ? "text-destructive" : "text-blue-400"
                           }`}
                         />
                         <span>Email</span>
@@ -210,7 +250,9 @@ export default function RegisterForm() {
                       <div className="flex items-center space-x-2">
                         <Lock
                           className={`w-4 h-4 ${
-                            errors.password ? 'text-destructive' : 'text-blue-400'
+                            errors.password
+                              ? "text-destructive"
+                              : "text-blue-400"
                           }`}
                         />
                         <span>Password</span>
@@ -222,7 +264,7 @@ export default function RegisterForm() {
                           placeholder="••••••••"
                           {...field}
                           disabled={ispending}
-                          type={showPassword ? 'text' : 'password'}
+                          type={showPassword ? "text" : "password"}
                           className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 pr-10 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
                         />
                         <button
@@ -253,7 +295,9 @@ export default function RegisterForm() {
                   <FormLabel className="text-sm font-medium text-gray-300">
                     <div className="flex items-center space-x-2">
                       <UserRoundCogIcon
-                        className={`w-4 h-4 ${errors.role ? 'text-destructive' : 'text-blue-400'}`}
+                        className={`w-4 h-4 ${
+                          errors.role ? "text-destructive" : "text-blue-400"
+                        }`}
                       />
                       <span>Role</span>
                     </div>
@@ -269,13 +313,22 @@ export default function RegisterForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="z-50 bg-blue-900/80 backdrop-blur-md border-blue-500/30 text-white">
-                      <SelectItem value="owner" className="hover:bg-blue-800/50">
+                      <SelectItem
+                        value="owner"
+                        className="hover:bg-blue-800/50"
+                      >
                         Gym Owner
                       </SelectItem>
-                      <SelectItem value="trainer" className="hover:bg-blue-800/50">
+                      <SelectItem
+                        value="trainer"
+                        className="hover:bg-blue-800/50"
+                      >
                         Trainer
                       </SelectItem>
-                      <SelectItem value="client" className="hover:bg-blue-800/50">
+                      <SelectItem
+                        value="client"
+                        className="hover:bg-blue-800/50"
+                      >
                         Client
                       </SelectItem>
                     </SelectContent>
@@ -297,7 +350,7 @@ export default function RegisterForm() {
                   <span>Registering...</span>
                 </div>
               ) : (
-                'Create Account'
+                "Create Account"
               )}
             </Button>
           </form>
@@ -307,7 +360,7 @@ export default function RegisterForm() {
           <FormError
             FormErrorProps={{
               message: error,
-              type: type as 'success' | 'fail',
+              type: type as "success" | "fail",
             }}
           />
         ) : null}
@@ -317,15 +370,20 @@ export default function RegisterForm() {
             <span className="w-full border-t border-blue-500/30" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-blue-900/20 px-2 text-gray-300">Or continue with</span>
+            <span className="bg-blue-900/20 px-2 text-gray-300">
+              Or continue with
+            </span>
           </div>
         </div>
 
         <GoogleButton handleSubmit={handleGoogleSubmit} />
 
         <div className="text-center text-sm text-gray-300">
-          Already have an account?{' '}
-          <a href="/signin" className="hover:underline font-medium text-blue-400">
+          Already have an account?{" "}
+          <a
+            href="/signin"
+            className="hover:underline font-medium text-blue-400"
+          >
             Sign In
           </a>
         </div>
