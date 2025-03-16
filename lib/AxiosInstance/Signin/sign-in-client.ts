@@ -36,8 +36,15 @@ export interface SigninResponseType {
   };
 }
 
+// Update the UserInfoResponse type to include the exists flag
 export interface UserInfoResponse {
-  role: Rolestype;
+  exists: boolean;
+  role?: Rolestype;
+}
+
+// Update interfaces to handle the exists flag
+export interface GoogleAuthResponse extends SigninResponseType {
+  exists: boolean;
 }
 
 /**
@@ -84,31 +91,51 @@ export const authClient = {
    */
   signInWithGoogle: async (
     email: string
-  ): Promise<ApiResult<SigninResponseType>> => {
+  ): Promise<ApiResult<GoogleAuthResponse>> => {
     try {
       const axiosInstance = await SigninReqConfig();
       const response = await axiosInstance.get("/google", {
         params: { email },
       });
 
-      const apiResponse = response.data as ApiResponse<SigninResponseType>;
+      const apiResponse = response.data as ApiResponse<GoogleAuthResponse | { exists: boolean }>;
 
-      if (!apiResponse.success) {
+      // Handle user doesn't exist case
+      if (apiResponse.success && 'exists' in apiResponse.data && !apiResponse.data.exists) {
+        return {
+          success: true,
+          data: { exists: false } as any,
+        };
+      }
+
+      // Handle normal success case
+      if (apiResponse.success) {
+        return {
+          success: true,
+          data: apiResponse.data as GoogleAuthResponse,
+        };
+      }
+
+      // Handle error case
+      return {
+        success: false,
+        error: {
+          code: apiResponse.error || "UNKNOWN_ERROR",
+          message: apiResponse.message || "Unknown error occurred",
+        },
+      };
+    } catch (error: unknown) {
+      // Handle network errors or other unexpected issues
+      if (error && typeof error === "object") {
         return {
           success: false,
           error: {
-            code: apiResponse.error || "UNKNOWN_ERROR",
-            message: apiResponse.message || "Unknown error occurred",
+            code: "REQUEST_FAILED",
+            message: "Failed to authenticate with Google",
           },
         };
       }
 
-      return {
-        success: true,
-        data: apiResponse.data,
-      };
-    } catch (error: unknown) {
-      // The error is already formatted by the axios interceptor
       return error as ApiResult<never>;
     }
   },
@@ -140,27 +167,24 @@ export const authClient = {
         data: apiResponse.data,
       };
     } catch (error: unknown) {
-      // Handle 404 differently - user not found is sometimes an expected result
-      if (
-        error &&
-        typeof error === "object" &&
-        "response" in error &&
-        error.response &&
-        typeof error.response === "object" &&
-        "status" in error.response &&
-        error.response.status === 404
-      ) {
+      // Handle network errors or other unexpected issues
+      if (error && typeof error === "object") {
         return {
           success: false,
           error: {
-            code: "USER_NOT_FOUND",
-            message: "User not found",
+            code: "REQUEST_FAILED",
+            message: "Failed to check user existence",
           },
         };
       }
 
-      // The error is already formatted by the axios interceptor
-      return error as ApiResult<never>;
+      return {
+        success: false,
+        error: {
+          code: "UNKNOWN_ERROR",
+          message: "An unknown error occurred",
+        },
+      };
     }
   },
 };

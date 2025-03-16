@@ -1,5 +1,6 @@
 "use client";
 import { getUserByEmail } from "@/app/(common)/_actions/auth/get-userinfo";
+import { storeGoogleSignupRole } from "@/app/(common)/_actions/auth/google-role-server-action";
 import {
   Form,
   FormControl,
@@ -60,16 +61,17 @@ export default function RegisterForm() {
 
     startTransition(async () => {
       try {
-        // Check if the user already exists using the new getUserByEmail function
+        // Check if the user already exists using the updated getUserByEmail function
         const userExistsResponse = await getUserByEmail(email);
 
-        if (userExistsResponse.success) {
-          // If the call was successful, it means the user exists
+        if (userExistsResponse.success && userExistsResponse.data?.exists) {
+          // User exists, show error
           settype("fail");
           seterror("Email is already registered");
           toast.error("Registration failed", {
             description: "Email is already registered",
           });
+          toast.dismiss(loadingToastId);
           return;
         }
 
@@ -140,16 +142,32 @@ export default function RegisterForm() {
   }
 
   async function handleGoogleSubmit() {
-    console.log("role from the form", form.getValues("role"));
+    const selectedRole = form.getValues("role");
+    console.log("role from the form", selectedRole);
 
-    // Store the loading toast ID so we can dismiss it later
+    if (!selectedRole) {
+      toast.error("Role selection required", {
+        description: "Please select a role before continuing with Google",
+      });
+      form.setError("role", { 
+        type: "manual", 
+        message: "Please select a role first" 
+      });
+      return;
+    }
+
+    // Store the role in a server-side cookie
+    await storeGoogleSignupRole(selectedRole);
+
+    // Store the loading toast ID
     const loadingToastId = toast.loading("Connecting to Google...");
 
     startTransition(async () => {
       try {
+        // Pass the role as a state parameter to Google auth
         const result = await signIn("google", {
           redirect: true,
-          redirectTo: "/selectrole",
+          callbackUrl: "/dashboard",
         });
         console.log("result from the google signin", result?.status);
       } catch (error) {
@@ -158,25 +176,14 @@ export default function RegisterForm() {
         });
         console.error("Google sign-in error:", error);
       } finally {
-        // Dismiss loading toast when the operation completes
-        // Note: For redirect operations, this might execute before redirect completes
-        toast.dismiss();
+        toast.dismiss(loadingToastId);
       }
     });
   }
 
   return (
     <div className="w-full max-w-md mx-auto  p-8 rounded-xl  shadow-xl">
-      {/* <div className="space-y-3 text-center mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
-          Create Account
-        </h1>
-        <p className="text-sm text-gray-300">
-          Enter your details to create your account
-        </p>
-      </div> */}
-
-      <div className="space-y-8 ">
+      <div className="space-y-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -184,7 +191,6 @@ export default function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  {/* @ts-ignore */}
                   <FormLabel className="text-sm font-medium text-gray-300">
                     <div className="flex items-center space-x-2">
                       <User
@@ -215,7 +221,6 @@ export default function RegisterForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    {/* @ts-ignore */}
                     <FormLabel className="text-sm font-medium text-gray-300">
                       <div className="flex items-center space-x-2">
                         <Mail
@@ -239,13 +244,11 @@ export default function RegisterForm() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    {/* @ts-ignore */}
                     <FormLabel className="text-sm font-medium text-gray-300">
                       <div className="flex items-center space-x-2">
                         <Lock
@@ -269,8 +272,8 @@ export default function RegisterForm() {
                         />
                         <button
                           type="button"
-                          onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 hover:text-blue-300 transition-colors"
+                          onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -285,13 +288,11 @@ export default function RegisterForm() {
                 )}
               />
             </div>
-
             <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
                 <FormItem className="space-y-1 w-full mt-4">
-                  {/* @ts-ignore */}
                   <FormLabel className="text-sm font-medium text-gray-300">
                     <div className="flex items-center space-x-2">
                       <UserRoundCogIcon
@@ -337,10 +338,9 @@ export default function RegisterForm() {
                 </FormItem>
               )}
             />
-
             <Button
-              className="w-full font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg relative z-10"
               type="submit"
+              className="w-full font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg relative z-10"
               disabled={ispending}
               size="lg"
             >
@@ -364,7 +364,6 @@ export default function RegisterForm() {
             }}
           />
         ) : null}
-
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-blue-500/30" />
@@ -375,9 +374,7 @@ export default function RegisterForm() {
             </span>
           </div>
         </div>
-
         <GoogleButton handleSubmit={handleGoogleSubmit} />
-
         <div className="text-center text-sm text-gray-300">
           Already have an account?{" "}
           <a

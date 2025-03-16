@@ -7,10 +7,10 @@ import Google from "next-auth/providers/google";
 
 import SignupSA from "@/app/(common)/_actions/auth/signup-with-credentials";
 import { getUserByEmail } from "../(common)/_actions/auth/get-userinfo";
+import { getGoogleSignupRole } from "../(common)/_actions/auth/google-role-server-action";
 import SigninSA from "../(common)/_actions/auth/signin-with-credentials";
 import { checkUserExists } from "..//(common)/_actions/auth/check-user-exists";
 import SigninGoogleSA from "..//(common)/_actions/auth/signin-with-google";
-// Add import for Google signup
 import SignupWithGoogle from "..//(common)/_actions/auth/signup-with-google";
 import type { GymInfo, Rolestype } from "../types/next-auth";
 
@@ -20,6 +20,7 @@ import type {
   SigninResponseType,
   UserInfoResponse,
 } from "@/lib/AxiosInstance/Signin/sign-in-client";
+import type { RoleType } from "@/lib/AxiosInstance/Signup/sign-up-client";
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {
@@ -190,10 +191,43 @@ export default {
 
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Simplified redirect logic
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      // First, handle relative URLs properly
+      if (url.startsWith("/")) {
+        // For relative URLs, check if they contain role parameter in the query string
+        if (url.includes("?") && url.includes("role=")) {
+          const [path, query] = url.split("?");
+          const params = new URLSearchParams(query);
+          const role = params.get("role");
+          
+          if (role) {
+            params.delete("role");
+            const newQuery = params.toString();
+            return `${baseUrl}${path}${newQuery ? `?${newQuery}` : ""}`;
+          }
+        }
+        // If no processing needed, return the URL joined with baseUrl
+        return `${baseUrl}${url}`;
+      }
+      
+      // For absolute URLs, we can use the URL constructor safely
+      try {
+        const urlObj = new URL(url);
+        
+        // Only process URLs from the same origin
+        if (urlObj.origin === baseUrl) {
+          const role = urlObj.searchParams.get("role");
+          if (role) {
+            urlObj.searchParams.delete("role");
+            return urlObj.toString();
+          }
+        }
+        
+        // Default: if same origin, return the URL, otherwise return baseUrl
+        return urlObj.origin === baseUrl ? url : baseUrl;
+      } catch (error) {
+        console.error("Error processing redirect URL:", error);
+        return baseUrl;
+      }
     },
 
     async signIn(params: {
@@ -216,37 +250,50 @@ export default {
         const userFromDb: ApiResult<UserInfoResponse> = await getUserByEmail(
           user.email
         );
-        
+
         console.log("userFromDb is from the signin callback", userFromDb);
 
         // Handle the case where the user doesn't exist (needs signup)
-        if (!userFromDb.success && userFromDb.error?.code === "USER_NOT_FOUND") {
+        if (userFromDb.success && userFromDb.data && !userFromDb.data.exists) {
           console.log("New Google user, creating account");
-          
+
           // Get name from profile or user object
-          const userName = user.name || 
-            (profile?.name || profile?.given_name || "Google User");
-          
-          // Allow role to be undefined so existing application logic handles role assignment
-          const defaultRole: Rolestype | undefined = undefined;
-          
+          const userName =
+            user.name || profile?.name || profile?.given_name || "Google User";
+
+          // Get the role from the cookie
+          const selectedRole = await getGoogleSignupRole();
+
+          // If no role was found in the cookie, redirect to role selection page
+          if (!selectedRole) {
+            // Return a URL to redirect to role selection
+            return "/selectrole";
+          }
+
+          console.log("Signing up with Google:", { 
+            name: userName, 
+            email: user.email, 
+            role: selectedRole 
+          });
+
           // Create a new user with Google signup
           const signupResult = await SignupWithGoogle(
             userName,
             user.email,
-            defaultRole
+            selectedRole as RoleType
           );
-          
+
           console.log("Google signup result:", signupResult);
-          
+
           if (!signupResult.success) {
             logger.error("Failed to create Google user:", signupResult.error);
             return false;
           }
-          
+
           // After successful signup, proceed with signin
+          console.log("Signing in with Google after account creation:", user.email);
           const response = await SigninGoogleSA(user.email);
-          
+
           if (response.success && response.data) {
             // Store the user data from the backend in the user object
             user.id = response.data.user.id;
@@ -261,20 +308,23 @@ export default {
                   id: String(response.data.user.gym.id),
                 }
               : undefined;
-            
+
             return true;
           }
-          
+
           return false;
-        } else if (userFromDb?.success) {
+        }
+
+        // Handle the case where the user exists
+        if (userFromDb.success && userFromDb.data && userFromDb.data.exists) {
+          console.log("Existing Google user, signing in:", user.email);
           const response: ApiResult<SigninResponseType> = await SigninGoogleSA(
             user.email
           );
-          console.log("response is from the signin with google", response);
+          console.log("Response from Google signin:", response);
 
           if (response.success && response.data) {
             // Store the user data from the backend in the user object
-            // This will be available in the JWT callback
             user.id = response.data.user.id;
             user.role = response.data.user.role as Rolestype;
             user.name = response.data.user.name;
@@ -287,16 +337,16 @@ export default {
                   id: String(response.data.user.gym.id),
                 }
               : undefined;
-            
+
             return true;
           }
-          
-          return false;
-        } else {
-          // Handle other error cases
-          logger.error("User lookup failed:", userFromDb.error);
+
           return false;
         }
+
+        // Handle other error cases
+        logger.error("User lookup failed:", userFromDb.error);
+        return false;
       } catch (error) {
         logger.error("Google sign-in error:", error);
         return false;
@@ -338,8 +388,8 @@ export default {
         session.user.id = token.sub as string;
         session.role = token.role as Rolestype;
         session.gym = token.gym as GymInfo;
-        // Only attach gym data if it exists
 
+        // Only attach access token if it exists
         if (token.accessToken) {
           session.accessToken = token.accessToken as string;
         }
