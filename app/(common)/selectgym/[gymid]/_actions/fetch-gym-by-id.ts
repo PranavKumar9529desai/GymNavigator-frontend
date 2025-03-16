@@ -1,7 +1,7 @@
 'use server';
 
 import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
-import type { gym } from "../../SelectGym";
+import type { gym } from "../../_components/SelectGym";
 
 /**
  * Fetches a gym by its ID using server actions

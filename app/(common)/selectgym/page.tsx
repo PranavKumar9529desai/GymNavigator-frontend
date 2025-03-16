@@ -1,6 +1,6 @@
-import SelectGym from '@/app/(common)/selectgym/SelectGym';
+import SelectGym from '@/app/(common)/selectgym/_components/SelectGym';
 import React from 'react';
-import FetchallGyms from './FetchallGyms';
+import FetchallGyms from './_actions/FetchallGyms';
 
 // Prevent static generation
 export const dynamic = 'force-dynamic';

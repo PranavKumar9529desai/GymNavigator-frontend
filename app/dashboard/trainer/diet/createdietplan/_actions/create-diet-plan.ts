@@ -2,6 +2,7 @@
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import type { AxiosError } from 'axios';
 
+// Types matching the backend expectations
 export interface MealIngredientInput {
   name: string;
   quantity: number;
@@ -34,7 +35,17 @@ export interface DietPlanInput {
   meals: MealInput[];
 }
 
-export const createDietPlan = async (dietPlan: DietPlanInput) => {
+// Replace 'any' with a more specific generic type or unknown
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data?: T;
+  error?: string;
+}
+
+export async function createDietPlan(dietPlan: DietPlanInput): Promise<ApiResponse> {
+  'use server'; // Ensure this is marked as a server action
+
   const trainerAxios = await TrainerReqConfig();
 
   try {
@@ -44,7 +55,8 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
       order: meal.order || index + 1,
     }));
 
-    const response = await trainerAxios.post('/createdietplans', {
+    // Transform data from frontend format to backend format if needed
+    const response = await trainerAxios.post('/diet/createdietplan', {
       ...dietPlan,
       meals: mealsWithOrder,
     });
@@ -53,7 +65,7 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
       return {
         success: true,
         message: 'Diet plan created successfully',
-        data: response.data.dietPlan,
+        data: response.data.data,
       };
     }
     throw new Error(response.data.msg || 'Failed to create diet plan');
@@ -65,4 +77,4 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
       message: axiosError.response?.data?.msg || 'Failed to create diet plan',
     };
   }
-};
+}

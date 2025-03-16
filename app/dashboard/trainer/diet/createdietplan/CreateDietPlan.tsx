@@ -1,23 +1,23 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
-import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
-import { AnimatePresence, m } from 'framer-motion';
-import { ArrowRight, Save } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { toast } from 'sonner';
-import { createDietPlan } from './PostDietPlan';
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { AnimatePresence, m } from "framer-motion";
+import { ArrowRight, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import { toast } from "sonner";
+import { createDietPlan } from "./_actions/create-diet-plan";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -46,31 +46,31 @@ interface DietPlan {
 }
 
 const mealTimes = [
-  'Breakfast (6-8 AM)',
-  'Morning Snack (10-11 AM)',
-  'Lunch (1-2 PM)',
-  'Evening Snack (4-5 PM)',
-  'Dinner (7-8 PM)',
-  'Late Night (9-10 PM)',
+  "Breakfast (6-8 AM)",
+  "Morning Snack (10-11 AM)",
+  "Lunch (1-2 PM)",
+  "Evening Snack (4-5 PM)",
+  "Dinner (7-8 PM)",
+  "Late Night (9-10 PM)",
 ];
 
 export default function CreateDietPlan() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return Number.parseInt(localStorage.getItem('dietPlanStep') || '1');
+    if (typeof window !== "undefined") {
+      return Number.parseInt(localStorage.getItem("dietPlanStep") || "1");
     }
     return 1;
   });
 
   const [dietPlan, setDietPlan] = useState<DietPlan>(() => {
-    if (typeof window !== 'undefined') {
-      const savedPlan = localStorage.getItem('dietPlanData');
+    if (typeof window !== "undefined") {
+      const savedPlan = localStorage.getItem("dietPlanData");
       return savedPlan
         ? JSON.parse(savedPlan)
         : {
-            name: '',
-            description: '',
+            name: "",
+            description: "",
             targetCalories: 2000,
             macroSplit: {
               protein: 30,
@@ -81,8 +81,8 @@ export default function CreateDietPlan() {
           };
     }
     return {
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       targetCalories: 2000,
       macroSplit: {
         protein: 30,
@@ -94,54 +94,56 @@ export default function CreateDietPlan() {
   });
 
   const [currentMeal, setCurrentMeal] = useState<Meal>(() => {
-    if (typeof window !== 'undefined') {
-      const savedMeal = localStorage.getItem('currentMealData');
+    if (typeof window !== "undefined") {
+      const savedMeal = localStorage.getItem("currentMealData");
       return savedMeal
         ? JSON.parse(savedMeal)
         : {
-            name: '',
-            time: '',
+            name: "",
+            time: "",
             calories: 0,
             protein: 0,
             carbs: 0,
             fats: 0,
             ingredients: [],
-            instructions: '',
+            instructions: "",
             order: 0,
           };
     }
     return {
-      name: '',
-      time: '',
+      name: "",
+      time: "",
       calories: 0,
       protein: 0,
       carbs: 0,
       fats: 0,
       ingredients: [],
-      instructions: '',
+      instructions: "",
       order: 0,
     };
   });
 
   // Save to localStorage whenever data changes
   useEffect(() => {
-    localStorage.setItem('dietPlanStep', currentStep.toString());
-    localStorage.setItem('dietPlanData', JSON.stringify(dietPlan));
-    localStorage.setItem('currentMealData', JSON.stringify(currentMeal));
+    localStorage.setItem("dietPlanStep", currentStep.toString());
+    localStorage.setItem("dietPlanData", JSON.stringify(dietPlan));
+    localStorage.setItem("currentMealData", JSON.stringify(currentMeal));
   }, [currentStep, dietPlan, currentMeal]);
 
-  const [newIngredient, setNewIngredient] = useState('');
+  const [newIngredient, setNewIngredient] = useState("");
 
   // Add checkpoint saving logic
   const saveCheckpoint = (meal: Meal) => {
-    const checkpoints = JSON.parse(localStorage.getItem('dietPlanCheckpoints') || '[]');
+    const checkpoints = JSON.parse(
+      localStorage.getItem("dietPlanCheckpoints") || "[]"
+    );
     checkpoints.push({
       step: currentStep,
       meal: meal,
       timestamp: new Date().toISOString(),
     });
-    localStorage.setItem('dietPlanCheckpoints', JSON.stringify(checkpoints));
-    toast.success('Progress saved');
+    localStorage.setItem("dietPlanCheckpoints", JSON.stringify(checkpoints));
+    toast.success("Progress saved");
   };
 
   const addMeal = () => {
@@ -153,14 +155,14 @@ export default function CreateDietPlan() {
       // Save checkpoint after adding meal
       saveCheckpoint(currentMeal);
       setCurrentMeal({
-        name: '',
-        time: '',
+        name: "",
+        time: "",
         calories: 0,
         protein: 0,
         carbs: 0,
         fats: 0,
         ingredients: [],
-        instructions: '',
+        instructions: "",
         order: 0,
       });
     }
@@ -172,7 +174,7 @@ export default function CreateDietPlan() {
         ...prev,
         ingredients: [...prev.ingredients, newIngredient.trim()],
       }));
-      setNewIngredient('');
+      setNewIngredient("");
     }
   };
 
@@ -191,11 +193,15 @@ export default function CreateDietPlan() {
   };
 
   const chartData = {
-    labels: ['Protein', 'Carbs', 'Fats'],
+    labels: ["Protein", "Carbs", "Fats"],
     datasets: [
       {
-        data: [dietPlan.macroSplit.protein, dietPlan.macroSplit.carbs, dietPlan.macroSplit.fats],
-        backgroundColor: ['#22c55e', '#3b82f6', '#ef4444'],
+        data: [
+          dietPlan.macroSplit.protein,
+          dietPlan.macroSplit.carbs,
+          dietPlan.macroSplit.fats,
+        ],
+        backgroundColor: ["#22c55e", "#3b82f6", "#ef4444"],
         borderWidth: 0,
       },
     ],
@@ -205,19 +211,21 @@ export default function CreateDietPlan() {
     try {
       // Validate required fields
       if (!dietPlan.name) {
-        toast.error('Please enter a plan name');
+        toast.error("Please enter a plan name");
         return;
       }
 
       if (dietPlan.meals.length === 0) {
-        toast.error('Please add at least one meal');
+        toast.error("Please add at least one meal");
         return;
       }
 
       const total =
-        dietPlan.macroSplit.protein + dietPlan.macroSplit.carbs + dietPlan.macroSplit.fats;
+        dietPlan.macroSplit.protein +
+        dietPlan.macroSplit.carbs +
+        dietPlan.macroSplit.fats;
       if (total !== 100) {
-        toast.error('Macro split percentages must add up to 100%');
+        toast.error("Macro split percentages must add up to 100%");
         return;
       }
 
@@ -241,7 +249,7 @@ export default function CreateDietPlan() {
           ingredients: meal.ingredients.map((ingredient) => ({
             name: ingredient,
             quantity: 1, // Default quantity
-            unit: 'serving', // Default unit
+            unit: "serving", // Default unit
             calories: 0, // These will be updated later if needed
             protein: 0,
             carbs: 0,
@@ -254,19 +262,19 @@ export default function CreateDietPlan() {
 
       if (result.success) {
         // Clear all stored data
-        localStorage.removeItem('dietPlanCheckpoints');
-        localStorage.removeItem('dietPlanStep');
-        localStorage.removeItem('dietPlanData');
-        localStorage.removeItem('currentMealData');
+        localStorage.removeItem("dietPlanCheckpoints");
+        localStorage.removeItem("dietPlanStep");
+        localStorage.removeItem("dietPlanData");
+        localStorage.removeItem("currentMealData");
 
         toast.success(result.message);
-        router.push('/trainerdashboard/diet/assigndietplan');
+        router.push("/dashboard/trainer/diet/assigndietplan");
       } else {
         toast.error(result.message);
       }
     } catch (error) {
-      console.error('Error submitting diet plan:', error);
-      toast.error('Failed to create diet plan');
+      console.error("Error submitting diet plan:", error);
+      toast.error("Failed to create diet plan");
     }
   };
 
@@ -285,19 +293,23 @@ export default function CreateDietPlan() {
             <div
               key={step}
               className={`flex items-center ${
-                currentStep >= step ? 'text-green-600' : 'text-gray-400'
+                currentStep >= step ? "text-green-600" : "text-gray-400"
               }`}
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 
-                  ${currentStep >= step ? 'border-green-600 bg-green-50' : 'border-gray-300'}`}
+                  ${
+                    currentStep >= step
+                      ? "border-green-600 bg-green-50"
+                      : "border-gray-300"
+                  }`}
               >
                 {step}
               </div>
               {step < 3 && (
                 <div
                   className={`flex-1 h-1 mx-4 ${
-                    currentStep > step ? 'bg-green-600' : 'bg-gray-300'
+                    currentStep > step ? "bg-green-600" : "bg-gray-300"
                   }`}
                 />
               )}
@@ -319,17 +331,25 @@ export default function CreateDietPlan() {
               <h2 className="text-2xl font-bold">Diet Plan Basics</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2" htmlFor="plan-name">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="plan-name"
+                  >
                     Plan Name
                   </label>
                   <Input
                     value={dietPlan.name}
-                    onChange={(e) => setDietPlan((prev) => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setDietPlan((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     placeholder="e.g., Weight Loss Meal Plan"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2" htmlFor="plan-description">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="plan-description"
+                  >
                     Description
                   </label>
                   <Textarea
@@ -345,7 +365,10 @@ export default function CreateDietPlan() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2" htmlFor="plan-target-calories">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="plan-target-calories"
+                  >
                     Target Daily Calories: {dietPlan.targetCalories}
                   </label>
                   <Slider
@@ -378,7 +401,10 @@ export default function CreateDietPlan() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-protein">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-protein"
+                    >
                       Protein: {dietPlan.macroSplit.protein}%
                     </label>
                     <Slider
@@ -395,7 +421,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-carbs">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-carbs"
+                    >
                       Carbs: {dietPlan.macroSplit.carbs}%
                     </label>
                     <Slider
@@ -412,7 +441,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-fats">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-fats"
+                    >
                       Fats: {dietPlan.macroSplit.fats}%
                     </label>
                     <Slider
@@ -454,7 +486,10 @@ export default function CreateDietPlan() {
                 <h3 className="text-lg font-semibold">Add New Meal</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-name">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-name"
+                    >
                       Meal Name
                     </label>
                     <Input
@@ -469,7 +504,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-time">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-time"
+                    >
                       Time of Day
                     </label>
                     <Select
@@ -490,7 +528,10 @@ export default function CreateDietPlan() {
                     </Select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-calories">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-calories"
+                    >
                       Calories
                     </label>
                     <Input
@@ -506,7 +547,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-protein">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-protein"
+                    >
                       Protein (g)
                     </label>
                     <Input
@@ -522,7 +566,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-carbs">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-carbs"
+                    >
                       Carbs (g)
                     </label>
                     <Input
@@ -538,7 +585,10 @@ export default function CreateDietPlan() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2" htmlFor="plan-fats">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="plan-fats"
+                    >
                       Fats (g)
                     </label>
                     <Input
@@ -557,7 +607,10 @@ export default function CreateDietPlan() {
 
                 {/* Ingredients Section */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium mb-2" htmlFor="plan-ingredients">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="plan-ingredients"
+                  >
                     Ingredients
                   </label>
                   <div className="flex gap-2">
@@ -565,7 +618,7 @@ export default function CreateDietPlan() {
                       value={newIngredient}
                       onChange={(e) => setNewIngredient(e.target.value)}
                       placeholder="Add ingredient"
-                      onKeyPress={(e) => e.key === 'Enter' && addIngredient()}
+                      onKeyPress={(e) => e.key === "Enter" && addIngredient()}
                     />
                     <Button onClick={addIngredient} type="button">
                       Add
@@ -592,7 +645,10 @@ export default function CreateDietPlan() {
 
                 {/* Instructions */}
                 <div>
-                  <label className="block text-sm font-medium mb-2" htmlFor="plan-instructions">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="plan-instructions"
+                  >
                     Instructions
                   </label>
                   <Textarea
@@ -628,19 +684,23 @@ export default function CreateDietPlan() {
                         <h4 className="font-medium">{meal.name}</h4>
                         <p className="text-sm text-gray-600">{meal.time}</p>
                         <p className="text-sm">
-                          Calories: {meal.calories} | P: {meal.protein}g | C: {meal.carbs}g | F:{' '}
-                          {meal.fats}g
+                          Calories: {meal.calories} | P: {meal.protein}g | C:{" "}
+                          {meal.carbs}g | F: {meal.fats}g
                         </p>
                         {meal.ingredients.length > 0 && (
                           <div className="mt-2">
                             <p className="text-sm font-medium">Ingredients:</p>
-                            <p className="text-sm text-gray-600">{meal.ingredients.join(', ')}</p>
+                            <p className="text-sm text-gray-600">
+                              {meal.ingredients.join(", ")}
+                            </p>
                           </div>
                         )}
                         {meal.instructions && (
                           <div className="mt-2">
                             <p className="text-sm font-medium">Instructions:</p>
-                            <p className="text-sm text-gray-600">{meal.instructions}</p>
+                            <p className="text-sm text-gray-600">
+                              {meal.instructions}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -663,7 +723,9 @@ export default function CreateDietPlan() {
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-8">
           <Button
-            onClick={() => setCurrentStep((current) => Math.max(current - 1, 1))}
+            onClick={() =>
+              setCurrentStep((current) => Math.max(current - 1, 1))
+            }
             disabled={currentStep === 1}
           >
             Previous
@@ -674,7 +736,11 @@ export default function CreateDietPlan() {
               Save Diet Plan
             </Button>
           ) : (
-            <Button onClick={() => setCurrentStep((current) => Math.min(current + 1, 3))}>
+            <Button
+              onClick={() =>
+                setCurrentStep((current) => Math.min(current + 1, 3))
+              }
+            >
               Next
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>

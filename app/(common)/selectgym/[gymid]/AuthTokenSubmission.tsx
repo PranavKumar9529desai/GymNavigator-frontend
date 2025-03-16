@@ -11,8 +11,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { gym } from "../SelectGym";
-import { VerifyAuthToken } from "../VerifyAuthToken";
+import { VerifyAuthToken } from "../_actions/VerifyAuthToken";
+import type { gym } from "../_components/SelectGym";
 import { fetchGymById } from "./_actions/fetch-gym-by-id";
 
 // Dynamic import with no SSR

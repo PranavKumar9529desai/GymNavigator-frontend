@@ -1,7 +1,7 @@
 'use server';
 
-import type { gym } from "../../SelectGym";
-import { VerifyAuthToken } from "../../VerifyAuthToken";
+import { VerifyAuthToken } from "../../_actions/VerifyAuthToken";
+import type { gym } from "../../_components/SelectGym";
 
 interface VerificationResult {
   success: boolean;

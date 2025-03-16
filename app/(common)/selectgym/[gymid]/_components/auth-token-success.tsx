@@ -3,7 +3,7 @@
 import { m } from "framer-motion";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import Image from "next/image";
-import type { gym } from "../../SelectGym";
+import type { gym } from "../../_components/SelectGym";
 
 interface AuthTokenSuccessProps {
 	gym: gym;

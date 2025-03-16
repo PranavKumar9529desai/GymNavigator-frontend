@@ -1,4 +1,4 @@
-import CreateDietPlan from './CreateDietPlan';
+import CreateDietPlan from './_components/create-diet-plan';
 
 export default function Page() {
   return (

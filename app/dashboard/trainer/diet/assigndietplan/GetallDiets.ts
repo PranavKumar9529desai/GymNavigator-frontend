@@ -23,7 +23,7 @@ export interface DietPlan {
 export const getAllDietPlans = async () => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.get('/alldietplans');
+    const response = await trainerAxios.get('/diet/alldietplans');
     const data = response.data;
 
     if (data.msg === 'success') {

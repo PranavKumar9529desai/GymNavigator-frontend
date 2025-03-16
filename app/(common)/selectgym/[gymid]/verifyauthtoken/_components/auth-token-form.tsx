@@ -1,6 +1,6 @@
 "use client";
 
-import type { gym } from "@/app/(common)/selectgym/SelectGym";
+import type { gym } from "@/app/(common)/selectgym/_components/SelectGym";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
