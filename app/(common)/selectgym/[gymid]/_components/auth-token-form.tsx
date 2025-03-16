@@ -1,12 +1,12 @@
 "use client";
 
-import type { gym } from "@/app/(common)/selectgym/SelectGym";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import type { gym } from "../../SelectGym";
 import { verifyGymToken } from "../_actions/verify-gym-token";
 
 interface AuthTokenFormProps {

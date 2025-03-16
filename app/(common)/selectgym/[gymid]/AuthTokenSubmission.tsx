@@ -13,18 +13,24 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { gym } from "../SelectGym";
 import { VerifyAuthToken } from "../VerifyAuthToken";
-import { fetchGymById } from "../[id]/_actions/fetch-gym-by-id";
+import { fetchGymById } from "./_actions/fetch-gym-by-id";
 
 // Dynamic import with no SSR
 const AuthTokenWrong = dynamic(() => import("./AuthTokenWrong"), {
   ssr: false,
 });
 
+const AuthTokenSuccess = dynamic(
+  () => import("./_components/auth-token-success").then((mod) => mod.AuthTokenSuccess),
+  {
+    ssr: false,
+  }
+);
+
+// Update path - now referencing local _components folder correctly
 const GymAuthForm = dynamic(
   () =>
-    import("../[id]/verifyauthtoken/_components/auth-token-form").then(
-      (mod) => mod.AuthTokenForm
-    ),
+    import("./_components/auth-token-form").then((mod) => mod.AuthTokenForm),
   {
     loading: () => <GymFormSkeleton />,
   }
@@ -62,6 +68,7 @@ export default function AuthTokenSubmission() {
   const [showWrongToken, setShowWrongToken] = useState(false);
   const [gym, setGym] = useState<gym | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
   const params = useParams();
   const gymId = params?.gymid as string;
 
@@ -94,6 +101,7 @@ export default function AuthTokenSubmission() {
       <div className="flex flex-col items-center justify-center p-8 text-center">
         <p className="text-red-500 mb-4">{error}</p>
         <button
+          type="button"
           onClick={() => window.location.reload()}
           className="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
@@ -138,11 +146,14 @@ export default function AuthTokenSubmission() {
         setStep(2);
         setIsSuccess(true);
         await updateSesionWithGym(gym, update);
-
+        
+        // Show success component instead of immediate redirect
+        setShowSuccess(true);
+        
         // Delay redirect for animation
         setTimeout(() => {
           router.push("/dashboard/trainer");
-        }, 1500);
+        }, 2500);
       } else {
         setShowWrongToken(true); // Show wrong token component instead of error message
       }
@@ -166,6 +177,8 @@ export default function AuthTokenSubmission() {
         <AnimatePresence mode="wait">
           {showWrongToken ? (
             <AuthTokenWrong onRetry={handleRetry} />
+          ) : showSuccess ? (
+            <AuthTokenSuccess gym={gym} redirectingTo="Dashboard" />
           ) : (
             <m.div
               initial={{ opacity: 0, y: 20 }}

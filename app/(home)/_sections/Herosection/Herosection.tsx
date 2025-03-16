@@ -1,11 +1,13 @@
 'use client';
+import { GradientBackground } from '@/components/theme/GradientBackground';
+import { GradientCard } from '@/components/theme/GradientCard';
+import { GradientText } from '@/components/theme/GradientText';
 import { Button } from '@/components/ui/button';
-import { Activity, ArrowRight, Dumbbell, Sparkles, UserCheck, UserCog, Users } from 'lucide-react';
-import CustomButton from '../../_component/CustomButton';
-
+import { gymTheme } from '@/styles/theme';
 import { m } from 'framer-motion';
+import { Activity, ArrowRight, Dumbbell, Sparkles, UserCheck, UserCog, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { BackgroundBeams } from '../../../../components/extras/beams';
+import CustomButton from '../../_component/CustomButton';
 
 export default function Herosection() {
   const [isClient, setIsClient] = useState(false);
@@ -18,23 +20,42 @@ export default function Herosection() {
     return <div className="min-h-[90vh]" />; // Loading state
   }
 
-  return (
-    <section className="relative min-h-[95vh] flex items-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
-      {/* Mobile-specific background elements */}
-      <div className="absolute inset-0 overflow-hidden lg:hidden">
-        <div className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/10 blur-3xl animate-pulse top-[-150px] left-[-150px]" />
-        <div className="absolute w-[300px] h-[300px] rounded-full bg-indigo-500/10 blur-3xl animate-pulse bottom-[-150px] right-[-150px]" />
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
-          className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"
-        />
-      </div>
+  const dashboardCards = [
+    {
+      icon: Users,
+      title: 'Onboarded Users',
+      value: '1,847',
+      color: gymTheme.colors.gradients.primaryBlue,
+      growth: '+22%',
+    },
+    {
+      icon: UserCheck,
+      title: "Today's Attendance",
+      value: '234',
+      color: gymTheme.colors.gradients.greenCard,
+      growth: '+18%',
+    },
+    {
+      icon: UserCog,
+      title: 'Trainer Dashboard',
+      value: '16',
+      color: gymTheme.colors.gradients.purpleCard,
+      growth: '+5%',
+    },
+    {
+      icon: Activity,
+      title: 'Active Users',
+      value: '1,392',
+      color: gymTheme.colors.gradients.orangeCard,
+      growth: '+15%',
+    },
+  ];
 
+  return (
+    <GradientBackground>
       <div className="container mx-auto px-4 sm:px-12 lg:px-16 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Mobile-optimized hero content */}
+          {/* Hero content */}
           <m.div className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0">
             <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto lg:mx-0">
               <m.div
@@ -44,9 +65,7 @@ export default function Herosection() {
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
                   <span className="block mb-2 sm:mb-4 text-white/90">Elevate Your</span>
-                  <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent inline-block animate-gradient">
-                    Gym Management
-                  </span>
+                  <GradientText>Gym Management</GradientText>
                 </h1>
               </m.div>
               <m.p
@@ -144,91 +163,16 @@ export default function Herosection() {
             <div className="relative w-[600px] h-[600px] perspective-1000">
               {/* 3D Dashboard Cards */}
               <div className="grid grid-cols-2 gap-6">
-                {[
-                  {
-                    icon: Users,
-                    title: 'Onboarded Users',
-                    value: '1,847',
-                    color: 'from-blue-500 to-blue-600',
-                    growth: '+22%',
-                  },
-                  {
-                    icon: UserCheck,
-                    title: "Today's Attendance",
-                    value: '234',
-                    color: 'from-green-500 to-green-600',
-                    growth: '+18%',
-                  },
-                  {
-                    icon: UserCog,
-                    title: 'Trainer Dashboard',
-                    value: '16',
-                    color: 'from-purple-500 to-purple-600',
-                    growth: '+5%',
-                  },
-                  {
-                    icon: Activity,
-                    title: 'Active Users',
-                    value: '1,392',
-                    color: 'from-orange-500 to-orange-600',
-                    growth: '+15%',
-                  },
-                ].map((item, i) => (
-                  <m.div
-                    key={i as number}
-                    initial={{ opacity: 0, y: 50, rotateX: 45 }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      rotateX: 0,
-                      z: Math.sin(i * 0.5) * 50,
-                    }}
-                    whileHover={{
-                      scale: 1.05,
-                      z: 30,
-                      rotateX: 10,
-                      rotateY: 10,
-                    }}
-                    transition={{
-                      delay: i * 0.1,
-                      duration: 0.8,
-                      type: 'spring',
-                      stiffness: 100,
-                    }}
-                    className="bg-gradient-to-br border border-white/10 rounded-xl p-6 transform-style-3d shadow-xl"
-                  >
-                    <div
-                      className={`rounded-full w-12 h-12 bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}
-                    >
-                      <item.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white/90">{item.title}</h3>
-                    <div className="flex items-end gap-2 mt-2">
-                      <span className="text-3xl font-bold text-white">{item.value}</span>
-                      <span className="text-green-400 text-sm mb-1">{item.growth}</span>
-                    </div>
-
-                    {/* Animated graph line */}
-                    <m.div
-                      className="h-1 bg-white/10 mt-4 rounded-full overflow-hidden"
-                      initial={{ width: '0%' }}
-                      animate={{ width: '100%' }}
-                      transition={{ delay: i * 0.2 + 0.5, duration: 1 }}
-                    >
-                      <m.div
-                        className={`h-full bg-gradient-to-r ${item.color}`}
-                        animate={{
-                          x: ['-100%', '0%'],
-                          opacity: [0.5, 1],
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          delay: i * 0.2 + 0.5,
-                          ease: 'easeOut',
-                        }}
-                      />
-                    </m.div>
-                  </m.div>
+                {dashboardCards.map((card, i) => (
+                  <GradientCard
+                    key={i}
+                    icon={card.icon}
+                    title={card.title}
+                    value={card.value}
+                    growth={card.growth}
+                    color={card.color}
+                    index={i}
+                  />
                 ))}
               </div>
 
@@ -306,8 +250,6 @@ export default function Herosection() {
           <ArrowRight className="w-4 h-4 rotate-90" />
         </m.div>
       </m.div>
-
-      <BackgroundBeams className="opacity-20" />
-    </section>
+    </GradientBackground>
   );
 }
