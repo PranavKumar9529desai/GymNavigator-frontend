@@ -80,6 +80,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
       </head>
       <body>
         <Providers>

@@ -176,16 +176,22 @@ export default function RegisterForm() {
         });
         console.error("Google sign-in error:", error);
       } finally {
-        toast.dismiss(loadingToastId);
+        toast.dismiss();
       }
     });
   }
 
   return (
-    <div className="w-full max-w-md mx-auto  p-8 rounded-xl  shadow-xl">
+    <div className="w-full max-w-md mx-auto p-8 rounded-xl shadow-xl">
       <div className="space-y-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form 
+            onSubmit={form.handleSubmit(onSubmit)} 
+            className="space-y-6"
+            method="post"
+            autoComplete="on"
+            name="registration"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -208,6 +214,9 @@ export default function RegisterForm() {
                       disabled={ispending}
                       type="text"
                       className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
+                      autoComplete="name"
+                      id="name"
+                      name="name"
                     />
                   </FormControl>
                   <FormMessage className="text-xs" />
@@ -238,6 +247,9 @@ export default function RegisterForm() {
                         type="email"
                         disabled={ispending}
                         className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
+                        autoComplete="email"
+                        id="email"
+                        name="email"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -269,6 +281,9 @@ export default function RegisterForm() {
                           disabled={ispending}
                           type={showPassword ? "text" : "password"}
                           className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 pr-10 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
+                          autoComplete="new-password"
+                          id="password"
+                          name="password"
                         />
                         <button
                           type="button"

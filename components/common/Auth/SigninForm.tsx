@@ -10,6 +10,23 @@ import { useState } from "react";
 import { toast } from "sonner";
 import GoogleButton from "../../ui/googleButton";
 
+// After successful login, store the credentials
+const storeCredentials = async (email: string, password: string) => {
+  if ('credentials' in navigator && window.PasswordCredential) {
+    try {
+      const cred = new window.PasswordCredential({
+        id: email,
+        password: password,
+        name: email,
+        iconURL: window.location.origin + '/favicon.ico',
+      });
+      await navigator.credentials.store(cred);
+    } catch (e) {
+      console.error('Error storing credentials:', e);
+    }
+  }
+};
+
 export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +34,7 @@ export default function SignInForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const Router = useRouter();
+  
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
@@ -74,6 +92,7 @@ export default function SignInForm() {
         toast.success("Welcome back!", {
           description: "Redirecting to dashboard...",
         });
+        await storeCredentials(email, password);
         // router.refresh();
       }
     } catch (error) {
@@ -120,13 +139,19 @@ export default function SignInForm() {
     }
   };
 
-  // Rest of the component UI remains unchanged
   return (
     <div className="md:flex justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md p-8 rounded-xl">
         {error && <AuthError error={error} onDismiss={() => setError(null)} />}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form 
+          onSubmit={handleSubmit} 
+          className="space-y-6" 
+          name="login" 
+          id="login-form" 
+          method="post"
+          autoComplete="on"
+        >
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-300">
               Email Address
@@ -135,6 +160,7 @@ export default function SignInForm() {
               <Mail className="absolute left-3 top-3 h-5 w-5 text-blue-400" />
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="john@example.com"
                 className="pl-10 bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
@@ -142,6 +168,7 @@ export default function SignInForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                autoComplete="email"
               />
             </div>
           </div>
@@ -154,6 +181,7 @@ export default function SignInForm() {
               <Lock className="absolute left-3 top-3 h-5 w-5 text-blue-400" />
               <Input
                 id="password"
+                name="password" 
                 placeholder="Your password"
                 type={showPassword ? "text" : "password"}
                 className="pl-10 pr-10 bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400"
@@ -161,6 +189,7 @@ export default function SignInForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                autoComplete="current-password"
               />
               <button
                 type="button"
@@ -181,6 +210,7 @@ export default function SignInForm() {
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
             disabled={loading}
+            name="login-button"
           >
             {loading ? "Signing in..." : "Sign In"}
           </Button>
