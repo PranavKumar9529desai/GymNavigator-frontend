@@ -1,4 +1,4 @@
-import { SignupReqConfig } from "./sign-up-axios";
+import { SignupReqConfig } from './sign-up-axios';
 
 // Define the standard API response format from backend
 export interface ApiResponse<T = unknown> {
@@ -19,7 +19,7 @@ export interface ApiResult<T> {
 }
 
 // Define signup-specific types
-export type RoleType = "owner" | "trainer" | "client" | "sales";
+export type RoleType = 'owner' | 'trainer' | 'client' | 'sales';
 
 export interface SignupResponseType {
   id: string;
@@ -45,11 +45,11 @@ export const signupClient = {
     role: string,
     name: string,
     email: string,
-    password: string
+    password: string,
   ): Promise<ApiResult<SignupResponseType>> => {
     try {
       const axiosInstance = await SignupReqConfig();
-      const response = await axiosInstance.post("/createaccount", {
+      const response = await axiosInstance.post('/createaccount', {
         name,
         email,
         password,
@@ -62,8 +62,8 @@ export const signupClient = {
         return {
           success: false,
           error: {
-            code: apiResponse.error || "UNKNOWN_ERROR",
-            message: apiResponse.message || "Unknown error occurred",
+            code: apiResponse.error || 'UNKNOWN_ERROR',
+            message: apiResponse.message || 'Unknown error occurred',
           },
         };
       }
@@ -75,8 +75,8 @@ export const signupClient = {
         return {
           success: false,
           error: {
-            code: "NO_DATA",
-            message: "No user data received",
+            code: 'NO_DATA',
+            message: 'No user data received',
           },
         };
       }
@@ -102,7 +102,7 @@ export const signupClient = {
   signupWithGoogle: async (
     name: string,
     email: string,
-    role: RoleType
+    role: RoleType,
   ): Promise<ApiResult<GoogleSignupResponseType>> => {
     try {
       const axiosInstance = await SignupReqConfig();
@@ -118,8 +118,8 @@ export const signupClient = {
         return {
           success: false,
           error: {
-            code: "USER_NOT_CREATED",
-            message: apiResponse.msg || "Failed to create user",
+            code: 'USER_NOT_CREATED',
+            message: apiResponse.msg || 'Failed to create user',
           },
         };
       }
@@ -140,7 +140,7 @@ export const signupClient = {
   checkUserExists: async (email: string): Promise<ApiResult<boolean>> => {
     try {
       const axiosInstance = await SignupReqConfig();
-      const response = await axiosInstance.post("/isexists", {
+      const response = await axiosInstance.post('/isexists', {
         email,
       });
 
@@ -151,8 +151,8 @@ export const signupClient = {
         return {
           success: false,
           error: {
-            code: apiResponse.error || "USER_CHECK_FAILED",
-            message: apiResponse.message || "Failed to check user existence",
+            code: apiResponse.error || 'USER_CHECK_FAILED',
+            message: apiResponse.message || 'Failed to check user existence',
           },
         };
       }

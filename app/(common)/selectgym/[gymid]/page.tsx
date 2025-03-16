@@ -1,11 +1,18 @@
-import AuthTokenSubmission from '@/app/(common)/selectgym/[gymid]/AuthTokenSubmission';
-import React from 'react';
+import AuthTokenSubmission from "./AuthTokenSubmission";
 
-export default async function page(props: { params: Promise<{ gymid: string }> }) {
-  const params = await props.params;
-  console.log('gymid is ', params.gymid);
+// Prevent static generation for this page
+export const dynamic = 'force-dynamic';
+
+interface PageProps {
+  params: {
+    gymid: string;
+  };
+}
+
+export default async function GymPage({ params }: PageProps) {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-2xl font-bold text-center mb-8">Verify Gym Access</h1>
       <AuthTokenSubmission />
     </div>
   );

@@ -15,13 +15,13 @@ export const SigninReqConfig = async (): Promise<AxiosInstance> => {
     (response) => response,
     (error) => {
       console.error('API request failed:', error);
-      
+
       // Preserve original axios error structure for status code checks
       if (error.response?.status === 404) {
         // Keep original structure for 404s so the status check works
         return Promise.reject(error);
       }
-      
+
       // Format other errors with consistent structure
       const errorResponse = error.response?.data;
       const formattedError = {
@@ -29,9 +29,9 @@ export const SigninReqConfig = async (): Promise<AxiosInstance> => {
         error: {
           code: errorResponse?.error || 'SERVER_ERROR',
           message: errorResponse?.message || error.message || 'Unknown error occurred',
-        }
+        },
       };
-      
+
       return Promise.reject(formattedError);
     },
   );

@@ -25,7 +25,7 @@ export const SignupReqConfig = async (): Promise<AxiosInstance> => {
     (response) => response,
     (error) => {
       console.error('API request failed:', error);
-      
+
       // Format the error with consistent structure
       const errorResponse = error.response?.data;
       const formattedError = {
@@ -33,9 +33,9 @@ export const SignupReqConfig = async (): Promise<AxiosInstance> => {
         error: {
           code: errorResponse?.error || 'SERVER_ERROR',
           message: errorResponse?.message || error.message || 'Unknown error occurred',
-        }
+        },
       };
-      
+
       return Promise.reject(formattedError);
     },
   );

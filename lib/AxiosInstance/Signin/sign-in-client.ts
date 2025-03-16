@@ -1,4 +1,4 @@
-import { SigninReqConfig } from "./sign-in-axios";
+import { SigninReqConfig } from './sign-in-axios';
 
 // Define the standard API response format from backend
 export interface ApiResponse<T = unknown> {
@@ -19,7 +19,7 @@ export interface ApiResult<T> {
 }
 
 // Define auth-specific types
-export type Rolestype = "owner" | "trainer" | "client";
+export type Rolestype = 'owner' | 'trainer' | 'client';
 
 export interface SigninResponseType {
   token: string;
@@ -56,11 +56,11 @@ export const authClient = {
    */
   signInWithCredentials: async (
     email: string,
-    password: string
+    password: string,
   ): Promise<ApiResult<SigninResponseType>> => {
     try {
       const axiosInstance = await SigninReqConfig();
-      const response = await axiosInstance.get("/login", {
+      const response = await axiosInstance.get('/login', {
         params: { email, password },
       });
 
@@ -70,8 +70,8 @@ export const authClient = {
         return {
           success: false,
           error: {
-            code: apiResponse.error || "UNKNOWN_ERROR",
-            message: apiResponse.message || "Unknown error occurred",
+            code: apiResponse.error || 'UNKNOWN_ERROR',
+            message: apiResponse.message || 'Unknown error occurred',
           },
         };
       }
@@ -89,22 +89,34 @@ export const authClient = {
   /**
    * Sign in with Google
    */
-  signInWithGoogle: async (
-    email: string
-  ): Promise<ApiResult<GoogleAuthResponse>> => {
+  signInWithGoogle: async (email: string): Promise<ApiResult<GoogleAuthResponse>> => {
     try {
       const axiosInstance = await SigninReqConfig();
-      const response = await axiosInstance.get("/google", {
+      const response = await axiosInstance.get('/google', {
         params: { email },
       });
 
       const apiResponse = response.data as ApiResponse<GoogleAuthResponse | { exists: boolean }>;
 
       // Handle user doesn't exist case
-      if (apiResponse.success && 'exists' in apiResponse.data && !apiResponse.data.exists) {
+      if (
+        apiResponse.success &&
+        apiResponse.data &&
+        'exists' in apiResponse.data &&
+        !apiResponse.data.exists
+      ) {
         return {
           success: true,
-          data: { exists: false } as any,
+          data: {
+            exists: false,
+            token: '',
+            user: {
+              id: '',
+              name: '',
+              email: '',
+              role: 'client',
+            },
+          } as GoogleAuthResponse,
         };
       }
 
@@ -120,18 +132,18 @@ export const authClient = {
       return {
         success: false,
         error: {
-          code: apiResponse.error || "UNKNOWN_ERROR",
-          message: apiResponse.message || "Unknown error occurred",
+          code: apiResponse.error || 'UNKNOWN_ERROR',
+          message: apiResponse.message || 'Unknown error occurred',
         },
       };
     } catch (error: unknown) {
       // Handle network errors or other unexpected issues
-      if (error && typeof error === "object") {
+      if (error && typeof error === 'object') {
         return {
           success: false,
           error: {
-            code: "REQUEST_FAILED",
-            message: "Failed to authenticate with Google",
+            code: 'REQUEST_FAILED',
+            message: 'Failed to authenticate with Google',
           },
         };
       }
@@ -146,7 +158,7 @@ export const authClient = {
   getUserInfo: async (email: string): Promise<ApiResult<UserInfoResponse>> => {
     try {
       const axiosInstance = await SigninReqConfig();
-      const response = await axiosInstance.get("/getuserinfo", {
+      const response = await axiosInstance.get('/getuserinfo', {
         params: { email },
       });
 
@@ -156,8 +168,8 @@ export const authClient = {
         return {
           success: false,
           error: {
-            code: apiResponse.error || "UNKNOWN_ERROR",
-            message: apiResponse.message || "Unknown error occurred",
+            code: apiResponse.error || 'UNKNOWN_ERROR',
+            message: apiResponse.message || 'Unknown error occurred',
           },
         };
       }
@@ -168,12 +180,12 @@ export const authClient = {
       };
     } catch (error: unknown) {
       // Handle network errors or other unexpected issues
-      if (error && typeof error === "object") {
+      if (error && typeof error === 'object') {
         return {
           success: false,
           error: {
-            code: "REQUEST_FAILED",
-            message: "Failed to check user existence",
+            code: 'REQUEST_FAILED',
+            message: 'Failed to check user existence',
           },
         };
       }
@@ -181,8 +193,8 @@ export const authClient = {
       return {
         success: false,
         error: {
-          code: "UNKNOWN_ERROR",
-          message: "An unknown error occurred",
+          code: 'UNKNOWN_ERROR',
+          message: 'An unknown error occurred',
         },
       };
     }

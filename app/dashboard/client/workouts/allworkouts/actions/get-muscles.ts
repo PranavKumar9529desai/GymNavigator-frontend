@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import axios from "axios";
-import { ClientReqConfig } from "../../../../../../lib/AxiosInstance/clientAxios";
+import axios from 'axios';
+import { ClientReqConfig } from '../../../../../../lib/AxiosInstance/clientAxios';
 
 // interface FetchedMusclesResponse {
 //   msg: string;
@@ -34,16 +34,16 @@ export interface Exercise {
 export const fetchMuscles = async () => {
   try {
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.get("/workout/allmuscles");
+    const response = await clientAxios.get('/workout/allmuscles');
     console.log(
-      "data fetched from the server by the FetchMuscles is",
-      typeof response.data.muscleGroups
+      'data fetched from the server by the FetchMuscles is',
+      typeof response.data.muscleGroups,
     );
     return { muscles: response.data.muscleGroups };
   } catch (error) {
-    console.error("Error in getAllMuscles:", error);
+    console.error('Error in getAllMuscles:', error);
     if (axios.isAxiosError(error)) {
-      console.error("Axios error details:", {
+      console.error('Axios error details:', {
         status: error.response?.status,
         data: error.response?.data,
         config: {

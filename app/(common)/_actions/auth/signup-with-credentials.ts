@@ -1,9 +1,9 @@
 'use server';
 
-import { 
-  type ApiResult, 
-  type SignupResponseType, 
-  signupClient 
+import {
+  type ApiResult,
+  type SignupResponseType,
+  signupClient,
 } from '@/lib/AxiosInstance/Signup/sign-up-client';
 
 export default async function SignupSA(

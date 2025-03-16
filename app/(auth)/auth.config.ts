@@ -1,26 +1,26 @@
-import type { AdapterUser } from "@auth/core/adapters";
-import type { Profile } from "@auth/core/types";
-import type { Account, NextAuthConfig, User } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
+import type { AdapterUser } from '@auth/core/adapters';
+import type { Profile } from '@auth/core/types';
+import type { Account, NextAuthConfig, User } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 
-import SignupSA from "@/app/(common)/_actions/auth/signup-with-credentials";
-import { getUserByEmail } from "../(common)/_actions/auth/get-userinfo";
-import { getGoogleSignupRole } from "../(common)/_actions/auth/google-role-server-action";
-import SigninSA from "../(common)/_actions/auth/signin-with-credentials";
-import { checkUserExists } from "..//(common)/_actions/auth/check-user-exists";
-import SigninGoogleSA from "..//(common)/_actions/auth/signin-with-google";
-import SignupWithGoogle from "..//(common)/_actions/auth/signup-with-google";
-import type { GymInfo, Rolestype } from "../types/next-auth";
+import SignupSA from '@/app/(common)/_actions/auth/signup-with-credentials';
+import { getUserByEmail } from '../(common)/_actions/auth/get-userinfo';
+import { getGoogleSignupRole } from '../(common)/_actions/auth/google-role-server-action';
+import SigninSA from '../(common)/_actions/auth/signin-with-credentials';
+import { checkUserExists } from '..//(common)/_actions/auth/check-user-exists';
+import SigninGoogleSA from '..//(common)/_actions/auth/signin-with-google';
+import SignupWithGoogle from '..//(common)/_actions/auth/signup-with-google';
+import type { GymInfo, Rolestype } from '../types/next-auth';
 
 // Import the relevant types from the auth client
 import type {
   ApiResult,
   SigninResponseType,
   UserInfoResponse,
-} from "@/lib/AxiosInstance/Signin/sign-in-client";
-import type { RoleType } from "@/lib/AxiosInstance/Signup/sign-up-client";
+} from '@/lib/AxiosInstance/Signin/sign-in-client';
+import type { RoleType } from '@/lib/AxiosInstance/Signup/sign-up-client';
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {
@@ -28,7 +28,7 @@ interface ExtendedUser extends User {
 }
 
 // Environment configuration
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Centralized logger that respects environment
 const logger = {
@@ -50,20 +50,20 @@ const authHandlers = {
     const userFromDB = await getUserByEmail(email);
 
     if (!userFromDB || !userFromDB.success) {
-      throw createError("User not found", "USER_NOT_FOUND");
+      throw createError('User not found', 'USER_NOT_FOUND');
     }
 
     const result = await SigninSA(email, password);
 
     if (!result.success || !result.data) {
       throw createError(
-        result.error?.message || "Failed to login",
-        result.error?.code || "LOGIN_FAILED"
+        result.error?.message || 'Failed to login',
+        result.error?.code || 'LOGIN_FAILED',
       );
     }
 
     const userData = result.data;
-    console.log("User data from signin handler", userData);
+    console.log('User data from signin handler', userData);
 
     return {
       id: userData.user.id,
@@ -80,18 +80,13 @@ const authHandlers = {
   },
 
   // Handle sign-up attempt
-  async handleSignUp(
-    role: string,
-    name: string,
-    email: string,
-    password: string
-  ): Promise<User> {
-    console.log("signup handler is called");
+  async handleSignUp(role: string, name: string, email: string, password: string): Promise<User> {
+    console.log('signup handler is called');
 
     // Use the appropriate method from signup client instead
     const userExistsResult = await checkUserExists(email);
     if (userExistsResult.success && userExistsResult.data === true) {
-      throw createError("User already exists", "USER_EXISTS");
+      throw createError('User already exists', 'USER_EXISTS');
     }
 
     const signupResult = await SignupSA(role, name, email, password);
@@ -99,14 +94,14 @@ const authHandlers = {
     // Check if the API call was successful and contains data
     if (!signupResult.success || !signupResult.data) {
       throw createError(
-        signupResult.error?.message || "Failed to create user",
-        signupResult.error?.code || "SIGNUP_FAILED"
+        signupResult.error?.message || 'Failed to create user',
+        signupResult.error?.code || 'SIGNUP_FAILED',
       );
     }
 
     // Extract the user data from the API result
     const userData = signupResult.data;
-    console.log("User data from signup handler:", userData);
+    console.log('User data from signup handler:', userData);
 
     return {
       id: userData.id,
@@ -130,10 +125,7 @@ export default {
       },
       async authorize(credentials): Promise<User | null> {
         if (!credentials?.email || !credentials?.password) {
-          throw createError(
-            "Email and password are required",
-            "INVALID_CREDENTIALS"
-          );
+          throw createError('Email and password are required', 'INVALID_CREDENTIALS');
         }
 
         const { email, password, name, role } = credentials as {
@@ -142,15 +134,12 @@ export default {
           name?: string;
           role?: string;
         };
-        console.log("credentials are", credentials);
+        console.log('credentials are', credentials);
 
         // Determine if this is sign-up or sign-in
         const isSignUp = Boolean(role && name);
-        console.log(
-          `Attempting ${isSignUp ? "sign-up" : "sign-in"} for email:`,
-          email
-        );
-        console.log("isSignUp is", isSignUp);
+        console.log(`Attempting ${isSignUp ? 'sign-up' : 'sign-in'} for email:`, email);
+        console.log('isSignUp is', isSignUp);
         try {
           // Route to appropriate handler
           if (isSignUp && role && name) {
@@ -158,7 +147,7 @@ export default {
           }
           return await authHandlers.handleSignIn(email, password);
         } catch (error) {
-          logger.error("Authentication error:", error);
+          logger.error('Authentication error:', error);
           throw error;
         }
       },
@@ -172,18 +161,18 @@ export default {
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 7 * 24 * 60 * 60, // 7 days
   },
 
   cookies: {
     sessionToken: {
-      name: "next-auth.session-token",
+      name: 'next-auth.session-token',
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
+        sameSite: 'lax',
+        path: '/',
         secure: isProduction,
       },
     },
@@ -192,40 +181,40 @@ export default {
   callbacks: {
     async redirect({ url, baseUrl }) {
       // First, handle relative URLs properly
-      if (url.startsWith("/")) {
+      if (url.startsWith('/')) {
         // For relative URLs, check if they contain role parameter in the query string
-        if (url.includes("?") && url.includes("role=")) {
-          const [path, query] = url.split("?");
+        if (url.includes('?') && url.includes('role=')) {
+          const [path, query] = url.split('?');
           const params = new URLSearchParams(query);
-          const role = params.get("role");
-          
+          const role = params.get('role');
+
           if (role) {
-            params.delete("role");
+            params.delete('role');
             const newQuery = params.toString();
-            return `${baseUrl}${path}${newQuery ? `?${newQuery}` : ""}`;
+            return `${baseUrl}${path}${newQuery ? `?${newQuery}` : ''}`;
           }
         }
         // If no processing needed, return the URL joined with baseUrl
         return `${baseUrl}${url}`;
       }
-      
+
       // For absolute URLs, we can use the URL constructor safely
       try {
         const urlObj = new URL(url);
-        
+
         // Only process URLs from the same origin
         if (urlObj.origin === baseUrl) {
-          const role = urlObj.searchParams.get("role");
+          const role = urlObj.searchParams.get('role');
           if (role) {
-            urlObj.searchParams.delete("role");
+            urlObj.searchParams.delete('role');
             return urlObj.toString();
           }
         }
-        
+
         // Default: if same origin, return the URL, otherwise return baseUrl
         return urlObj.origin === baseUrl ? url : baseUrl;
       } catch (error) {
-        console.error("Error processing redirect URL:", error);
+        console.error('Error processing redirect URL:', error);
         return baseUrl;
       }
     },
@@ -238,28 +227,25 @@ export default {
       credentials?: Record<string, unknown>;
     }) {
       const { user, account, profile } = params;
-      console.log("user is received from the signin callback", user);
+      console.log('user is received from the signin callback', user);
 
       // Only process special cases (like Google)
-      if (!account || account.provider !== "google" || !user?.email) {
+      if (!account || account.provider !== 'google' || !user?.email) {
         return true;
       }
 
       try {
         // Optimize by fetching user data only once for Google sign-in
-        const userFromDb: ApiResult<UserInfoResponse> = await getUserByEmail(
-          user.email
-        );
+        const userFromDb: ApiResult<UserInfoResponse> = await getUserByEmail(user.email);
 
-        console.log("userFromDb is from the signin callback", userFromDb);
+        console.log('userFromDb is from the signin callback', userFromDb);
 
         // Handle the case where the user doesn't exist (needs signup)
         if (userFromDb.success && userFromDb.data && !userFromDb.data.exists) {
-          console.log("New Google user, creating account");
+          console.log('New Google user, creating account');
 
           // Get name from profile or user object
-          const userName =
-            user.name || profile?.name || profile?.given_name || "Google User";
+          const userName = user.name || profile?.name || profile?.given_name || 'Google User';
 
           // Get the role from the cookie
           const selectedRole = await getGoogleSignupRole();
@@ -267,31 +253,31 @@ export default {
           // If no role was found in the cookie, redirect to role selection page
           if (!selectedRole) {
             // Return a URL to redirect to role selection
-            return "/selectrole";
+            return '/selectrole';
           }
 
-          console.log("Signing up with Google:", { 
-            name: userName, 
-            email: user.email, 
-            role: selectedRole 
+          console.log('Signing up with Google:', {
+            name: userName,
+            email: user.email,
+            role: selectedRole,
           });
 
           // Create a new user with Google signup
           const signupResult = await SignupWithGoogle(
             userName,
             user.email,
-            selectedRole as RoleType
+            selectedRole as RoleType,
           );
 
-          console.log("Google signup result:", signupResult);
+          console.log('Google signup result:', signupResult);
 
           if (!signupResult.success) {
-            logger.error("Failed to create Google user:", signupResult.error);
+            logger.error('Failed to create Google user:', signupResult.error);
             return false;
           }
 
           // After successful signup, proceed with signin
-          console.log("Signing in with Google after account creation:", user.email);
+          console.log('Signing in with Google after account creation:', user.email);
           const response = await SigninGoogleSA(user.email);
 
           if (response.success && response.data) {
@@ -317,11 +303,9 @@ export default {
 
         // Handle the case where the user exists
         if (userFromDb.success && userFromDb.data && userFromDb.data.exists) {
-          console.log("Existing Google user, signing in:", user.email);
-          const response: ApiResult<SigninResponseType> = await SigninGoogleSA(
-            user.email
-          );
-          console.log("Response from Google signin:", response);
+          console.log('Existing Google user, signing in:', user.email);
+          const response: ApiResult<SigninResponseType> = await SigninGoogleSA(user.email);
+          console.log('Response from Google signin:', response);
 
           if (response.success && response.data) {
             // Store the user data from the backend in the user object
@@ -345,10 +329,10 @@ export default {
         }
 
         // Handle other error cases
-        logger.error("User lookup failed:", userFromDb.error);
+        logger.error('User lookup failed:', userFromDb.error);
         return false;
       } catch (error) {
-        logger.error("Google sign-in error:", error);
+        logger.error('Google sign-in error:', error);
         return false;
       }
     },
@@ -374,15 +358,15 @@ export default {
       }
 
       // Handle session updates
-      if (trigger === "update" && session) {
+      if (trigger === 'update' && session) {
         return { ...token, ...session };
       }
-      console.log("token is from the jwt callback", token);
+      console.log('token is from the jwt callback', token);
       return token;
     },
 
     async session({ session, token }) {
-      console.log("token received from the session callback", token);
+      console.log('token received from the session callback', token);
       if (token) {
         // Structure session according to the defined type
         session.user.id = token.sub as string;
@@ -394,15 +378,15 @@ export default {
           session.accessToken = token.accessToken as string;
         }
       }
-      console.log("session from the sesion callback", session);
+      console.log('session from the sesion callback', session);
       return session;
     },
   },
 
   trustHost: true,
   pages: {
-    signIn: "/signin",
-    error: "/auth/error",
+    signIn: '/signin',
+    error: '/auth/error',
   },
   debug: !isProduction,
 } satisfies NextAuthConfig;
