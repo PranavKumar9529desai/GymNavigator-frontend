@@ -1,4 +1,5 @@
-"use server";
+'use server';
+
 import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
 
 export interface Exercise {
@@ -26,7 +27,7 @@ export interface WorkoutPlan {
   schedules: WorkoutSchedule[];
 }
 
-export const getAllWorkoutPlans = async () => {
+export async function getWorkoutPlans() {
   const trainerAxios = await TrainerReqConfig();
   try {
     const response = await trainerAxios.get("/workouts/allworkoutplans");
@@ -50,4 +51,4 @@ export const getAllWorkoutPlans = async () => {
       error: "Failed to fetch workout plans",
     };
   }
-};
+} 

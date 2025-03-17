@@ -1,42 +1,13 @@
-import { getUsersAssignedToTrainer } from './GetuserassignedTotrainers';
-import { getAllWorkoutPlans } from './Getworkout';
-import UserWorkoutAssignment from './UserWorkoutAssignment';
+import { getUsersAssignedToTrainer } from "../../assignedusers/GetuserassignedTotrainers";
+import UserWorkoutList from "./_components/user-workout-list";
 
-export default async function Page() {
-  const [users, workoutPlansResponse] = await Promise.all([
-    getUsersAssignedToTrainer(),
-    getAllWorkoutPlans(),
-  ]);
-
-  // Calculate status cards data
-  const statusCards = [
-    {
-      title: 'Total Users',
-      value: users.length,
-      iconName: 'users',
-      gradient: 'blue',
-    },
-    {
-      title: 'Assigned Workouts',
-      value: users.filter((u) => u.hasActiveWorkoutPlan).length,
-      iconName: 'dumbbell',
-      gradient: 'green',
-    },
-    {
-      title: 'Pending Assignments',
-      value: users.filter((u) => !u.hasActiveWorkoutPlan).length,
-      iconName: 'target',
-      gradient: 'red',
-    },
-  ];
+export default async function AssignWorkoutPage() {
+  const users = await getUsersAssignedToTrainer();
 
   return (
-    <div className="container mx-auto">
-      <UserWorkoutAssignment
-        Users={users}
-        statusCards={statusCards}
-        workoutPlans={workoutPlansResponse.workoutPlans}
-      />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-6">Assign Workout Plans</h1>
+      <UserWorkoutList users={users} />
     </div>
   );
 }
