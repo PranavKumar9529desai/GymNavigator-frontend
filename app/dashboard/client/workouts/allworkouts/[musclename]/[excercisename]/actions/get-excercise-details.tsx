@@ -10,8 +10,11 @@ export interface Exercise {
 }
 
 interface SingleExerciseResponse {
+  success: boolean;
   msg: string;
-  exercise: Exercise;
+  data: {
+    exercise: Exercise;
+  };
 }
 
 export const GetExcerciseDetails = async (
@@ -23,10 +26,13 @@ export const GetExcerciseDetails = async (
     const response: AxiosResponse<SingleExerciseResponse> = await clientAxios.get(
       `/workout/singleworkout/${excerciseName}`,
     );
-    if (!response.data.exercise) {
-      throw new Error('Exercise not found');
+    
+    // Check for the nested data structure
+    if (!response.data.data || !response.data.data.exercise) {
+      throw new Error('Exercise not found or invalid response structure');
     }
-    return response.data.exercise;
+    
+    return response.data.data.exercise;
   } catch (error) {
     console.error('Error fetching exercise:', error);
     throw error;

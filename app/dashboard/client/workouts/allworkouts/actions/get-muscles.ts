@@ -3,11 +3,6 @@
 import axios from 'axios';
 import { ClientReqConfig } from '../../../../../../lib/AxiosInstance/clientAxios';
 
-// interface FetchedMusclesResponse {
-//   msg: string;
-//   muscleGroups: MuscleGroup[];
-// }
-
 export interface MuscleGroup {
   img: string;
   id: number;
@@ -37,9 +32,16 @@ export const fetchMuscles = async () => {
     const response = await clientAxios.get('/workout/allmuscles');
     console.log(
       'data fetched from the server by the FetchMuscles is',
-      typeof response.data.muscleGroups,
+      response.data,
     );
-    return { muscles: response.data.muscleGroups };
+    
+    // Access the nested muscleGroups inside the data property
+    if (!response.data.data || !response.data.data.muscleGroups) {
+      console.error('Unexpected response structure:', response.data);
+      throw new Error('Invalid response structure from API');
+    }
+    
+    return { muscles: response.data.data.muscleGroups };
   } catch (error) {
     console.error('Error in getAllMuscles:', error);
     if (axios.isAxiosError(error)) {

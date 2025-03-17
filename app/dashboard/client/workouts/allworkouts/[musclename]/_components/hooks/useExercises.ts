@@ -1,25 +1,48 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import type { Excercisetype, ExerciseWithMuscle } from '../../actions/getSIngleMuscle';
+import type { Excercisetype } from '../../actions/getSIngleMuscle';
 
 async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/${muscleName}`,
-  );
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/${muscleName}`,
+    );
 
-  // Transform the data to match Excercisetype
-  return response.data.exercises.map((exercise: ExerciseWithMuscle) => ({
-    name: exercise.name,
-    img: exercise.image_url || '',
-    instructions: exercise.instructions,
-    videolink: exercise.video_url || '',
-    MuscleGroup: {
-      id: exercise.MuscleGroup.id,
-      name: exercise.MuscleGroup.name,
-      img: exercise.MuscleGroup.image_url || '',
-      fullimage: exercise.muscle_image || '',
-    },
-  }));
+    // Log the raw response for debugging
+    console.log(`Client-side API response for ${muscleName}:`, response.data);
+
+    // Check basic response structure
+    if (!response.data || !response.data.success) {
+      console.error('API returned error response:', response.data);
+      return [];
+    }
+
+    // Check for nested data structure
+    if (!response.data.data || !response.data.data.exercises) {
+      console.error('Missing exercises in API response:', response.data);
+      return [];
+    }
+
+    const exercises = response.data.data.exercises;
+    console.log(`Found ${exercises.length} exercises for ${muscleName}`);
+
+    // Transform data with robust error handling
+    return exercises.map((exercise: any) => ({
+      name: exercise.name || 'Unknown Exercise',
+      img: exercise.image_url || '',
+      instructions: exercise.instructions || 'No instructions available',
+      videolink: exercise.video_url || '',
+      MuscleGroup: {
+        id: exercise.MuscleGroup?.id || 0,
+        name: exercise.MuscleGroup?.name || muscleName,
+        img: exercise.MuscleGroup?.image_url || '',
+        fullimage: exercise.muscle_image || '',
+      },
+    }));
+  } catch (error) {
+    console.error(`Error fetching exercises for ${muscleName}:`, error);
+    return [];
+  }
 }
 
 export function useExercises(muscleName: string) {
