@@ -1,24 +1,22 @@
 'use server';
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
 
+export interface Meal {
+  type: string;
+  items: string[];
+  timing: string;
+}
+
 interface DietResponse {
   success: boolean;
   data?: {
-    meals: {
-      type: string;
-      items: string[];
-      timing: string;
-    }[];
+    meals: Meal[];
   };
   error?: string;
 }
 
 export interface TodaysDiet {
-  meals: {
-    type: string;
-    items: string[];
-    timing: string;
-  }[];
+  meals: Meal[];
 }
 
 export const fetchTodaysDiet = async (): Promise<TodaysDiet> => {
