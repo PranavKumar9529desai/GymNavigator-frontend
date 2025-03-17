@@ -27,6 +27,17 @@ const getMealColor = (mealType: string) => {
   return "from-gray-100 to-gray-50 border-gray-200";
 };
 
+// Helper function to determine meal type priority for sorting
+const getMealTypePriority = (mealType: string): number => {
+  const type = mealType.toLowerCase();
+  if (type.includes("breakfast")) return 1;
+  if (type.includes("lunch")) return 2;
+  if (type.includes("snack")) return 3;
+  if (type.includes("dinner")) return 4;
+  if (type.includes("recovery")) return 5;
+  return 6; // Any other meal types
+};
+
 export default function TodaysDiet() {
   const { data, error } = useQuery({
     queryKey: ["todaysDiet"],
@@ -41,7 +52,17 @@ export default function TodaysDiet() {
     );
   }
 
+  // Sort meals by type priority first, then by timing if same type
   const sortedMeals = [...data.meals].sort((a, b) => {
+    const priorityA = getMealTypePriority(a.type);
+    const priorityB = getMealTypePriority(b.type);
+    
+    // If different meal types, sort by priority
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+    
+    // If same meal type, sort by time
     const timeA = a.timing.split(":").map(Number);
     const timeB = b.timing.split(":").map(Number);
     return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
