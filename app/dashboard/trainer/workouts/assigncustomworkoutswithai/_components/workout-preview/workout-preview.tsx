@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { UserData } from "../_actions/get-user-by-id";
-import type { WorkoutPlan } from "../_actions/generate-ai-workout";
+import type { UserData } from "../../_actions/get-user-by-id";
+import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
 
 // Define interface for displayed exercise
 interface ExerciseDisplay {

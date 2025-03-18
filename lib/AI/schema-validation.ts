@@ -17,6 +17,12 @@ export function extractJsonFromString(text: string): unknown | null {
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
+    
+    // Look for JSON patterns in code blocks (common in AI responses)
+    const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (codeBlockMatch && codeBlockMatch[1]) {
+      return JSON.parse(codeBlockMatch[1]);
+    }
 
     // If we can't find a JSON object, return null
     return null;

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getUserById } from "./_actions/get-user-by-id";
 import type { UserData } from "./_actions/get-user-by-id";
-import ClientWorkoutGenerator from "./_components/client-workout-generator";
+import ClientWorkoutGenerator from "./_components/client display/client-workout-generator";
 
 export default async function AssignCustomWorkoutsWithAI({
   searchParams,
@@ -23,7 +23,7 @@ export default async function AssignCustomWorkoutsWithAI({
     response.success && response.data ? response.data : null;
 
   return (
-    <div className="container max-w-5xl px-4 sm:px-6 pb-16">
+    <div className="container max-w-5xl  pb-16">
       {/* Navigation with improved mobile tap target */}
       <Link
         href="/dashboard/trainer/workouts"

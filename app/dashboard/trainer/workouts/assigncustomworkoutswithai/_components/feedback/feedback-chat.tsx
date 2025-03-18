@@ -2,22 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, SendIcon } from "lucide-react";
+import { Loader2, MessageSquare, SendIcon } from "lucide-react";
 import { useState } from "react";
+import type { WorkoutPlan } from "../_actions/generate-ai-workout";
 
 interface FeedbackChatProps {
-  initialWorkout: string;
+  workoutPlan: WorkoutPlan;
   onSendFeedback: (feedback: string) => Promise<void>;
   isSubmitting: boolean;
   conversationHistory: Array<{
     type: "ai" | "user";
     message: string;
+    workout?: WorkoutPlan;
     timestamp: Date;
   }>;
 }
 
 export function FeedbackChat({
-  initialWorkout,
+  workoutPlan,
   onSendFeedback,
   isSubmitting,
   conversationHistory,
@@ -34,7 +36,7 @@ export function FeedbackChat({
 
   return (
     <div className="flex flex-col space-y-4 mt-6">
-      <div className="rounded-lg bg-slate-100 p-4 max-h-[400px] overflow-y-auto">
+      <div className="rounded-lg bg-muted/30 p-4 max-h-[400px] overflow-y-auto">
         <div className="space-y-4">
           {conversationHistory.map((entry, index) => (
             <div 
@@ -42,14 +44,26 @@ export function FeedbackChat({
               className={`flex ${entry.type === "user" ? "justify-end" : "justify-start"}`}
             >
               <div 
-                className={`max-w-[85%] p-3 rounded-lg ${
+                className={`max-w-[85%] p-4 rounded-lg ${
                   entry.type === "user" 
                     ? "bg-primary text-primary-foreground" 
                     : "bg-muted text-muted-foreground"
                 }`}
               >
-                <p className="whitespace-pre-wrap">{entry.message}</p>
-                <p className="text-xs opacity-70 text-right mt-1">
+                {entry.type === "user" ? (
+                  <div className="flex gap-2 items-start">
+                    <div className="whitespace-pre-wrap text-sm">{entry.message}</div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex gap-2 items-center text-sm font-medium">
+                      <MessageSquare className="h-4 w-4" />
+                      AI Response
+                    </div>
+                    <div className="whitespace-pre-wrap text-sm">{entry.message}</div>
+                  </div>
+                )}
+                <p className="text-xs opacity-70 text-right mt-2">
                   {entry.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -62,14 +76,14 @@ export function FeedbackChat({
         <Textarea 
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Provide feedback about the workout..."
+          placeholder="Provide feedback to refine this workout plan..."
           className="resize-none min-h-[100px]"
           disabled={isSubmitting}
         />
         <Button 
           type="submit" 
           size="icon" 
-          className="h-10 w-10" 
+          className="h-10 w-10 shrink-0" 
           disabled={isSubmitting || !feedback.trim()}
         >
           {isSubmitting ? (

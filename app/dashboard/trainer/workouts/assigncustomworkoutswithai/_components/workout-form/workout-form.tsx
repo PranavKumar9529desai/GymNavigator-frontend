@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2, Sparkles, Dumbbell, Gauge, Clock, StickyNote } from "lucide-react";
+import { Loader2, Sparkles, Dumbbell, Gauge, Clock, StickyNote, Calendar } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,9 +26,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import type { UserData } from "../_actions/get-user-by-id";
-import { generateAiWorkout, WorkoutPlan } from "../_actions/generate-ai-workout";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { UserData } from "../../_actions/get-user-by-id";
+import { generateAiWorkout, WorkoutPlan } from "../../_actions/generate-ai-workout";
 import { toast } from "@/hooks/use-toast";
+
+const daysOfWeek = [
+  { id: "monday", label: "Monday" },
+  { id: "tuesday", label: "Tuesday" },
+  { id: "wednesday", label: "Wednesday" },
+  { id: "thursday", label: "Thursday" },
+  { id: "friday", label: "Friday" },
+  { id: "saturday", label: "Saturday" },
+  { id: "sunday", label: "Sunday" },
+];
 
 const formSchema = z.object({
   workoutName: z.string().min(3, {
@@ -41,6 +52,9 @@ const formSchema = z.object({
     message: "Please select experience level.",
   }),
   duration: z.number().min(10).max(120),
+  workoutDays: z.array(z.string()).min(1, {
+    message: "Select at least one workout day."
+  }),
   specialInstructions: z.string().optional(),
 });
 
@@ -69,9 +83,13 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
       goal: mappedGoal,
       experience: "intermediate", // Default value
       duration: 45,
+      workoutDays: ["Monday", "Wednesday", "Friday"], // Default MWF schedule
       specialInstructions: "",
     },
   });
+
+  // Get current values for form fields
+  const selectedDays = form.watch("workoutDays");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!user) {
@@ -91,9 +109,10 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
         userId: user.id,
         goals: values.goal,
         fitnessLevel: values.experience,
-        preferredDays: ["Monday", "Wednesday", "Friday"], // Default to MWF schedule
+        preferredDays: values.workoutDays,
         workoutDuration: values.duration,
         focusAreas: [], // Can be extended in future
+        specialInstructions: values.specialInstructions,
       };
       
       const result = await generateAiWorkout(params);
@@ -152,7 +171,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                 <Input 
                   placeholder="e.g. Summer Shred Program" 
                   {...field} 
-                  className="h-11"
+                  className="h-11 focus:border-indigo-600"
                 />
               </FormControl>
               <FormMessage />
@@ -172,7 +191,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                 </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600">
                       <SelectValue placeholder="Select goal" />
                     </SelectTrigger>
                   </FormControl>
@@ -200,7 +219,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                 </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="h-11">
+                    <SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600">
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                   </FormControl>
@@ -220,7 +239,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           control={form.control}
           name="duration"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="border border-gray-100 rounded-lg p-4 shadow-sm">
               <FormLabel className="flex items-center gap-2 text-base">
                 <Clock className="h-4 w-4" />
                 Workout Duration
@@ -228,7 +247,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
               <div className="pt-2 px-1">
                 <div className="flex justify-between text-sm mb-1">
                   <span>10 min</span>
-                  <span className="font-medium">{field.value} min</span>
+                  <span className="font-medium text-indigo-700">{field.value} min</span>
                   <span>120 min</span>
                 </div>
                 <FormControl>
@@ -241,6 +260,59 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                     className="py-5"
                   />
                 </FormControl>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="workoutDays"
+          render={() => (
+            <FormItem className="border border-gray-100 rounded-lg p-4 shadow-sm">
+              <FormLabel className="flex items-center gap-2 text-base">
+                <Calendar className="h-4 w-4" />
+                Workout Days
+              </FormLabel>
+              <FormDescription>
+                Select the days to include in the workout plan ({selectedDays.length} days selected)
+              </FormDescription>
+              <div className="grid grid-cols-7 gap-2 mt-2">
+                {daysOfWeek.map((day) => (
+                  <FormField
+                    key={day.id}
+                    control={form.control}
+                    name="workoutDays"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={day.id}
+                          className="flex flex-col items-center space-y-1"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(day.label)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, day.label])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== day.label
+                                      )
+                                    );
+                              }}
+                              className="data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+                            />
+                          </FormControl>
+                          <FormLabel className="text-xs font-normal cursor-pointer">
+                            {day.label.substring(0, 3)}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
               </div>
               <FormMessage />
             </FormItem>
@@ -259,7 +331,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
               <FormControl>
                 <Textarea
                   placeholder="Add any specific requirements or preferences for this workout"
-                  className="resize-none h-24"
+                  className="resize-none h-24 focus:border-indigo-600"
                   {...field}
                 />
               </FormControl>
@@ -270,7 +342,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
 
         <Button 
           type="submit" 
-          className="w-full h-12 mt-2 text-base"
+          className="w-full h-12 mt-2 text-base bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 text-white border-0 hover:opacity-90 shadow-md"
           disabled={isGenerating || !user}
         >
           {isGenerating ? (

@@ -1,9 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { User, UserSearch, Activity, Weight, Ruler, CalendarClock, ArrowRight } from "lucide-react";
+import {
+  User,
+  UserSearch,
+  Activity,
+  Weight,
+  Ruler,
+  CalendarClock,
+  ArrowRight,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { UserData } from "../_actions/get-user-by-id";
+import type { UserData } from "../../_actions/get-user-by-id";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +27,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
 
   const handleClientSelection = () => {
     setIsNavigating(true);
-    router.push('/dashboard/trainer/clients');
+    router.push("/dashboard/trainer/clients");
   };
 
   if (!user) {
@@ -42,7 +50,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
                 Please select a client to create a personalized AI workout plan
               </p>
             </div>
-            <Button 
+            <Button
               className="mt-2 w-full sm:w-auto transition-all"
               onClick={handleClientSelection}
               disabled={isNavigating}
@@ -92,7 +100,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
             )}
           </div>
         </div>
-        
+
         {user.healthProfile ? (
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40">
@@ -101,7 +109,11 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Weight</div>
-                <div className="font-medium">{user.healthProfile.weight ? `${user.healthProfile.weight} kg` : "—"}</div>
+                <div className="font-medium">
+                  {user.healthProfile.weight
+                    ? `${user.healthProfile.weight} kg`
+                    : "—"}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40">
@@ -110,7 +122,11 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Height</div>
-                <div className="font-medium">{user.healthProfile.height ? `${user.healthProfile.height} cm` : "—"}</div>
+                <div className="font-medium">
+                  {user.healthProfile.height
+                    ? `${user.healthProfile.height} cm`
+                    : "—"}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40">
@@ -119,7 +135,11 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Age</div>
-                <div className="font-medium">{user.healthProfile.age ? `${user.healthProfile.age} years` : "—"}</div>
+                <div className="font-medium">
+                  {user.healthProfile.age
+                    ? `${user.healthProfile.age} years`
+                    : "—"}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/40">
@@ -128,13 +148,27 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Goal</div>
-                <div className="font-medium">{user.healthProfile.goal || "—"}</div>
+                <div className="font-medium">
+                  {user.healthProfile.goal || "—"}
+                </div>
               </div>
             </div>
           </div>
         ) : (
           <div className="flex items-center gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              role="img"
+              aria-label="Warning icon"
+            >
               <circle cx="12" cy="12" r="10" />
               <line x1="12" x2="12" y1="8" y2="12" />
               <line x1="12" x2="12.01" y1="16" y2="16" />
