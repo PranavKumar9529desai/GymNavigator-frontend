@@ -1,12 +1,12 @@
-import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ClientWorkoutGenerator from "./_components/client-workout-generator";
-import { getUserById } from "./_actions/get-user-by-id";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import type { UserData } from "./_actions/get-user-by-id";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Activity, ChevronLeft, Dumbbell, Zap } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
+import { getUserById } from "./_actions/get-user-by-id";
+import type { UserData } from "./_actions/get-user-by-id";
+import ClientWorkoutGenerator from "./_components/client-workout-generator";
 
 export default async function AssignCustomWorkoutsWithAI({
   searchParams,
@@ -34,13 +34,65 @@ export default async function AssignCustomWorkoutsWithAI({
       </Link>
 
       <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
-            Assign AI-Generated Workouts
-          </h1>
-          <p className="text-muted-foreground max-w-2xl">
-            Create personalized workout plans with AI assistance tailored to your client's fitness goals and experience level
-          </p>
+        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 p-8 border border-indigo-500/20 shadow-lg text-white">
+          {/* Decorative background patterns */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 transform rotate-45 translate-x-1/3 -translate-y-1/2">
+              <Dumbbell className="h-48 w-48" strokeWidth={0.5} />
+            </div>
+            <div className="absolute bottom-0 left-0 transform -rotate-12 -translate-x-1/4 translate-y-1/3">
+              <Activity className="h-40 w-40" strokeWidth={0.5} />
+            </div>
+            <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div 
+                  key={i} 
+                  className="flex items-center justify-center opacity-20"
+                  style={{ 
+                    transform: `translate(${Math.random() * 100 - 50}%, ${Math.random() * 100 - 50}%)`,
+                    position: 'absolute',
+                    left: `${(i % 4) * 25}%`,
+                    top: `${Math.floor(i / 4) * 33}%`
+                  }}
+                >
+                  <Dumbbell className="h-8 w-8" strokeWidth={1} />
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Glowing effects */}
+          <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl"></div>
+          
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
+              <Zap className="h-4 w-4" />
+              AI-Powered Workout Builder
+            </div>
+            
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
+              Craft <span className="text-blue-200">Perfect Workouts</span> in Seconds
+            </h1>
+            
+            <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
+              Let our AI design personalized workout plans tailored to your client's specific goals
+              and fitness level — turning hours of planning into moments.
+            </p>
+
+            {/* Decorative icons */}
+            <div className="absolute right-8 bottom-6 hidden lg:flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <Dumbbell className="h-5 w-5 text-white" />
+              </div>
+              <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <Activity className="h-5 w-5 text-white" />
+              </div>
+              <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <Zap className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <Tabs defaultValue="generate" className="space-y-6">
