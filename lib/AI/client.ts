@@ -2,7 +2,7 @@
 
 import { OpenAI } from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { StreamingTextResponse, Message } from 'ai';
+import type { Message } from 'ai';
 
 // Initialize AI providers
 const openai = new OpenAI({
@@ -17,7 +17,6 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 export async function generateWithGemini(prompt: string, options?: {
   temperature?: number;
   maxOutputTokens?: number;
-  stream?: boolean;
 }) {
   try {
     const model = genAI.getGenerativeModel({ 
@@ -29,23 +28,6 @@ export async function generateWithGemini(prompt: string, options?: {
         maxOutputTokens: options?.maxOutputTokens || 4096,
       },
     });
-
-    // Handle streaming if requested
-    if (options?.stream) {
-      const result = await model.generateContentStream({ text: prompt });
-      const stream = new ReadableStream({
-        async start(controller) {
-          for await (const chunk of result.stream) {
-            const text = chunk.text();
-            if (text) {
-              controller.enqueue(new TextEncoder().encode(text));
-            }
-          }
-          controller.close();
-        }
-      });
-      return new StreamingTextResponse(stream);
-    }
 
     // Regular non-streaming response
     const result = await model.generateContent(prompt);
@@ -62,22 +44,9 @@ export async function generateWithGemini(prompt: string, options?: {
 export async function generateWithOpenAI(messages: Message[], options?: {
   temperature?: number;
   maxTokens?: number;
-  stream?: boolean;
   model?: string;
 }) {
   try {
-    if (options?.stream) {
-      const response = await openai.chat.completions.create({
-        model: options?.model || 'gpt-3.5-turbo',
-        messages: messages as any[],
-        temperature: options?.temperature || 0.7,
-        max_tokens: options?.maxTokens || 2048,
-        stream: true,
-      });
-
-      return new StreamingTextResponse(response.toReadableStream());
-    }
-    
     const response = await openai.chat.completions.create({
       model: options?.model || 'gpt-3.5-turbo',
       messages: messages as any[],
