@@ -4,7 +4,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Dumbbell, Gauge, Clock, StickyNote } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,6 @@ interface WorkoutFormProps {
 
 export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormProps) {
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedWorkout, setGeneratedWorkout] = useState<WorkoutPlan | null>(null);
 
   // Pre-fill goal if user has one in health profile
   const userGoal = user?.healthProfile?.goal?.toLowerCase() || "";
@@ -95,7 +94,6 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
         preferredDays: ["Monday", "Wednesday", "Friday"], // Default to MWF schedule
         workoutDuration: values.duration,
         focusAreas: [], // Can be extended in future
-        // healthConditions: user.healthProfile?.healthConditions || [],
       };
       
       const result = await generateAiWorkout(params);
@@ -106,8 +104,6 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           ...result.workoutPlan,
           name: values.workoutName,
         };
-        
-        setGeneratedWorkout(workoutPlan);
         
         // Notify parent component
         if (onWorkoutGenerated) {
@@ -145,9 +141,19 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           name="workoutName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Workout Name</FormLabel>
+              <FormLabel className="flex items-center gap-2 text-base">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                Workout Name
+              </FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Summer Shred Program" {...field} />
+                <Input 
+                  placeholder="e.g. Summer Shred Program" 
+                  {...field} 
+                  className="h-11"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -160,10 +166,13 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
             name="goal"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Workout Goal</FormLabel>
+                <FormLabel className="flex items-center gap-2 text-base">
+                  <Dumbbell className="h-4 w-4" />
+                  Workout Goal
+                </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select goal" />
                     </SelectTrigger>
                   </FormControl>
@@ -185,10 +194,13 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
             name="experience"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Experience Level</FormLabel>
+                <FormLabel className="flex items-center gap-2 text-base">
+                  <Gauge className="h-4 w-4" />
+                  Experience Level
+                </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                   </FormControl>
@@ -209,20 +221,27 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           name="duration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Workout Duration: {field.value} minutes</FormLabel>
-              <FormControl>
-                <Slider
-                  min={10}
-                  max={120}
-                  step={5}
-                  defaultValue={[field.value]}
-                  onValueChange={(value) => field.onChange(value[0])}
-                  className="py-4"
-                />
-              </FormControl>
-              <FormDescription className="text-xs">
-                Choose workout duration between 10-120 minutes
-              </FormDescription>
+              <FormLabel className="flex items-center gap-2 text-base">
+                <Clock className="h-4 w-4" />
+                Workout Duration
+              </FormLabel>
+              <div className="pt-2 px-1">
+                <div className="flex justify-between text-sm mb-1">
+                  <span>10 min</span>
+                  <span className="font-medium">{field.value} min</span>
+                  <span>120 min</span>
+                </div>
+                <FormControl>
+                  <Slider
+                    min={10}
+                    max={120}
+                    step={5}
+                    defaultValue={[field.value]}
+                    onValueChange={(value) => field.onChange(value[0])}
+                    className="py-5"
+                  />
+                </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -233,7 +252,10 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           name="specialInstructions"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Special Instructions (Optional)</FormLabel>
+              <FormLabel className="flex items-center gap-2 text-base">
+                <StickyNote className="h-4 w-4" />
+                Special Instructions (Optional)
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Add any specific requirements or preferences for this workout"
@@ -248,26 +270,27 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
 
         <Button 
           type="submit" 
-          className="w-full"
+          className="w-full h-12 mt-2 text-base"
           disabled={isGenerating || !user}
         >
           {isGenerating ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               Generating Workout...
             </>
           ) : (
             <>
-              <Sparkles className="mr-2 h-4 w-4" />
+              <Sparkles className="mr-2 h-5 w-5" />
               Generate AI Workout
             </>
           )}
         </Button>
         
         {!user && (
-          <p className="text-sm text-center text-muted-foreground">
-            Select a client to create a personalized workout plan
-          </p>
+          <div className="text-sm text-center text-amber-600 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4">
+            <p className="font-medium">No Client Selected</p>
+            <p className="text-amber-700">Please select a client first to generate a workout plan</p>
+          </div>
         )}
       </form>
     </Form>

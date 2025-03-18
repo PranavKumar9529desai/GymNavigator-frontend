@@ -38,10 +38,12 @@ export interface WorkoutGenerationParams {
   userId: string;
   goals: string;
   fitnessLevel: string;
-  preferredDays: string[];
+  preferredDays?: string[];
   focusAreas?: string[];
   healthConditions?: string[];
   workoutDuration?: number;
+  equipment?: string[];
+  specialInstructions?: string;
 }
 
 /**
