@@ -2,7 +2,7 @@ import { queryClient } from '@/lib/getQueryClient';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { Allworkouts } from './_components/allworkouts';
-import { type MuscleGroup, fetchMuscles } from './actions/get-muscles';
+import { type MuscleGroup, fetchMuscles } from './_actions/get-muscles';
 
 export const metadata: Metadata = {
   title: 'All Workouts | Gym Navigator',

@@ -1,13 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { AssignedUser } from "../../../../assignedusers/GetuserassignedTotrainers";
 import { assignWorkoutPlan } from "../../_actions/assign-workout-plan";
 import type { WorkoutPlan } from "../../_actions/get-workout-plans";
+import CreateWOrkoutImaage from "../_assests/gemini-logo.png";
 import WorkoutSearchFilters from "./workout-search-filters";
-
 interface Props {
   user: AssignedUser;
   workoutPlans: WorkoutPlan[];
@@ -19,7 +20,8 @@ export default function UserWorkoutAssignmentDetails({
 }: Props) {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [isAssigning, setIsAssigning] = useState(false);
-  const [filteredWorkouts, setFilteredWorkouts] = useState<WorkoutPlan[]>(workoutPlans);
+  const [filteredWorkouts, setFilteredWorkouts] =
+    useState<WorkoutPlan[]>(workoutPlans);
 
   const handleAssignWorkout = async () => {
     if (!selectedPlan) {
@@ -43,35 +45,31 @@ export default function UserWorkoutAssignmentDetails({
     <div className="space-y-6">
       {/* User Profile Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
           <h2 className="text-xl font-semibold">User Profile</h2>
           <Link
-            href="/dashboard/trainer/workouts/createworkout"
-            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-medium rounded-md hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all"
+            href="/dashboard/trainer/workouts/assigncustomworkouts"
+            className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-sm font-medium rounded-md hover:from-violet-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-all sm:ml-auto w-full sm:w-auto justify-center sm:justify-start overflow-hidden shadow-lg hover:shadow-xl"
           >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <title>Add icon</title>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Create Custom Plan
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm">
+                <Image
+                  src={CreateWOrkoutImaage}
+                  alt="AI Workout"
+                  className="w-5 h-5 object-contain brightness-0 invert opacity-90"
+                />
+              </div>
+              <span className="font-medium tracking-wide">Custom Workout with AI</span>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-purple-500/20 backdrop-blur-[1px]" />
           </Link>
         </div>
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center shadow-inner">
-              <span className="text-2xl text-blue-600 font-semibold">{user.name[0]}</span>
+              <span className="text-2xl text-blue-600 font-semibold">
+                {user.name[0]}
+              </span>
             </div>
             <div>
               <h3 className="font-medium text-lg">{user.name}</h3>
@@ -85,15 +83,21 @@ export default function UserWorkoutAssignmentDetails({
               <div className="grid grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Height</p>
-                  <p className="font-medium text-gray-900">{user.HealthProfile.height} cm</p>
+                  <p className="font-medium text-gray-900">
+                    {user.HealthProfile.height} cm
+                  </p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Weight</p>
-                  <p className="font-medium text-gray-900">{user.HealthProfile.weight} kg</p>
+                  <p className="font-medium text-gray-900">
+                    {user.HealthProfile.weight} kg
+                  </p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Gender</p>
-                  <p className="font-medium text-gray-900">{user.HealthProfile.gender}</p>
+                  <p className="font-medium text-gray-900">
+                    {user.HealthProfile.gender}
+                  </p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Goal</p>
@@ -110,9 +114,9 @@ export default function UserWorkoutAssignmentDetails({
       </div>
 
       {/* Search and Filters */}
-      <WorkoutSearchFilters 
-        workoutPlans={workoutPlans} 
-        onFilterChange={setFilteredWorkouts} 
+      <WorkoutSearchFilters
+        workoutPlans={workoutPlans}
+        onFilterChange={setFilteredWorkouts}
       />
 
       {/* Workout Plans Section */}
@@ -124,45 +128,71 @@ export default function UserWorkoutAssignmentDetails({
               Select a plan to assign to {user.name}
             </p>
           </div>
-          <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-            {filteredWorkouts.length} plans found
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="hidden md:inline text-sm text-gray-600">
+              Total:
+            </span>
+            <span className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+              {filteredWorkouts.length}
+            </span>
+          </div>
         </div>
 
         <div className="space-y-4">
           {filteredWorkouts.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">No workout plans match your filters</p>
+              <p className="text-gray-500">
+                No workout plans match your filters
+              </p>
             </div>
           ) : (
             filteredWorkouts.map((plan) => (
               <button
                 key={plan.id}
                 type="button"
-                className={`w-full text-left p-4 border rounded-lg transition-all ${
+                className={`group w-full text-left p-4 border rounded-lg transition-all ${
                   selectedPlan === plan.id
                     ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
                     : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
                 }`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{plan.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{plan.description}</p>
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-medium text-gray-900 truncate pr-4">
+                        {plan.name}
+                      </h3>
+                      <div className="flex items-center gap-2 sm:hidden">
+                        <span className="shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                          {plan.schedules.length}
+                          <span className="ml-1 hidden xs:inline">days</span>
+                        </span>
+                      </div>
+                    </div>
+                    {plan.description && (
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                        {plan.description}
+                      </p>
+                    )}
                   </div>
-                  <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-                    {plan.schedules.length} days
-                  </span>
+                  <div className="hidden sm:block shrink-0">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
+                      {plan.schedules.length} days
+                    </span>
+                  </div>
                 </div>
-                
-                <div className="mt-3 flex flex-wrap gap-2">
+
+                <div className="mt-3 flex flex-wrap gap-1.5">
                   {plan.schedules.map((schedule) => (
                     <span
                       key={schedule.id}
-                      className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-700"
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 group-hover:bg-gray-200 transition-colors"
                     >
-                      {schedule.dayOfWeek} • {schedule.muscleTarget}
+                      <span className="w-[1.125rem] h-[1.125rem] flex items-center justify-center rounded-full bg-gray-700 text-white mr-1.5">
+                        {schedule.dayOfWeek[0]}
+                      </span>
+                      {schedule.muscleTarget}
                     </span>
                   ))}
                 </div>
@@ -174,24 +204,26 @@ export default function UserWorkoutAssignmentDetails({
         <div className="mt-6 flex items-center justify-between">
           <Link
             href="/dashboard/trainer/workouts/createworkout"
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center"
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center group"
           >
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <title>Create new plan icon</title>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
+            <span className="w-5 h-5 mr-2 rounded-full bg-blue-100 text-blue-600 inline-flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <title>Create new plan icon</title>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </span>
             Create New Plan
           </Link>
           <button
