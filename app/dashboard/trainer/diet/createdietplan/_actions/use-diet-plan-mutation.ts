@@ -18,6 +18,26 @@ interface DietPlanResponse {
 	// Add other fields from backend response
 }
 
+// Define the missing DietPlanInput type
+export interface DietPlanInput {
+  name: string;
+  description: string;
+  totalCalories: number;
+  meals: Meal[];
+  clientId?: number;
+}
+
+export interface Meal {
+  name: string;
+  foods: Food[];
+}
+
+export interface Food {
+  name: string;
+  quantity: string;
+  calories: number;
+}
+
 export function useDietPlanMutation() {
 	const queryClient = useQueryClient();
 
@@ -64,7 +84,7 @@ export function useDietPlanMutation() {
 
 			return response.data.data as DietPlanResponse;
 		},
-		onSuccess: (data, variables) => {
+		onSuccess: (_, variables) => {
 			// Update the diet plan in the cache
 			queryClient.invalidateQueries({ queryKey: ["dietPlans"] });
 			queryClient.invalidateQueries({ queryKey: ["dietPlan", variables.id] });
@@ -81,3 +101,11 @@ export function useDietPlanMutation() {
 		updateDietPlanMutation,
 	};
 }
+
+// Add proper types to parameters
+export const calculateTotalCalories = (meals: Meal[]): number => {
+  return meals.reduce((total, meal: Meal, index: number) => {
+    // ...existing code...
+    return total;
+  }, 0);
+};

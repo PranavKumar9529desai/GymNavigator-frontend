@@ -4,7 +4,7 @@ import { generateStructuredContent } from '@/lib/AI/client';
 import { validateResponseWithSchema } from '@/lib/AI/schema-validation';
 import { WorkoutPlanSchema, type WorkoutPlan } from '@/lib/AI/types/workout-types';
 import { buildWorkoutPlanPrompt } from '@/lib/AI/prompts/workout-prompts';
-import { getUserById } from '@/app/dashboard/trainer/assignedusers/_actions/get-user';
+import { getUserById } from '../../../_lib/user-service';
 
 export interface WorkoutGenerationParams {
   userId: string;
@@ -61,5 +61,18 @@ export async function regenerateWorkoutWithFeedback(
 ) {
   // Implementation for regenerating with feedback
   // Similar to the generateWorkoutPlan but using the feedback-specific prompt
-  // ...
+  console.log(`Will regenerate plan with feedback: ${feedback}`);
+  
+  try {
+    // Placeholder - In the real implementation, this would use the feedback
+    return await generateWorkoutPlan({
+      userId,
+      specialInstructions: `Original plan was modified based on feedback: ${feedback}`,
+    });
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to regenerate workout plan',
+    };
+  }
 }

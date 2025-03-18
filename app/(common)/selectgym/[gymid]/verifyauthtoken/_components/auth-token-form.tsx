@@ -55,7 +55,7 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error : unknown) {
       toast({
         title: "Error",
         description: "An error occurred during verification",

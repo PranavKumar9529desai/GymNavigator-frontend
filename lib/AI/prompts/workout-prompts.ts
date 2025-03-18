@@ -1,87 +1,65 @@
-import type { AssignedUser } from '@/app/dashboard/trainer/workouts/assignworkout/GetuserassignedTotrainers';
+import { WorkoutGenerationParams } from "@/app/dashboard/trainer/workouts/assigncustomworkoutswithai/_actions/generate-ai-workout";
 
 /**
- * Generate a workout plan for a user based on their profile and trainer preferences
+ * Generate a workout plan prompt based on user parameters
  */
-export function buildWorkoutPlanPrompt(
-  user: AssignedUser, 
-  trainerPreferences: {
-    focusAreas?: string[];
-    daysPerWeek?: number;
-    sessionDuration?: number;
-    equipment?: string[];
-    intensity?: 'beginner' | 'intermediate' | 'advanced';
-    specialInstructions?: string;
-  }
-) {
+export function generateWorkoutPrompt(params: WorkoutGenerationParams): string {
   const {
+    goals,
+    fitnessLevel,
+    preferredDays,
     focusAreas = [],
-    daysPerWeek = 4,
-    sessionDuration = 60,
-    equipment = ['Dumbbells', 'Barbells', 'Machines'],
-    intensity = 'intermediate',
-    specialInstructions = '',
-  } = trainerPreferences;
+    healthConditions = [],
+    workoutDuration = 45
+  } = params;
 
-  // Extract health profile data safely
-  const healthProfile = user.HealthProfile || {};
-  const height = healthProfile.height || 'Unknown';
-  const weight = healthProfile.weight || 'Unknown';
-  const gender = healthProfile.gender || user.gender || 'Unknown';
-  const goal = healthProfile.goal || user.goal || 'General fitness';
+  // Format focus areas for the prompt
+  const focusAreasText = focusAreas.length 
+    ? `with special focus on: ${focusAreas.join(', ')}` 
+    : '';
+  
+  // Format health conditions for the prompt
+  const healthConditionsText = healthConditions.length 
+    ? `The user has the following health conditions to consider: ${healthConditions.join(', ')}.` 
+    : '';
+  
+  // Format preferred days
+  const daysPerWeek = preferredDays.length;
+  const daysText = preferredDays.length > 0 
+    ? `on these specific days: ${preferredDays.join(', ')}`
+    : `${daysPerWeek} days per week`;
 
   return `
-Create a personalized workout plan for a client with the following profile:
-- Gender: ${gender}
-- Weight: ${weight} kg
-- Height: ${height} cm
-- Fitness goal: ${goal}
-- Fitness level: ${intensity}
+Create a personalized workout plan for a ${fitnessLevel} level client with the primary goal of ${goals} ${focusAreasText}.
+The workout plan should be designed for ${daysPerWeek} days per week ${daysText}, with each workout lasting approximately ${workoutDuration} minutes.
+${healthConditionsText}
 
-The workout plan should focus on these areas: ${focusAreas.join(', ') || 'balanced full body training'}
-
-Available equipment:
-${equipment.map(e => `- ${e}`).join('\n')}
-
-Parameters:
-- ${daysPerWeek} days per week
-- ${sessionDuration} minutes per session
-
-${specialInstructions ? `Special instructions: ${specialInstructions}` : ''}
-
-RESPONSE FORMAT:
-You must respond with a valid JSON object that strictly follows this schema:
+Provide a complete workout plan in JSON format with the following structure:
 {
-  "name": "Name of the workout plan",
-  "description": "Brief overview of the plan",
+  "name": "Descriptive name for the workout plan",
+  "description": "Brief overview of the workout plan and its benefits",
   "schedules": [
     {
-      "dayOfWeek": "Monday", // Must be a valid day of week
-      "muscleTarget": "Chest & Triceps", // Muscle group targeted
-      "duration": 60, // Duration in minutes (number)
-      "calories": 350, // Estimated calories burned (number)
+      "dayOfWeek": "Monday",
+      "muscleTarget": "Primary muscle groups targeted",
+      "duration": duration in minutes,
+      "calories": estimated calories burned,
       "exercises": [
         {
-          "name": "Bench Press", // Exercise name
-          "sets": 3, // Number of sets (number)
-          "reps": "8-10", // Repetition range (string)
-          "description": "Instructions for the exercise",
-          "order": 1 // Exercise order (number)
+          "name": "Exercise name",
+          "sets": number of sets,
+          "reps": "repetition scheme (e.g. '10-12' or '3x10')",
+          "description": "Brief description of how to perform the exercise",
+          "order": 0
         }
-        // Include 4-8 exercises per day
+        // Additional exercises...
       ]
     }
-    // Include schedules for each training day
+    // Additional workout days...
   ]
 }
 
-IMPORTANT:
-1. Respond ONLY with the JSON. No introduction or explanations.
-2. Ensure all required fields are included and properly typed.
-3. Structure the workout to match the client's fitness level (${intensity}).
-4. Include a mix of compound and isolation exercises.
-5. Include proper warm-up and cool-down exercises.
-6. Consider the client's goals: ${goal}
+Please ensure the workout plan follows best practices for exercise selection, sequencing, and recovery. Include appropriate warm-up and cool-down recommendations.
 `;
 }
 

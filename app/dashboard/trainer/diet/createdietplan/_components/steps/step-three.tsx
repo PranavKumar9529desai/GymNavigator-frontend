@@ -7,7 +7,6 @@ import MealList from "../meals/meal-list";
 
 interface StepThreeProps {
 	dietPlan: DietPlanInterface;
-	setDietPlan: React.Dispatch<React.SetStateAction<DietPlanInterface>>;
 	currentMeal: MealInterface;
 	setCurrentMeal: React.Dispatch<React.SetStateAction<MealInterface>>;
 	addMeal: () => void;
@@ -17,7 +16,6 @@ interface StepThreeProps {
 
 export default function StepThree({
 	dietPlan,
-	setDietPlan,
 	currentMeal,
 	setCurrentMeal,
 	addMeal,

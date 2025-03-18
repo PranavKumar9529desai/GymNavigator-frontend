@@ -30,6 +30,13 @@ export default function MealForm({ currentMeal, setCurrentMeal, addMeal }: MealF
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addIngredient();
+    }
+  };
+
   const removeIngredient = (index: number) => {
     setCurrentMeal((prev) => ({
       ...prev,
@@ -160,21 +167,21 @@ export default function MealForm({ currentMeal, setCurrentMeal, addMeal }: MealF
             value={newIngredient}
             onChange={(e) => setNewIngredient(e.target.value)}
             placeholder="Add ingredient"
-            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addIngredient())}
+            onKeyDown={handleKeyDown}
           />
           <Button onClick={addIngredient} type="button">
             Add
           </Button>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
-          {currentMeal.ingredients.map((ingredient, index) => (
+          {currentMeal.ingredients.map((ingredient) => (
             <div
-              key={`ingredient-${index}`}
+              key={`ingredient-${ingredient}`}
               className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-2"
             >
               <span>{ingredient}</span>
               <button
-                onClick={() => removeIngredient(index)}
+                onClick={() => removeIngredient(currentMeal.ingredients.indexOf(ingredient))}
                 className="text-gray-500 hover:text-red-500"
                 type="button"
                 aria-label={`Remove ${ingredient}`}

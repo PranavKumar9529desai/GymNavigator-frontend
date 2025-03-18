@@ -48,7 +48,7 @@ export default function UserWorkoutAssignmentDetails({
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
           <h2 className="text-xl font-semibold">User Profile</h2>
           <Link
-            href="/dashboard/trainer/workouts/assigncustomworkouts"
+            href={`/dashboard/trainer/workouts/assigncustomworkoutswithai?userId=${user.id}`}
             className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white text-sm font-medium rounded-md hover:from-violet-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-all sm:ml-auto w-full sm:w-auto justify-center sm:justify-start overflow-hidden shadow-lg hover:shadow-xl"
           >
             <div className="relative z-10 flex items-center gap-3">
@@ -59,7 +59,9 @@ export default function UserWorkoutAssignmentDetails({
                   className="w-5 h-5 object-contain brightness-0 invert opacity-90"
                 />
               </div>
-              <span className="font-medium tracking-wide">Custom Workout with AI</span>
+              <span className="font-medium tracking-wide">
+                Custom Workout with AI
+              </span>
             </div>
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-purple-500/20 backdrop-blur-[1px]" />
           </Link>

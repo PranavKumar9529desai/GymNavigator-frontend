@@ -2,6 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import type { Excercisetype } from '../../actions/getSIngleMuscle';
 
+// Define interface for the API response exercise structure
+interface ExerciseApiResponse {
+  name: string;
+  image_url?: string;
+  instructions?: string;
+  video_url?: string;
+  MuscleGroup?: {
+    id?: number;
+    name?: string;
+    image_url?: string;
+  };
+  muscle_image?: string;
+}
+
 async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
   try {
     const response = await axios.get(
@@ -27,7 +41,7 @@ async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
     console.log(`Found ${exercises.length} exercises for ${muscleName}`);
 
     // Transform data with robust error handling
-    return exercises.map((exercise: any) => ({
+    return exercises.map((exercise: ExerciseApiResponse) => ({
       name: exercise.name || 'Unknown Exercise',
       img: exercise.image_url || '',
       instructions: exercise.instructions || 'No instructions available',

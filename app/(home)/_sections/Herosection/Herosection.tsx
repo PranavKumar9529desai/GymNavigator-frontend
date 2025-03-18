@@ -165,7 +165,7 @@ export default function Herosection() {
               <div className="grid grid-cols-2 gap-6">
                 {dashboardCards.map((card, i) => (
                   <GradientCard
-                    key={i}
+                    key={i as number}
                     icon={card.icon}
                     title={card.title}
                     value={card.value}

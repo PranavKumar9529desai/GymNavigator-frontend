@@ -10,6 +10,12 @@ export interface AssignDietPlanInput {
   dietPlanId: number;
 }
 
+// Define interface for user data structure
+interface UserData {
+  dietPlanId?: number;
+  [key: string]: unknown; // For other properties in the user data
+}
+
 export function useAssignDietPlan() {
   const queryClient = useQueryClient();
   
@@ -41,7 +47,7 @@ export function useAssignDietPlan() {
       const previousUserData = queryClient.getQueryData(['user', newAssignment.userId]);
       
       // Optimistically update the cache
-      queryClient.setQueryData(['user', newAssignment.userId], (old: any) => {
+      queryClient.setQueryData(['user', newAssignment.userId], (old: UserData | undefined) => {
         if (!old) return old;
         return {
           ...old,
@@ -53,7 +59,7 @@ export function useAssignDietPlan() {
       // Return context with previous values
       return { previousUserData };
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       // Update queries that may be affected
       queryClient.invalidateQueries({ 
         queryKey: ['user', variables.userId] 

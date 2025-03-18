@@ -28,13 +28,13 @@ const AuthTokenSuccess = dynamic(
 );
 
 // Update path - now referencing local _components folder correctly
-const GymAuthForm = dynamic(
-  () =>
-    import("./_components/auth-token-form").then((mod) => mod.AuthTokenForm),
-  {
-    loading: () => <GymFormSkeleton />,
-  }
-);
+// const GymAuthForm = dynamic(
+//   () =>
+//     import("./_components/auth-token-form").then((mod) => mod.AuthTokenForm),
+//   {
+//     loading: () => <GymFormSkeleton />,
+//   }
+// );
 
 function GymFormSkeleton() {
   return (
