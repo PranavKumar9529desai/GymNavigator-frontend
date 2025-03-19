@@ -101,15 +101,25 @@ export default async function AssignCustomWorkoutsWithAI({
           </div>
         </div>
         <Tabs defaultValue="generate" className="space-y-6">
-          <div className="bg-background sticky top-0 z-10 pb-2 pt-1 backdrop-blur-sm border-b">
-            <TabsList className="w-full max-w-md mx-auto">
-              <TabsTrigger value="generate" className="flex-1">
-                Generate
-              </TabsTrigger>
-              <TabsTrigger value="history" className="flex-1">
-                History
-              </TabsTrigger>
-            </TabsList>
+          <div className="sticky top-0 z-10 pb-2 pt-1 bg-background/80 backdrop-blur-sm border-b border-indigo-100/20">
+            <div className="container max-w-5xl mx-auto px-4">
+              <div className="flex justify-center">
+                <TabsList className="w-full max-w-md bg-gradient-to-r from-indigo-50 to-blue-50/50 border border-indigo-100/50 shadow-sm rounded-lg">
+                  <TabsTrigger 
+                    value="generate" 
+                    className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  >
+                    Generate
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="history" 
+                    className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                  >
+                    History
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+            </div>
           </div>
 
           <TabsContent
