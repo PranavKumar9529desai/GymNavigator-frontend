@@ -7,12 +7,13 @@ import type {
   WorkoutSchedule,
 } from "../../_actions/generate-ai-workout";
 import { refineWorkout } from "../../_actions/refine-workout";
+import { useWorkoutChatStore } from "../../_store/workout-chat-store";
 
-import WorkoutHeader from "./workout-header";
+import ActionButtons from "./action-buttons";
 import FeedbackSection from "./feedback-section";
 import WeeklyScheduleTabs from "./weekly-schedule-tabs";
 import WorkoutDayDetails from "./workout-day-details";
-import ActionButtons from "./action-buttons";
+import WorkoutHeader from "./workout-header";
 
 interface WorkoutResultsProps {
   workoutPlan: WorkoutPlan;
@@ -20,6 +21,7 @@ interface WorkoutResultsProps {
   onDiscard: () => void;
   isLoading?: boolean;
   userId: string;
+  userName?: string;
 }
 
 export default function WorkoutResults({
@@ -28,6 +30,7 @@ export default function WorkoutResults({
   onDiscard,
   isLoading = false,
   userId,
+  userName = "Client", // Default name if not provided
 }: WorkoutResultsProps) {
   const [plan, setPlan] = useState<WorkoutPlan>(workoutPlan);
   const [editMode, setEditMode] = useState(false);
@@ -36,34 +39,52 @@ export default function WorkoutResults({
   );
   const tabsRef = useRef<HTMLDivElement>(null);
 
-  // Feedback state
-  const [showFeedbackChat, setShowFeedbackChat] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState<
-    Array<{
-      type: "ai" | "user";
-      message: string;
-      workout?: WorkoutPlan;
-      timestamp: Date;
-    }>
-  >([]);
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
-  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  // Fetch state and actions from Zustand store
+  const {
+    conversationHistory,
+    isSubmittingFeedback,
+    feedbackError,
+    showFeedbackChat,
+    initializeConversation,
+    addUserMessage,
+    addAIMessage,
+    setSubmittingFeedback,
+    setFeedbackError,
+    toggleFeedbackChat,
+    setShowFeedbackChat,
+    saveWorkoutToHistory
+  } = useWorkoutChatStore();
 
   // Initialize conversation with initial workout
   useEffect(() => {
-    setConversationHistory([
-      {
-        type: "ai",
-        message:
-          "Here's your personalized workout plan. Let me know if you'd like any modifications!",
-        workout: workoutPlan,
-        timestamp: new Date(),
-      },
-    ]);
-  }, [workoutPlan]);
+    initializeConversation(workoutPlan);
+  }, [workoutPlan, initializeConversation]);
 
   const handleSave = () => {
-    onSave(plan);
+    try {
+      // Save workout with conversation history to localStorage
+      const workoutId = saveWorkoutToHistory(plan, userId, userName);
+      
+      // Log success with workout ID
+      console.log("Workout saved successfully with ID:", workoutId);
+      console.log("Conversation history saved:", conversationHistory);
+      
+      // Call the parent's onSave with the updated plan
+      onSave(plan);
+      
+      // Show success toast
+      toast({
+        title: "Workout Saved",
+        description: "Workout plan has been saved successfully with conversation history.",
+      });
+    } catch (error) {
+      console.error("Error saving workout:", error);
+      toast({
+        title: "Error Saving",
+        description: "There was a problem saving your workout plan.",
+        variant: "destructive",
+      });
+    }
   };
 
   const updateSchedule = (index: number, updatedSchedule: WorkoutSchedule) => {
@@ -76,26 +97,17 @@ export default function WorkoutResults({
   const handleSendFeedback = async (feedback: string) => {
     try {
       setFeedbackError(null);
-      setIsSubmittingFeedback(true);
+      setSubmittingFeedback(true);
 
       // Add user's feedback to conversation history
-      const newHistory = [
-        ...conversationHistory,
-        {
-          type: "user",
-          message: feedback,
-          timestamp: new Date(),
-        },
-      ];
-
-      setConversationHistory(newHistory);
+      addUserMessage(feedback);
 
       // Call server action to refine workout
       const result = await refineWorkout({
         userId,
         originalWorkoutPlan: plan,
         feedback,
-        conversationHistory: newHistory.map(({ type, message, timestamp }) => ({
+        conversationHistory: conversationHistory.map(({ type, message, timestamp }) => ({
           type,
           message,
           timestamp,
@@ -104,18 +116,11 @@ export default function WorkoutResults({
 
       if (result.success && result.workoutPlan) {
         // Add AI's response to conversation history
-        const updatedHistory = [
-          ...newHistory,
-          {
-            type: "ai",
-            message:
-              "I've refined the workout plan based on your feedback. Here's the updated version!",
-            workout: result.workoutPlan,
-            timestamp: new Date(),
-          },
-        ];
-
-        setConversationHistory(updatedHistory);
+        addAIMessage(
+          "I've refined the workout plan based on your feedback. Here's the updated version!",
+          result.workoutPlan
+        );
+        
         setPlan(result.workoutPlan);
 
         toast({
@@ -141,7 +146,7 @@ export default function WorkoutResults({
         variant: "destructive",
       });
     } finally {
-      setIsSubmittingFeedback(false);
+      setSubmittingFeedback(false);
     }
   };
 
@@ -164,10 +169,6 @@ export default function WorkoutResults({
       // Add logging to help debug
       console.log(`Scrolling ${direction}: ${currentScroll} -> ${currentScroll + scrollAmount}`);
     }
-  };
-
-  const toggleFeedbackChat = () => {
-    setShowFeedbackChat(!showFeedbackChat);
   };
 
   return (

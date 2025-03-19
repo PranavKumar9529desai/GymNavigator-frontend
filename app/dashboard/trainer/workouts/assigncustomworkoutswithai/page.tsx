@@ -6,7 +6,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getUserById } from "./_actions/get-user-by-id";
 import type { UserData } from "./_actions/get-user-by-id";
+import { getWorkoutHistory } from "./_actions/get-workout-history";
 import ClientWorkoutGenerator from "./_components/client display/client-workout-generator";
+import { WorkoutHistoryProvider } from "./_components/history/workout-history-provider";
 
 export default async function AssignCustomWorkoutsWithAI({
   searchParams,
@@ -16,7 +18,7 @@ export default async function AssignCustomWorkoutsWithAI({
   // Next.js 15.2 requires awaiting searchParams before accessing properties
   const params = await searchParams;
   const userId = params.userId || "defaultUserId";
-  
+
   const response = await getUserById(userId);
   // Fix type error by ensuring user is strictly UserData | null (not undefined)
   const user: UserData | null =
@@ -45,14 +47,16 @@ export default async function AssignCustomWorkoutsWithAI({
             </div>
             <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className="flex items-center justify-center opacity-20"
-                  style={{ 
-                    transform: `translate(${Math.random() * 100 - 50}%, ${Math.random() * 100 - 50}%)`,
-                    position: 'absolute',
+                  style={{
+                    transform: `translate(${Math.random() * 100 - 50}%, ${
+                      Math.random() * 100 - 50
+                    }%)`,
+                    position: "absolute",
                     left: `${(i % 4) * 25}%`,
-                    top: `${Math.floor(i / 4) * 33}%`
+                    top: `${Math.floor(i / 4) * 33}%`,
                   }}
                 >
                   <Dumbbell className="h-8 w-8" strokeWidth={1} />
@@ -60,24 +64,26 @@ export default async function AssignCustomWorkoutsWithAI({
               ))}
             </div>
           </div>
-          
+
           {/* Glowing effects */}
-          <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl"></div>
-          
+          <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl" />
+
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
               <Zap className="h-4 w-4" />
               AI-Powered Workout Builder
             </div>
-            
+
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
-              Craft <span className="text-blue-200">Perfect Workouts</span> in Seconds
+              Craft <span className="text-blue-200">Perfect Workouts</span> in
+              Seconds
             </h1>
-            
+
             <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
-              Let our AI design personalized workout plans tailored to your client's specific goals
-              and fitness level — turning hours of planning into moments.
+              Let our AI design personalized workout plans tailored to your
+              client's specific goals and fitness level — turning hours of
+              planning into moments.
             </p>
 
             {/* Decorative icons */}
@@ -94,55 +100,75 @@ export default async function AssignCustomWorkoutsWithAI({
             </div>
           </div>
         </div>
-
         <Tabs defaultValue="generate" className="space-y-6">
           <div className="bg-background sticky top-0 z-10 pb-2 pt-1 backdrop-blur-sm border-b">
             <TabsList className="w-full max-w-md mx-auto">
-              <TabsTrigger value="generate" className="flex-1">Generate</TabsTrigger>
-              <TabsTrigger value="history" className="flex-1">History</TabsTrigger>
+              <TabsTrigger value="generate" className="flex-1">
+                Generate
+              </TabsTrigger>
+              <TabsTrigger value="history" className="flex-1">
+                History
+              </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="generate" className="space-y-6 mt-6 focus-visible:outline-none focus-visible:ring-0">
-            <Suspense fallback={
-              <div className="space-y-4">
-                <Skeleton className="h-8 w-64" />
-                <Skeleton className="h-64 w-full" />
-              </div>
-            }>
+          <TabsContent
+            value="generate"
+            className="space-y-6 mt-6 focus-visible:outline-none focus-visible:ring-0"
+          >
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-64" />
+                  <Skeleton className="h-64 w-full" />
+                </div>
+              }
+            >
               <ClientWorkoutGenerator user={user} />
             </Suspense>
           </TabsContent>
 
-          <TabsContent value="history" className="focus-visible:outline-none focus-visible:ring-0">
-            <Card className="p-6 sm:p-8">
-              <h3 className="text-xl font-medium mb-4">
-                Previously Generated Workouts
-              </h3>
-              {/* Workout history UI will be implemented later */}
-              <div className="py-12 text-center bg-muted/20 rounded-lg">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-muted mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground">
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                    <line x1="16" x2="16" y1="2" y2="6" />
-                    <line x1="8" x2="8" y1="2" y2="6" />
-                    <line x1="3" x2="21" y1="10" y2="10" />
-                    <path d="M8 14h.01" />
-                    <path d="M12 14h.01" />
-                    <path d="M16 14h.01" />
-                    <path d="M8 18h.01" />
-                    <path d="M12 18h.01" />
-                    <path d="M16 18h.01" />
-                  </svg>
+          <TabsContent
+            value="history"
+            className="focus-visible:outline-none focus-visible:ring-0"
+          >
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <Skeleton className="h-8 w-64" />
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <Skeleton key={i} className="h-24 w-full" />
+                    ))}
+                  </div>
                 </div>
-                <p className="text-muted-foreground">
-                  You haven't generated any workouts yet.
-                </p>
-              </div>
-            </Card>
+              }
+            >
+              <HistoryContent userId={userId} />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+}
+
+// Update the HistoryContent component
+async function HistoryContent({ userId }: { userId: string }) {
+  // Get server fallback history data
+  const historyResponse = await getWorkoutHistory(userId);
+  const serverFallbackHistory =
+    historyResponse.success && historyResponse.data ? historyResponse.data : [];
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-xl font-medium">Previously Generated Workouts</h3>
+
+      {/* Use the client component to access localStorage */}
+      <WorkoutHistoryProvider
+        userId={userId}
+        serverFallbackHistory={serverFallbackHistory}
+      />
     </div>
   );
 }

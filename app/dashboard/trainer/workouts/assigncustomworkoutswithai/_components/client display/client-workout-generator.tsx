@@ -7,9 +7,9 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
 import type { UserData } from "../../_actions/get-user-by-id";
-import ClientDisplay from "./client-display";
 import WorkoutForm from "../workout-form/workout-form";
 import WorkoutResults from "../workout-result/workout-results";
+import ClientDisplay from "./client-display";
 
 interface ClientWorkoutGeneratorProps {
   user: UserData | null;
