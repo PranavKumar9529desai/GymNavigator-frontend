@@ -64,12 +64,12 @@ export function WorkoutHistoryProvider({
   return (
     <>
       {/* Show debug info about data source */}
-      <div className="text-xs text-muted-foreground mb-4">
+      {/* <div className="text-xs text-muted-foreground mb-4">
         Showing {history.length} workout(s)
         {history.length > 0 && history[0].id.startsWith("workout-")
           ? " from localStorage"
           : " from server"}
-      </div>
+      </div> */}
 
       <WorkoutHistory
         history={history}

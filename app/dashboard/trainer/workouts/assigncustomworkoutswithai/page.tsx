@@ -105,14 +105,14 @@ export default async function AssignCustomWorkoutsWithAI({
             <div className="container max-w-5xl mx-auto px-4">
               <div className="flex justify-center">
                 <TabsList className="w-full max-w-md bg-gradient-to-r from-indigo-50 to-blue-50/50 border border-indigo-100/50 shadow-sm rounded-lg">
-                  <TabsTrigger 
-                    value="generate" 
+                  <TabsTrigger
+                    value="generate"
                     className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
                   >
                     Generate
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="history" 
+                  <TabsTrigger
+                    value="history"
                     className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
                   >
                     History

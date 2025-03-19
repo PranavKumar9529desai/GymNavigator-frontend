@@ -193,10 +193,10 @@ export default function WorkoutHistory({
             }) : "None"}
           </div>
         </div>
-        <div className="bg-muted/20 rounded-lg p-3">
+        {/* <div className="bg-muted/20 rounded-lg p-3">
           <div className="text-xs text-muted-foreground">Data Source</div>
           <div className="text-2xl font-semibold truncate capitalize">{dataSource}</div>
-        </div>
+        </div> */}
       </div>
 
       {/* View toggle */}
