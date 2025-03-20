@@ -75,7 +75,7 @@ export const getTodaysWorkout = async (): Promise<AssignedWorkout[]> => {
     const response: AxiosResponse<ApiResponse> = await clientAxios.get("/workout/myworkouts/get-todays-workout");
     
     // Log the raw response to see its structure
-    console.log("Raw API response:", JSON.stringify(response.data, null, 2));
+    console.log("Raw API response:", response.data);
     
     // Check for response structure
     if (!response.data) {

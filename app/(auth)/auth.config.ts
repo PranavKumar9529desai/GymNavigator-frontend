@@ -134,12 +134,10 @@ export default {
           name?: string;
           role?: string;
         };
-        console.log('credentials are', credentials);
 
         // Determine if this is sign-up or sign-in
         const isSignUp = Boolean(role && name);
-        console.log(`Attempting ${isSignUp ? 'sign-up' : 'sign-in'} for email:`, email);
-        console.log('isSignUp is', isSignUp);
+      
         try {
           // Route to appropriate handler
           if (isSignUp && role && name) {
@@ -277,7 +275,6 @@ export default {
           }
 
           // After successful signup, proceed with signin
-          console.log('Signing in with Google after account creation:', user.email);
           const response = await SigninGoogleSA(user.email);
 
           if (response.success && response.data) {
@@ -303,9 +300,7 @@ export default {
 
         // Handle the case where the user exists
         if (userFromDb.success && userFromDb.data && userFromDb.data.exists) {
-          console.log('Existing Google user, signing in:', user.email);
           const response: ApiResult<SigninResponseType> = await SigninGoogleSA(user.email);
-          console.log('Response from Google signin:', response);
 
           if (response.success && response.data) {
             // Store the user data from the backend in the user object
@@ -361,12 +356,10 @@ export default {
       if (trigger === 'update' && session) {
         return { ...token, ...session };
       }
-      console.log('token is from the jwt callback', token);
       return token;
     },
 
     async session({ session, token }) {
-      console.log('token received from the session callback', token);
       if (token) {
         // Structure session according to the defined type
         session.user.id = token.sub as string;
@@ -378,7 +371,6 @@ export default {
           session.accessToken = token.accessToken as string;
         }
       }
-      console.log('session from the sesion callback', session);
       return session;
     },
   },

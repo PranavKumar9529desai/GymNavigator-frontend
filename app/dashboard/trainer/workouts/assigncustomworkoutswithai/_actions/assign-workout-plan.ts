@@ -51,29 +51,26 @@ export async function assignCustomWorkoutPlan(
 
   try {
     // Create and assign a workout plan to the user in one request
-    const response = await trainerAxios.post(
-      "/workouts/customworkoutplan",
-      {
-        userId,
-        workoutPlan: {
-          name: workoutPlan.name,
-          description: workoutPlan.description,
-          schedules: workoutPlan.schedules.map((schedule) => ({
-            dayOfWeek: schedule.dayOfWeek,
-            muscleTarget: schedule.muscleTarget,
-            duration: schedule.duration,
-            calories: schedule.calories,
-            exercises: schedule.exercises.map((exercise) => ({
-              name: exercise.name,
-              sets: exercise.sets,
-              reps: exercise.reps,
-              description: exercise.description,
-              order: exercise.order,
-            })),
+    const response = await trainerAxios.post("/workouts/customworkoutplan", {
+      userId,
+      workoutPlan: {
+        name: workoutPlan.name,
+        description: workoutPlan.description,
+        schedules: workoutPlan.schedules.map((schedule) => ({
+          dayOfWeek: schedule.dayOfWeek,
+          muscleTarget: schedule.muscleTarget,
+          duration: schedule.duration,
+          calories: schedule.calories,
+          exercises: schedule.exercises.map((exercise) => ({
+            name: exercise.name,
+            sets: exercise.sets,
+            reps: exercise.reps,
+            description: exercise.description,
+            order: exercise.order,
           })),
-        },
-      }
-    );
+        })),
+      },
+    });
 
     if (!response.data.success) {
       throw new Error(
@@ -86,7 +83,7 @@ export async function assignCustomWorkoutPlan(
       workoutPlanId: response.data.workoutPlanId,
       msg: response.data.msg,
       previousPlan: response.data.previousPlan,
-      newPlan: response.data.newPlan
+      newPlan: response.data.newPlan,
     };
   } catch (error) {
     console.error("Error assigning custom workout plan:", error);
@@ -96,7 +93,7 @@ export async function assignCustomWorkoutPlan(
       msg: "Failed to assign workout plan",
       error: error instanceof Error ? error.message : "Unknown error",
       previousPlan: null,
-      newPlan: { id: -1, name: "", description: null }
+      newPlan: { id: -1, name: "", description: null },
     };
   }
 }
