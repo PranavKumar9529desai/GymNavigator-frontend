@@ -1,23 +1,33 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
 import type { UserData } from "../../_actions/get-user-by-id";
+import { useWorkoutViewStore } from "../../_store/workout-view-store";
 import WorkoutForm from "../workout-form/workout-form";
 import WorkoutResults from "../workout-result/workout-results";
 import ClientDisplay from "./client-display";
 
+interface GeneratedWorkout {
+  clientName: string;
+  workoutPlan: WorkoutPlan;
+}
+
 interface ClientWorkoutGeneratorProps {
   user: UserData | null;
+  onWorkoutGenerated?: (workout: GeneratedWorkout) => void;
 }
 
 export default function ClientWorkoutGenerator({
   user,
+  onWorkoutGenerated,
 }: ClientWorkoutGeneratorProps) {
+  const { toast } = useToast();
+  const { loadWorkout } = useWorkoutViewStore();
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -31,12 +41,21 @@ export default function ClientWorkoutGenerator({
     setIsSaving(true);
 
     try {
-      // Here you would call your save workout server action
-      // Example: await saveWorkoutPlan({ userId: user.id, plan });
+      // Create a complete workout object
+      const workout: GeneratedWorkout = {
+        clientName: user.name || "Client",
+        workoutPlan: plan,
+      };
+
+      // Load the workout into the store
+      loadWorkout(workout);
+
+      // Call the callback to switch to the workout tab
+      onWorkoutGenerated?.(workout);
 
       toast({
         title: "Success",
-        description: "Workout plan has been saved successfully!",
+        description: "Workout plan has been generated successfully!",
       });
 
       // Reset state after save
@@ -45,7 +64,7 @@ export default function ClientWorkoutGenerator({
       console.error("Error saving workout plan:", error);
       toast({
         title: "Error",
-        description: "Failed to save the workout plan",
+        description: "Failed to generate the workout plan",
         variant: "destructive",
       });
     } finally {
@@ -84,7 +103,7 @@ export default function ClientWorkoutGenerator({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className=" rounded-lg p-3 sm:p-8  dark:bg-gray-950"
+          className="rounded-lg p-3 sm:p-8 dark:bg-gray-950"
         >
           <div className="mb-6">
             <Button
@@ -102,7 +121,7 @@ export default function ClientWorkoutGenerator({
             onSave={handleSaveWorkout}
             onDiscard={handleDiscardWorkout}
             isLoading={isSaving}
-            userId={user?.id || ""} // Pass the userId to WorkoutResults
+            userId={user?.id || ""}
           />
         </motion.div>
       )}

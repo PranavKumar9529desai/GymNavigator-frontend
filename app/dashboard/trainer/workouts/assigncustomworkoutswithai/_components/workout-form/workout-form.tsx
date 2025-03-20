@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Calendar, Clock, Dumbbell, Gauge, Loader2, Sparkles, StickyNote } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2, Sparkles, Dumbbell, Gauge, Clock, StickyNote, Calendar } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -24,12 +25,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import type { UserData } from "../../_actions/get-user-by-id";
-import { generateAiWorkout, WorkoutPlan } from "../../_actions/generate-ai-workout";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { type WorkoutPlan, generateAiWorkout } from "../../_actions/generate-ai-workout";
+import type { UserData } from "../../_actions/get-user-by-id";
 
 const daysOfWeek = [
   { id: "monday", label: "Monday" },

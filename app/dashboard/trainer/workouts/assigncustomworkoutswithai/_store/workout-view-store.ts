@@ -2,21 +2,16 @@ import { create } from 'zustand';
 import type { WorkoutPlan } from '../_actions/generate-ai-workout';
 import type { SavedWorkout } from './workout-chat-store';
 
-type TabValue = 'generate' | 'history' | 'workout';
-
 interface WorkoutViewStore {
   // State
   activeWorkout: SavedWorkout | null;
   isAssigning: boolean;
   assignmentError: string | null;
   showWorkoutDetails: boolean;
-  activeTab: TabValue;
   
   // Actions
   setActiveWorkout: (workout: SavedWorkout | null) => void;
   setShowWorkoutDetails: (show: boolean) => void;
-  setActiveTab: (tab: TabValue) => void;
-  loadWorkout: (workout: SavedWorkout) => void;
   assignWorkout: (workout: SavedWorkout) => Promise<void>;
   reset: () => void;
 }
@@ -27,7 +22,6 @@ export const useWorkoutViewStore = create<WorkoutViewStore>((set) => ({
   isAssigning: false,
   assignmentError: null,
   showWorkoutDetails: false,
-  activeTab: 'generate',
   
   // Actions
   setActiveWorkout: (workout) => set({ 
@@ -36,15 +30,6 @@ export const useWorkoutViewStore = create<WorkoutViewStore>((set) => ({
   }),
   
   setShowWorkoutDetails: (show) => set({ showWorkoutDetails: show }),
-  
-  setActiveTab: (tab) => set({ activeTab: tab }),
-  
-  // New action that combines setting the workout and changing the tab
-  loadWorkout: (workout) => set({ 
-    activeWorkout: workout,
-    showWorkoutDetails: true,
-    activeTab: 'workout'
-  }),
   
   assignWorkout: async (workout) => {
     try {
@@ -73,6 +58,5 @@ export const useWorkoutViewStore = create<WorkoutViewStore>((set) => ({
     isAssigning: false,
     assignmentError: null,
     showWorkoutDetails: false,
-    // Don't reset activeTab here to preserve navigation state
   }),
 })); 

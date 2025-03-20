@@ -2,13 +2,16 @@
 
 import { toast } from "@/hooks/use-toast";
 import { useEffect, useRef, useState } from "react";
+import { assignCustomWorkoutPlan } from "../../_actions/assign-workout-plan";
 import type {
   WorkoutPlan,
   WorkoutSchedule,
 } from "../../_actions/generate-ai-workout";
 import { refineWorkout } from "../../_actions/refine-workout";
 import { useWorkoutChatStore } from "../../_store/workout-chat-store";
-import { useWorkoutViewStore } from "../../_store/workout-view-store";
+
+// Import the response type from the server action
+import type { CustomWorkoutPlanResponse } from "../../_actions/assign-workout-plan";
 
 import ActionButtons from "./action-buttons";
 import FeedbackSection from "./feedback-section";
@@ -38,9 +41,10 @@ export default function WorkoutResults({
   const [activeTab, setActiveTab] = useState(
     plan.schedules[0]?.dayOfWeek || "Monday"
   );
+  const [isAssigning, setIsAssigning] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch state and actions from Zustand stores
+  // Fetch state and actions from Zustand store
   const {
     conversationHistory,
     isSubmittingFeedback,
@@ -56,27 +60,19 @@ export default function WorkoutResults({
     saveWorkoutToHistory
   } = useWorkoutChatStore();
 
-  const {
-    activeWorkout,
-    isAssigning,
-    assignmentError,
-    assignWorkout
-  } = useWorkoutViewStore();
-
   // Initialize conversation with initial workout
   useEffect(() => {
     initializeConversation(workoutPlan);
   }, [workoutPlan, initializeConversation]);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     try {
       // Save workout with conversation history to localStorage
       const workoutId = saveWorkoutToHistory(plan, userId, userName);
       
-      // If we have an active workout from history, assign it
-      if (activeWorkout) {
-        await assignWorkout(activeWorkout);
-      }
+      // Log success with workout ID
+      console.log("Workout saved successfully with ID:", workoutId);
+      console.log("Conversation history saved:", conversationHistory);
       
       // Call the parent's onSave with the updated plan
       onSave(plan);
@@ -84,7 +80,7 @@ export default function WorkoutResults({
       // Show success toast
       toast({
         title: "Workout Saved",
-        description: "Workout plan has been saved and assigned successfully.",
+        description: "Workout plan has been saved successfully with conversation history.",
       });
     } catch (error) {
       console.error("Error saving workout:", error);
@@ -93,6 +89,46 @@ export default function WorkoutResults({
         description: "There was a problem saving your workout plan.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleAssignWorkout = async () => {
+    try {
+      setIsAssigning(true);
+      
+      // Call the server action to assign the workout
+      const result = await assignCustomWorkoutPlan(userId, plan);
+      
+      if (result.success) {
+        // Show different toast messages based on whether this is an update or new assignment
+        const wasUpdate = result.previousPlan !== null;
+        
+        toast({
+          title: wasUpdate ? "Workout Updated" : "Workout Assigned",
+          description: wasUpdate 
+            ? `The previous workout "${result.previousPlan?.name}" has been replaced with "${result.newPlan.name}".`
+            : `The custom workout "${result.newPlan.name}" has been assigned to ${userName}.`,
+        });
+        
+        // Save the workout to history too
+        saveWorkoutToHistory(plan, userId, userName);
+        
+        // After successful assignment, we might want to return to the dashboard
+        // or stay on the same page and show a success message
+      } else {
+        throw new Error(result.error || "Failed to assign workout");
+      }
+    } catch (error) {
+      console.error("Error assigning workout:", error);
+      toast({
+        title: "Assignment Failed",
+        description: error instanceof Error 
+          ? error.message 
+          : "There was a problem assigning the workout to the user.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAssigning(false);
     }
   };
 
@@ -216,7 +252,9 @@ export default function WorkoutResults({
       <ActionButtons
         onSave={handleSave}
         onDiscard={onDiscard}
-        isLoading={isLoading || isAssigning}
+        onAssign={handleAssignWorkout}
+        isLoading={isLoading}
+        isAssigning={isAssigning}
         showFeedbackChat={showFeedbackChat}
         toggleFeedback={toggleFeedbackChat}
       />

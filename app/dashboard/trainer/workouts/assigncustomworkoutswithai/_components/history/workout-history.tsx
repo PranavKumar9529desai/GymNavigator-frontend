@@ -22,7 +22,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import type { WorkoutHistoryItem } from "../../_actions/get-workout-history";
 import { useWorkoutChatStore } from "../../_store/workout-chat-store";
-import { useWorkoutViewStore } from "../../_store/workout-view-store";
 import Exercise from "./exercise";
 
 // Define workout difficulty levels with corresponding colors
@@ -94,7 +93,6 @@ export default function WorkoutHistory({
     dayIndex: number;
   } | null>(null);
   const { initializeConversation, reset } = useWorkoutChatStore();
-  const { setActiveWorkout, loadWorkout } = useWorkoutViewStore();
 
   const toggleExpand = (id: string) => {
     // If we're viewing exercises for a day in this workout, close that view first
@@ -132,9 +130,6 @@ export default function WorkoutHistory({
         // Fallback to just initializing with the workout plan
         initializeConversation(workout.workoutPlan);
       }
-
-      // Use the new loadWorkout function to set workout and switch tabs
-      loadWorkout(workout);
 
       if (onViewWorkout) {
         onViewWorkout(workout);
@@ -184,23 +179,27 @@ export default function WorkoutHistory({
 
   return (
     <div className="space-y-4">
-      {/* Basic stats - Improved mobile layout */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      {/* Basic stats */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
         <div className="bg-muted/20 rounded-lg p-3">
           <div className="text-xs text-muted-foreground">Total Workouts</div>
-          <div className="text-xl sm:text-2xl font-semibold">{history.length}</div>
+          <div className="text-2xl font-semibold">{history.length}</div>
         </div>
         <div className="bg-muted/20 rounded-lg p-3">
           <div className="text-xs text-muted-foreground">Latest Workout</div>
-          <div className="text-base sm:text-lg font-semibold truncate">
+          <div className="text-lg font-semibold truncate">
             {history.length > 0 ? formatDistanceToNow(new Date(history[0].createdAt), {
               addSuffix: true,
             }) : "None"}
           </div>
         </div>
+        {/* <div className="bg-muted/20 rounded-lg p-3">
+          <div className="text-xs text-muted-foreground">Data Source</div>
+          <div className="text-2xl font-semibold truncate capitalize">{dataSource}</div>
+        </div> */}
       </div>
 
-      {/* View toggle - Improved mobile layout */}
+      {/* View toggle */}
       <div className="flex justify-end mb-4">
         <div className="flex gap-2">
           <Button
@@ -222,7 +221,7 @@ export default function WorkoutHistory({
         </div>
       </div>
 
-      {/* Workout list - Improved mobile layout */}
+      {/* Workout list */}
       <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "space-y-4"}>
         {history.map((item) => {
           const difficulty = getWorkoutDifficulty(item);
@@ -234,7 +233,7 @@ export default function WorkoutHistory({
               key={item.id}
               className="border rounded-lg overflow-hidden bg-background hover:border-primary/30 transition-colors"
             >
-              {/* Workout Header - Improved mobile layout */}
+              {/* Workout Header - Always visible */}
               <div
                 className={`p-4 cursor-pointer hover:bg-muted/10 transition-colors ${
                   isShowingDayExercises ? 'bg-muted/10' : ''
@@ -243,33 +242,31 @@ export default function WorkoutHistory({
                 role="button"
                 tabIndex={0}
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="font-medium text-base sm:text-lg">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium">
                         {getWorkoutTitle(item.workoutPlan)}
                       </h4>
                       <div className={`text-xs px-2 py-0.5 rounded-full ${difficultyClass}`}>
                         {difficulty}
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {item.workoutPlan.description}
-                    </p>
                   </div>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  <span className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(item.createdAt), {
                       addSuffix: true,
                     })}
                   </span>
                 </div>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  {item.workoutPlan.description}
+                </p>
 
-                <div className="flex flex-wrap gap-2 text-xs mt-3">
+                <div className="flex flex-wrap gap-2 text-xs">
                   <div className="bg-muted px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Goal className="h-3 w-3" />
-                    <span className="truncate max-w-[100px] sm:max-w-[120px]">
-                      {item.clientName || "Client"}
-                    </span>
+                    <span>{item.clientName || "Client"}</span>
                   </div>
                   <div className="bg-muted px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Activity className="h-3 w-3" />
@@ -297,7 +294,7 @@ export default function WorkoutHistory({
                 </div>
               </div>
 
-              {/* Schedule Summary or Day Exercise Detail - Improved mobile layout */}
+              {/* Schedule Summary or Day Exercise Detail */}
               {expandedItemId === item.id && (
                 <div className="p-4 pt-0 border-t border-dashed">
                   {!isShowingDayExercises ? (
@@ -310,8 +307,8 @@ export default function WorkoutHistory({
                           
                           return (
                             <div
-                              key={`${item.id}-day-${idx}`}
-                              className="text-xs flex flex-wrap items-center bg-muted/30 px-3 py-2 rounded cursor-pointer hover:bg-muted/60 transition-colors"
+                              key={idx}
+                              className="text-xs flex items-center bg-muted/30 px-3 py-2 rounded cursor-pointer hover:bg-muted/60 transition-colors"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDayClick(item.id, idx);
@@ -346,7 +343,7 @@ export default function WorkoutHistory({
                         
                         return (
                           <>
-                            <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <Button 
                                   size="icon" 
@@ -396,7 +393,7 @@ export default function WorkoutHistory({
                         </h5>
                         <div className="text-xs bg-muted/30 px-3 py-2 rounded max-h-24 overflow-y-auto">
                           {item.conversationHistory.slice(1).map((message, idx) => (
-                            <div key={`${item.id}-message-${idx}`} className="mb-1">
+                            <div key={idx} className="mb-1">
                               <span
                                 className={`font-medium ${
                                   message.type === "user"

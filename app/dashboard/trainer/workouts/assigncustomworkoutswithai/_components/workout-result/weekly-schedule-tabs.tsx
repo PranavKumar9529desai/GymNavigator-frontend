@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { RefObject, useEffect, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
 
 interface WeeklyScheduleTabsProps {
   plan: WorkoutPlan;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  tabsRef: RefObject<HTMLDivElement>;
+  tabsRef: RefObject<HTMLDivElement | null>;
   scrollTabs: (direction: 'left' | 'right') => void;
 }
 
@@ -40,7 +40,7 @@ export default function WeeklyScheduleTabs({
       currentTabsRef.addEventListener('scroll', checkScrollPosition);
       return () => currentTabsRef.removeEventListener('scroll', checkScrollPosition);
     }
-  }, [tabsRef, plan.schedules]);
+  }, [tabsRef]);
   
   // Directly use the parent component's scrollTabs function
   const handleScrollLeft = () => scrollTabs('left');
