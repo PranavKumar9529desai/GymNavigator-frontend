@@ -8,6 +8,7 @@ import type {
 } from "../../_actions/generate-ai-workout";
 import { refineWorkout } from "../../_actions/refine-workout";
 import { useWorkoutChatStore } from "../../_store/workout-chat-store";
+import { useWorkoutViewStore } from "../../_store/workout-view-store";
 
 import ActionButtons from "./action-buttons";
 import FeedbackSection from "./feedback-section";
@@ -39,7 +40,7 @@ export default function WorkoutResults({
   );
   const tabsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch state and actions from Zustand store
+  // Fetch state and actions from Zustand stores
   const {
     conversationHistory,
     isSubmittingFeedback,
@@ -55,19 +56,27 @@ export default function WorkoutResults({
     saveWorkoutToHistory
   } = useWorkoutChatStore();
 
+  const {
+    activeWorkout,
+    isAssigning,
+    assignmentError,
+    assignWorkout
+  } = useWorkoutViewStore();
+
   // Initialize conversation with initial workout
   useEffect(() => {
     initializeConversation(workoutPlan);
   }, [workoutPlan, initializeConversation]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
       // Save workout with conversation history to localStorage
       const workoutId = saveWorkoutToHistory(plan, userId, userName);
       
-      // Log success with workout ID
-      console.log("Workout saved successfully with ID:", workoutId);
-      console.log("Conversation history saved:", conversationHistory);
+      // If we have an active workout from history, assign it
+      if (activeWorkout) {
+        await assignWorkout(activeWorkout);
+      }
       
       // Call the parent's onSave with the updated plan
       onSave(plan);
@@ -75,7 +84,7 @@ export default function WorkoutResults({
       // Show success toast
       toast({
         title: "Workout Saved",
-        description: "Workout plan has been saved successfully with conversation history.",
+        description: "Workout plan has been saved and assigned successfully.",
       });
     } catch (error) {
       console.error("Error saving workout:", error);
@@ -207,7 +216,7 @@ export default function WorkoutResults({
       <ActionButtons
         onSave={handleSave}
         onDiscard={onDiscard}
-        isLoading={isLoading}
+        isLoading={isLoading || isAssigning}
         showFeedbackChat={showFeedbackChat}
         toggleFeedback={toggleFeedbackChat}
       />
