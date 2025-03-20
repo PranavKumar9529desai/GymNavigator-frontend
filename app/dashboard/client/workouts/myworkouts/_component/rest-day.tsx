@@ -59,19 +59,19 @@ export const RestDay = () => {
 					</p>
 					<ul className="text-left space-y-2 text-gray-600 mb-6">
 						<li className="flex items-center gap-2">
-							<span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+							<span className="w-2 h-2 bg-purple-500 rounded-full" />
 							Proper nutrition and hydration
 						</li>
 						<li className="flex items-center gap-2">
-							<span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+							<span className="w-2 h-2 bg-purple-500 rounded-full" />
 							Quality sleep (7-9 hours)
 						</li>
 						<li className="flex items-center gap-2">
-							<span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+							<span className="w-2 h-2 bg-purple-500 rounded-full" />
 							Light stretching or mobility work
 						</li>
 						<li className="flex items-center gap-2">
-							<span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+							<span className="w-2 h-2 bg-purple-500 rounded-full" />
 							Stress management and relaxation
 						</li>
 					</ul>
