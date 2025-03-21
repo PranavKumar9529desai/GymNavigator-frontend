@@ -67,14 +67,14 @@ export function DietHistoryProvider({
         setHistory(combinedDiets);
         setError(null);
       } else {
-        // If backend fails, still use local diets
-        setHistory(localDiets);
-        
-        if (localDiets.length === 0) {
-          setError(result.message || "Failed to load diet history");
-        } else {
-          // If we have local diets, don't show the error
+        // If backend fails but we have local diets, use them without showing an error
+        if (localDiets.length > 0) {
+          setHistory(localDiets);
           setError(null);
+        } else {
+          // Only show error if we have no local diets to display
+          setHistory(localDiets);
+          setError(result.message || "Failed to load diet history");
         }
       }
     } catch (err) {
@@ -84,7 +84,7 @@ export function DietHistoryProvider({
       const localDiets = getSavedDiets(session.user.id);
       if (localDiets.length > 0) {
         setHistory(localDiets);
-        setError(null);
+        setError(null); // Don't show error when we have local diets
       } else {
         setError("An unexpected error occurred while loading diet history");
       }

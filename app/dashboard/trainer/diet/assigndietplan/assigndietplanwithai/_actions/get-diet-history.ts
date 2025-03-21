@@ -19,14 +19,25 @@ export async function getDietHistory(userId: string): Promise<{ success: boolean
     
     return {
       success: false,
-      message: data.message || data.error || 'Failed to fetch diet history'
+      message: data.message || data.error || 'Failed to fetch diet history from server'
     };
   } catch (error) {
     console.error('Error fetching diet history:', error);
     
+    // Create a more informative error message based on the type of error
+    let errorMessage = 'Unable to connect to the server. Your diet plans are still available locally.';
+    
+    // Check if it's a network error
+    if (error && typeof error === 'object' && 'message' in error) {
+      const errMsg = error.message as string;
+      if (errMsg.includes('Network Error') || errMsg.includes('timeout')) {
+        errorMessage = 'Network connection issue. Your diet plans are still available locally.';
+      }
+    }
+    
     return {
       success: false,
-      message: 'An error occurred while fetching diet history'
+      message: errorMessage
     };
   }
 } 

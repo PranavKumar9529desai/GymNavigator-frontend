@@ -86,11 +86,11 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
       return (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <p className="text-sm text-red-500">
-              {error} (showing locally saved diets)
+            <p className="text-sm text-amber-500">
+              <span className="font-medium">Note:</span> Using locally saved diets
             </p>
             <Button variant="outline" size="sm" onClick={refreshHistory}>
-              <RefreshCw className="h-3 w-3 mr-1" /> Retry
+              <RefreshCw className="h-3 w-3 mr-1" /> Sync with server
             </Button>
           </div>
           <DietHistoryList 

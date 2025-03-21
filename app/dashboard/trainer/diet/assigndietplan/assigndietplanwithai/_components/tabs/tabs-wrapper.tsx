@@ -2,14 +2,14 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useState } from "react";
-import type { DietPlan } from "../../_actions /GetallDiets";
-import { useDietViewStore } from "../_store/diet-view-store";
-import type { TabType } from "../_store/diet-view-store";
-import { DietForm } from "./diet-form/diet-form";
-import { DietFormSkeleton } from "./diet-form/diet-form-skeleton";
-import { DietHistory } from "./diet-history/diet-history";
-import DietResults from "./diet-result/diet-results";
-import DietSkeleton from "./diet-result/diet-skeleton";
+import type { DietPlan } from "../../../_actions /GetallDiets";
+import { useDietViewStore } from "../../_store/diet-view-store";
+import type { TabType } from "../../_store/diet-view-store";
+import { DietForm } from "../diet-form/diet-form";
+import { DietFormSkeleton } from "../diet-form/diet-form-skeleton";
+import { DietHistory } from "../diet-history/diet-history";
+import DietResults from "../diet-result/diet-results";
+import DietSkeleton from "../diet-result/diet-skeleton";
 
 interface TabsWrapperProps {
   userId: string;

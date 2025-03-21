@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Sparkles } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type { DietPlan } from "../../_actions /GetallDiets";
-import { generateAIDiet } from "../_actions/generate-ai-diet";
-import { useDietViewStore } from "../_store/diet-view-store";
-import { dietGenerationSchema } from "../types/dietGenerationSchema";
-import type { DietGenerationParams } from "../types/dietGenerationSchema";
+import type { DietPlan } from "../../../_actions /GetallDiets";
+import { generateAIDiet } from "../../_actions/generate-ai-diet";
+import { useDietViewStore } from "../../_store/diet-view-store";
+import { dietGenerationSchema } from "../../types/dietGenerationSchema";
+import type { DietGenerationParams } from "../../types/dietGenerationSchema";
 
 const DIET_PREFERENCES = [
   "Vegetarian",

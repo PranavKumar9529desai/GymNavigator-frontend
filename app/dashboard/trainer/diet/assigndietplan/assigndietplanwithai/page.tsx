@@ -6,8 +6,8 @@ import React from "react";
 import { Suspense } from "react";
 import { getUserById } from "./_actions/get-user-by-id";
 import { DietHistoryProvider } from "./_components/diet-history/diet-history-provider";
-import { TabsWrapper } from "./_components/tabs-wrapper";
-import UserProfileCard from "./_components/user-profile-card";
+import { TabsWrapper } from "./_components/tabs/tabs-wrapper";
+import UserProfileCard from "./_components/user-profile/user-profile-card";
 
 // Pre-generate decoration positions
 const decorations = [
@@ -28,10 +28,10 @@ const decorations = [
 export default async function AssignDietPlanWithAI({
   searchParams,
 }: {
-  searchParams: { userId?: string };
+  searchParams: Promise<{ userId?: string }>;
 }) {
   // Get userId from search params
-  const userId = (await searchParams.userId) || "defaultUserId";
+  const userId = (await searchParams).userId || "defaultUserId";
 
   // Fetch user data
   const response = await getUserById(userId);

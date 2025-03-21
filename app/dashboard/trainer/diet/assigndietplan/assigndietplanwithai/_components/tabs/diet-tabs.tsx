@@ -10,7 +10,7 @@ import {
   type DietHistoryItem,
   useDietViewStore,
 } from "../../_store/diet-view-store";
-import { DietForm } from "../diet-form";
+import { DietForm } from "../diet-form/diet-form";
 import DietResults from "../diet-result/diet-results";
 import { DietHistoryProvider } from "../history/diet-history-provider";
 
