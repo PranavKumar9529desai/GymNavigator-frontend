@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
 // biome-ignore lint/style/useImportType: <Diet hsitory provider need it>
-import  React from "react";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { getDietHistory } from "../../_actions/get-diet-history";
-import type { DietHistoryItem } from "../../_store/diet-view-store";
-import { useDietViewStore } from "../../_store/diet-view-store";
+import React from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { getDietHistory } from '../../_actions/get-diet-history';
+import type { DietHistoryItem } from '../../_store/diet-view-store';
+import { useDietViewStore } from '../../_store/diet-view-store';
 
 interface DietHistoryContextType {
   loading: boolean;
@@ -48,22 +42,23 @@ export function DietHistoryProvider({
     try {
       // First get diets from localStorage
       const localDiets = getSavedDiets(session.user.id);
-      
+
       // Then get diets from backend
       const result = await getDietHistory(session.user.id);
-      
+
       if (result.success && result.data) {
         // Combine local and backend diets, removing duplicates by id
         const backendDiets = result.data;
-        const backendIds = new Set(backendDiets.map(diet => diet.id));
-        
+        const backendIds = new Set(backendDiets.map((diet) => diet.id));
+
         // Filter out local diets that already exist in backend results
-        const uniqueLocalDiets = localDiets.filter(diet => !backendIds.has(diet.id));
-        
+        const uniqueLocalDiets = localDiets.filter((diet) => !backendIds.has(diet.id));
+
         // Combine and sort by createdAt (newest first)
-        const combinedDiets = [...backendDiets, ...uniqueLocalDiets]
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        
+        const combinedDiets = [...backendDiets, ...uniqueLocalDiets].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+
         setHistory(combinedDiets);
         setError(null);
       } else {
@@ -74,19 +69,19 @@ export function DietHistoryProvider({
         } else {
           // Only show error if we have no local diets to display
           setHistory(localDiets);
-          setError(result.message || "Failed to load diet history");
+          setError(result.message || 'Failed to load diet history');
         }
       }
     } catch (err) {
-      console.error("Error fetching diet history:", err);
-      
+      console.error('Error fetching diet history:', err);
+
       // Try to use local diets if backend fails
       const localDiets = getSavedDiets(session.user.id);
       if (localDiets.length > 0) {
         setHistory(localDiets);
         setError(null); // Don't show error when we have local diets
       } else {
-        setError("An unexpected error occurred while loading diet history");
+        setError('An unexpected error occurred while loading diet history');
       }
     } finally {
       setLoading(false);

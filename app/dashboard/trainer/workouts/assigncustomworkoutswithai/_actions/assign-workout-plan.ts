@@ -1,26 +1,26 @@
-"use server";
+'use server';
 
-import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
-import type { WorkoutPlan } from "./generate-ai-workout";
+import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
+import type { WorkoutPlan } from './generate-ai-workout';
 
 export async function assignWorkoutPlan(userId: string, workoutPlanId: number) {
   const trainerAxios = await TrainerReqConfig();
 
   try {
-    const response = await trainerAxios.post("/workouts/assignworkoutplan", {
+    const response = await trainerAxios.post('/workouts/assignworkoutplan', {
       userId,
       workoutPlanId,
     });
 
-    if (response.data.msg === "success") {
+    if (response.data.msg === 'success') {
       return {
         success: true,
       };
     }
 
-    throw new Error(response.data.error || "Failed to assign workout plan");
+    throw new Error(response.data.error || 'Failed to assign workout plan');
   } catch (error) {
-    console.error("Error assigning workout plan:", error);
+    console.error('Error assigning workout plan:', error);
     throw error;
   }
 }
@@ -45,13 +45,13 @@ export interface CustomWorkoutPlanResponse {
  */
 export async function assignCustomWorkoutPlan(
   userId: string,
-  workoutPlan: WorkoutPlan
+  workoutPlan: WorkoutPlan,
 ): Promise<CustomWorkoutPlanResponse> {
   const trainerAxios = await TrainerReqConfig();
 
   try {
     // Create and assign a workout plan to the user in one request
-    const response = await trainerAxios.post("/workouts/customworkoutplan", {
+    const response = await trainerAxios.post('/workouts/customworkoutplan', {
       userId,
       workoutPlan: {
         name: workoutPlan.name,
@@ -73,9 +73,7 @@ export async function assignCustomWorkoutPlan(
     });
 
     if (!response.data.success) {
-      throw new Error(
-        response.data.error || "Failed to create and assign custom workout plan"
-      );
+      throw new Error(response.data.error || 'Failed to create and assign custom workout plan');
     }
 
     return {
@@ -86,14 +84,14 @@ export async function assignCustomWorkoutPlan(
       newPlan: response.data.newPlan,
     };
   } catch (error) {
-    console.error("Error assigning custom workout plan:", error);
+    console.error('Error assigning custom workout plan:', error);
     return {
       success: false,
       workoutPlanId: -1,
-      msg: "Failed to assign workout plan",
-      error: error instanceof Error ? error.message : "Unknown error",
+      msg: 'Failed to assign workout plan',
+      error: error instanceof Error ? error.message : 'Unknown error',
       previousPlan: null,
-      newPlan: { id: -1, name: "", description: null },
+      newPlan: { id: -1, name: '', description: null },
     };
   }
 }

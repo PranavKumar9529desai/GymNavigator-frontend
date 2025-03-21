@@ -15,19 +15,19 @@ export async function verifyGymToken(gym: gym, authToken: string): Promise<Verif
     id: gym.id,
     img: gym.img,
   };
-  
+
   try {
     const result = await VerifyAuthToken(gymAtom, authToken);
-    
+
     return {
       success: result.success,
-      message: result.msg
+      message: result.msg,
     };
   } catch (error) {
-    console.error("Error in verifyGymToken:", error);
+    console.error('Error in verifyGymToken:', error);
     return {
       success: false,
-      message: "Failed to verify authentication token"
+      message: 'Failed to verify authentication token',
     };
   }
 }

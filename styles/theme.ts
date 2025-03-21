@@ -25,7 +25,8 @@ export const gymTheme = {
       secondary: 'text-gray-300',
       muted: 'text-gray-400',
       accent: 'text-blue-400',
-      gradient: 'bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent',
+      gradient:
+        'bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent',
     },
     backgrounds: {
       card: 'bg-white/5',
@@ -37,7 +38,7 @@ export const gymTheme = {
       accent: 'border-blue-500/20',
       button: 'border-gray-700',
       buttonHover: 'hover:border-blue-500',
-    }
+    },
   },
   animation: {
     gradient: 'animate-gradient',
@@ -47,7 +48,7 @@ export const gymTheme = {
     card: 'rounded-xl',
     button: 'rounded-lg',
     badge: 'rounded-full',
-  }
+  },
 };
 
 export type GymTheme = typeof gymTheme;

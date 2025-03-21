@@ -137,7 +137,7 @@ export default {
 
         // Determine if this is sign-up or sign-in
         const isSignUp = Boolean(role && name);
-      
+
         try {
           // Route to appropriate handler
           if (isSignUp && role && name) {

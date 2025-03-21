@@ -1,21 +1,13 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import {
-  User,
-  UserSearch,
-  Activity,
-  Weight,
-  Ruler,
-  CalendarClock,
-  ArrowRight,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import type { UserData } from "../../_actions/get-user-by-id";
-import { useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Activity, ArrowRight, CalendarClock, Ruler, User, UserSearch, Weight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import type { UserData } from '../../_actions/get-user-by-id';
 
 interface ClientDisplayProps {
   user: UserData | null;
@@ -27,7 +19,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
 
   const handleClientSelection = () => {
     setIsNavigating(true);
-    router.push("/dashboard/trainer/clients");
+    router.push('/dashboard/trainer/clients');
   };
 
   if (!user) {
@@ -110,9 +102,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               <div>
                 <div className="text-xs text-muted-foreground">Weight</div>
                 <div className="font-medium">
-                  {user.healthProfile.weight
-                    ? `${user.healthProfile.weight} kg`
-                    : "—"}
+                  {user.healthProfile.weight ? `${user.healthProfile.weight} kg` : '—'}
                 </div>
               </div>
             </div>
@@ -123,9 +113,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               <div>
                 <div className="text-xs text-muted-foreground">Height</div>
                 <div className="font-medium">
-                  {user.healthProfile.height
-                    ? `${user.healthProfile.height} cm`
-                    : "—"}
+                  {user.healthProfile.height ? `${user.healthProfile.height} cm` : '—'}
                 </div>
               </div>
             </div>
@@ -136,9 +124,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               <div>
                 <div className="text-xs text-muted-foreground">Age</div>
                 <div className="font-medium">
-                  {user.healthProfile.age
-                    ? `${user.healthProfile.age} years`
-                    : "—"}
+                  {user.healthProfile.age ? `${user.healthProfile.age} years` : '—'}
                 </div>
               </div>
             </div>
@@ -148,9 +134,7 @@ export default function ClientDisplay({ user }: ClientDisplayProps) {
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Goal</div>
-                <div className="font-medium">
-                  {user.healthProfile.goal || "—"}
-                </div>
+                <div className="font-medium">{user.healthProfile.goal || '—'}</div>
               </div>
             </div>
           </div>

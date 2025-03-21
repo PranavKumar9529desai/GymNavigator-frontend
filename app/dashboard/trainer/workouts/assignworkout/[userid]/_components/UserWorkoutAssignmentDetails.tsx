@@ -1,41 +1,37 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import type { AssignedUser } from "../../../../assignedusers/GetuserassignedTotrainers";
-import { assignWorkoutPlan } from "../../_actions/assign-workout-plan";
-import type { WorkoutPlan } from "../../_actions/get-workout-plans";
-import CreateWOrkoutImaage from "../_assests/gemini-logo.png";
-import WorkoutSearchFilters from "./workout-search-filters";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import type { AssignedUser } from '../../../../assignedusers/GetuserassignedTotrainers';
+import { assignWorkoutPlan } from '../../_actions/assign-workout-plan';
+import type { WorkoutPlan } from '../../_actions/get-workout-plans';
+import CreateWOrkoutImaage from '../_assests/gemini-logo.png';
+import WorkoutSearchFilters from './workout-search-filters';
 interface Props {
   user: AssignedUser;
   workoutPlans: WorkoutPlan[];
 }
 
-export default function UserWorkoutAssignmentDetails({
-  user,
-  workoutPlans,
-}: Props) {
+export default function UserWorkoutAssignmentDetails({ user, workoutPlans }: Props) {
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
   const [isAssigning, setIsAssigning] = useState(false);
-  const [filteredWorkouts, setFilteredWorkouts] =
-    useState<WorkoutPlan[]>(workoutPlans);
+  const [filteredWorkouts, setFilteredWorkouts] = useState<WorkoutPlan[]>(workoutPlans);
 
   const handleAssignWorkout = async () => {
     if (!selectedPlan) {
-      toast.error("Please select a workout plan");
+      toast.error('Please select a workout plan');
       return;
     }
 
     try {
       setIsAssigning(true);
       await assignWorkoutPlan(user.id, selectedPlan);
-      toast.success("Workout plan assigned successfully");
+      toast.success('Workout plan assigned successfully');
     } catch (error) {
-      toast.error("Failed to assign workout plan");
-      console.error("Error assigning workout plan:", error);
+      toast.error('Failed to assign workout plan');
+      console.error('Error assigning workout plan:', error);
     } finally {
       setIsAssigning(false);
     }
@@ -59,9 +55,7 @@ export default function UserWorkoutAssignmentDetails({
                   className="w-5 h-5 object-contain brightness-0 invert opacity-90"
                 />
               </div>
-              <span className="font-medium tracking-wide">
-                Custom Workout with AI
-              </span>
+              <span className="font-medium tracking-wide">Custom Workout with AI</span>
             </div>
             <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-purple-500/20 backdrop-blur-[1px]" />
           </Link>
@@ -69,9 +63,7 @@ export default function UserWorkoutAssignmentDetails({
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center shadow-inner">
-              <span className="text-2xl text-blue-600 font-semibold">
-                {user.name[0]}
-              </span>
+              <span className="text-2xl text-blue-600 font-semibold">{user.name[0]}</span>
             </div>
             <div>
               <h3 className="font-medium text-lg">{user.name}</h3>
@@ -85,26 +77,20 @@ export default function UserWorkoutAssignmentDetails({
               <div className="grid grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Height</p>
-                  <p className="font-medium text-gray-900">
-                    {user.HealthProfile.height} cm
-                  </p>
+                  <p className="font-medium text-gray-900">{user.HealthProfile.height} cm</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Weight</p>
-                  <p className="font-medium text-gray-900">
-                    {user.HealthProfile.weight} kg
-                  </p>
+                  <p className="font-medium text-gray-900">{user.HealthProfile.weight} kg</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Gender</p>
-                  <p className="font-medium text-gray-900">
-                    {user.HealthProfile.gender}
-                  </p>
+                  <p className="font-medium text-gray-900">{user.HealthProfile.gender}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-600 mb-1">Goal</p>
                   <p className="font-medium text-gray-900">
-                    {user.HealthProfile.goal || "Not specified"}
+                    {user.HealthProfile.goal || 'Not specified'}
                   </p>
                 </div>
               </div>
@@ -116,24 +102,17 @@ export default function UserWorkoutAssignmentDetails({
       </div>
 
       {/* Search and Filters */}
-      <WorkoutSearchFilters
-        workoutPlans={workoutPlans}
-        onFilterChange={setFilteredWorkouts}
-      />
+      <WorkoutSearchFilters workoutPlans={workoutPlans} onFilterChange={setFilteredWorkouts} />
 
       {/* Workout Plans Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-semibold">Available Workout Plans</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Select a plan to assign to {user.name}
-            </p>
+            <p className="text-sm text-gray-600 mt-1">Select a plan to assign to {user.name}</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden md:inline text-sm text-gray-600">
-              Total:
-            </span>
+            <span className="hidden md:inline text-sm text-gray-600">Total:</span>
             <span className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
               {filteredWorkouts.length}
             </span>
@@ -143,9 +122,7 @@ export default function UserWorkoutAssignmentDetails({
         <div className="space-y-4">
           {filteredWorkouts.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">
-                No workout plans match your filters
-              </p>
+              <p className="text-gray-500">No workout plans match your filters</p>
             </div>
           ) : (
             filteredWorkouts.map((plan) => (
@@ -154,17 +131,15 @@ export default function UserWorkoutAssignmentDetails({
                 type="button"
                 className={`group w-full text-left p-4 border rounded-lg transition-all ${
                   selectedPlan === plan.id
-                    ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
-                    : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
+                    ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
                 }`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
-                      <h3 className="font-medium text-gray-900 truncate pr-4">
-                        {plan.name}
-                      </h3>
+                      <h3 className="font-medium text-gray-900 truncate pr-4">{plan.name}</h3>
                       <div className="flex items-center gap-2 sm:hidden">
                         <span className="shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
                           {plan.schedules.length}
@@ -173,9 +148,7 @@ export default function UserWorkoutAssignmentDetails({
                       </div>
                     </div>
                     {plan.description && (
-                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                        {plan.description}
-                      </p>
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{plan.description}</p>
                     )}
                   </div>
                   <div className="hidden sm:block shrink-0">
@@ -234,8 +207,8 @@ export default function UserWorkoutAssignmentDetails({
             disabled={!selectedPlan || isAssigning}
             className={`px-6 py-2.5 rounded-md text-white font-medium transition-all ${
               !selectedPlan || isAssigning
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
             }`}
           >
             {isAssigning ? (
@@ -264,7 +237,7 @@ export default function UserWorkoutAssignmentDetails({
                 Assigning...
               </span>
             ) : (
-              "Assign Workout Plan"
+              'Assign Workout Plan'
             )}
           </button>
         </div>

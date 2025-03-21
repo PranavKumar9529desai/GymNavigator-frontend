@@ -1,23 +1,21 @@
-import { notFound } from "next/navigation";
-import { fetchGymById } from "../../[id]/_actions/fetch-gym-by-id";
-import { AuthTokenForm } from "./_components/auth-token-form";
+import { notFound } from 'next/navigation';
+import { fetchGymById } from '../../[gymid]/_actions/fetch-gym-by-id';
+import { AuthTokenForm } from './_components/auth-token-form';
 
 // Prevent static generation
 export const dynamic = 'force-dynamic';
 
-interface VerifyAuthTokenPageProps {
-  params: {
-    id: string;
-  };
-}
+export default async function VerifyAuthTokenPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const gym = await fetchGymById((await params).id);
 
-export default async function VerifyAuthTokenPage({ params }: VerifyAuthTokenPageProps) {
-  const gym = await fetchGymById(params.id);
-  
   if (!gym) {
     notFound();
   }
-  
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-lg">

@@ -16,21 +16,21 @@ export const WorkoutNotAssigned = () => {
           </div>
           <p className="text-blue-100">Complete your assigned exercises to track your progress</p>
         </div>
-        
+
         {/* Decorative wave */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 1440 80" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1440 80"
             className="w-full h-6"
             aria-hidden="true"
             role="img"
           >
             <title>Decorative wave pattern</title>
-            <path 
-              fill="#ffffff" 
-              fillOpacity="1" 
-              d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,80L1360,80C1280,80,1120,80,960,80C800,80,640,80,480,80C320,80,160,80,80,80L0,80Z" 
+            <path
+              fill="#ffffff"
+              fillOpacity="1"
+              d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,80L1360,80C1280,80,1120,80,960,80C800,80,640,80,480,80C320,80,160,80,80,80L0,80Z"
             />
           </svg>
         </div>
@@ -38,7 +38,7 @@ export const WorkoutNotAssigned = () => {
 
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <div className="p-6 text-center">
-          <div className="mx-auto relative w-full aspect-square mb-6" style={{ maxWidth: "280px" }}>
+          <div className="mx-auto relative w-full aspect-square mb-6" style={{ maxWidth: '280px' }}>
             <Image
               src={NoWorkoutAssignedImage}
               alt="No workouts assigned"

@@ -2,12 +2,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ViewDietLoading() {
   const skeletonMealTypes = ['Breakfast', 'Lunch', 'Snack', 'Dinner'];
-  
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 text-center">
-        Today's Diet Plan
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 text-center">Today's Diet Plan</h1>
       <div className="space-y-8">
         {skeletonMealTypes.map((type) => (
           <div key={`skeleton-${type}`} className="relative">

@@ -69,9 +69,7 @@ export default function MealForm({ currentMeal, setCurrentMeal, addMeal }: MealF
             Time of Day
           </label>
           <Select
-            onValueChange={(value) =>
-              setCurrentMeal((prev) => ({ ...prev, time: value }))
-            }
+            onValueChange={(value) => setCurrentMeal((prev) => ({ ...prev, time: value }))}
             value={currentMeal.time || undefined}
           >
             <SelectTrigger id="meal-time">
@@ -212,8 +210,8 @@ export default function MealForm({ currentMeal, setCurrentMeal, addMeal }: MealF
         />
       </div>
 
-      <Button 
-        onClick={addMeal} 
+      <Button
+        onClick={addMeal}
         className="w-full"
         disabled={!currentMeal.name || !currentMeal.time}
       >

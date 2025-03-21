@@ -30,17 +30,14 @@ export const fetchMuscles = async () => {
   try {
     const clientAxios = await ClientReqConfig();
     const response = await clientAxios.get('/workout/allmuscles');
-    console.log(
-      'data fetched from the server by the FetchMuscles is',
-      response.data,
-    );
-    
+    console.log('data fetched from the server by the FetchMuscles is', response.data);
+
     // Access the nested muscleGroups inside the data property
     if (!response.data.data || !response.data.data.muscleGroups) {
       console.error('Unexpected response structure:', response.data);
       throw new Error('Invalid response structure from API');
     }
-    
+
     return { muscles: response.data.data.muscleGroups };
   } catch (error) {
     console.error('Error in getAllMuscles:', error);

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import type { AssignedUser } from "../../../assignedusers/GetuserassignedTotrainers";
+import Link from 'next/link';
+import type { AssignedUser } from '../../../assignedusers/GetuserassignedTotrainers';
 
 interface Props {
   users: AssignedUser[];
@@ -26,7 +26,7 @@ export default function UserWorkoutList({ users }: Props) {
                 <p className="text-sm text-gray-600">{user.email}</p>
               </div>
             </div>
-            
+
             {user.HealthProfile && (
               <div className="mt-4 pt-4 border-t">
                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -36,9 +36,11 @@ export default function UserWorkoutList({ users }: Props) {
                   </div>
                   <div>
                     <span className="text-gray-600">Status:</span>
-                    <p className={`font-medium ${
-                      user.membershipStatus === 'active' ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <p
+                      className={`font-medium ${
+                        user.membershipStatus === 'active' ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       {user.membershipStatus}
                     </p>
                   </div>
@@ -50,4 +52,4 @@ export default function UserWorkoutList({ users }: Props) {
       ))}
     </div>
   );
-} 
+}

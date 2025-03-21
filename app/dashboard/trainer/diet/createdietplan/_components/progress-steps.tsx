@@ -27,9 +27,7 @@ export default function ProgressSteps({ currentStep }: ProgressStepsProps) {
             </div>
             {step < 3 && (
               <div
-                className={`flex-1 h-1 mx-4 ${
-                  currentStep > step ? 'bg-green-600' : 'bg-gray-300'
-                }`}
+                className={`flex-1 h-1 mx-4 ${currentStep > step ? 'bg-green-600' : 'bg-gray-300'}`}
               />
             )}
           </div>

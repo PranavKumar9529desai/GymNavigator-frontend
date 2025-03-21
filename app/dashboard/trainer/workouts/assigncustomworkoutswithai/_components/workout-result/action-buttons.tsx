@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { MessageSquare, Save, UserCheck } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { MessageSquare, Save, UserCheck } from 'lucide-react';
 
 interface ActionButtonsProps {
   onSave: () => void;
@@ -11,44 +11,44 @@ interface ActionButtonsProps {
   toggleFeedback?: () => void;
 }
 
-export default function ActionButtons({ 
-  onSave, 
-  onDiscard, 
+export default function ActionButtons({
+  onSave,
+  onDiscard,
   onAssign,
   isLoading,
   isAssigning = false,
   showFeedbackChat = false,
-  toggleFeedback
+  toggleFeedback,
 }: ActionButtonsProps) {
   return (
     <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-5 border-t">
-      <Button 
-        variant="outline" 
-        onClick={onDiscard} 
+      <Button
+        variant="outline"
+        onClick={onDiscard}
         className="h-12 sm:h-11 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
       >
         Discard Plan
       </Button>
-      
+
       {toggleFeedback && (
         <Button
           variant="outline"
           onClick={toggleFeedback}
           className={`h-12 sm:h-11 ${
-            showFeedbackChat 
-              ? "bg-indigo-50 text-indigo-700 border-indigo-200" 
-              : "hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"
+            showFeedbackChat
+              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+              : 'hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200'
           } transition-colors`}
         >
-          <MessageSquare className="h-4 w-4 mr-2" /> 
-          {showFeedbackChat ? "Hide Feedback" : "Provide Feedback"}
+          <MessageSquare className="h-4 w-4 mr-2" />
+          {showFeedbackChat ? 'Hide Feedback' : 'Provide Feedback'}
         </Button>
       )}
-      
+
       {onAssign && (
-        <Button 
-          onClick={onAssign} 
-          disabled={isAssigning} 
+        <Button
+          onClick={onAssign}
+          disabled={isAssigning}
           className="h-12 sm:h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-sm"
         >
           {isAssigning ? (
@@ -63,10 +63,10 @@ export default function ActionButtons({
           )}
         </Button>
       )}
-      
-      <Button 
-        onClick={onSave} 
-        disabled={isLoading} 
+
+      <Button
+        onClick={onSave}
+        disabled={isLoading}
         className="h-12 sm:h-11 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-sm"
       >
         {isLoading ? (

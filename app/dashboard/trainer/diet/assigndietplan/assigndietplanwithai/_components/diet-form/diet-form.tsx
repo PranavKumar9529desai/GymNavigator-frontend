@@ -1,65 +1,53 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Sparkles } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import type { DietPlan } from "../../../_actions /GetallDiets";
-import { generateAIDiet } from "../../_actions/generate-ai-diet";
-import { useDietViewStore } from "../../_store/diet-view-store";
-import { dietGenerationSchema } from "../../types/dietGenerationSchema";
-import type { DietGenerationParams } from "../../types/dietGenerationSchema";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type { DietPlan } from '../../../_actions /GetallDiets';
+import { generateAIDiet } from '../../_actions/generate-ai-diet';
+import type { UserData } from '../../_actions/get-user-by-id';
+import { useDietViewStore } from '../../_store/diet-view-store';
+import { dietGenerationSchema } from '../../types/dietGenerationSchema';
+import type { DietGenerationParams } from '../../types/dietGenerationSchema';
 
 const DIET_PREFERENCES = [
-  "Vegetarian",
-  "Vegan",
-  "Pescatarian",
-  "Keto",
-  "Paleo",
-  "Mediterranean",
-  "No Restrictions",
+  'Vegetarian',
+  'Vegan',
+  'Pescatarian',
+  'Keto',
+  'Paleo',
+  'Mediterranean',
+  'No Restrictions',
 ];
 
 const MEDICAL_CONDITIONS = [
-  "Diabetes",
-  "Hypertension",
-  "Celiac Disease",
-  "Lactose Intolerance",
-  "None",
+  'Diabetes',
+  'Hypertension',
+  'Celiac Disease',
+  'Lactose Intolerance',
+  'None',
 ];
 
 interface DietFormProps {
   userId: string;
+  userData?: UserData | null;
   onGenerateStateChange?: (generating: boolean) => void;
+  onDietGenerated?: (diet: { clientName: string; dietPlan: DietPlan }) => void;
 }
 
-export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
+export function DietForm({
+  userId,
+  userData,
+  onGenerateStateChange,
+  onDietGenerated,
+}: DietFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedDiet, setGeneratedDiet] = useState<DietPlan | null>(null);
-  const [clientName, setClientName] = useState("Client");
+  const [clientName, setClientName] = useState(userData?.name || 'Client');
 
   const { setActiveDiet, setActiveTab } = useDietViewStore();
-
-  // Fetch user data when component mounts
-  useEffect(() => {
-    async function fetchUserData() {
-      if (userId) {
-        try {
-          const response = await fetch(`/api/users/${userId}`);
-          const data = await response.json();
-          if (data.success && data.data) {
-            setClientName(data.data.name || "Client");
-          }
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-        }
-      }
-    }
-
-    fetchUserData();
-  }, [userId]);
 
   const {
     register,
@@ -69,7 +57,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
     resolver: zodResolver(dietGenerationSchema),
     defaultValues: {
       medicalConditions: [],
-      dietPreference: "No Restrictions",
+      dietPreference: 'No Restrictions',
     },
   });
 
@@ -80,23 +68,28 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
       if (onGenerateStateChange) {
         onGenerateStateChange(true);
       }
-      
+
       // Call our server action directly with simplified error handling
       const result = await generateAIDiet(data);
-      
-      // Set the generated diet plan
-      setGeneratedDiet(result);
 
       // Update the store and automatically switch to the diet tab
       setActiveDiet({
         clientName: clientName,
         dietPlan: result,
       });
-      
+
+      // Notify parent component about diet generation
+      if (onDietGenerated) {
+        onDietGenerated({
+          clientName: clientName,
+          dietPlan: result,
+        });
+      }
+
       // Automatically switch to the diet tab
-      setActiveTab("diet");
+      setActiveTab('diet');
     } catch (error) {
-      console.error("Error generating diet plan:", error);
+      console.error('Error generating diet plan:', error, userId);
       // Handle error appropriately - you could set an error state here
     } finally {
       setIsLoading(false);
@@ -114,10 +107,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Client Name - optional field for reference */}
             <div>
-              <label
-                htmlFor="clientName"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="clientName" className="block text-sm font-medium mb-2">
                 Client Name (Optional)
               </label>
               <input
@@ -132,15 +122,12 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
 
             {/* Diet Preference */}
             <div>
-              <label
-                htmlFor="dietPreference"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="dietPreference" className="block text-sm font-medium mb-2">
                 Diet Preference
               </label>
               <select
                 id="dietPreference"
-                {...register("dietPreference")}
+                {...register('dietPreference')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 {DIET_PREFERENCES.map((pref) => (
@@ -150,32 +137,24 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 ))}
               </select>
               {errors.dietPreference && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.dietPreference.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.dietPreference.message}</p>
               )}
             </div>
 
             {/* Medical Conditions */}
             <div>
               <fieldset>
-                <legend className="block text-sm font-medium mb-2">
-                  Medical Conditions
-                </legend>
+                <legend className="block text-sm font-medium mb-2">Medical Conditions</legend>
                 <div className="space-y-2">
                   {MEDICAL_CONDITIONS.map((condition) => {
                     const id = `condition-${condition}`;
                     return (
-                      <label
-                        key={condition}
-                        htmlFor={id}
-                        className="flex items-center"
-                      >
+                      <label key={condition} htmlFor={id} className="flex items-center">
                         <input
                           id={id}
                           type="checkbox"
                           value={condition}
-                          {...register("medicalConditions")}
+                          {...register('medicalConditions')}
                           className="mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500"
                         />
                         {condition}
@@ -185,97 +164,75 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 </div>
               </fieldset>
               {errors.medicalConditions && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.medicalConditions.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.medicalConditions.message}</p>
               )}
             </div>
 
             {/* Location */}
             <div>
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="location" className="block text-sm font-medium mb-2">
                 Location
               </label>
               <input
                 id="location"
                 type="text"
-                {...register("location")}
+                {...register('location')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter city/region"
               />
               {errors.location && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.location.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
               )}
             </div>
 
             {/* Country */}
             <div>
-              <label
-                htmlFor="country"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="country" className="block text-sm font-medium mb-2">
                 Country
               </label>
               <input
                 id="country"
                 type="text"
-                {...register("country")}
+                {...register('country')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter country"
               />
               {errors.country && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.country.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>
               )}
             </div>
 
             {/* Target Calories */}
             <div>
-              <label
-                htmlFor="targetCalories"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="targetCalories" className="block text-sm font-medium mb-2">
                 Target Calories (Optional)
               </label>
               <input
                 id="targetCalories"
                 type="number"
-                {...register("targetCalories", { valueAsNumber: true })}
+                {...register('targetCalories', { valueAsNumber: true })}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter target calories"
               />
               {errors.targetCalories && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.targetCalories.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.targetCalories.message}</p>
               )}
             </div>
 
             {/* Special Instructions */}
             <div>
-              <label
-                htmlFor="specialInstructions"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="specialInstructions" className="block text-sm font-medium mb-2">
                 Special Instructions (Optional)
               </label>
               <textarea
                 id="specialInstructions"
-                {...register("specialInstructions")}
+                {...register('specialInstructions')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter any special instructions or preferences"
                 rows={3}
               />
               {errors.specialInstructions && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.specialInstructions.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.specialInstructions.message}</p>
               )}
             </div>
 

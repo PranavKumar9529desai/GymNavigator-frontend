@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { CheckCheck, Clock, Dumbbell, FlameIcon } from "lucide-react";
-import type { WorkoutSchedule } from "../../_actions/generate-ai-workout";
+import { Badge } from '@/components/ui/badge';
+import { CheckCheck, Clock, Dumbbell, FlameIcon } from 'lucide-react';
+import type { WorkoutSchedule } from '../../_actions/generate-ai-workout';
 
 interface WorkoutDayDetailsProps {
   currentSchedule: WorkoutSchedule;
@@ -63,27 +63,26 @@ export default function WorkoutDayDetails({ currentSchedule }: WorkoutDayDetails
                 {currentSchedule.duration} minutes
               </span>
               <span className="flex items-center gap-1 text-sm">
-                <FlameIcon className="h-4 w-4 text-indigo-600" />
-                ~{currentSchedule.calories} calories
+                <FlameIcon className="h-4 w-4 text-indigo-600" />~{currentSchedule.calories}{' '}
+                calories
               </span>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Exercise list */}
       <div className="p-2 sm:p-3">
         <div className="space-y-2">
           {currentSchedule.exercises.map((exercise, index) => (
-            <ExerciseItem 
-              key={`${exercise.name}-${index}`}
-              exercise={exercise}
-              index={index}
-            />
+            <ExerciseItem key={`${exercise.name}-${index}`} exercise={exercise} index={index} />
           ))}
 
           <div className="w-full flex justify-center pt-3 sm:pt-4">
-            <Badge variant="outline" className="flex items-center gap-2 py-1.5 px-3 sm:py-2 sm:px-4 border-indigo-200 dark:border-indigo-800/30">
+            <Badge
+              variant="outline"
+              className="flex items-center gap-2 py-1.5 px-3 sm:py-2 sm:px-4 border-indigo-200 dark:border-indigo-800/30"
+            >
               <CheckCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-600" />
               Complete All Exercises
             </Badge>

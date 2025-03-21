@@ -1,28 +1,28 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Apple, ChevronLeft, Salad, Utensils } from "lucide-react";
-import Link from "next/link";
-import React from "react";
-import { Suspense } from "react";
-import { getUserById } from "./_actions/get-user-by-id";
-import { DietHistoryProvider } from "./_components/diet-history/diet-history-provider";
-import { TabsWrapper } from "./_components/tabs/tabs-wrapper";
-import UserProfileCard from "./_components/user-profile/user-profile-card";
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Apple, ChevronLeft, Salad, Utensils } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+import { Suspense } from 'react';
+import { getUserById } from './_actions/get-user-by-id';
+import { DietHistoryProvider } from './_components/diet-history/diet-history-provider';
+import { TabsWrapper } from './_components/tabs/tabs-wrapper';
+import UserProfileCard from './_components/user-profile/user-profile-card';
 
 // Pre-generate decoration positions
 const decorations = [
-  { left: "0%", top: "0%", transform: "translate(20%, 30%)" },
-  { left: "25%", top: "0%", transform: "translate(-10%, 40%)" },
-  { left: "50%", top: "0%", transform: "translate(15%, -20%)" },
-  { left: "75%", top: "0%", transform: "translate(5%, 25%)" },
-  { left: "0%", top: "33%", transform: "translate(-5%, 10%)" },
-  { left: "25%", top: "33%", transform: "translate(25%, -15%)" },
-  { left: "50%", top: "33%", transform: "translate(-20%, 20%)" },
-  { left: "75%", top: "33%", transform: "translate(10%, -10%)" },
-  { left: "0%", top: "66%", transform: "translate(15%, -25%)" },
-  { left: "25%", top: "66%", transform: "translate(-15%, 5%)" },
-  { left: "50%", top: "66%", transform: "translate(25%, 15%)" },
-  { left: "75%", top: "66%", transform: "translate(-5%, -5%)" },
+  { left: '0%', top: '0%', transform: 'translate(20%, 30%)' },
+  { left: '25%', top: '0%', transform: 'translate(-10%, 40%)' },
+  { left: '50%', top: '0%', transform: 'translate(15%, -20%)' },
+  { left: '75%', top: '0%', transform: 'translate(5%, 25%)' },
+  { left: '0%', top: '33%', transform: 'translate(-5%, 10%)' },
+  { left: '25%', top: '33%', transform: 'translate(25%, -15%)' },
+  { left: '50%', top: '33%', transform: 'translate(-20%, 20%)' },
+  { left: '75%', top: '33%', transform: 'translate(10%, -10%)' },
+  { left: '0%', top: '66%', transform: 'translate(15%, -25%)' },
+  { left: '25%', top: '66%', transform: 'translate(-15%, 5%)' },
+  { left: '50%', top: '66%', transform: 'translate(25%, 15%)' },
+  { left: '75%', top: '66%', transform: 'translate(-5%, -5%)' },
 ];
 
 export default async function AssignDietPlanWithAI({
@@ -31,7 +31,7 @@ export default async function AssignDietPlanWithAI({
   searchParams: Promise<{ userId?: string }>;
 }) {
   // Get userId from search params
-  const userId = (await searchParams).userId || "defaultUserId";
+  const userId = (await searchParams).userId || 'defaultUserId';
 
   // Fetch user data
   const response = await getUserById(userId);
@@ -66,7 +66,7 @@ export default async function AssignDietPlanWithAI({
                     key={`deco-${i}-${style.left}-${style.top}`}
                     className="flex items-center justify-center opacity-20"
                     style={{
-                      position: "absolute",
+                      position: 'absolute',
                       left: style.left,
                       top: style.top,
                       transform: style.transform,
@@ -89,15 +89,12 @@ export default async function AssignDietPlanWithAI({
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
-                Create{" "}
-                <span className="text-blue-200">Perfect Diet Plans</span> in
-                Seconds
+                Create <span className="text-blue-200">Perfect Diet Plans</span> in Seconds
               </h1>
 
               <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
-                Let our AI design personalized nutrition plans tailored to your
-                client's specific needs and health goals — turning hours of
-                planning into moments.
+                Let our AI design personalized nutrition plans tailored to your client's specific
+                needs and health goals — turning hours of planning into moments.
               </p>
 
               {/* Decorative icons */}
@@ -126,7 +123,7 @@ export default async function AssignDietPlanWithAI({
 
             {/* Right column - Diet Form */}
             <div className="md:col-span-8">
-              <TabsWrapper userId={userId} />
+              <TabsWrapper userId={userId} userData={user} />
             </div>
           </div>
         </div>

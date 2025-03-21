@@ -88,7 +88,7 @@ const createColumns = (
               ))}
             </SelectContent>
           </Select>
-          <Link 
+          <Link
             href={`/dashboard/trainer/diet/assigndietplan/assigndietplanwithai?userId=${row.original.id}`}
             className="flex items-center justify-center w-[200px] bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
           >
@@ -251,7 +251,7 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
                     ))}
                   </SelectContent>
                 </Select>
-                <Link 
+                <Link
                   href={`/dashboard/trainer/diet/assigndietplan/assigndietplanwithai?userId=${user.id}`}
                   className="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
                 >

@@ -6,14 +6,12 @@ import {
 import { type WorkoutPlan, getAllWorkoutPlans } from "../Getworkout";
 import UserWorkoutAssignmentDetails from "./_components/UserWorkoutAssignmentDetails";
 
-interface Props {
-  params: {
-    userid: string;
-  };
-}
-
-export default async function AssignWorkoutToUserPage({ params }: Props) {
-  const { userid } = params;
+export default async function AssignWorkoutToUserPage({
+  params,
+}: {
+  params: Promise<{ userid: string }>;
+}) {
+  const { userid } = await params;
 
   // Fetch user details and available workout plans
   const [users, workoutPlansResult] = await Promise.all([

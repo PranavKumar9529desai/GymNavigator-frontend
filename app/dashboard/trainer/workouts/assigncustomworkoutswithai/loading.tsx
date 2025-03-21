@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Loading() {
   return (
@@ -24,8 +24,12 @@ export default function Loading() {
         <Tabs defaultValue="generate" className="space-y-6">
           <div className="bg-background sticky top-0 z-10 pb-2 pt-1 backdrop-blur-sm border-b">
             <TabsList className="w-full max-w-md mx-auto">
-              <TabsTrigger value="generate" className="flex-1">Generate</TabsTrigger>
-              <TabsTrigger value="history" className="flex-1">History</TabsTrigger>
+              <TabsTrigger value="generate" className="flex-1">
+                Generate
+              </TabsTrigger>
+              <TabsTrigger value="history" className="flex-1">
+                History
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -42,7 +46,7 @@ export default function Loading() {
                         <Skeleton className="h-6 w-32 mb-3" />
                         <div className="space-y-3">
                           {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="flex items-center gap-3">
+                            <div key={i as number} className="flex items-center gap-3">
                               <Skeleton className="h-12 w-12 rounded-full" />
                               <div className="space-y-2">
                                 <Skeleton className="h-5 w-32" />

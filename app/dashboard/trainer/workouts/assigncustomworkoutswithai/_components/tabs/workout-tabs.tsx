@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, Dumbbell, Loader2, Sparkles } from "lucide-react";
-import { Suspense, useState } from "react";
-import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
-import type { UserData } from "../../_actions/get-user-by-id";
-import type { WorkoutHistoryItem } from "../../_actions/get-workout-history";
-import { useWorkoutViewStore } from "../../_store/workout-view-store";
-import ClientWorkoutGenerator from "../client display/client-workout-generator";
-import { WorkoutHistoryProvider } from "../history/workout-history-provider";
-import WorkoutResults from "../workout-result/workout-results";
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChevronLeft, Dumbbell, Loader2, Sparkles } from 'lucide-react';
+import { Suspense, useState } from 'react';
+import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
+import type { UserData } from '../../_actions/get-user-by-id';
+import type { WorkoutHistoryItem } from '../../_actions/get-workout-history';
+import { useWorkoutViewStore } from '../../_store/workout-view-store';
+import ClientWorkoutGenerator from '../client display/client-workout-generator';
+import { WorkoutHistoryProvider } from '../history/workout-history-provider';
+import WorkoutResults from '../workout-result/workout-results';
 
 interface GeneratedWorkout {
   clientName: string;
@@ -76,46 +76,39 @@ function HistorySkeleton() {
   );
 }
 
-export default function WorkoutTabs({
-  userId,
-  user,
-  serverFallbackHistory,
-}: WorkoutTabsProps) {
+export default function WorkoutTabs({ userId, user, serverFallbackHistory }: WorkoutTabsProps) {
   // Use local state for activeTab instead of store
-  const [activeTab, setActiveTab] = useState<"generate" | "history" | "workout">("generate");
-  
+  const [activeTab, setActiveTab] = useState<'generate' | 'history' | 'workout'>('generate');
+
   const {
     activeWorkout,
     setShowWorkoutDetails,
-    reset,
+    // reset,
   } = useWorkoutViewStore();
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value as "generate" | "history" | "workout");
-    
+    setActiveTab(value as 'generate' | 'history' | 'workout');
+
     // If switching away from workout tab, reset the workout view
-    if (value !== "workout") {
+    if (value !== 'workout') {
       setShowWorkoutDetails(false);
     }
   };
 
   const handleBackToHistory = () => {
-    setActiveTab("history");
+    setActiveTab('history');
     setShowWorkoutDetails(false);
   };
 
   const handleWorkoutGenerated = (workout: GeneratedWorkout) => {
+    console.log('workout', workout);
     // When a workout is generated, switch to the workout tab
-    setActiveTab("workout");
+    setActiveTab('workout');
     setShowWorkoutDetails(true);
   };
 
   return (
-    <Tabs
-      value={activeTab}
-      onValueChange={handleTabChange}
-      className="space-y-8"
-    >
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
       <div className="sticky top-0 z-10 pb-4 pt-2 bg-gradient-to-b from-background via-background to-background/95 backdrop-blur-lg">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="flex justify-center">
@@ -152,18 +145,12 @@ export default function WorkoutTabs({
       >
         <div className="container max-w-5xl mx-auto px-4">
           <Suspense fallback={<GenerateWorkoutSkeleton />}>
-            <ClientWorkoutGenerator 
-              user={user} 
-              onWorkoutGenerated={handleWorkoutGenerated}
-            />
+            <ClientWorkoutGenerator user={user} onWorkoutGenerated={handleWorkoutGenerated} />
           </Suspense>
         </div>
       </TabsContent>
 
-      <TabsContent
-        value="history"
-        className="focus-visible:outline-none focus-visible:ring-0"
-      >
+      <TabsContent value="history" className="focus-visible:outline-none focus-visible:ring-0">
         <div className="container max-w-5xl mx-auto px-4">
           <Suspense fallback={<HistorySkeleton />}>
             <div className="space-y-6">
@@ -182,10 +169,7 @@ export default function WorkoutTabs({
         </div>
       </TabsContent>
 
-      <TabsContent
-        value="workout"
-        className="focus-visible:outline-none focus-visible:ring-0"
-      >
+      <TabsContent value="workout" className="focus-visible:outline-none focus-visible:ring-0">
         <div className="container max-w-5xl mx-auto px-4">
           {activeWorkout ? (
             <div className="space-y-6">
@@ -200,10 +184,13 @@ export default function WorkoutTabs({
                   <span>Back to history</span>
                 </Button>
                 <div className="text-sm">
-                  Workout for: <span className="font-medium text-indigo-700 dark:text-indigo-400">{activeWorkout.clientName}</span>
+                  Workout for:{' '}
+                  <span className="font-medium text-indigo-700 dark:text-indigo-400">
+                    {activeWorkout.clientName}
+                  </span>
                 </div>
               </div>
-              
+
               <WorkoutResults
                 workoutPlan={activeWorkout.workoutPlan}
                 onSave={() => {
@@ -226,17 +213,17 @@ export default function WorkoutTabs({
                   Please select a workout from your history or generate a new one to view it here.
                 </p>
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setActiveTab("history")}
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('history')}
                     className="gap-1 border-indigo-200 dark:border-indigo-800/30"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Go to History
                   </Button>
-                  <Button 
+                  <Button
                     variant="default"
-                    onClick={() => setActiveTab("generate")}
+                    onClick={() => setActiveTab('generate')}
                     className="gap-1 bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 hover:from-indigo-600 hover:to-blue-600 text-white shadow-md"
                   >
                     <Sparkles className="h-4 w-4" />
@@ -250,4 +237,4 @@ export default function WorkoutTabs({
       </TabsContent>
     </Tabs>
   );
-} 
+}

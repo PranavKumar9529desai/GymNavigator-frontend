@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import type { WorkoutPlan } from "../../_actions/get-workout-plans";
+import { useState } from 'react';
+import type { WorkoutPlan } from '../../_actions/get-workout-plans';
 
 interface Props {
   workoutPlans: WorkoutPlan[];
@@ -9,21 +9,19 @@ interface Props {
 }
 
 export default function WorkoutSearchFilters({ workoutPlans, onFilterChange }: Props) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [selectedMuscleTargets, setSelectedMuscleTargets] = useState<string[]>([]);
 
   // Get unique muscle targets and days from all workout plans
   const uniqueMuscleTargets = Array.from(
     new Set(
-      workoutPlans.flatMap((plan) =>
-        plan.schedules.map((schedule) => schedule.muscleTarget)
-      )
-    )
+      workoutPlans.flatMap((plan) => plan.schedules.map((schedule) => schedule.muscleTarget)),
+    ),
   ).sort();
 
   const uniqueDays = Array.from(
-    new Set(workoutPlans.flatMap((plan) => plan.schedules.map((s) => s.dayOfWeek)))
+    new Set(workoutPlans.flatMap((plan) => plan.schedules.map((s) => s.dayOfWeek))),
   ).sort();
 
   const handleSearch = (query: string) => {
@@ -47,11 +45,7 @@ export default function WorkoutSearchFilters({ workoutPlans, onFilterChange }: P
     filterWorkouts(searchQuery, selectedDays, newMuscles);
   };
 
-  const filterWorkouts = (
-    query: string,
-    days: string[],
-    muscles: string[]
-  ) => {
+  const filterWorkouts = (query: string, days: string[], muscles: string[]) => {
     let filtered = workoutPlans;
 
     // Search by name or description
@@ -60,23 +54,21 @@ export default function WorkoutSearchFilters({ workoutPlans, onFilterChange }: P
       filtered = filtered.filter(
         (plan) =>
           plan.name.toLowerCase().includes(lowerQuery) ||
-          (plan.description?.toLowerCase() || "").includes(lowerQuery)
+          (plan.description?.toLowerCase() || '').includes(lowerQuery),
       );
     }
 
     // Filter by selected days
     if (days.length > 0) {
       filtered = filtered.filter((plan) =>
-        plan.schedules.some((schedule) => days.includes(schedule.dayOfWeek))
+        plan.schedules.some((schedule) => days.includes(schedule.dayOfWeek)),
       );
     }
 
     // Filter by selected muscle targets
     if (muscles.length > 0) {
       filtered = filtered.filter((plan) =>
-        plan.schedules.some((schedule) =>
-          muscles.includes(schedule.muscleTarget)
-        )
+        plan.schedules.some((schedule) => muscles.includes(schedule.muscleTarget)),
       );
     }
 
@@ -182,8 +174,8 @@ export default function WorkoutSearchFilters({ workoutPlans, onFilterChange }: P
                   type="button"
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                     selectedDays.includes(day)
-                      ? "bg-blue-500 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      ? 'bg-blue-500 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {day}
@@ -203,8 +195,8 @@ export default function WorkoutSearchFilters({ workoutPlans, onFilterChange }: P
                   type="button"
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                     selectedMuscleTargets.includes(muscle)
-                      ? "bg-indigo-500 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      ? 'bg-indigo-500 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {muscle}

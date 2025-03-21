@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
-import type { AxiosResponse } from "axios";
+import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import type { AxiosResponse } from 'axios';
 
 // Types that match backend exactly
 export interface Exercise {
@@ -61,13 +61,15 @@ interface ApiResponse {
 export const getTodaysWorkout = async (): Promise<TodaysWorkout | null> => {
   try {
     const clientAxios = await ClientReqConfig();
-    
-    const response: AxiosResponse<ApiResponse> = await clientAxios.get("/workout/myworkouts/get-todays-workout");
-    
+
+    const response: AxiosResponse<ApiResponse> = await clientAxios.get(
+      '/workout/myworkouts/get-todays-workout',
+    );
+
     if (!response.data?.data?.workout) {
       return null;
     }
-    
+
     return response.data.data.workout;
   } catch (error) {
     console.error("Error fetching today's workouts:", error);

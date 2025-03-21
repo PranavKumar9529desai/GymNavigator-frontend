@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
 // Define response types for strong type safety
 export interface HealthProfile {
@@ -33,7 +33,7 @@ export async function getUserById(userId: string) {
     const response = await trainerAxios.get(`/client/user/${userId}`);
     const data = response.data;
 
-    if (data.msg === "success" && data.user) {
+    if (data.msg === 'success' && data.user) {
       return {
         success: true,
         data: data.user as UserData,
@@ -42,13 +42,13 @@ export async function getUserById(userId: string) {
 
     return {
       success: false,
-      error: data.msg || "Failed to fetch user data",
+      error: data.msg || 'Failed to fetch user data',
     };
   } catch (error) {
-    console.error("Error fetching user by ID:", error);
+    console.error('Error fetching user by ID:', error);
     return {
       success: false,
-      error: "Failed to fetch user data",
+      error: 'Failed to fetch user data',
     };
   }
 }

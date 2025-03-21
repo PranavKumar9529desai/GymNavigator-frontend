@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Dumbbell } from "lucide-react";
+import { Dumbbell } from 'lucide-react';
 
 interface ExerciseProps {
   exercise: {
@@ -14,7 +14,7 @@ interface ExerciseProps {
     muscleGroup?: string;
   };
   index: number;
-  variant?: "default" | "compact" | "detailed";
+  variant?: 'default' | 'compact' | 'detailed';
   showMuscleGroup?: boolean;
   showIndex?: boolean;
 }
@@ -22,12 +22,12 @@ interface ExerciseProps {
 export default function Exercise({
   exercise,
   index,
-  variant = "default",
+  variant = 'default',
   showMuscleGroup = false,
   showIndex = true,
 }: ExerciseProps) {
   // Handle different display variants
-  if (variant === "compact") {
+  if (variant === 'compact') {
     return (
       <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
         <div className="flex items-center gap-2">
@@ -36,9 +36,7 @@ export default function Exercise({
               {index + 1}
             </span>
           )}
-          <span className="font-medium text-sm truncate max-w-[180px]">
-            {exercise.name}
-          </span>
+          <span className="font-medium text-sm truncate max-w-[180px]">{exercise.name}</span>
         </div>
         <span className="text-xs bg-background/50 px-2 py-1 rounded-full">
           {exercise.sets} × {exercise.reps}
@@ -47,7 +45,7 @@ export default function Exercise({
     );
   }
 
-  if (variant === "detailed") {
+  if (variant === 'detailed') {
     return (
       <div className="rounded-xl p-4 transition-all shadow-sm group bg-gradient-to-br from-transparent to-muted/10 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 border">
         <div className="flex items-start gap-3">
@@ -64,34 +62,34 @@ export default function Exercise({
             <h4 className="font-medium text-base group-hover:text-indigo-600 transition-colors">
               {exercise.name}
             </h4>
-            
+
             {showMuscleGroup && exercise.muscleGroup && (
               <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full mt-1 inline-block">
                 {exercise.muscleGroup}
               </span>
             )}
-            
+
             <p className="text-sm mt-2 text-muted-foreground group-hover:text-foreground/70 transition-colors">
               {exercise.description}
             </p>
-            
+
             <div className="flex flex-wrap gap-2 mt-3">
               <span className="text-xs bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 px-2.5 py-1 rounded-full font-medium">
                 {exercise.sets} sets × {exercise.reps} reps
               </span>
-              
+
               {exercise.weight && (
                 <span className="text-xs bg-muted/50 px-2.5 py-1 rounded-full">
                   {exercise.weight} weight
                 </span>
               )}
-              
+
               {exercise.rest && (
                 <span className="text-xs bg-muted/50 px-2.5 py-1 rounded-full">
                   {exercise.rest} rest
                 </span>
               )}
-              
+
               {exercise.duration && (
                 <span className="text-xs bg-muted/50 px-2.5 py-1 rounded-full">
                   {exercise.duration} duration

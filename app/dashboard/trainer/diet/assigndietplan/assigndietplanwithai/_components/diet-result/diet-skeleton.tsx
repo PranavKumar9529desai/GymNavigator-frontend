@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Utensils } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Utensils } from 'lucide-react';
 
 export default function DietSkeleton() {
   return (
@@ -26,7 +26,10 @@ export default function DietSkeleton() {
         <CardContent className="pt-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {[1, 2, 3].map((index) => (
-              <div key={index} className="p-3 bg-green-50/50 dark:bg-green-900/20 rounded-md border border-green-100/50 dark:border-green-800/30 text-center">
+              <div
+                key={index}
+                className="p-3 bg-green-50/50 dark:bg-green-900/20 rounded-md border border-green-100/50 dark:border-green-800/30 text-center"
+              >
                 <div className="text-sm text-muted-foreground mb-1">
                   <Skeleton className="h-4 w-20 mx-auto bg-slate-300/80 dark:bg-slate-700/80" />
                 </div>
@@ -45,7 +48,10 @@ export default function DietSkeleton() {
 
             <div className="space-y-4">
               {[1, 2, 3, 4].map((index) => (
-                <Card key={index} className="overflow-hidden border border-green-100/50 dark:border-green-800/30">
+                <Card
+                  key={index}
+                  className="overflow-hidden border border-green-100/50 dark:border-green-800/30"
+                >
                   <CardHeader className="py-3 px-4 bg-green-50/70 dark:bg-green-900/30">
                     <div className="flex justify-between items-center">
                       <Skeleton className="h-5 w-24 bg-slate-300/80 dark:bg-slate-700/80" />
@@ -82,4 +88,4 @@ export default function DietSkeleton() {
       </div>
     </div>
   );
-} 
+}

@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import type { gym } from "@/app/(common)/selectgym/_components/SelectGym";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, Loader2 } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { verifyGymToken } from "../_actions/verify-gym-token";
+import type { gym } from '@/app/(common)/selectgym/_components/SelectGym';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircle2, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { verifyGymToken } from '../_actions/verify-gym-token';
 
 interface AuthTokenFormProps {
   gym: gym;
 }
 
 export function AuthTokenForm({ gym }: AuthTokenFormProps) {
-  const [authToken, setAuthToken] = useState("");
+  const [authToken, setAuthToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
@@ -26,9 +26,9 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
 
     if (!authToken.trim()) {
       toast({
-        title: "Error",
-        description: "Authentication token is required",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Authentication token is required',
+        variant: 'destructive',
       });
       return;
     }
@@ -40,26 +40,28 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
       if (result.success) {
         setIsRedirecting(true);
         toast({
-          title: "Success",
-          description: "Authentication successful!",
+          title: 'Success',
+          description: 'Authentication successful!',
         });
 
         // Add a slight delay before redirect to allow session update to complete
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push('/dashboard');
         }, 2000);
       } else {
         toast({
-          title: "Verification Failed",
-          description: result.message || "Invalid authentication token",
-          variant: "destructive",
+          title: 'Verification Failed',
+          description: result.message || 'Invalid authentication token',
+          variant: 'destructive',
         });
       }
-    } catch (error : unknown) {
+    } catch (error: unknown) {
+      console.error('Error during verification:', error);
       toast({
-        title: "Error",
-        description: "An error occurred during verification",
-        variant: "destructive",
+        title: 'Error',
+        description:
+          error instanceof Error ? error.message : 'An error occurred during verification',
+        variant: 'destructive',
       });
     } finally {
       if (!isRedirecting) {
@@ -77,17 +79,13 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-gray-900">
-              Authentication Successful!
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900">Authentication Successful!</h2>
             <p className="text-gray-500">Redirecting to your dashboard...</p>
           </div>
 
           <div className="flex items-center justify-center w-full pt-4">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-sm text-gray-500">
-              Setting up your session...
-            </span>
+            <span className="ml-2 text-sm text-gray-500">Setting up your session...</span>
           </div>
         </div>
       </div>
@@ -101,17 +99,12 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
           <Image src={gym.img} alt={gym.name} fill className="object-cover" />
         </div>
         <h2 className="text-xl font-bold text-gray-900">{gym.name}</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Enter gym authentication token
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Enter gym authentication token</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label
-            htmlFor="authToken"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="authToken" className="block text-sm font-medium text-gray-700">
             Authentication Token
           </label>
           <Input
@@ -126,18 +119,14 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full py-6 text-lg"
-          disabled={isLoading}
-        >
+        <Button type="submit" className="w-full py-6 text-lg" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Verifying...
             </>
           ) : (
-            "Verify Token"
+            'Verify Token'
           )}
         </Button>
       </form>

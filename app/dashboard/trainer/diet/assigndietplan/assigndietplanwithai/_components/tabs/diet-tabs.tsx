@@ -1,18 +1,15 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronLeft, Loader2, Sparkles, Utensils } from "lucide-react";
-import { Suspense, useState } from "react";
-import type { DietPlan } from "../../../_actions /GetallDiets";
-import {
-  type DietHistoryItem,
-  useDietViewStore,
-} from "../../_store/diet-view-store";
-import { DietForm } from "../diet-form/diet-form";
-import DietResults from "../diet-result/diet-results";
-import { DietHistoryProvider } from "../history/diet-history-provider";
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChevronLeft, Loader2, Sparkles, Utensils } from 'lucide-react';
+import { Suspense, useState } from 'react';
+import type { DietPlan } from '../../../_actions /GetallDiets';
+import { type DietHistoryItem, useDietViewStore } from '../../_store/diet-view-store';
+import { DietForm } from '../diet-form/diet-form';
+import DietResults from '../diet-result/diet-results';
+import { DietHistoryProvider } from '../history/diet-history-provider';
 
 interface GeneratedDiet {
   clientName: string;
@@ -77,44 +74,35 @@ function HistorySkeleton() {
   );
 }
 
-export default function DietTabs({
-  userId,
-  userName,
-  serverFallbackHistory,
-}: DietTabsProps) {
+export default function DietTabs({ userId, userName, serverFallbackHistory }: DietTabsProps) {
   // Use local state for activeTab
-  const [activeTab, setActiveTab] = useState<"generate" | "history" | "diet">(
-    "generate"
-  );
+  const [activeTab, setActiveTab] = useState<'generate' | 'history' | 'diet'>('generate');
 
-  const { activeDiet, setShowDietDetails, reset } = useDietViewStore();
+  const { activeDiet, setShowDietDetails } = useDietViewStore();
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value as "generate" | "history" | "diet");
+    setActiveTab(value as 'generate' | 'history' | 'diet');
 
     // If switching away from diet tab, reset the diet view
-    if (value !== "diet") {
+    if (value !== 'diet') {
       setShowDietDetails(false);
     }
   };
 
   const handleBackToHistory = () => {
-    setActiveTab("history");
+    setActiveTab('history');
     setShowDietDetails(false);
   };
 
   const handleDietGenerated = (diet: GeneratedDiet) => {
+    console.log('Diet generated:', diet);
     // When a diet is generated, switch to the diet tab
-    setActiveTab("diet");
+    setActiveTab('diet');
     setShowDietDetails(true);
   };
 
   return (
-    <Tabs
-      value={activeTab}
-      onValueChange={handleTabChange}
-      className="space-y-8 "
-    >
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8 ">
       <div className="sticky top-0 z-10 pb-4 pt-2 bg-gradient-to-b from-background via-background to-background/95 backdrop-blur-lg">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="flex justify-center">
@@ -162,34 +150,23 @@ export default function DietTabs({
         </div>
       </TabsContent>
 
-      <TabsContent
-        value="history"
-        className="focus-visible:outline-none focus-visible:ring-0"
-      >
+      <TabsContent value="history" className="focus-visible:outline-none focus-visible:ring-0">
         <div className="container max-w-5xl mx-auto px-4">
           <Suspense fallback={<HistorySkeleton />}>
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-green-50/50 via-emerald-50/30 to-green-50/50 dark:from-green-950/50 dark:via-emerald-950/30 dark:to-green-950/50 p-4 rounded-lg border border-green-100/50 dark:border-green-800/20 mb-6">
-                <h3 className="text-xl font-medium">
-                  Previously Generated Diet Plans
-                </h3>
+                <h3 className="text-xl font-medium">Previously Generated Diet Plans</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   View and load your previously created diet plans
                 </p>
               </div>
-              <DietHistoryProvider
-                userId={userId}
-                serverFallbackHistory={serverFallbackHistory}
-              />
+              <DietHistoryProvider userId={userId} serverFallbackHistory={serverFallbackHistory} />
             </div>
           </Suspense>
         </div>
       </TabsContent>
 
-      <TabsContent
-        value="diet"
-        className="focus-visible:outline-none focus-visible:ring-0"
-      >
+      <TabsContent value="diet" className="focus-visible:outline-none focus-visible:ring-0">
         <div className="container max-w-5xl mx-auto px-4">
           {activeDiet ? (
             <div className="space-y-6">
@@ -204,7 +181,7 @@ export default function DietTabs({
                   <span>Back to history</span>
                 </Button>
                 <div className="text-sm">
-                  Diet plan for:{" "}
+                  Diet plan for:{' '}
                   <span className="font-medium text-green-700 dark:text-green-400">
                     {activeDiet.clientName}
                   </span>
@@ -228,17 +205,14 @@ export default function DietTabs({
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40 flex items-center justify-center mb-4 shadow-inner">
                   <Utensils className="h-8 w-8 text-green-600/70 dark:text-green-400/70" />
                 </div>
-                <h3 className="text-xl font-medium mb-2">
-                  No Diet Plan Selected
-                </h3>
+                <h3 className="text-xl font-medium mb-2">No Diet Plan Selected</h3>
                 <p className="text-muted-foreground max-w-md mb-6">
-                  Please select a diet plan from your history or generate a new
-                  one to view it here.
+                  Please select a diet plan from your history or generate a new one to view it here.
                 </p>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
-                    onClick={() => setActiveTab("history")}
+                    onClick={() => setActiveTab('history')}
                     className="gap-1 border-green-200 dark:border-green-800/30"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -246,7 +220,7 @@ export default function DietTabs({
                   </Button>
                   <Button
                     variant="default"
-                    onClick={() => setActiveTab("generate")}
+                    onClick={() => setActiveTab('generate')}
                     className="gap-1 bg-gradient-to-br from-green-600/90 via-emerald-600/80 to-green-700/90 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
                   >
                     <Sparkles className="h-4 w-4" />

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Loader2, MessageSquare, SendIcon } from "lucide-react";
-import { useState } from "react";
-import type { WorkoutPlan } from "../_actions/generate-ai-workout";
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Loader2, MessageSquare, SendIcon } from 'lucide-react';
+import { useState } from 'react';
+import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
 
 interface FeedbackChatProps {
   workoutPlan: WorkoutPlan;
   onSendFeedback: (feedback: string) => Promise<void>;
   isSubmitting: boolean;
   conversationHistory: Array<{
-    type: "ai" | "user";
+    type: 'ai' | 'user';
     message: string;
     workout?: WorkoutPlan;
     timestamp: Date;
@@ -19,19 +19,19 @@ interface FeedbackChatProps {
 }
 
 export function FeedbackChat({
-  workoutPlan,
+  // workoutPlan,
   onSendFeedback,
   isSubmitting,
   conversationHistory,
 }: FeedbackChatProps) {
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!feedback.trim() || isSubmitting) return;
-    
+
     await onSendFeedback(feedback);
-    setFeedback("");
+    setFeedback('');
   };
 
   return (
@@ -39,18 +39,18 @@ export function FeedbackChat({
       <div className="rounded-lg bg-muted/30 p-4 max-h-[400px] overflow-y-auto">
         <div className="space-y-4">
           {conversationHistory.map((entry, index) => (
-            <div 
-              key={`chat-${index}-${entry.timestamp.getTime()}`} 
-              className={`flex ${entry.type === "user" ? "justify-end" : "justify-start"}`}
+            <div
+              key={`chat-${index}-${entry.timestamp.getTime()}`}
+              className={`flex ${entry.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div 
+              <div
                 className={`max-w-[85%] p-4 rounded-lg ${
-                  entry.type === "user" 
-                    ? "bg-primary text-primary-foreground" 
-                    : "bg-muted text-muted-foreground"
+                  entry.type === 'user'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {entry.type === "user" ? (
+                {entry.type === 'user' ? (
                   <div className="flex gap-2 items-start">
                     <div className="whitespace-pre-wrap text-sm">{entry.message}</div>
                   </div>
@@ -64,7 +64,10 @@ export function FeedbackChat({
                   </div>
                 )}
                 <p className="text-xs opacity-70 text-right mt-2">
-                  {entry.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {entry.timestamp.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
                 </p>
               </div>
             </div>
@@ -73,17 +76,17 @@ export function FeedbackChat({
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2 items-end">
-        <Textarea 
+        <Textarea
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
           placeholder="Provide feedback to refine this workout plan..."
           className="resize-none min-h-[100px]"
           disabled={isSubmitting}
         />
-        <Button 
-          type="submit" 
-          size="icon" 
-          className="h-10 w-10 shrink-0" 
+        <Button
+          type="submit"
+          size="icon"
+          className="h-10 w-10 shrink-0"
           disabled={isSubmitting || !feedback.trim()}
         >
           {isSubmitting ? (

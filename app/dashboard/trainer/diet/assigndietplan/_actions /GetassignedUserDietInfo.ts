@@ -1,5 +1,5 @@
-"use server";
-import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+'use server';
+import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
 export interface AssignedUser {
   id: string;
@@ -37,17 +37,17 @@ interface ApiUserResponse {
 export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    console.log("getuserassignedwithtodietplans is called");
-    const response = await trainerAxios.get("/client/assignedusers");
-    if (response.data.msg === "success") {
-      console.log("response.data.users", response.data.users);
+    console.log('getuserassignedwithtodietplans is called');
+    const response = await trainerAxios.get('/client/assignedusers');
+    if (response.data.msg === 'success') {
+      console.log('response.data.users', response.data.users);
       // Transform the data to ensure all fields are present even if null
-      console.log("user id of the user is ", response.data.users[0].id);
+      console.log('user id of the user is ', response.data.users[0].id);
       return response.data.users.map((user: ApiUserResponse) => ({
         id: user.id,
         name: user.name,
         email: user.email,
-        membershipStatus: "active",
+        membershipStatus: 'active',
         HealthProfile: user.HealthProfile || null,
         dietPlanId: user.dietPlanId || null,
         dietPlanName: user.dietPlanName || null,
@@ -57,7 +57,7 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
     }
     return [];
   } catch (error) {
-    console.error("Error fetching assigned users with diet plans:", error);
+    console.error('Error fetching assigned users with diet plans:', error);
     return [];
   }
 };

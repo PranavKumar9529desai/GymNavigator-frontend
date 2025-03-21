@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Dumbbell, Clock, Calendar, Edit, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { UserData } from "../../_actions/get-user-by-id";
-import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
+} from '@/components/ui/accordion';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar, CheckCircle, Clock, Dumbbell, Edit } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
+import type { UserData } from '../../_actions/get-user-by-id';
 
 // Define interface for displayed exercise
 interface ExerciseDisplay {
@@ -36,18 +36,21 @@ interface WorkoutDisplay {
 }
 
 // Initialize with null - will be populated when the AI generates a workout
-const workoutData = null;
+// const workoutData = null;
 
 interface WorkoutPreviewProps {
   user: UserData | null;
   generatedWorkout?: WorkoutPlan;
 }
 
-export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: WorkoutPreviewProps) {
+export default function WorkoutPreview({
+  user,
+  generatedWorkout: propWorkout,
+}: WorkoutPreviewProps) {
   const [isAssigning, setIsAssigning] = useState(false);
   const [assigned, setAssigned] = useState(false);
   const [generatedWorkout, setGeneratedWorkout] = useState<WorkoutDisplay | null>(null);
-  
+
   // Update local state when prop changes
   useEffect(() => {
     if (propWorkout) {
@@ -56,30 +59,33 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
         name: propWorkout.name,
         description: propWorkout.description || '',
         goal: propWorkout.schedules[0]?.muscleTarget || 'General fitness',
-        duration: Math.round(propWorkout.schedules.reduce((sum, s) => sum + s.duration, 0) / propWorkout.schedules.length),
+        duration: Math.round(
+          propWorkout.schedules.reduce((sum, s) => sum + s.duration, 0) /
+            propWorkout.schedules.length,
+        ),
         experience: 'intermediate', // Default, can be made dynamic
-        days: propWorkout.schedules.map(s => s.dayOfWeek),
-        exercises: propWorkout.schedules.flatMap(s => 
+        days: propWorkout.schedules.map((s) => s.dayOfWeek),
+        exercises: propWorkout.schedules.flatMap((s) =>
           s.exercises.map((e, i) => ({
             id: `${s.dayOfWeek}-${i}`,
             name: e.name,
             sets: e.sets,
             reps: e.reps,
             rest: '60 sec', // Default, can be made dynamic
-            notes: e.description
-          }))
-        )
+            notes: e.description,
+          })),
+        ),
       };
-      
+
       setGeneratedWorkout(displayWorkout);
     }
   }, [propWorkout]);
 
   const handleAssignWorkout = () => {
     if (!user || !generatedWorkout) return;
-    
+
     setIsAssigning(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       console.log(`Assigning workout to ${user.name} (ID: ${user.id})`);
@@ -96,10 +102,9 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
         </div>
         <h3 className="text-xl font-medium mb-2">No Workout Generated Yet</h3>
         <p className="text-muted-foreground max-w-md">
-          {user 
-            ? "Complete the form and click \"Generate AI Workout\" to create a personalized workout plan."
-            : "Select a client first, then complete the form to generate a personalized workout plan."
-          }
+          {user
+            ? 'Complete the form and click "Generate AI Workout" to create a personalized workout plan.'
+            : 'Select a client first, then complete the form to generate a personalized workout plan.'}
         </p>
       </div>
     );
@@ -111,10 +116,11 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
         <CheckCircle className="h-5 w-5" />
         <AlertTitle className="text-green-800">Workout Successfully Assigned!</AlertTitle>
         <AlertDescription className="text-green-700">
-          "{generatedWorkout.name}" has been assigned to {user?.name}. They'll be notified about their new workout plan.
+          "{generatedWorkout.name}" has been assigned to {user?.name}. They'll be notified about
+          their new workout plan.
         </AlertDescription>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="mt-4 border-green-200 bg-green-100/50 text-green-800 hover:bg-green-100 hover:text-green-900"
           onClick={() => setAssigned(false)}
         >
@@ -130,7 +136,7 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
         <h3 className="text-xl font-semibold">{generatedWorkout.name}</h3>
         <p className="text-sm text-muted-foreground">{generatedWorkout.description}</p>
       </div>
-      
+
       <div className="flex flex-wrap gap-2">
         <Badge variant="secondary" className="flex items-center gap-1">
           <Dumbbell className="h-3 w-3" />
@@ -148,7 +154,7 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
           </Badge>
         ))}
       </div>
-      
+
       <Accordion type="single" collapsible className="w-full">
         {generatedWorkout.exercises.map((exercise) => (
           <AccordionItem key={exercise.id} value={exercise.id}>
@@ -177,7 +183,7 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
               </div>
               {exercise.notes && (
                 <div className="text-sm text-muted-foreground mt-3 p-3 bg-muted/20 rounded-md">
-                  <span className="font-medium text-foreground block mb-1">Instructions:</span> 
+                  <span className="font-medium text-foreground block mb-1">Instructions:</span>
                   {exercise.notes}
                 </div>
               )}
@@ -185,13 +191,13 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
           </AccordionItem>
         ))}
       </Accordion>
-      
+
       <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-3 pt-4 border-t mt-6">
         <Button variant="outline" size="sm" className="w-full sm:w-auto h-10">
           <Edit className="h-4 w-4 mr-2" /> Edit Workout
         </Button>
-        <Button 
-          onClick={handleAssignWorkout} 
+        <Button
+          onClick={handleAssignWorkout}
           disabled={isAssigning || !user}
           className="w-full sm:w-auto h-11 sm:h-10 px-6"
           size="default"
@@ -202,7 +208,7 @@ export default function WorkoutPreview({ user, generatedWorkout: propWorkout }: 
               Assigning...
             </>
           ) : (
-            "Assign to Client"
+            'Assign to Client'
           )}
         </Button>
       </div>

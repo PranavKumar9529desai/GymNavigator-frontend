@@ -26,12 +26,12 @@ export const GetExcerciseDetails = async (
     const response: AxiosResponse<SingleExerciseResponse> = await clientAxios.get(
       `/workout/singleworkout/${excerciseName}`,
     );
-    
+
     // Check for the nested data structure
     if (!response.data.data || !response.data.data.exercise) {
       throw new Error('Exercise not found or invalid response structure');
     }
-    
+
     return response.data.data.exercise;
   } catch (error) {
     console.error('Error fetching exercise:', error);

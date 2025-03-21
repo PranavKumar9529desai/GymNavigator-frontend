@@ -15,10 +15,10 @@ export function GradientText({
   return (
     <span
       className={cn(
-        "bg-gradient-to-r bg-clip-text text-transparent",
+        'bg-gradient-to-r bg-clip-text text-transparent',
         gradient,
         gymTheme.animation.gradient,
-        className
+        className,
       )}
     >
       {children}

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import type { WorkoutHistoryItem } from "../../_actions/get-workout-history";
-import { useWorkoutChatStore } from "../../_store/workout-chat-store";
-import WorkoutHistory from "./workout-history";
+import { useEffect, useState } from 'react';
+import type { WorkoutHistoryItem } from '../../_actions/get-workout-history';
+import { useWorkoutChatStore } from '../../_store/workout-chat-store';
+import WorkoutHistory from './workout-history';
 
 interface WorkoutHistoryProviderProps {
   userId: string;
@@ -15,11 +15,10 @@ export function WorkoutHistoryProvider({
   serverFallbackHistory,
 }: WorkoutHistoryProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [history, setHistory] = useState<WorkoutHistoryItem[]>(
-    serverFallbackHistory
-  );
+  const [history, setHistory] = useState<WorkoutHistoryItem[]>(serverFallbackHistory);
   const { getSavedWorkouts, initializeConversation, reset } = useWorkoutChatStore();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     // This runs on client-side only
     try {
@@ -31,7 +30,7 @@ export function WorkoutHistoryProvider({
         setHistory(savedWorkouts);
       }
     } catch (error) {
-      console.error("Error fetching saved workouts:", error);
+      console.error('Error fetching saved workouts:', error);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +46,7 @@ export function WorkoutHistoryProvider({
       if (workout.conversationHistory && workout.conversationHistory.length > 0) {
         // Load the conversation history
         for (const message of workout.conversationHistory) {
-          if (message.type === "ai" && message.workout) {
+          if (message.type === 'ai' && message.workout) {
             initializeConversation(message.workout);
             break; // We only need the last workout from AI
           }
@@ -57,7 +56,7 @@ export function WorkoutHistoryProvider({
         initializeConversation(workout.workoutPlan);
       }
     } catch (error) {
-      console.error("Error viewing workout:", error);
+      console.error('Error viewing workout:', error);
     }
   };
 
@@ -75,9 +74,7 @@ export function WorkoutHistoryProvider({
         history={history}
         isLoading={isLoading}
         onViewWorkout={handleViewWorkout}
-        dataSource={history.length > 0 && history[0].id.startsWith("workout-") 
-          ? "local" 
-          : "server"}
+        dataSource={history.length > 0 && history[0].id.startsWith('workout-') ? 'local' : 'server'}
       />
     </>
   );

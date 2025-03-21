@@ -1,9 +1,18 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Award, CalendarDays, CheckCircle, Clock, Dumbbell, MessageSquarePlus, Pencil, X } from "lucide-react";
-import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Award,
+  CalendarDays,
+  CheckCircle,
+  Clock,
+  Dumbbell,
+  MessageSquarePlus,
+  Pencil,
+  X,
+} from 'lucide-react';
+import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
 
 interface WorkoutHeaderProps {
   plan: WorkoutPlan;
@@ -14,20 +23,20 @@ interface WorkoutHeaderProps {
   setShowFeedbackChat: (show: boolean) => void;
 }
 
-export default function WorkoutHeader({ 
-  plan, 
-  setPlan, 
-  editMode, 
+export default function WorkoutHeader({
+  plan,
+  setPlan,
+  editMode,
   setEditMode,
   showFeedbackChat,
-  setShowFeedbackChat
+  setShowFeedbackChat,
 }: WorkoutHeaderProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-white to-slate-50/80 dark:from-gray-900 dark:to-gray-950/80 p-6 shadow-sm">
       <div className="absolute top-0 right-0 h-32 w-32 opacity-5 pointer-events-none">
         <Dumbbell className="h-full w-full" strokeWidth={1} />
       </div>
-      
+
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
         <div className="flex-1">
           {editMode ? (
@@ -43,14 +52,12 @@ export default function WorkoutHeader({
               {plan.name}
             </h2>
           )}
-          
+
           <div className="text-muted-foreground text-sm mt-2">
             {editMode ? (
               <Textarea
-                value={plan.description || ""}
-                onChange={(e) =>
-                  setPlan({ ...plan, description: e.target.value })
-                }
+                value={plan.description || ''}
+                onChange={(e) => setPlan({ ...plan, description: e.target.value })}
                 className="mt-2 min-h-[80px]"
                 placeholder="Add a description for this workout plan"
                 aria-label="Workout description"
@@ -60,7 +67,7 @@ export default function WorkoutHeader({
             )}
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           {editMode ? (
             <>
@@ -92,25 +99,30 @@ export default function WorkoutHeader({
                 <Pencil className="h-4 w-4 mr-1.5" /> Edit
               </Button>
               <Button
-                variant={showFeedbackChat ? "secondary" : "outline"}
+                variant={showFeedbackChat ? 'secondary' : 'outline'}
                 size="sm"
                 onClick={() => setShowFeedbackChat(!showFeedbackChat)}
-                className={`h-10 px-4 ${showFeedbackChat 
-                  ? "bg-primary/10 text-primary border-primary/20" 
-                  : "hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"} transition-colors`}
+                className={`h-10 px-4 ${
+                  showFeedbackChat
+                    ? 'bg-primary/10 text-primary border-primary/20'
+                    : 'hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200'
+                } transition-colors`}
               >
-                <MessageSquarePlus className="h-4 w-4 mr-1.5" /> 
-                {showFeedbackChat ? "Hide Feedback" : "Request Changes"}
+                <MessageSquarePlus className="h-4 w-4 mr-1.5" />
+                {showFeedbackChat ? 'Hide Feedback' : 'Request Changes'}
               </Button>
             </>
           )}
         </div>
       </div>
-      
+
       {/* Workout stats badges */}
       {plan.schedules.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-5">
-          <Badge variant="secondary" className="flex items-center gap-1 px-3 py-1 text-sm bg-primary/10 text-primary border-primary/20">
+          <Badge
+            variant="secondary"
+            className="flex items-center gap-1 px-3 py-1 text-sm bg-primary/10 text-primary border-primary/20"
+          >
             <Dumbbell className="h-3.5 w-3.5" />
             {plan.schedules.length} workout days
           </Badge>
@@ -120,7 +132,10 @@ export default function WorkoutHeader({
           </Badge>
           <Badge variant="secondary" className="flex items-center gap-1 px-3 py-1 text-sm">
             <Clock className="h-3.5 w-3.5" />
-            {Math.round(plan.schedules.reduce((avg, s) => avg + s.duration, 0) / plan.schedules.length)} min avg
+            {Math.round(
+              plan.schedules.reduce((avg, s) => avg + s.duration, 0) / plan.schedules.length,
+            )}{' '}
+            min avg
           </Badge>
         </div>
       )}

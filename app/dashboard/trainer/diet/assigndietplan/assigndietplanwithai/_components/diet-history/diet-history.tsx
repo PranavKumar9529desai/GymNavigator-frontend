@@ -1,21 +1,14 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { formatDistanceToNow } from "date-fns";
-import {
-  Calendar,
-  Check,
-  ChevronRight,
-  RefreshCw,
-  Search,
-  UtensilsCrossed,
-} from "lucide-react";
-import React, { useEffect } from "react";
-import type { DietHistoryItem } from "../../_store/diet-view-store";
-import { useDietViewStore } from "../../_store/diet-view-store";
-import { useDietHistory } from "./diet-history-provider";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { formatDistanceToNow } from 'date-fns';
+import { Calendar, Check, ChevronRight, RefreshCw, Search, UtensilsCrossed } from 'lucide-react';
+import React, { useEffect } from 'react';
+import type { DietHistoryItem } from '../../_store/diet-view-store';
+import { useDietViewStore } from '../../_store/diet-view-store';
+import { useDietHistory } from './diet-history-provider';
 
 interface DietHistoryProps {
   onSelectDiet: (diet: DietHistoryItem) => void;
@@ -25,7 +18,7 @@ interface DietHistoryProps {
 export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
   const { loading, history, error, refreshHistory } = useDietHistory();
   const { getSavedDiets } = useDietViewStore();
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [localHistory, setLocalHistory] = React.useState<DietHistoryItem[]>([]);
 
   useEffect(() => {
@@ -44,7 +37,7 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
     return localHistory.filter(
       (item) =>
         item.dietPlan.name.toLowerCase().includes(query) ||
-        item.dietPlan.description?.toLowerCase().includes(query)
+        item.dietPlan.description?.toLowerCase().includes(query),
     );
   }, [localHistory, searchQuery]);
 
@@ -61,16 +54,16 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
             </p>
             <RefreshCw className="h-4 w-4 animate-spin" />
           </div>
-          <DietHistoryList 
-            diets={localDiets} 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery} 
-            onSelectDiet={onSelectDiet} 
+          <DietHistoryList
+            diets={localDiets}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSelectDiet={onSelectDiet}
           />
         </div>
       );
     }
-    
+
     return (
       <div className="flex justify-center items-center p-8">
         <RefreshCw className="h-6 w-6 animate-spin" />
@@ -93,16 +86,16 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
               <RefreshCw className="h-3 w-3 mr-1" /> Sync with server
             </Button>
           </div>
-          <DietHistoryList 
-            diets={localDiets} 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery} 
-            onSelectDiet={onSelectDiet} 
+          <DietHistoryList
+            diets={localDiets}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSelectDiet={onSelectDiet}
           />
         </div>
       );
     }
-    
+
     return (
       <div className="p-6 text-center">
         <p className="text-red-500 mb-4">{error}</p>
@@ -126,11 +119,11 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
   }
 
   return (
-    <DietHistoryList 
-      diets={filteredHistory} 
-      searchQuery={searchQuery} 
-      setSearchQuery={setSearchQuery} 
-      onSelectDiet={onSelectDiet} 
+    <DietHistoryList
+      diets={filteredHistory}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      onSelectDiet={onSelectDiet}
     />
   );
 }
@@ -142,7 +135,12 @@ interface DietHistoryListProps {
   onSelectDiet: (diet: DietHistoryItem) => void;
 }
 
-function DietHistoryList({ diets, searchQuery, setSearchQuery, onSelectDiet }: DietHistoryListProps) {
+function DietHistoryList({
+  diets,
+  searchQuery,
+  setSearchQuery,
+  onSelectDiet,
+}: DietHistoryListProps) {
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -158,9 +156,7 @@ function DietHistoryList({ diets, searchQuery, setSearchQuery, onSelectDiet }: D
       <div className="grid gap-4">
         {diets.length === 0 ? (
           <div className="text-center p-6">
-            <p className="text-muted-foreground">
-              No matching diet plans found
-            </p>
+            <p className="text-muted-foreground">No matching diet plans found</p>
           </div>
         ) : (
           diets.map((item) => (
@@ -176,9 +172,7 @@ function DietHistoryList({ diets, searchQuery, setSearchQuery, onSelectDiet }: D
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">
-                      <h3 className="font-semibold truncate">
-                        {item.dietPlan.name}
-                      </h3>
+                      <h3 className="font-semibold truncate">{item.dietPlan.name}</h3>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <span className="whitespace-nowrap">
                           {formatDistanceToNow(new Date(item.createdAt), {
@@ -189,7 +183,7 @@ function DietHistoryList({ diets, searchQuery, setSearchQuery, onSelectDiet }: D
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                      {item.dietPlan.description || "No description"}
+                      {item.dietPlan.description || 'No description'}
                     </p>
                     <div className="flex gap-2 mt-2">
                       <div className="inline-flex items-center text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">

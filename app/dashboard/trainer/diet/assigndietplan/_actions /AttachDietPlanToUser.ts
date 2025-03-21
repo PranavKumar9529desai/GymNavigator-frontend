@@ -18,8 +18,9 @@ export const attachDietPlanToUser = async (
   dietPlanId: string,
 ): Promise<AttachDietPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
+  console.log('dietplan id is , userid is recievd from the client', dietPlanId, userId);
   try {
-    const response = await trainerAxios.post('/assigndietplantouser', {
+    const response = await trainerAxios.post('/diet/upsertdietplan', {
       userId: Number.parseInt(userId),
       dietPlanId: Number.parseInt(dietPlanId),
     });

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Extract JSON from a string that might contain markdown or explanatory text
@@ -20,10 +20,10 @@ export function extractJsonFromString(text: string): unknown | null {
         const cleanedJson = jsonMatch[0].replace(/:\s+/g, ': ');
         return JSON.parse(cleanedJson);
       } catch (e) {
-        console.error("Failed to parse JSON match:", e);
+        console.error('Failed to parse JSON match:', e);
       }
     }
-    
+
     // Look for JSON patterns in code blocks (common in AI responses)
     const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
     if (codeBlockMatch?.[1]) {
@@ -32,14 +32,14 @@ export function extractJsonFromString(text: string): unknown | null {
         const cleanedJson = codeBlockMatch[1].replace(/:\s+/g, ': ');
         return JSON.parse(cleanedJson);
       } catch (e) {
-        console.error("Failed to parse code block JSON:", e);
+        console.error('Failed to parse code block JSON:', e);
       }
     }
 
     // If we can't find a JSON object, return null
     return null;
   } catch (error) {
-    console.error("Failed to extract JSON from string:", error);
+    console.error('Failed to extract JSON from string:', error);
     return null;
   }
 }
@@ -49,7 +49,7 @@ export function extractJsonFromString(text: string): unknown | null {
  */
 export function validateResponseWithSchema<T>(
   response: string,
-  schema: z.ZodType<T>
+  schema: z.ZodType<T>,
 ): { valid: boolean; data?: T; errors?: z.ZodError } {
   try {
     // Extract JSON from response
@@ -60,8 +60,8 @@ export function validateResponseWithSchema<T>(
         valid: false,
         errors: new z.ZodError([
           {
-            code: "custom",
-            message: "No JSON data found in response",
+            code: 'custom',
+            message: 'No JSON data found in response',
             path: [],
           },
         ]),
@@ -83,7 +83,7 @@ export function validateResponseWithSchema<T>(
       errors: result.error,
     };
   } catch (error) {
-    console.error("Validation error:", error);
+    console.error('Validation error:', error);
     return {
       valid: false,
       errors:
@@ -91,9 +91,9 @@ export function validateResponseWithSchema<T>(
           ? error
           : new z.ZodError([
               {
-                code: "custom",
+                code: 'custom',
                 // @ts-ignore
-                message: error.message || "Unknown error during validation",
+                message: error.message || 'Unknown error during validation',
                 path: [],
               },
             ]),

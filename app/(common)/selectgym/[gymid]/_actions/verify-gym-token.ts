@@ -1,7 +1,7 @@
 'use server';
 
-import { VerifyAuthToken } from "../../_actions/VerifyAuthToken";
-import type { gym } from "../../_components/SelectGym";
+import { VerifyAuthToken } from '../../_actions/VerifyAuthToken';
+import type { gym } from '../../_components/SelectGym';
 
 interface VerificationResult {
   success: boolean;
@@ -11,16 +11,16 @@ interface VerificationResult {
 export async function verifyGymToken(gym: gym, authToken: string): Promise<VerificationResult> {
   try {
     const result = await VerifyAuthToken(gym, authToken);
-    
+
     return {
       success: result.success,
-      message: result.msg
+      message: result.msg,
     };
   } catch (error) {
-    console.error("Error in verifyGymToken:", error);
+    console.error('Error in verifyGymToken:', error);
     return {
       success: false,
-      message: "Failed to verify authentication token"
+      message: 'Failed to verify authentication token',
     };
   }
 }

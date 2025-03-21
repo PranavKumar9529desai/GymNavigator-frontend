@@ -4,7 +4,7 @@ import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
 export async function assignWorkoutPlanToUser(userId: string, workoutPlanId: number) {
   const trainerAxios = await TrainerReqConfig();
-  
+
   try {
     const response = await trainerAxios.post('/workouts/assign', {
       userId,
@@ -22,4 +22,4 @@ export async function assignWorkoutPlanToUser(userId: string, workoutPlanId: num
     console.error('Error assigning workout plan:', error);
     throw error;
   }
-} 
+}

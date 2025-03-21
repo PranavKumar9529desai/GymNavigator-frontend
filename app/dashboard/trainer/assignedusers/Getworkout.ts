@@ -1,5 +1,5 @@
-"use server";
-import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+'use server';
+import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
 export interface Exercise {
   id: number;
@@ -29,10 +29,10 @@ export interface WorkoutPlan {
 export const getAllWorkoutPlans = async () => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.get("/workouts/allworkoutplans");
+    const response = await trainerAxios.get('/workouts/allworkoutplans');
     const data = response.data;
 
-    if (data.msg === "success") {
+    if (data.msg === 'success') {
       return {
         success: true,
         workoutPlans: data.workoutPlans as WorkoutPlan[],
@@ -43,11 +43,11 @@ export const getAllWorkoutPlans = async () => {
       workoutPlans: [],
     };
   } catch (error) {
-    console.error("Error fetching workout plans:", error);
+    console.error('Error fetching workout plans:', error);
     return {
       success: false,
       workoutPlans: [],
-      error: "Failed to fetch workout plans",
+      error: 'Failed to fetch workout plans',
     };
   }
 };

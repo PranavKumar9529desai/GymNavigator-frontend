@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Clock, Dumbbell, Gauge, Loader2, Sparkles, StickyNote } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Calendar, Clock, Dumbbell, Gauge, Loader2, Sparkles, StickyNote } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -16,44 +16,44 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
-import { type WorkoutPlan, generateAiWorkout } from "../../_actions/generate-ai-workout";
-import type { UserData } from "../../_actions/get-user-by-id";
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
+import { type WorkoutPlan, generateAiWorkout } from '../../_actions/generate-ai-workout';
+import type { UserData } from '../../_actions/get-user-by-id';
 
 const daysOfWeek = [
-  { id: "monday", label: "Monday" },
-  { id: "tuesday", label: "Tuesday" },
-  { id: "wednesday", label: "Wednesday" },
-  { id: "thursday", label: "Thursday" },
-  { id: "friday", label: "Friday" },
-  { id: "saturday", label: "Saturday" },
-  { id: "sunday", label: "Sunday" },
+  { id: 'monday', label: 'Monday' },
+  { id: 'tuesday', label: 'Tuesday' },
+  { id: 'wednesday', label: 'Wednesday' },
+  { id: 'thursday', label: 'Thursday' },
+  { id: 'friday', label: 'Friday' },
+  { id: 'saturday', label: 'Saturday' },
+  { id: 'sunday', label: 'Sunday' },
 ];
 
 const formSchema = z.object({
   workoutName: z.string().min(3, {
-    message: "Workout name must be at least 3 characters.",
+    message: 'Workout name must be at least 3 characters.',
   }),
   goal: z.string().min(1, {
-    message: "Please select a workout goal.",
+    message: 'Please select a workout goal.',
   }),
   experience: z.string().min(1, {
-    message: "Please select experience level.",
+    message: 'Please select experience level.',
   }),
   duration: z.number().min(10).max(120),
   workoutDays: z.array(z.string()).min(1, {
-    message: "Select at least one workout day."
+    message: 'Select at least one workout day.',
   }),
   specialInstructions: z.string().optional(),
 });
@@ -67,42 +67,46 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Pre-fill goal if user has one in health profile
-  const userGoal = user?.healthProfile?.goal?.toLowerCase() || "";
-  const mappedGoal = 
-    userGoal.includes("strength") ? "strength" :
-    userGoal.includes("muscle") || userGoal.includes("hypertrophy") ? "hypertrophy" :
-    userGoal.includes("endurance") ? "endurance" :
-    userGoal.includes("weight") || userGoal.includes("fat") ? "weight-loss" :
-    userGoal.includes("tone") || userGoal.includes("lean") ? "toning" : 
-    "";
+  const userGoal = user?.healthProfile?.goal?.toLowerCase() || '';
+  const mappedGoal = userGoal.includes('strength')
+    ? 'strength'
+    : userGoal.includes('muscle') || userGoal.includes('hypertrophy')
+      ? 'hypertrophy'
+      : userGoal.includes('endurance')
+        ? 'endurance'
+        : userGoal.includes('weight') || userGoal.includes('fat')
+          ? 'weight-loss'
+          : userGoal.includes('tone') || userGoal.includes('lean')
+            ? 'toning'
+            : '';
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      workoutName: user ? `Custom Plan for ${user.name}` : "",
+      workoutName: user ? `Custom Plan for ${user.name}` : '',
       goal: mappedGoal,
-      experience: "intermediate", // Default value
+      experience: 'intermediate', // Default value
       duration: 45,
-      workoutDays: ["Monday", "Wednesday", "Friday"], // Default MWF schedule
-      specialInstructions: "",
+      workoutDays: ['Monday', 'Wednesday', 'Friday'], // Default MWF schedule
+      specialInstructions: '',
     },
   });
 
   // Get current values for form fields
-  const selectedDays = form.watch("workoutDays");
+  const selectedDays = form.watch('workoutDays');
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!user) {
       toast({
-        title: "Error",
-        description: "Please select a client first",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Please select a client first',
+        variant: 'destructive',
       });
       return;
     }
-    
+
     setIsGenerating(true);
-    
+
     try {
       // Map form values to workout generation params
       const params = {
@@ -114,38 +118,38 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
         focusAreas: [], // Can be extended in future
         specialInstructions: values.specialInstructions,
       };
-      
+
       const result = await generateAiWorkout(params);
-      
+
       if (result.success && result.workoutPlan) {
         // Set the workout plan with the name from the form
         const workoutPlan = {
           ...result.workoutPlan,
           name: values.workoutName,
         };
-        
+
         // Notify parent component
         if (onWorkoutGenerated) {
           onWorkoutGenerated(workoutPlan);
         }
-        
+
         toast({
-          title: "Success",
-          description: "AI workout plan generated successfully!",
+          title: 'Success',
+          description: 'AI workout plan generated successfully!',
         });
       } else {
         toast({
-          title: "Generation Failed",
-          description: result.error || "Failed to generate workout plan",
-          variant: "destructive",
+          title: 'Generation Failed',
+          description: result.error || 'Failed to generate workout plan',
+          variant: 'destructive',
         });
       }
     } catch (error) {
-      console.error("Error generating workout:", error);
+      console.error('Error generating workout:', error);
       toast({
-        title: "Error",
-        description: "An unexpected error occurred while generating the workout",
-        variant: "destructive",
+        title: 'Error',
+        description: 'An unexpected error occurred while generating the workout',
+        variant: 'destructive',
       });
     } finally {
       setIsGenerating(false);
@@ -161,16 +165,29 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center gap-2 text-base">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-labelledby="editIconTitle"
+                  role="img"
+                >
+                  <title id="editIconTitle">Edit</title>
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
                 Workout Name
               </FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="e.g. Summer Shred Program" 
-                  {...field} 
+                <Input
+                  placeholder="e.g. Summer Shred Program"
+                  {...field}
                   className="h-11 focus:border-indigo-600"
                 />
               </FormControl>
@@ -265,7 +282,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="workoutDays"
@@ -286,10 +303,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                     name="workoutDays"
                     render={({ field }) => {
                       return (
-                        <FormItem
-                          key={day.id}
-                          className="flex flex-col items-center space-y-1"
-                        >
+                        <FormItem key={day.id} className="flex flex-col items-center space-y-1">
                           <FormControl>
                             <Checkbox
                               checked={field.value?.includes(day.label)}
@@ -297,9 +311,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                                 return checked
                                   ? field.onChange([...field.value, day.label])
                                   : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== day.label
-                                      )
+                                      field.value?.filter((value) => value !== day.label),
                                     );
                               }}
                               className="data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
@@ -340,8 +352,8 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
           )}
         />
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full h-12 mt-2 text-base bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 text-white border-0 hover:opacity-90 shadow-md"
           disabled={isGenerating || !user}
         >
@@ -357,11 +369,13 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
             </>
           )}
         </Button>
-        
+
         {!user && (
           <div className="text-sm text-center text-amber-600 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4">
             <p className="font-medium">No Client Selected</p>
-            <p className="text-amber-700">Please select a client first to generate a workout plan</p>
+            <p className="text-amber-700">
+              Please select a client first to generate a workout plan
+            </p>
           </div>
         )}
       </form>

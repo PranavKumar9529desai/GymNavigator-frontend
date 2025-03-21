@@ -65,7 +65,7 @@ export default function RegisterForm() {
           toast.error('Registration failed', {
             description: 'Email is already registered',
           });
-          toast.dismiss(loadingToastId);
+          toast.dismiss();
           return;
         }
 

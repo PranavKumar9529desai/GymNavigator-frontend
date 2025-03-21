@@ -1,43 +1,38 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Activity, ChevronLeft, Dumbbell, Zap } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
-import { getUserById } from "./_actions/get-user-by-id";
-import type { UserData } from "./_actions/get-user-by-id";
-import { getWorkoutHistory } from "./_actions/get-workout-history";
-import { WorkoutHistoryProvider } from "./_components/history/workout-history-provider";
-import WorkoutTabs from "./_components/tabs/workout-tabs";
+import { Activity, ChevronLeft, Dumbbell, Zap } from 'lucide-react';
+import Link from 'next/link';
+import { getUserById } from './_actions/get-user-by-id';
+import type { UserData } from './_actions/get-user-by-id';
+import { getWorkoutHistory } from './_actions/get-workout-history';
+import WorkoutTabs from './_components/tabs/workout-tabs';
 
 // Pre-generate decoration positions instead of using map with index
 const decorations = [
-  { left: "0%", top: "0%", transform: "translate(20%, 30%)" },
-  { left: "25%", top: "0%", transform: "translate(-10%, 40%)" },
-  { left: "50%", top: "0%", transform: "translate(15%, -20%)" },
-  { left: "75%", top: "0%", transform: "translate(5%, 25%)" },
-  { left: "0%", top: "33%", transform: "translate(-5%, 10%)" },
-  { left: "25%", top: "33%", transform: "translate(25%, -15%)" },
-  { left: "50%", top: "33%", transform: "translate(-20%, 20%)" },
-  { left: "75%", top: "33%", transform: "translate(10%, -10%)" },
-  { left: "0%", top: "66%", transform: "translate(15%, -25%)" },
-  { left: "25%", top: "66%", transform: "translate(-15%, 5%)" },
-  { left: "50%", top: "66%", transform: "translate(25%, 15%)" },
-  { left: "75%", top: "66%", transform: "translate(-5%, -5%)" },
+  { left: '0%', top: '0%', transform: 'translate(20%, 30%)' },
+  { left: '25%', top: '0%', transform: 'translate(-10%, 40%)' },
+  { left: '50%', top: '0%', transform: 'translate(15%, -20%)' },
+  { left: '75%', top: '0%', transform: 'translate(5%, 25%)' },
+  { left: '0%', top: '33%', transform: 'translate(-5%, 10%)' },
+  { left: '25%', top: '33%', transform: 'translate(25%, -15%)' },
+  { left: '50%', top: '33%', transform: 'translate(-20%, 20%)' },
+  { left: '75%', top: '33%', transform: 'translate(10%, -10%)' },
+  { left: '0%', top: '66%', transform: 'translate(15%, -25%)' },
+  { left: '25%', top: '66%', transform: 'translate(-15%, 5%)' },
+  { left: '50%', top: '66%', transform: 'translate(25%, 15%)' },
+  { left: '75%', top: '66%', transform: 'translate(-5%, -5%)' },
 ];
 
 export default async function AssignCustomWorkoutsWithAI({
   searchParams,
 }: {
-  searchParams: { userId?: string };
+  searchParams: Promise<{ userId?: string }>;
 }) {
   // Next.js 15.2 requires awaiting searchParams before accessing properties
   const params = await searchParams;
-  const userId = params.userId || "defaultUserId";
+  const userId = params.userId || 'defaultUserId';
 
   const response = await getUserById(userId);
   // Fix type error by ensuring user is strictly UserData | null (not undefined)
-  const user: UserData | null =
-    response.success && response.data ? response.data : null;
+  const user: UserData | null = response.success && response.data ? response.data : null;
 
   // Get server fallback history data for passing to client component
   const historyResponse = await getWorkoutHistory(userId);
@@ -71,7 +66,7 @@ export default async function AssignCustomWorkoutsWithAI({
                   key={`deco-${i}-${style.left}-${style.top}`}
                   className="flex items-center justify-center opacity-20"
                   style={{
-                    position: "absolute",
+                    position: 'absolute',
                     left: style.left,
                     top: style.top,
                     transform: style.transform,
@@ -94,14 +89,12 @@ export default async function AssignCustomWorkoutsWithAI({
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
-              Craft <span className="text-blue-200">Perfect Workouts</span> in
-              Seconds
+              Craft <span className="text-blue-200">Perfect Workouts</span> in Seconds
             </h1>
 
             <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
-              Let our AI design personalized workout plans tailored to your
-              client's specific goals and fitness level — turning hours of
-              planning into moments.
+              Let our AI design personalized workout plans tailored to your client's specific goals
+              and fitness level — turning hours of planning into moments.
             </p>
 
             {/* Decorative icons */}
@@ -120,15 +113,10 @@ export default async function AssignCustomWorkoutsWithAI({
         </div>
 
         {/* Use the new WorkoutTabs component */}
-        <WorkoutTabs
-          userId={userId}
-          user={user}
-          serverFallbackHistory={serverFallbackHistory}
-        />
+        <WorkoutTabs userId={userId} user={user} serverFallbackHistory={serverFallbackHistory} />
       </div>
     </div>
   );
 }
 
 // TabsHistoryContent has been removed as it's now handled internally by the WorkoutTabs component
-

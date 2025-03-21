@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Activity,
@@ -9,10 +9,10 @@ import {
   Flame,
   Target,
   Timer,
-} from "lucide-react";
-import { useState } from "react";
-import type { TodaysWorkout } from "../_actions/get-todays-workout";
-import { RestDay } from "./rest-day";
+} from 'lucide-react';
+import { useState } from 'react';
+import type { TodaysWorkout } from '../_actions/get-todays-workout';
+import { RestDay } from './rest-day';
 
 interface TodaysWorkoutsProps {
   workout: TodaysWorkout;
@@ -20,7 +20,7 @@ interface TodaysWorkoutsProps {
 
 export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
   const [expandedMuscle, setExpandedMuscle] = useState<string | null>(
-    workout.muscleGroups.length > 0 ? workout.muscleGroups[0].muscle : null
+    workout.muscleGroups.length > 0 ? workout.muscleGroups[0].muscle : null,
   );
 
   const toggleExpand = (muscle: string) => {
@@ -30,7 +30,7 @@ export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
   // Calculate total exercises across all muscle groups
   const totalExercises = workout.muscleGroups.reduce(
     (total, group) => total + group.exercises.length,
-    0
+    0,
   );
 
   // If no workouts, show rest day component
@@ -47,26 +47,20 @@ export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
             <div className="bg-white/20 p-2 rounded-full">
               <Activity className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-white">
-              {workout.day}'s Workout
-            </h2>
+            <h2 className="text-2xl font-bold text-white">{workout.day}'s Workout</h2>
           </div>
-          <p className="text-blue-100">
-            Track your muscle groups and exercises
-          </p>
+          <p className="text-blue-100">Track your muscle groups and exercises</p>
 
           {/* Stats Summary */}
           <div className="flex flex-wrap gap-4 mt-4">
             <div className="bg-white/10 rounded-lg px-3 py-2 text-white flex items-center gap-2">
               <Target className="w-4 h-4" />
-              <span>
-                {workout.muscleGroups.length} Muscle Groups
-              </span>
+              <span>{workout.muscleGroups.length} Muscle Groups</span>
             </div>
             <div className="bg-white/10 rounded-lg px-3 py-2 text-white flex items-center gap-2">
               <Flame className="w-4 h-4" />
               <span>
-                {totalExercises} {totalExercises === 1 ? "Exercise" : "Exercises"}
+                {totalExercises} {totalExercises === 1 ? 'Exercise' : 'Exercises'}
               </span>
             </div>
           </div>
@@ -101,11 +95,11 @@ export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
             <button
               type="button"
               className={`w-full text-left p-5 border-b border-gray-100 transition-colors ${
-                expandedMuscle === muscleGroup.muscle ? "bg-blue-50" : ""
+                expandedMuscle === muscleGroup.muscle ? 'bg-blue-50' : ''
               }`}
               onClick={() => toggleExpand(muscleGroup.muscle)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+                if (e.key === 'Enter' || e.key === ' ') {
                   toggleExpand(muscleGroup.muscle);
                 }
               }}
@@ -113,11 +107,10 @@ export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                    {muscleGroup.muscle}
-                  </h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-1">{muscleGroup.muscle}</h3>
                   <p className="text-gray-600 text-base">
-                    {muscleGroup.exercises.length} {muscleGroup.exercises.length === 1 ? "Exercise" : "Exercises"}
+                    {muscleGroup.exercises.length}{' '}
+                    {muscleGroup.exercises.length === 1 ? 'Exercise' : 'Exercises'}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-2 ml-2">
@@ -138,7 +131,7 @@ export const TodaysWorkouts = ({ workout }: TodaysWorkoutsProps) => {
                     <div
                       key={exercise.id}
                       className={`overflow-hidden rounded-lg transition-all ${
-                        index % 2 === 0 ? "bg-blue-50" : "bg-gray-50"
+                        index % 2 === 0 ? 'bg-blue-50' : 'bg-gray-50'
                       }`}
                     >
                       {/* Exercise number badge */}

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import type { WorkoutPlan } from "../../_actions/generate-ai-workout";
-import type { UserData } from "../../_actions/get-user-by-id";
-import { useWorkoutViewStore } from "../../_store/workout-view-store";
-import WorkoutForm from "../workout-form/workout-form";
-import WorkoutResults from "../workout-result/workout-results";
-import ClientDisplay from "./client-display";
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
+import type { UserData } from '../../_actions/get-user-by-id';
+import { useWorkoutViewStore } from '../../_store/workout-view-store';
+import WorkoutForm from '../workout-form/workout-form';
+import WorkoutResults from '../workout-result/workout-results';
+import ClientDisplay from './client-display';
 
 interface GeneratedWorkout {
   clientName: string;
@@ -43,7 +43,7 @@ export default function ClientWorkoutGenerator({
     try {
       // Create a complete workout object
       const workout: GeneratedWorkout = {
-        clientName: user.name || "Client",
+        clientName: user.name || 'Client',
         workoutPlan: plan,
       };
 
@@ -54,18 +54,18 @@ export default function ClientWorkoutGenerator({
       onWorkoutGenerated?.(workout);
 
       toast({
-        title: "Success",
-        description: "Workout plan has been generated successfully!",
+        title: 'Success',
+        description: 'Workout plan has been generated successfully!',
       });
 
       // Reset state after save
       setWorkoutPlan(null);
     } catch (error) {
-      console.error("Error saving workout plan:", error);
+      console.error('Error saving workout plan:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate the workout plan",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to generate the workout plan',
+        variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
@@ -89,13 +89,8 @@ export default function ClientWorkoutGenerator({
             <ClientDisplay user={user} />
           </div>
           <div className="md:col-span-3 border rounded-lg p-5 sm:p-6 bg-white dark:bg-gray-950">
-            <h2 className="text-xl font-medium mb-4">
-              Generate AI Workout Plan
-            </h2>
-            <WorkoutForm
-              user={user}
-              onWorkoutGenerated={handleWorkoutGenerated}
-            />
+            <h2 className="text-xl font-medium mb-4">Generate AI Workout Plan</h2>
+            <WorkoutForm user={user} onWorkoutGenerated={handleWorkoutGenerated} />
           </div>
         </motion.div>
       ) : (
@@ -121,7 +116,7 @@ export default function ClientWorkoutGenerator({
             onSave={handleSaveWorkout}
             onDiscard={handleDiscardWorkout}
             isLoading={isSaving}
-            userId={user?.id || ""}
+            userId={user?.id || ''}
           />
         </motion.div>
       )}
