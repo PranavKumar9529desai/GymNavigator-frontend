@@ -146,6 +146,7 @@ export async function generateStructuredContent<T>(
       const validation = validateFn(lastResponse);
       
       if (validation.valid && validation.data) {
+        console.log('Validation passed: form the AI', validation.data);
         return {
           success: true,
           data: validation.data,
@@ -236,6 +237,7 @@ ${originalPrompt}
     const validation = validateFn(response);
     
     if (validation.valid && validation.data) {
+      console.log('Validation passed:', validation.data);
       return {
         success: true,
         data: validation.data,

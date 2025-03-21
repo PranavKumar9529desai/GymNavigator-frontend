@@ -1,4 +1,4 @@
-import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
+import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
 
 export interface DietPlan {
   id: number;
@@ -23,15 +23,16 @@ export interface DietPlan {
 export const getAllDietPlans = async () => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.get('/diet/alldietplans');
+    const response = await trainerAxios.get("/diet/alldietplans");
+    console.log("response.data.dietPlans", response.data.dietPlans);
     const data = response.data;
 
-    if (data.msg === 'success') {
+    if (data.msg === "success") {
       return data.dietPlans as DietPlan[];
     }
     return [];
   } catch (error) {
-    console.error('Error fetching diet plans:', error);
+    console.error("Error fetching diet plans:", error);
     return [];
   }
 };

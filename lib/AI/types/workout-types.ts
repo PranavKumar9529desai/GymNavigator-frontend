@@ -7,6 +7,7 @@ export const ExerciseSchema = z.object({
   reps: z.string().min(1, "Repetition information is required"),
   description: z.string().min(1, "Exercise description is required"),
   order: z.number().min(0, "Order must be non-negative"),
+
 });
 
 export const WorkoutScheduleSchema = z.object({

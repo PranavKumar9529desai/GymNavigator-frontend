@@ -15,13 +15,25 @@ export function extractJsonFromString(text: string): unknown | null {
     // Look for JSON object pattern
     const jsonMatch = text.match(/{[\s\S]*}/);
     if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
+      try {
+        // Clean the JSON string - replace multiple spaces after colons with single space
+        const cleanedJson = jsonMatch[0].replace(/:\s+/g, ': ');
+        return JSON.parse(cleanedJson);
+      } catch (e) {
+        console.error("Failed to parse JSON match:", e);
+      }
     }
     
     // Look for JSON patterns in code blocks (common in AI responses)
     const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-    if (codeBlockMatch && codeBlockMatch[1]) {
-      return JSON.parse(codeBlockMatch[1]);
+    if (codeBlockMatch?.[1]) {
+      try {
+        // Clean the JSON string - replace multiple spaces after colons with single space
+        const cleanedJson = codeBlockMatch[1].replace(/:\s+/g, ': ');
+        return JSON.parse(cleanedJson);
+      } catch (e) {
+        console.error("Failed to parse code block JSON:", e);
+      }
     }
 
     // If we can't find a JSON object, return null

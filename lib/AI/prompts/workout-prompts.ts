@@ -1,52 +1,63 @@
 import type { WorkoutGenerationParams } from "@/app/dashboard/trainer/workouts/assigncustomworkoutswithai/_actions/generate-ai-workout";
+import type {
+  Exercise,
+  WorkoutPlan,
+  WorkoutSchedule,
+} from "../types/workout-types";
 
 interface FeedbackPromptParams {
-	userId: string;
-	originalWorkoutPlan: any; // WorkoutPlan type
-	feedback: string;
-	conversationHistory: string;
+  userId: string;
+  originalWorkoutPlan: WorkoutPlan;
+  feedback: string;
+  conversationHistory: string;
 }
 
 /**
  * Generate a workout plan prompt based on user parameters
  */
 export function generateWorkoutPrompt(params: WorkoutGenerationParams): string {
-	const {
-		goals,
-		fitnessLevel,
-		preferredDays,
-		focusAreas = [],
-		healthConditions = [],
-		workoutDuration = 45,
-		specialInstructions = "",
-	} = params;
+  const {
+    goals,
+    fitnessLevel,
+    preferredDays = [],
+    focusAreas = [],
+    healthConditions = [],
+    workoutDuration = 45,
+    specialInstructions = "",
+  } = params;
 
-	// Format focus areas for the prompt
-	const focusAreasText = focusAreas.length
-		? `with special focus on: ${focusAreas.join(", ")}`
-		: "";
+  // Format focus areas for the prompt
+  const focusAreasText = focusAreas.length
+    ? `with special focus on: ${focusAreas.join(", ")}`
+    : "";
 
-	// Format health conditions for the prompt
-	const healthConditionsText = healthConditions.length
-		? `The user has the following health conditions to consider: ${healthConditions.join(", ")}.`
-		: "";
+  // Format health conditions for the prompt
+  const healthConditionsText = healthConditions.length
+    ? `The user has the following health conditions to consider: ${healthConditions.join(
+        ", "
+      )}.`
+    : "";
 
-	// Format preferred days
-	const daysPerWeek = preferredDays.length;
-	const daysText = `${daysPerWeek} days per week specifically on these days: ${preferredDays.join(", ")}`;
+  // Format preferred days
+  const daysPerWeek = preferredDays.length;
+  const daysText = `${daysPerWeek} days per week specifically on these days: ${preferredDays.join(
+    ", "
+  )}`;
 
-	// Format special instructions
-	const specialInstructionsText = specialInstructions
-		? `Additional requirements: ${specialInstructions}`
-		: "";
+  // Format special instructions
+  const specialInstructionsText = specialInstructions
+    ? `Additional requirements: ${specialInstructions}`
+    : "";
 
-	return `
+  return `
 Create a personalized workout plan for a ${fitnessLevel} level client with the primary goal of ${goals} ${focusAreasText}.
 The workout plan should be designed for ${daysText}, with each workout lasting approximately ${workoutDuration} minutes.
 ${healthConditionsText}
 ${specialInstructionsText}
 
-IMPORTANT: Generate workouts ONLY for these specific days: ${preferredDays.join(", ")}. Do not add workouts for any other days.
+IMPORTANT: Generate workouts ONLY for these specific days: ${preferredDays.join(
+    ", "
+  )}. Do not add workouts for any other days.
 
 Provide a complete workout plan in JSON format with the following structure:
 {
@@ -64,7 +75,8 @@ Provide a complete workout plan in JSON format with the following structure:
           "sets": number of sets,
           "reps": "repetition scheme (e.g. '10-12' or '3x10')",
           "description": "Brief description of how to perform the exercise",
-          "order": 0
+          "order": 0,
+          
         }
         // Additional exercises...
       ]
@@ -81,10 +93,10 @@ Please ensure the workout plan follows best practices for exercise selection, se
  * Generate feedback-based improvements to a workout plan
  */
 export function buildWorkoutFeedbackPrompt(
-	originalPlan: any,
-	feedback: string,
+  originalPlan: WorkoutPlan,
+  feedback: string
 ) {
-	return `
+  return `
 I previously generated this workout plan:
 ${JSON.stringify(originalPlan, null, 2)}
 
@@ -107,7 +119,8 @@ Please adjust the workout plan to address this feedback. Maintain the same JSON 
           "sets": number_of_sets,
           "reps": "rep_range",
           "description": "Instructions",
-          "order": order_number
+          "order": order_number,
+          
         }
       ]
     }
@@ -122,28 +135,31 @@ IMPORTANT:
 }
 
 export function generateFeedbackPrompt(params: FeedbackPromptParams): string {
-	const { originalWorkoutPlan, feedback, conversationHistory } = params;
+  const { originalWorkoutPlan, feedback, conversationHistory } = params;
 
-	// Serialize the workout plan to provide context to the AI
-	const workoutDetails = `
+  // Serialize the workout plan to provide context to the AI
+  const workoutDetails = `
   Workout Name: ${originalWorkoutPlan.name}
   Description: ${originalWorkoutPlan.description || "Not provided"}
   Schedule:
   ${originalWorkoutPlan.schedules
-		.map(
-			(s: any) => `
+    .map(
+      (s: WorkoutSchedule) => `
   - Day: ${s.dayOfWeek}
     Target: ${s.muscleTarget}
     Duration: ${s.duration} minutes
     Exercises: ${s.exercises
-			.map((e: any) => `${e.name} (${e.sets}x${e.reps})`)
-			.join(", ")}
-  `,
-		)
-		.join("")}
+      .map(
+        (e: Exercise) =>
+          `${e.name} (${e.sets}x${e.reps})${e.imageUrl ? " [Has Image]" : ""}`
+      )
+      .join(", ")}
+  `
+    )
+    .join("")}
   `;
 
-	return `
+  return `
   You are an expert fitness trainer tasked with refining workout plans based on client feedback.
   
   THE ORIGINAL WORKOUT PLAN:
@@ -173,7 +189,8 @@ export function generateFeedbackPrompt(params: FeedbackPromptParams): string {
             "sets": number_of_sets,
             "reps": "repetition scheme (e.g. '8-12' or '10')",
             "description": "Brief instructions or notes about the exercise",
-            "order": 1
+            "order": 1,
+            
           }
           // Additional exercises...
         ]

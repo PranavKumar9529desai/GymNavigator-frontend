@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, Users, UtensilsCrossed } from 'lucide-react';
+import Link from 'next/link';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
-import { attachDietPlanToUser } from './AttachDietPlanToUser';
-import type { DietPlan } from './GetallDiets';
-import type { AssignedUser } from './GetassignedUserDietInfo';
+import { attachDietPlanToUser } from '../_actions /AttachDietPlanToUser';
+import type { DietPlan } from '../_actions /GetallDiets';
+import type { AssignedUser } from '../_actions /GetassignedUserDietInfo';
 import { updateAssignedDietPlan } from './updateassigneddiet';
 import type { UpdateDietPlanResponse } from './updateassigneddiet';
 
@@ -87,6 +88,12 @@ const createColumns = (
               ))}
             </SelectContent>
           </Select>
+          <Link 
+            href={`/dashboard/trainer/diet/assigndietplan/assigndietplanwithai?userId=${row.original.id}`}
+            className="flex items-center justify-center w-[200px] bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            Generate Diet Plan with AI
+          </Link>
         </div>
       );
     },
@@ -244,6 +251,12 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
                     ))}
                   </SelectContent>
                 </Select>
+                <Link 
+                  href={`/dashboard/trainer/diet/assigndietplan/assigndietplanwithai?userId=${user.id}`}
+                  className="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  Generate Diet Plan with AI
+                </Link>
                 {hasDiet && (
                   <div className="mt-2 text-xs text-green-600">
                     Current Plan: {currentPlan?.name}
