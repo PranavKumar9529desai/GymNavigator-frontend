@@ -31,7 +31,7 @@ export default async function AssignDietPlanWithAI({
   searchParams: { userId?: string };
 }) {
   // Get userId from search params
-  const userId = await searchParams.userId || "defaultUserId";
+  const userId = (await searchParams.userId) || "defaultUserId";
 
   // Fetch user data
   const response = await getUserById(userId);

@@ -113,7 +113,7 @@ export default function DietTabs({
     <Tabs
       value={activeTab}
       onValueChange={handleTabChange}
-      className="space-y-8"
+      className="space-y-8 "
     >
       <div className="sticky top-0 z-10 pb-4 pt-2 bg-gradient-to-b from-background via-background to-background/95 backdrop-blur-lg">
         <div className="container max-w-5xl mx-auto px-4">

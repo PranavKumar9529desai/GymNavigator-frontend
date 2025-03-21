@@ -6,6 +6,7 @@ import { CheckCircle, Clock, Save, Trash2, Utensils } from "lucide-react";
 import { useState } from "react";
 import type { DietPlan } from "../../../_actions /GetallDiets";
 import { saveDietPlan } from "../../_actions/save-diet-plan";
+import { useDietViewStore } from "../../_store/diet-view-store";
 
 interface DietResultsProps {
   dietPlan: DietPlan;
@@ -25,6 +26,7 @@ export default function DietResults({
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const { saveDietToLocalStorage } = useDietViewStore();
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -32,13 +34,17 @@ export default function DietResults({
     setSaveSuccess(false);
 
     try {
+      // Save to localStorage first
+      saveDietToLocalStorage({ clientName, dietPlan }, userId);
+
+      // Then save to backend
       const result = await saveDietPlan(dietPlan);
 
       if (result.success) {
         setSaveSuccess(true);
         setSaveMessage("Diet plan saved successfully!");
 
-        // Call the onSave callback if provided
+        // Call the onSuccess callback if provided
         if (onSuccess) {
           setTimeout(() => {
             onSuccess();

@@ -35,7 +35,7 @@ export async function generateWithGemini(prompt: string, options?: {
     
     // Using free tier model instead of pro models
     // Try gemini-1.0-pro-vision-latest first (available on free tier)
-    let modelName = 'gemini-1.5-flash';
+    const modelName = 'gemini-1.5-flash';
     
     const model = genAI.getGenerativeModel({ 
       model: modelName,

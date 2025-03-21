@@ -12,6 +12,7 @@ import {
 } from "react";
 import { getDietHistory } from "../../_actions/get-diet-history";
 import type { DietHistoryItem } from "../../_store/diet-view-store";
+import { useDietViewStore } from "../../_store/diet-view-store";
 
 interface DietHistoryContextType {
   loading: boolean;
@@ -38,26 +39,59 @@ export function DietHistoryProvider({
   const [history, setHistory] = useState<DietHistoryItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
+  const { getSavedDiets } = useDietViewStore();
 
   const fetchHistory = useCallback(async () => {
     if (!session?.user?.id) return;
 
     setLoading(true);
     try {
+      // First get diets from localStorage
+      const localDiets = getSavedDiets(session.user.id);
+      
+      // Then get diets from backend
       const result = await getDietHistory(session.user.id);
+      
       if (result.success && result.data) {
-        setHistory(result.data);
+        // Combine local and backend diets, removing duplicates by id
+        const backendDiets = result.data;
+        const backendIds = new Set(backendDiets.map(diet => diet.id));
+        
+        // Filter out local diets that already exist in backend results
+        const uniqueLocalDiets = localDiets.filter(diet => !backendIds.has(diet.id));
+        
+        // Combine and sort by createdAt (newest first)
+        const combinedDiets = [...backendDiets, ...uniqueLocalDiets]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        setHistory(combinedDiets);
         setError(null);
       } else {
-        setError(result.message || "Failed to load diet history");
+        // If backend fails, still use local diets
+        setHistory(localDiets);
+        
+        if (localDiets.length === 0) {
+          setError(result.message || "Failed to load diet history");
+        } else {
+          // If we have local diets, don't show the error
+          setError(null);
+        }
       }
     } catch (err) {
       console.error("Error fetching diet history:", err);
-      setError("An unexpected error occurred while loading diet history");
+      
+      // Try to use local diets if backend fails
+      const localDiets = getSavedDiets(session.user.id);
+      if (localDiets.length > 0) {
+        setHistory(localDiets);
+        setError(null);
+      } else {
+        setError("An unexpected error occurred while loading diet history");
+      }
     } finally {
       setLoading(false);
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.id, getSavedDiets]);
 
   useEffect(() => {
     if (session?.user?.id) {

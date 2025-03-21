@@ -8,7 +8,6 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { DietPlan } from "../../_actions /GetallDiets";
 import { generateAIDiet } from "../_actions/generate-ai-diet";
-import { saveDietPlan } from "../_actions/save-diet-plan";
 import { useDietViewStore } from "../_store/diet-view-store";
 import { dietGenerationSchema } from "../types/dietGenerationSchema";
 import type { DietGenerationParams } from "../types/dietGenerationSchema";
@@ -33,13 +32,13 @@ const MEDICAL_CONDITIONS = [
 
 interface DietFormProps {
   userId: string;
+  onGenerateStateChange?: (generating: boolean) => void;
 }
 
-export function DietForm({ userId }: DietFormProps) {
+export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedDiet, setGeneratedDiet] = useState<DietPlan | null>(null);
   const [clientName, setClientName] = useState("Client");
-  const [saveMessage, setSaveMessage] = useState({ text: "", type: "success" });
 
   const { setActiveDiet, setActiveTab } = useDietViewStore();
 
@@ -77,6 +76,11 @@ export function DietForm({ userId }: DietFormProps) {
   const onSubmit = async (data: DietGenerationParams) => {
     try {
       setIsLoading(true);
+      // Update the parent component about the loading state
+      if (onGenerateStateChange) {
+        onGenerateStateChange(true);
+      }
+      
       // Call our server action directly with simplified error handling
       const result = await generateAIDiet(data);
       
@@ -96,34 +100,10 @@ export function DietForm({ userId }: DietFormProps) {
       // Handle error appropriately - you could set an error state here
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleSaveDietPlan = async () => {
-    if (!generatedDiet) return;
-
-    try {
-      setSaveMessage({ text: "", type: "success" });
-
-      const result = await saveDietPlan(generatedDiet);
-
-      if (result.success) {
-        setSaveMessage({
-          text: result.message,
-          type: "success",
-        });
-      } else {
-        setSaveMessage({
-          text: result.message,
-          type: "error",
-        });
+      // Update the parent component that loading is done
+      if (onGenerateStateChange) {
+        onGenerateStateChange(false);
       }
-    } catch (error) {
-      console.error("Error saving diet plan:", error);
-      setSaveMessage({
-        text: "Failed to save diet plan. Please try again.",
-        type: "error",
-      });
     }
   };
 
