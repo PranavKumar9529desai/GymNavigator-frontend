@@ -51,7 +51,7 @@ export default async function AssignDietPlanWithAI({
 
         <div className="space-y-8">
           {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-green-600/90 via-emerald-600/80 to-green-700/90 p-8 border border-green-500/20 shadow-lg text-white">
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 p-8 border border-indigo-500/20 shadow-lg text-white">
             {/* Decorative background patterns */}
             <div className="absolute inset-0 opacity-5">
               <div className="absolute top-0 right-0 transform rotate-45 translate-x-1/3 -translate-y-1/2">
@@ -79,8 +79,8 @@ export default async function AssignDietPlanWithAI({
             </div>
 
             {/* Glowing effects */}
-            <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-green-400/30 blur-3xl" />
-            <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-emerald-300/20 blur-3xl" />
+            <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl" />
+            <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl" />
 
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
@@ -90,11 +90,11 @@ export default async function AssignDietPlanWithAI({
 
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
                 Create{" "}
-                <span className="text-green-200">Perfect Diet Plans</span> in
+                <span className="text-blue-200">Perfect Diet Plans</span> in
                 Seconds
               </h1>
 
-              <p className="max-w-2xl text-base text-green-100/90 sm:text-lg">
+              <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
                 Let our AI design personalized nutrition plans tailored to your
                 client's specific needs and health goals — turning hours of
                 planning into moments.

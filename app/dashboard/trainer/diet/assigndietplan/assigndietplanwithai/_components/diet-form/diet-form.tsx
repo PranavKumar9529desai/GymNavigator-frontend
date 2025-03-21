@@ -109,7 +109,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card className="bg-white/70 dark:bg-gray-950/70  border border-green-100/50 dark:border-green-800/30">
+      <Card className="bg-white/70 dark:bg-gray-950/70 border border-indigo-100/50 dark:border-indigo-800/30">
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Client Name - optional field for reference */}
@@ -125,7 +125,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter client name"
               />
             </div>
@@ -141,7 +141,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
               <select
                 id="dietPreference"
                 {...register("dietPreference")}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 {DIET_PREFERENCES.map((pref) => (
                   <option key={pref} value={pref}>
@@ -176,7 +176,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                           type="checkbox"
                           value={condition}
                           {...register("medicalConditions")}
-                          className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500"
+                          className="mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500"
                         />
                         {condition}
                       </label>
@@ -203,7 +203,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 id="location"
                 type="text"
                 {...register("location")}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter city/region"
               />
               {errors.location && (
@@ -225,7 +225,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 id="country"
                 type="text"
                 {...register("country")}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter country"
               />
               {errors.country && (
@@ -247,7 +247,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
                 id="targetCalories"
                 type="number"
                 {...register("targetCalories", { valueAsNumber: true })}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter target calories"
               />
               {errors.targetCalories && (
@@ -268,7 +268,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
               <textarea
                 id="specialInstructions"
                 {...register("specialInstructions")}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter any special instructions or preferences"
                 rows={3}
               />
@@ -282,7 +282,7 @@ export function DietForm({ userId, onGenerateStateChange }: DietFormProps) {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-br from-green-600/90 via-emerald-600/80 to-green-700/90 hover:from-green-600 hover:to-emerald-600 text-white py-2 px-4 rounded shadow-md disabled:opacity-50"
+              className="w-full bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 hover:from-indigo-600 hover:to-blue-600 text-white py-2 px-4 rounded shadow-md disabled:opacity-50"
             >
               {isLoading ? (
                 <>

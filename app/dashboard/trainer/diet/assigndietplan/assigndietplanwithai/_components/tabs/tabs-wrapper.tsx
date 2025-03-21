@@ -74,7 +74,7 @@ export function TabsWrapper({ userId }: TabsWrapperProps) {
             <button
               type="button"
               onClick={handleEmptyStateGenerate}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md"
+              className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-md transition-colors"
             >
               Generate Diet Plan
             </button>
