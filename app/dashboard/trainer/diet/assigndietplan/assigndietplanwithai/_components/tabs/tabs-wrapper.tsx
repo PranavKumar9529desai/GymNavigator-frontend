@@ -1,6 +1,7 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import type { DietPlan } from '../../../_actions /GetallDiets';
 import type { UserData } from '../../_actions/get-user-by-id';
@@ -9,6 +10,7 @@ import type { TabType } from '../../_store/diet-view-store';
 import { DietForm } from '../diet-form/diet-form';
 import { DietFormSkeleton } from '../diet-form/diet-form-skeleton';
 import { DietHistory } from '../diet-history/diet-history';
+import { DIET_PLANS_QUERY_KEY } from '../diet-history/use-diet-history';
 import DietResults from '../diet-result/diet-results';
 import DietSkeleton from '../diet-result/diet-skeleton';
 
@@ -20,10 +22,26 @@ interface TabsWrapperProps {
 export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
   const { activeTab, setActiveTab, activeDiet, setActiveDiet } = useDietViewStore();
   const [isGenerating, setIsGenerating] = useState(false);
+  const queryClient = useQueryClient();
 
   // Handler to be passed to DietForm to set the generating state
   const handleGenerateStateChange = (generating: boolean) => {
     setIsGenerating(generating);
+  };
+
+  // Handler for when a diet is generated
+  const handleDietGenerated = (diet: { clientName: string; dietPlan: DietPlan }) => {
+    // This function is called when a diet is successfully generated
+    // We can prefetch the diet history data here to ensure it's up to date
+    queryClient.invalidateQueries({ queryKey: [DIET_PLANS_QUERY_KEY, userId] });
+  };
+
+  // Handler for when a diet is saved
+  const handleDietSaved = () => {
+    // Invalidate the diet history query to refresh the data
+    queryClient.invalidateQueries({ queryKey: [DIET_PLANS_QUERY_KEY] });
+    // Switch to history tab after diet is saved
+    setActiveTab('history');
   };
 
   // Handler for Generate Diet Plan button in empty state
@@ -53,6 +71,7 @@ export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
             userId={userId}
             userData={userData}
             onGenerateStateChange={handleGenerateStateChange}
+            onDietGenerated={handleDietGenerated}
           />
         )}
       </TabsContent>
@@ -64,7 +83,7 @@ export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
           <DietResults
             clientName={activeDiet.clientName}
             dietPlan={activeDiet.dietPlan}
-            onSuccess={() => setActiveTab('history')}
+            onSuccess={handleDietSaved}
             userId={userId}
           />
         ) : (

@@ -12,6 +12,7 @@ import type { UserData } from '../../_actions/get-user-by-id';
 import { useDietViewStore } from '../../_store/diet-view-store';
 import { dietGenerationSchema } from '../../types/dietGenerationSchema';
 import type { DietGenerationParams } from '../../types/dietGenerationSchema';
+import { useSaveToLocalStorageMutation } from '../diet-history/use-diet-history';
 
 const DIET_PREFERENCES = [
   'Vegetarian',
@@ -48,6 +49,8 @@ export function DietForm({
   const [clientName, setClientName] = useState(userData?.name || 'Client');
 
   const { setActiveDiet, setActiveTab } = useDietViewStore();
+  
+  const saveToLocalStorage = useSaveToLocalStorageMutation();
 
   const {
     register,
@@ -72,18 +75,25 @@ export function DietForm({
       // Call our server action directly with simplified error handling
       const result = await generateAIDiet(data);
 
-      // Update the store and automatically switch to the diet tab
-      setActiveDiet({
+      // Create diet object with client name
+      const dietData = {
         clientName: clientName,
         dietPlan: result,
+      };
+
+      // Save the diet to localStorage 
+      await saveToLocalStorage.mutateAsync({
+        clientName: clientName,
+        dietPlan: result,
+        userId
       });
+
+      // Update the store and automatically switch to the diet tab
+      setActiveDiet(dietData);
 
       // Notify parent component about diet generation
       if (onDietGenerated) {
-        onDietGenerated({
-          clientName: clientName,
-          dietPlan: result,
-        });
+        onDietGenerated(dietData);
       }
 
       // Automatically switch to the diet tab
@@ -123,7 +133,7 @@ export function DietForm({
             {/* Diet Preference */}
             <div>
               <label htmlFor="dietPreference" className="block text-sm font-medium mb-2">
-                Diet Preference
+                Diet Preference <span className="text-red-500">*</span>
               </label>
               <select
                 id="dietPreference"
@@ -144,7 +154,9 @@ export function DietForm({
             {/* Medical Conditions */}
             <div>
               <fieldset>
-                <legend className="block text-sm font-medium mb-2">Medical Conditions</legend>
+                <legend className="block text-sm font-medium mb-2">
+                  Medical Conditions <span className="text-red-500">*</span>
+                </legend>
                 <div className="space-y-2">
                   {MEDICAL_CONDITIONS.map((condition) => {
                     const id = `condition-${condition}`;
@@ -171,7 +183,7 @@ export function DietForm({
             {/* Location */}
             <div>
               <label htmlFor="location" className="block text-sm font-medium mb-2">
-                Location
+                Location <span className="text-red-500">*</span>
               </label>
               <input
                 id="location"
@@ -179,6 +191,7 @@ export function DietForm({
                 {...register('location')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter city/region"
+                required
               />
               {errors.location && (
                 <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
@@ -188,7 +201,7 @@ export function DietForm({
             {/* Country */}
             <div>
               <label htmlFor="country" className="block text-sm font-medium mb-2">
-                Country
+                Country <span className="text-red-500">*</span>
               </label>
               <input
                 id="country"
@@ -196,6 +209,7 @@ export function DietForm({
                 {...register('country')}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter country"
+                required
               />
               {errors.country && (
                 <p className="text-red-500 text-sm mt-1">{errors.country.message}</p>
@@ -205,7 +219,7 @@ export function DietForm({
             {/* Target Calories */}
             <div>
               <label htmlFor="targetCalories" className="block text-sm font-medium mb-2">
-                Target Calories (Optional)
+                Target Calories <span className="text-red-500">*</span>
               </label>
               <input
                 id="targetCalories"
@@ -213,6 +227,7 @@ export function DietForm({
                 {...register('targetCalories', { valueAsNumber: true })}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter target calories"
+                required
               />
               {errors.targetCalories && (
                 <p className="text-red-500 text-sm mt-1">{errors.targetCalories.message}</p>

@@ -6,6 +6,7 @@ import React from 'react';
 import { Suspense } from 'react';
 import { getUserById } from './_actions/get-user-by-id';
 import { DietHistoryProvider } from './_components/diet-history/diet-history-provider';
+import { QueryProvider } from './_components/query-provider';
 import { TabsWrapper } from './_components/tabs/tabs-wrapper';
 import UserProfileCard from './_components/user-profile/user-profile-card';
 
@@ -49,77 +50,77 @@ export default async function AssignDietPlanWithAI({
           <span>Back to diet plans</span>
         </Link>
 
-        <div className="space-y-8">
-          {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 p-8 border border-indigo-500/20 shadow-lg text-white">
-            {/* Decorative background patterns */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-0 right-0 transform rotate-45 translate-x-1/3 -translate-y-1/2">
-                <Apple className="h-48 w-48" strokeWidth={0.5} />
+          <div className="space-y-8">
+            {/* Hero Banner */}
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 p-8 border border-indigo-500/20 shadow-lg text-white">
+              {/* Decorative background patterns */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 transform rotate-45 translate-x-1/3 -translate-y-1/2">
+                  <Apple className="h-48 w-48" strokeWidth={0.5} />
+                </div>
+                <div className="absolute bottom-0 left-0 transform -rotate-12 -translate-x-1/4 translate-y-1/3">
+                  <Salad className="h-40 w-40" strokeWidth={0.5} />
+                </div>
+                <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
+                  {decorations.map((style, i) => (
+                    <div
+                      key={`deco-${i}-${style.left}-${style.top}`}
+                      className="flex items-center justify-center opacity-20"
+                      style={{
+                        position: 'absolute',
+                        left: style.left,
+                        top: style.top,
+                        transform: style.transform,
+                      }}
+                    >
+                      <Utensils className="h-8 w-8" strokeWidth={1} />
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 transform -rotate-12 -translate-x-1/4 translate-y-1/3">
-                <Salad className="h-40 w-40" strokeWidth={0.5} />
-              </div>
-              <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
-                {decorations.map((style, i) => (
-                  <div
-                    key={`deco-${i}-${style.left}-${style.top}`}
-                    className="flex items-center justify-center opacity-20"
-                    style={{
-                      position: 'absolute',
-                      left: style.left,
-                      top: style.top,
-                      transform: style.transform,
-                    }}
-                  >
-                    <Utensils className="h-8 w-8" strokeWidth={1} />
+
+              {/* Glowing effects */}
+              <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl" />
+              <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl" />
+
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
+                  <Utensils className="h-4 w-4" />
+                  AI-Powered Diet Planner
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
+                  Create <span className="text-blue-200">Perfect Diet Plans</span> in Seconds
+                </h1>
+
+                <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
+                  Let our AI design personalized nutrition plans tailored to your client's specific
+                  needs and health goals — turning hours of planning into moments.
+                </p>
+
+                {/* Decorative icons */}
+                <div className="absolute right-8 bottom-6 hidden lg:flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <Apple className="h-5 w-5 text-white" />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Glowing effects */}
-            <div className="absolute top-1/2 right-1/4 h-40 w-40 rounded-full bg-blue-400/30 blur-3xl" />
-            <div className="absolute bottom-0 left-1/4 h-32 w-32 rounded-full bg-indigo-300/20 blur-3xl" />
-
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
-                <Utensils className="h-4 w-4" />
-                AI-Powered Diet Planner
-              </div>
-
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 drop-shadow-sm">
-                Create <span className="text-blue-200">Perfect Diet Plans</span> in Seconds
-              </h1>
-
-              <p className="max-w-2xl text-base text-indigo-100/90 sm:text-lg">
-                Let our AI design personalized nutrition plans tailored to your client's specific
-                needs and health goals — turning hours of planning into moments.
-              </p>
-
-              {/* Decorative icons */}
-              <div className="absolute right-8 bottom-6 hidden lg:flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <Apple className="h-5 w-5 text-white" />
-                </div>
-                <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <Salad className="h-5 w-5 text-white" />
-                </div>
-                <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <Utensils className="h-5 w-5 text-white" />
+                  <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <Salad className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                    <Utensils className="h-5 w-5 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Two-column layout */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Left column - User Profile */}
-            <div className="md:col-span-4">
-              <Suspense fallback={<UserProfileSkeleton />}>
-                <UserProfileCard user={user} />
-              </Suspense>
-            </div>
+            {/* Two-column layout */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* Left column - User Profile */}
+              <div className="md:col-span-4">
+                <Suspense fallback={<UserProfileSkeleton />}>
+                  <UserProfileCard user={user} />
+                </Suspense>
+              </div>
 
             {/* Right column - Diet Form */}
             <div className="md:col-span-8">

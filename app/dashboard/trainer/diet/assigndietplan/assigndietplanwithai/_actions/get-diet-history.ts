@@ -21,8 +21,10 @@ export async function getDietHistory(
     // Call the getcustomdietplans endpoint instead of /diet/history/{userId}
     const response = await trainerAxios.get('/diet/getcustomdietplans');
     const data = response.data as CustomDietPlansResponse;
+    console.log("Response from getcustomdietplans:", data);
 
-    if (data.success || data.msg === 'success') {
+    // Check for success in the API response (look at success field, not msg)
+    if (data.success === true) {
       // Transform the diet plans into DietHistoryItem format
       const dietHistoryItems: DietHistoryItem[] = (data.dietPlans || []).map((dietPlan) => {
         // Get the current date as ISO string for fallback

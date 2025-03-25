@@ -5,10 +5,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { formatDistanceToNow } from 'date-fns';
 import { Calendar, Check, ChevronRight, RefreshCw, Search, UtensilsCrossed } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import type { DietHistoryItem } from '../../_store/diet-view-store';
-import { useDietViewStore } from '../../_store/diet-view-store';
-import { useDietHistory } from './diet-history-provider';
+import { useDietHistoryQuery } from './use-diet-history';
 
 interface DietHistoryProps {
   onSelectDiet: (diet: DietHistoryItem) => void;
@@ -16,54 +15,31 @@ interface DietHistoryProps {
 }
 
 export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
-  const { loading, history, error, refreshHistory } = useDietHistory();
-  const { getSavedDiets } = useDietViewStore();
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [localHistory, setLocalHistory] = React.useState<DietHistoryItem[]>([]);
-
-  useEffect(() => {
-    // When API is loading or errors out, show diets from localStorage
-    if (loading || error) {
-      setLocalHistory(getSavedDiets(userId));
-    } else {
-      setLocalHistory(history);
-    }
-  }, [loading, error, history, getSavedDiets, userId]);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Use React Query hook for fetching diet history
+  const { 
+    data: history = [], 
+    isLoading, 
+    isError, 
+    error, 
+    refetch,
+    isFetching
+  } = useDietHistoryQuery(userId);
 
   const filteredHistory = React.useMemo(() => {
-    if (!searchQuery.trim()) return localHistory;
+    if (!searchQuery.trim()) return history;
 
     const query = searchQuery.toLowerCase();
-    return localHistory.filter(
+    return history.filter(
       (item) =>
         item.dietPlan.name.toLowerCase().includes(query) ||
         item.dietPlan.description?.toLowerCase().includes(query),
     );
-  }, [localHistory, searchQuery]);
+  }, [history, searchQuery]);
 
-  // Show loading state with local diets if available
-  if (loading) {
-    const localDiets = getSavedDiets(userId);
-    if (localDiets.length > 0) {
-      // If we have local diets, show them while loading
-      return (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              Loading from server, showing saved diets...
-            </p>
-            <RefreshCw className="h-4 w-4 animate-spin" />
-          </div>
-          <DietHistoryList
-            diets={localDiets}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onSelectDiet={onSelectDiet}
-          />
-        </div>
-      );
-    }
-
+  // Show loading state
+  if (isLoading && !history.length) {
     return (
       <div className="flex justify-center items-center p-8">
         <RefreshCw className="h-6 w-6 animate-spin" />
@@ -71,41 +47,61 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
     );
   }
 
-  // Show error state with local diets if available
-  if (error) {
-    const localDiets = getSavedDiets(userId);
-    if (localDiets.length > 0) {
-      // If we have local diets, show them despite the error
-      return (
-        <div className="space-y-4">
+  // Show error state
+  if (isError) {
+    return (
+      <div className="space-y-4">
+        {history.length > 0 && (
           <div className="flex justify-between items-center">
             <p className="text-sm text-amber-500">
               <span className="font-medium">Note:</span> Using locally saved diets
             </p>
-            <Button variant="outline" size="sm" onClick={refreshHistory}>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
               <RefreshCw className="h-3 w-3 mr-1" /> Sync with server
             </Button>
           </div>
+        )}
+        
+        {history.length > 0 ? (
           <DietHistoryList
-            diets={localDiets}
+            diets={filteredHistory}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onSelectDiet={onSelectDiet}
           />
-        </div>
-      );
-    }
-
-    return (
-      <div className="p-6 text-center">
-        <p className="text-red-500 mb-4">{error}</p>
-        <Button variant="outline" onClick={refreshHistory}>
-          <RefreshCw className="h-4 w-4 mr-2" /> Try Again
-        </Button>
+        ) : (
+          <div className="p-6 text-center">
+            <p className="text-red-500 mb-4">{error instanceof Error ? error.message : 'Error loading diet history'}</p>
+            <Button variant="outline" onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" /> Try Again
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
 
+  // Show fetching state with current data
+  if (isFetching && history.length > 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            Refreshing diet history...
+          </p>
+          <RefreshCw className="h-4 w-4 animate-spin" />
+        </div>
+        <DietHistoryList
+          diets={filteredHistory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSelectDiet={onSelectDiet}
+        />
+      </div>
+    );
+  }
+
+  // No diets found
   if (filteredHistory.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -118,13 +114,21 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
     );
   }
 
+  // Normal state with data
   return (
-    <DietHistoryList
-      diets={filteredHistory}
-      searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
-      onSelectDiet={onSelectDiet}
-    />
+    <div className="space-y-4">
+      {isFetching && (
+        <div className="flex justify-end">
+          <RefreshCw className="h-4 w-4 animate-spin" />
+        </div>
+      )}
+      <DietHistoryList
+        diets={filteredHistory}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSelectDiet={onSelectDiet}
+      />
+    </div>
   );
 }
 

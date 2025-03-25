@@ -208,7 +208,7 @@ export default function WorkoutForm({ user, onWorkoutGenerated }: WorkoutFormPro
                 </FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600">
+                    <SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600 bg-white-500 z-10">
                       <SelectValue placeholder="Select goal" />
                     </SelectTrigger>
                   </FormControl>
