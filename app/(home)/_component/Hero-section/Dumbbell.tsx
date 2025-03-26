@@ -1,10 +1,9 @@
 "use client";
-import { Cylinder, Text } from "@react-three/drei";
+import { Cylinder } from "@react-three/drei";
 // components/Dumbbell.tsx
-import { Canvas } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 
 // --- Define Initial Orientation ---
@@ -35,45 +34,18 @@ interface DumbbellProps {
   mousePos?: React.MutableRefObject<{ x: number; y: number }>;
 }
 
-// Main wrapper component that provides the Canvas context
+// Export Dumbbell Scene directly without a Canvas wrapper
 export function DumbbellScene({ mousePos }: DumbbellProps) {
   // Create a default mousePos ref if none is provided
   const defaultMousePos = useRef({ x: 0, y: 0 });
   const safeMousePos = mousePos || defaultMousePos;
 
-  return (
-    <Canvas 
-      shadows 
-      camera={{ position: [0, 0, 5], fov: 50 }}
-      style={{ width: '100%', height: '100%' }}
-    >
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-      <Dumbbell mousePos={safeMousePos} />
-    </Canvas>
-  );
+  return <Dumbbell mousePos={safeMousePos} />;
 }
 
 // The actual Dumbbell component that uses Three.js hooks
 function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; y: number }> }) {
   const group = useRef<THREE.Group>(null);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [fontError, setFontError] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setFontsLoaded(true);
-    }, 300);
-    
-    // Add error handling for font loading
-    window.addEventListener('error', (e) => {
-      if (e.message.includes('Failed to fetch') && e.message.includes('Content Security Policy')) {
-        setFontError(true);
-      }
-    });
-    
-    return () => clearTimeout(timer);
-  }, []);
 
   // Theme colors (remain the same)
   const purpleAccent = "#a855f7";
@@ -178,17 +150,6 @@ function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; 
     clearcoatRoughness: 0.3,
     reflectivity: 0.6,
   };
-  const textMaterial = (
-    <meshPhysicalMaterial
-      color={purpleAccent}
-      metalness={0.9}
-      roughness={0.1}
-      clearcoat={0.8}
-      emissive={purpleDark}
-      emissiveIntensity={0.6}
-      side={THREE.DoubleSide}
-    />
-  );
   const plateDetailMaterial = (
     <meshPhysicalMaterial color={detailColor} roughness={0.5} metalness={0.6} />
   );
@@ -273,22 +234,7 @@ function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; 
             {...physicalMaterialProps}
           />{" "}
         </Cylinder>
-        {fontsLoaded && !fontError && (
-          <Text
-            position={[0, 0, 0]}
-            rotation={[Math.PI / 2, 0, 0]}
-            fontSize={0.15}
-            anchorX="center"
-            anchorY="middle"
-            maxWidth={plateArgs[0] * Math.PI * 2 * 0.9}
-            outlineColor="#000000"
-            outlineWidth={0.01}
-            font="/fonts/Inter-Bold.woff" // Provide a local font to avoid CDN requests
-          >
-            {" "}
-            GymNavigator {textMaterial}{" "}
-          </Text>
-        )}
+        {/* Text removed as requested */}
         {detailPositions.map((detail) => (
           <Cylinder
             key={`left-${detail.id}`}
