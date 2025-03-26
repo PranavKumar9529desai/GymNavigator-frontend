@@ -64,10 +64,10 @@ const nextConfig = {
             value: 'max-age=31536000; includeSubDomains',
           },
           {
-            // Additional recommended security header with YouTube frame support
+            // Updated CSP to allow blob scripts for Web Workers
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
+              "default-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob:; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
           },
           {
             // Prevent XSS attacks
