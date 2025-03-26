@@ -31,11 +31,11 @@ const INITIAL_ROTATION_Y_RAD = THREE.MathUtils.degToRad(
 const INITIAL_ROLL_Z_RAD = THREE.MathUtils.degToRad(INITIAL_ROLL_Z_DEGREES); // Radian for Z
 
 interface DumbbellProps {
-  mousePos?: React.MutableRefObject<{ x: number; y: number }>;
+  mousePos: React.MutableRefObject<{ x: number; y: number }>;
 }
 
 // Export Dumbbell Scene directly without a Canvas wrapper
-export function DumbbellScene({ mousePos }: DumbbellProps) {
+export function DumbbellScene({ mousePos }: { mousePos?: React.MutableRefObject<{ x: number; y: number }> }) {
   // Create a default mousePos ref if none is provided
   const defaultMousePos = useRef({ x: 0, y: 0 });
   const safeMousePos = mousePos || defaultMousePos;
@@ -44,7 +44,7 @@ export function DumbbellScene({ mousePos }: DumbbellProps) {
 }
 
 // The actual Dumbbell component that uses Three.js hooks
-function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; y: number }> }) {
+function Dumbbell({ mousePos }: DumbbellProps) {
   const group = useRef<THREE.Group>(null);
 
   // Theme colors (remain the same)
@@ -58,18 +58,14 @@ function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; 
     if (!group.current) return;
     const t = state.clock.getElapsedTime();
 
-    // Safely access mousePos values with defaults if undefined
-    const mousePosX = mousePos?.current?.x || 0;
-    const mousePosY = mousePos?.current?.y || 0;
-
     // Calculate Subtle Deviations including Z
     const baseRotX = Math.cos(t / (BASE_ANIM_AMP_X / 25)) / BASE_ANIM_AMP_X;
     const baseRotY = Math.sin(t / (BASE_ANIM_AMP_Y / 20)) / BASE_ANIM_AMP_Y;
     const baseRotZ = Math.cos(t / (BASE_ANIM_AMP_Z / 15)) / BASE_ANIM_AMP_Z; // Z wobble
-    const mouseRotX = (-mousePosY * Math.PI) / MOUSE_SENSITIVITY_X;
-    const mouseRotY = (mousePosX * Math.PI) / MOUSE_SENSITIVITY_Y;
+    const mouseRotX = (-mousePos.current.y * Math.PI) / MOUSE_SENSITIVITY_X;
+    const mouseRotY = (mousePos.current.x * Math.PI) / MOUSE_SENSITIVITY_Y;
     // Optional: Minimal mouse effect on Z roll (can be removed if distracting)
-    const mouseRotZ = (mousePosX * Math.PI) / MOUSE_SENSITIVITY_Z;
+    const mouseRotZ = (mousePos.current.x * Math.PI) / MOUSE_SENSITIVITY_Z;
 
     // Target Rotation: Start from initial pose and add small deviations
     const targetX = INITIAL_TILT_X_RAD + baseRotX + mouseRotX;
@@ -234,7 +230,6 @@ function Dumbbell({ mousePos }: { mousePos: React.MutableRefObject<{ x: number; 
             {...physicalMaterialProps}
           />{" "}
         </Cylinder>
-        {/* Text removed as requested */}
         {detailPositions.map((detail) => (
           <Cylinder
             key={`left-${detail.id}`}

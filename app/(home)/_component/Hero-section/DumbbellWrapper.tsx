@@ -2,6 +2,7 @@
 
 import {
 	ContactShadows,
+	Environment,
 	OrbitControls,
 	PerspectiveCamera,
 	SpotLight,
@@ -39,7 +40,7 @@ export default function DumbbellWrapper() {
 				shadows 
 				dpr={[1, 1.5]} 
 				gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }} 
-				style={{ backgroundColor: 'transparent' }}
+				style={{ background: 'transparent' }}
 				camera={{ position: [0, 1.5, 11], fov: 45 }}
 			>
 				<Suspense fallback={null}>
@@ -57,22 +58,19 @@ export default function DumbbellWrapper() {
 						target={[0, 0.5, 0]}
 					/>
 
-					{/* Enhanced Lighting Setup */}
-					<ambientLight intensity={0.6} /> {/* Increased intensity */}
-					<pointLight position={[10, 10, 10]} intensity={1.2} castShadow />
+					{/* Lighting Setup */}
+					<ambientLight intensity={0.4} />
 					<SpotLight 
 						position={[10, 15, 10]} 
 						angle={0.25} 
 						penumbra={0.8} 
-						intensity={2.0} 
+						intensity={1.8} 
 						castShadow 
-						shadow-mapSize={1024}
+						shadow-mapSize-width={1024}
+						shadow-mapSize-height={1024}
 						color="#d8b4fe" 
 					/>
 					<pointLight position={[-10, -5, -10]} intensity={0.5} color="#ffffff" />
-					{/* Additional lights to simulate environment */}
-					<pointLight position={[5, 5, -10]} intensity={0.5} color="#a1c4fd" /> {/* Blue backlight */}
-					<pointLight position={[-5, 8, 10]} intensity={0.3} color="#fed6e3" /> {/* Pink fill light */}
 
 					{/* Dumbbell Component */}
 					<DumbbellScene mousePos={mousePos} />
@@ -88,7 +86,8 @@ export default function DumbbellWrapper() {
 						position={[0, -1.8, 0]} 
 					/>
 					
-					{/* Environment maps can cause problems with HDR loading - removed */}
+					{/* Try a different preset if city doesn't work */}
+					<Environment preset="city" blur={0.6} />
 				</Suspense>
 			</Canvas>
 		</div>
