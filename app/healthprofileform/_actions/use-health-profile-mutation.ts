@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { HealthProfileState } from '../_store/health-profile-store';
+import { HealthProfileState, ReligiousPreference } from '../_store/health-profile-store';
 import { z } from 'zod';
 
 const healthProfileSchema = z.object({
@@ -25,7 +25,10 @@ const healthProfileSchema = z.object({
     name: z.string(),
     selected: z.boolean()
   })),
-  otherMedicalCondition: z.string().optional()
+  otherMedicalCondition: z.string().optional(),
+  religiousPreference: z.enum(['hindu', 'muslim', 'sikh', 'jain', 'christian', 'buddhist', 'other', 'none']).nullable(),
+  otherReligiousPreference: z.string().optional(),
+  dietaryRestrictions: z.array(z.string()).optional()
 });
 
 export type HealthProfileData = z.infer<typeof healthProfileSchema>;
@@ -40,13 +43,16 @@ export async function submitHealthProfile(formData: Partial<HealthProfileState>)
     weight: formData.weight as { value: number, unit: 'kg' | 'lb' },
     targetWeight: formData.targetWeight as { value: number, unit: 'kg' | 'lb' },
     medicalConditions: formData.medicalConditions!.filter(condition => condition.selected),
-    otherMedicalCondition: formData.otherMedicalCondition
+    otherMedicalCondition: formData.otherMedicalCondition,
+    religiousPreference: formData.religiousPreference || null,
+    otherReligiousPreference: formData.otherReligiousPreference,
+    dietaryRestrictions: formData.dietaryRestrictions || []
   };
 
   try {
     // Validate the data
     healthProfileSchema.parse(profileData);
-    
+    console.log("")
     // TODO: Replace with actual API call to backend
     // Example: 
     // const response = await fetch('/api/health-profile', {

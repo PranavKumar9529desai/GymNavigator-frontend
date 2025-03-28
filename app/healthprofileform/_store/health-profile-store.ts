@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export type Gender = 'male' | 'female' | 'other';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive';
+export type ReligiousPreference = 'hindu' | 'muslim' | 'sikh' | 'jain' | 'christian' | 'buddhist' | 'other' | 'none';
 
 export interface MedicalCondition {
   id: string;
@@ -19,6 +20,9 @@ export interface HealthProfileState {
   targetWeight: { value: number | null; unit: 'kg' | 'lb' };
   medicalConditions: MedicalCondition[];
   otherMedicalCondition: string;
+  religiousPreference: ReligiousPreference | null;
+  otherReligiousPreference: string;
+  dietaryRestrictions: string[];
   
   // Form navigation
   currentStep: number;
@@ -34,6 +38,10 @@ export interface HealthProfileState {
   toggleMedicalCondition: (id: string) => void;
   addMedicalCondition: (condition: string) => void;
   setOtherMedicalCondition: (text: string) => void;
+  setReligiousPreference: (preference: ReligiousPreference) => void;
+  setOtherReligiousPreference: (text: string) => void;
+  addDietaryRestriction: (restriction: string) => void;
+  removeDietaryRestriction: (restriction: string) => void;
   
   nextStep: () => void;
   prevStep: () => void;
@@ -61,9 +69,12 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
   targetWeight: { value: null, unit: 'kg' },
   medicalConditions: [...defaultMedicalConditions],
   otherMedicalCondition: '',
+  religiousPreference: null,
+  otherReligiousPreference: '',
+  dietaryRestrictions: [],
   
   currentStep: 1,
-  totalSteps: 7,
+  totalSteps: 8,
 
   // Actions
   setGender: (gender) => set({ gender }),
@@ -98,6 +109,18 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
   
   setOtherMedicalCondition: (text) => set({ otherMedicalCondition: text }),
   
+  setReligiousPreference: (preference) => set({ religiousPreference: preference }),
+  
+  setOtherReligiousPreference: (text) => set({ otherReligiousPreference: text }),
+  
+  addDietaryRestriction: (restriction) => set((state) => ({
+    dietaryRestrictions: [...state.dietaryRestrictions, restriction]
+  })),
+  
+  removeDietaryRestriction: (restriction) => set((state) => ({
+    dietaryRestrictions: state.dietaryRestrictions.filter(item => item !== restriction)
+  })),
+  
   nextStep: () => set((state) => ({
     currentStep: Math.min(state.currentStep + 1, state.totalSteps)
   })),
@@ -117,6 +140,9 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
     targetWeight: { value: null, unit: 'kg' },
     medicalConditions: [...defaultMedicalConditions],
     otherMedicalCondition: '',
+    religiousPreference: null,
+    otherReligiousPreference: '',
+    dietaryRestrictions: [],
     currentStep: 1
   })
 }));

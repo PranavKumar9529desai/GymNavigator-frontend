@@ -1,9 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useHealthProfileStore } from '../_store/health-profile-store';
+import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Ruler } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useHealthProfileStore } from '../_store/health-profile-store';
 
 export default function HeightForm() {
   const { height, setHeight, nextStep, prevStep } = useHealthProfileStore();
@@ -46,11 +47,11 @@ export default function HeightForm() {
   const getHeightDisplay = () => {
     if (unit === 'cm') {
       return `${value} cm`;
-    } else {
-      const feet = Math.floor(value);
-      const inches = Math.round((value - feet) * 12);
-      return `${feet}'${inches}"`;
     }
+    
+    const feet = Math.floor(value);
+    const inches = Math.round((value - feet) * 12);
+    return `${feet}'${inches}"`;
   };
 
   return (
@@ -75,6 +76,7 @@ export default function HeightForm() {
                 type="button"
                 onClick={toggleUnit}
                 className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full"
+                aria-label={`Switch to ${unit === 'cm' ? 'feet' : 'cm'}`}
               >
                 Switch to {unit === 'cm' ? 'feet' : 'cm'}
               </button>
@@ -88,6 +90,7 @@ export default function HeightForm() {
               value={value} 
               onChange={handleChange} 
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              aria-label={`Select height value between ${minHeight} and ${maxHeight} ${unit}`}
             />
             <div className="flex justify-between text-xs text-gray-400 px-1 mt-1">
               <span>{minHeight}{unit === 'cm' ? 'cm' : 'ft'}</span>
@@ -107,7 +110,10 @@ export default function HeightForm() {
         </Button>
         <Button
           onClick={handleNext}
-          className="flex items-center justify-center gap-1"
+          className={cn(
+            "flex items-center justify-center gap-1",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>

@@ -1,10 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useHealthProfileStore } from '../_store/health-profile-store';
-import { ArrowLeft, ArrowRight, Footprints, Activity, Dumbbell, Bike , Zap } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Activity, ArrowLeft, ArrowRight, Bike, Dumbbell, Footprints, Zap } from 'lucide-react';
 import { useState } from 'react';
-// import  Running  from "../_assests/running-svgrepo-com.svg"
+import { useHealthProfileStore } from '../_store/health-profile-store';
+
 export default function ActivityForm() {
   const { activityLevel, setActivityLevel, nextStep, prevStep } = useHealthProfileStore();
   const [selected, setSelected] = useState<string | null>(activityLevel || null);
@@ -21,31 +22,31 @@ export default function ActivityForm() {
       id: 'sedentary',
       name: 'Sedentary',
       description: 'Little to no exercise',
-      icon: <Footprints className="h-6 w-6 text-gray-600" />
+      icon: <Footprints className={`h-6 w-6 ${selected === 'sedentary' ? 'text-blue-600' : 'text-gray-600'}`} />
     },
     {
       id: 'light',
       name: 'Light',
       description: 'Light exercise 1-3 days/week',
-      icon: <Activity className="h-6 w-6 text-blue-400" />
+      icon: <Activity className={`h-6 w-6 ${selected === 'light' ? 'text-blue-600' : 'text-blue-400'}`} />
     },
     {
       id: 'moderate',
       name: 'Moderate',
       description: 'Moderate exercise 3-5 days/week',
-      icon: <Dumbbell className="h-6 w-6 text-blue-500" />
+      icon: <Dumbbell className={`h-6 w-6 ${selected === 'moderate' ? 'text-blue-600' : 'text-blue-500'}`} />
     },
     {
       id: 'active',
       name: 'Active',
       description: 'Hard exercise 6-7 days/week',
-      icon: <Zap className="h-6 w-6 text-blue-600" />
+      icon: <Zap className={`h-6 w-6 ${selected === 'active' ? 'text-blue-600' : 'text-blue-600'}`} />
     },
     {
       id: 'veryActive',
       name: 'Very Active',
       description: 'Intense training 2x daily',
-      icon: <Bike className="h-6 w-6 text-blue-700" />
+      icon: <Bike className={`h-6 w-6 ${selected === 'veryActive' ? 'text-blue-600' : 'text-blue-700'}`} />
     }
   ];
 
@@ -61,13 +62,15 @@ export default function ActivityForm() {
               key={activity.id}
               type="button"
               onClick={() => setSelected(activity.id)}
-              className={`flex items-center p-4 rounded-lg border-2 transition-all ${
+              className={cn(
+                "flex items-center p-4 rounded-xl border-2 transition-all",
                 selected === activity.id
-                  ? 'border-blue-500 bg-blue-50'
+                  ? "border-blue-500 bg-blue-50"
                   : 'border-gray-200 hover:border-blue-200'
-              }`}
+              )}
+              aria-pressed={selected === activity.id}
             >
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+              <div className={`w-10 h-10 ${selected === activity.id ? 'bg-blue-100' : 'bg-gray-100'} rounded-full flex items-center justify-center mr-3`}>
                 {activity.icon}
               </div>
               <div className="text-left">
@@ -90,7 +93,10 @@ export default function ActivityForm() {
         <Button
           onClick={handleNext}
           disabled={!selected}
-          className="flex items-center justify-center gap-1"
+          className={cn(
+            "flex items-center justify-center gap-1",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>

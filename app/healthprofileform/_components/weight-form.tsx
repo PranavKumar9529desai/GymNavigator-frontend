@@ -1,9 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useHealthProfileStore } from '../_store/health-profile-store';
+import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Scale } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useHealthProfileStore } from '../_store/health-profile-store';
 
 export default function WeightForm() {
   const { weight, setWeight, nextStep, prevStep } = useHealthProfileStore();
@@ -59,7 +60,7 @@ export default function WeightForm() {
               <Scale className="h-10 w-10 text-blue-600" />
             </div>
             <div className="mt-4 text-center">
-              <p className="text-4xl font-bold text-blue-600">{getWeightDisplay()}</p>
+              <p className="text-4xl font-bold text-blue-600">{value} {unit}</p>
             </div>
           </div>
           
@@ -69,6 +70,7 @@ export default function WeightForm() {
                 type="button"
                 onClick={toggleUnit}
                 className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full"
+                aria-label={`Switch to ${unit === 'kg' ? 'pounds' : 'kg'}`}
               >
                 Switch to {unit === 'kg' ? 'pounds' : 'kg'}
               </button>
@@ -81,6 +83,7 @@ export default function WeightForm() {
               value={value} 
               onChange={handleChange} 
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              aria-label={`Select weight between ${minWeight} and ${maxWeight} ${unit}`}
             />
             <div className="flex justify-between text-xs text-gray-400 px-1 mt-1">
               <span>{minWeight} {unit}</span>
@@ -100,7 +103,10 @@ export default function WeightForm() {
         </Button>
         <Button
           onClick={handleNext}
-          className="flex items-center justify-center gap-1"
+          className={cn(
+            "flex items-center justify-center gap-1",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>

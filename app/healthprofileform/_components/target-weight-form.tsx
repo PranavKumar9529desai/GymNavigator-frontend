@@ -1,9 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, Target } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useHealthProfileStore } from '../_store/health-profile-store';
-import { ArrowLeft, ArrowRight, Target, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 export default function TargetWeightForm() {
   const { targetWeight, weight, setTargetWeight, nextStep, prevStep } = useHealthProfileStore();
@@ -83,7 +84,7 @@ export default function TargetWeightForm() {
                 <button
                   type="button"
                   onClick={handleDecrement}
-                  className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 mr-3"
+                  className="p-1 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 mr-3"
                 >
                   <ChevronDown className="h-5 w-5" />
                 </button>
@@ -91,7 +92,7 @@ export default function TargetWeightForm() {
                 <button
                   type="button"
                   onClick={handleIncrement}
-                  className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 ml-3"
+                  className="p-1 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 ml-3"
                 >
                   <ChevronUp className="h-5 w-5" />
                 </button>
@@ -141,7 +142,10 @@ export default function TargetWeightForm() {
         </Button>
         <Button
           onClick={handleNext}
-          className="flex items-center justify-center gap-1"
+          className={cn(
+            "flex items-center justify-center gap-1",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Check, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useHealthProfileStore } from '../_store/health-profile-store';
 
 interface MedicalConditionsFormProps {
@@ -18,7 +19,8 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
     otherMedicalCondition, 
     toggleMedicalCondition, 
     setOtherMedicalCondition,
-    prevStep 
+    prevStep,
+    nextStep
   } = useHealthProfileStore();
   
   const [newCondition, setNewCondition] = useState('');
@@ -33,6 +35,7 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
   
   const handleSubmit = async () => {
     await onSubmit();
+    nextStep();
   };
   
   return (
@@ -48,20 +51,22 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
                 id={`condition-${condition.id}`} 
                 checked={condition.selected}
                 onCheckedChange={() => toggleMedicalCondition(condition.id)}
+                className="border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <label 
                 htmlFor={`condition-${condition.id}`}
-                className="text-base font-medium cursor-pointer"
+                className="text-base font-medium text-gray-700 cursor-pointer"
               >
                 {condition.name}
               </label>
             </div>
           ))}
           
-          <div className="pt-4">
-            <label className="text-base font-medium mb-2 block">Other condition not listed?</label>
+          <div className="pt-4 border-t border-gray-200">
+            <label htmlFor="new-condition-input" className="text-base font-medium text-gray-700 mb-2 block">Other condition not listed?</label>
             <div className="flex gap-2">
               <Input 
+                id="new-condition-input"
                 placeholder="Type condition here" 
                 value={newCondition} 
                 onChange={(e) => setNewCondition(e.target.value)} 
@@ -72,6 +77,7 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
                 variant="outline" 
                 onClick={handleAddCondition} 
                 disabled={!newCondition.trim()}
+                className="border-blue-300 hover:bg-blue-50"
               >
                 Add
               </Button>
@@ -91,7 +97,10 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="w-full py-6 flex items-center justify-center gap-2 text-base"
+          className={cn(
+            "w-full py-6 flex items-center justify-center gap-2 text-base",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           {isSubmitting ? (
             <>
@@ -100,7 +109,7 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
             </>
           ) : (
             <>
-              Complete Profile <Check className="h-5 w-5" />
+              Continue <ArrowRight className="h-5 w-5" />
             </>
           )}
         </Button>

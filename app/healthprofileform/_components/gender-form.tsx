@@ -1,12 +1,13 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useHealthProfileStore } from '../_store/health-profile-store';
+import { cn } from '@/lib/utils';
 import { ArrowRight, Users } from 'lucide-react';
-import { useState } from 'react';
 import Image from 'next/image';
-import MaleSvg from '../_assests/male-symbol-svgrepo-com.svg';
+import { useState } from 'react';
 import FemaleSvg from '../_assests/female-svgrepo-com.svg';
+import MaleSvg from '../_assests/male-symbol-svgrepo-com.svg';
+import { useHealthProfileStore } from '../_store/health-profile-store';
 
 export default function GenderForm() {
   const { gender, setGender, nextStep } = useHealthProfileStore();
@@ -29,11 +30,13 @@ export default function GenderForm() {
           <button
             type="button"
             onClick={() => setSelected('male')}
-            className={`flex items-center p-4 rounded-lg border-2 transition-all ${
+            className={cn(
+              "flex items-center p-4 rounded-xl border-2 transition-all",
               selected === 'male'
-                ? 'border-blue-500 bg-blue-50'
+                ? "border-blue-500 bg-blue-50"
                 : 'border-gray-200 hover:border-blue-200'
-            }`}
+            )}
+            aria-pressed={selected === 'male'}
           >
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
               <Image 
@@ -41,7 +44,7 @@ export default function GenderForm() {
                 alt="Male" 
                 width={24} 
                 height={24}
-                className="text-blue-600" 
+                className={selected === 'male' ? 'text-blue-600' : 'text-blue-600'} 
               />
             </div>
             <span className="font-medium text-gray-800">Male</span>
@@ -50,11 +53,13 @@ export default function GenderForm() {
           <button
             type="button"
             onClick={() => setSelected('female')}
-            className={`flex items-center p-4 rounded-lg border-2 transition-all ${
+            className={cn(
+              "flex items-center p-4 rounded-xl border-2 transition-all",
               selected === 'female'
-                ? 'border-blue-500 bg-blue-50'
+                ? "border-pink-500 bg-pink-50"
                 : 'border-gray-200 hover:border-blue-200'
-            }`}
+            )}
+            aria-pressed={selected === 'female'}
           >
             <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mr-3">
               <Image 
@@ -71,14 +76,16 @@ export default function GenderForm() {
           <button
             type="button"
             onClick={() => setSelected('other')}
-            className={`flex items-center p-4 rounded-lg border-2 transition-all ${
+            className={cn(
+              "flex items-center p-4 rounded-xl border-2 transition-all",
               selected === 'other'
-                ? 'border-blue-500 bg-blue-50'
+                ? "border-purple-500 bg-purple-50"
                 : 'border-gray-200 hover:border-blue-200'
-            }`}
+            )}
+            aria-pressed={selected === 'other'}
           >
             <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-              <Users className="h-6 w-6 text-purple-600" />
+              <Users className={`h-6 w-6 ${selected === 'other' ? 'text-purple-600' : 'text-purple-600'}`} />
             </div>
             <span className="font-medium text-gray-800">Other</span>
           </button>
@@ -89,7 +96,7 @@ export default function GenderForm() {
         <Button
           onClick={handleNext}
           disabled={!selected}
-          className="w-full py-6 flex items-center justify-center gap-2 text-base"
+          className="w-full py-6 flex items-center justify-center gap-2 text-base bg-gradient-to-r from-blue-500 to-blue-600"
         >
           Continue <ArrowRight className="h-5 w-5" />
         </Button>

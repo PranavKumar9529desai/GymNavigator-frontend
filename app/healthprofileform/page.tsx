@@ -1,33 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useHealthProfileStore } from './_store/health-profile-store';
-import { submitHealthProfile } from './_actions/use-health-profile-mutation';
 import { useToast } from '@/hooks/use-toast';
+import { gymTheme } from '@/styles/theme';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { submitHealthProfile } from './_actions/use-health-profile-mutation';
+import { useHealthProfileStore } from './_store/health-profile-store';
 
+import ActivityForm from './_components/activity-form';
+import AgeForm from './_components/age-form';
 // Form step components
 import GenderForm from './_components/gender-form';
-import AgeForm from './_components/age-form';
-import WeightForm from './_components/weight-form';
 import HeightForm from './_components/height-form';
-import TargetWeightForm from './_components/target-weight-form';
-import ActivityForm from './_components/activity-form';
 import MedicalConditionsForm from './_components/medical-conditions-form';
+import ReligiousPreferencesForm from './_components/religious-preferences-form';
+import TargetWeightForm from './_components/target-weight-form';
+import WeightForm from './_components/weight-form';
 
 // Progress indicator component
 const ProgressIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
+  const { gender } = useHealthProfileStore();
+  
+  // Only show progress after gender is selected (first step completed)
+  // If gender is null, show 0%, otherwise calculate based on current step
+  const progressPercentage = !gender ? 0 : Math.floor((currentStep / totalSteps) * 100);
+  
   return (
     <div className="w-full mb-8">
       <div className="flex justify-between mb-2">
         <span className="text-sm text-gray-500">Step {currentStep} of {totalSteps}</span>
-        <span className="text-sm font-medium">{Math.round((currentStep / totalSteps) * 100)}%</span>
+        <span className="text-sm font-medium">{progressPercentage}%</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
         <div
-          className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-          style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-        ></div>
+          className="h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-blue-600"
+          style={{ width: `${progressPercentage}%` }}
+        />
       </div>
     </div>
   );
@@ -75,6 +83,12 @@ export default function HealthProfileFormPage() {
     }
   };
 
+  // Modified to return a Promise to match expected type
+  const handleNextStep = async (): Promise<void> => {
+    useHealthProfileStore.getState().nextStep();
+    return Promise.resolve();
+  };
+
   // Render the current step component
   const renderStep = () => {
     switch (currentStep) {
@@ -91,7 +105,9 @@ export default function HealthProfileFormPage() {
       case 6:
         return <ActivityForm />;
       case 7:
-        return <MedicalConditionsForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />;
+        return <MedicalConditionsForm onSubmit={handleNextStep} isSubmitting={false} />;
+      case 8:
+        return <ReligiousPreferencesForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} isLast={true} />;
       default:
         return <GenderForm />;
     }

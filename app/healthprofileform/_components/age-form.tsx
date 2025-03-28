@@ -1,9 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useHealthProfileStore } from '../_store/health-profile-store';
+import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Clock } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useHealthProfileStore } from '../_store/health-profile-store';
 
 export default function AgeForm() {
   const { age, setAge, nextStep, prevStep } = useHealthProfileStore();
@@ -16,14 +17,6 @@ export default function AgeForm() {
   const handleNext = () => {
     setAge(value);
     nextStep();
-  };
-
-  const ageLabels = {
-    18: 'Teen',
-    25: 'Young adult',
-    40: 'Adult',
-    60: 'Senior',
-    80: 'Elder'
   };
 
   const getAgeLabel = () => {
@@ -59,6 +52,7 @@ export default function AgeForm() {
               value={value} 
               onChange={handleChange} 
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              aria-label="Select your age"
             />
             <div className="flex justify-between text-xs text-gray-400 px-1 mt-1">
               <span>16</span>
@@ -78,7 +72,10 @@ export default function AgeForm() {
         </Button>
         <Button
           onClick={handleNext}
-          className="flex items-center justify-center gap-1"
+          className={cn(
+            "flex items-center justify-center gap-1",
+            "bg-gradient-to-r from-blue-500 to-blue-600"
+          )}
         >
           Continue <ArrowRight className="h-4 w-4" />
         </Button>
