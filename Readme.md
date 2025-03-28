@@ -9,7 +9,7 @@
 GymNavigator Admin is a professional and robust web application designed to transform the way gym owners manage their business operations. This platform simplifies gym management by offering a feature-rich dashboard for administrators and trainers. It allows gym owners to oversee trainers, users, and sales operations while also providing trainers with tools to manage their assigned clients effectively.  
 
 ---
-
+I want that change the gemnavigator admin to just gemnavigator as we have merged the admin with the original gemnavigator.
 ## **Features**  
 
 ### **For Gym Owners**  
