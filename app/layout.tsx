@@ -1,6 +1,5 @@
 import './globals.css';
 import RecoilContextProvider from '@/lib/RecoilContextProvider';
-import { Analytics } from '@vercel/analytics/react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import type { Metadata } from 'next';
 // import Script from "next/script";

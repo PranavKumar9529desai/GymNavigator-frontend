@@ -2,11 +2,25 @@ import { create } from 'zustand';
 
 export type Gender = 'male' | 'female' | 'other';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive';
+export type DietaryPreference = 'vegetarian' | 'non-vegetarian' | 'vegan' | 'other';
 export type ReligiousPreference = 'hindu' | 'muslim' | 'sikh' | 'jain' | 'christian' | 'buddhist' | 'other' | 'none';
+export type MealTimes = '2' | '3' | '4+';
+export type GoalType = 'fat-loss' | 'muscle-building' | 'muscle-building-with-fat-loss' | 'bodybuilding' | 'maintenance' | 'general-fitness' | 'other';
 
 export interface MedicalCondition {
   id: string;
   name: string;
+  selected: boolean;
+}
+
+export interface Allergy {
+  id: string;
+  name: string;
+  selected: boolean;
+}
+
+export interface NonVegDay {
+  day: string;
   selected: boolean;
 }
 
@@ -18,6 +32,18 @@ export interface HealthProfileState {
   height: { value: number | null; unit: 'cm' | 'ft' };
   weight: { value: number | null; unit: 'kg' | 'lb' };
   targetWeight: { value: number | null; unit: 'kg' | 'lb' };
+  goal: GoalType | null;
+  otherGoal: string;
+  
+  // New fields
+  dietaryPreference: DietaryPreference | null;
+  otherDietaryPreference: string;
+  nonVegDays: NonVegDay[];
+  allergies: Allergy[];
+  otherAllergy: string;
+  mealTimes: MealTimes | null;
+  
+  // Original fields
   medicalConditions: MedicalCondition[];
   otherMedicalCondition: string;
   religiousPreference: ReligiousPreference | null;
@@ -35,6 +61,19 @@ export interface HealthProfileState {
   setHeight: (value: number, unit: 'cm' | 'ft') => void;
   setWeight: (value: number, unit: 'kg' | 'lb') => void;
   setTargetWeight: (value: number, unit: 'kg' | 'lb') => void;
+  setGoal: (goal: GoalType) => void;
+  setOtherGoal: (text: string) => void;
+  
+  // New actions
+  setDietaryPreference: (preference: DietaryPreference) => void;
+  setOtherDietaryPreference: (text: string) => void;
+  toggleNonVegDay: (day: string) => void;
+  toggleAllergy: (id: string) => void;
+  addAllergy: (allergy: string) => void;
+  setOtherAllergy: (text: string) => void;
+  setMealTimes: (times: MealTimes) => void;
+  
+  // Original actions
   toggleMedicalCondition: (id: string) => void;
   addMedicalCondition: (condition: string) => void;
   setOtherMedicalCondition: (text: string) => void;
@@ -51,12 +90,33 @@ export interface HealthProfileState {
 
 export const defaultMedicalConditions: MedicalCondition[] = [
   { id: '1', name: 'Diabetes', selected: false },
-  { id: '2', name: 'Hypertension', selected: false },
-  { id: '3', name: 'Heart Disease', selected: false },
-  { id: '4', name: 'Asthma', selected: false },
-  { id: '5', name: 'Arthritis', selected: false },
-  { id: '6', name: 'Back Pain', selected: false },
-  { id: '7', name: 'None', selected: false },
+  { id: '2', name: 'Heart Disease', selected: false },
+  { id: '3', name: 'Thyroid', selected: false },
+  { id: '4', name: 'Hypertension', selected: false },
+  { id: '5', name: 'PCOS', selected: false },
+  { id: '6', name: 'Asthma', selected: false },
+  { id: '7', name: 'Arthritis', selected: false },
+  { id: '8', name: 'Back Pain', selected: false },
+  { id: '9', name: 'None', selected: false },
+];
+
+export const defaultAllergies: Allergy[] = [
+  { id: '1', name: 'Gluten', selected: false },
+  { id: '2', name: 'Lactose', selected: false },
+  { id: '3', name: 'Nuts', selected: false },
+  { id: '4', name: 'Soy', selected: false },
+  { id: '5', name: 'Shellfish', selected: false },
+  { id: '6', name: 'None', selected: false },
+];
+
+export const defaultNonVegDays: NonVegDay[] = [
+  { day: 'Monday', selected: false },
+  { day: 'Tuesday', selected: false },
+  { day: 'Wednesday', selected: false },
+  { day: 'Thursday', selected: false },
+  { day: 'Friday', selected: false },
+  { day: 'Saturday', selected: false },
+  { day: 'Sunday', selected: false },
 ];
 
 export const useHealthProfileStore = create<HealthProfileState>((set) => ({
@@ -67,6 +127,18 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
   height: { value: null, unit: 'cm' },
   weight: { value: null, unit: 'kg' },
   targetWeight: { value: null, unit: 'kg' },
+  goal: null,
+  otherGoal: '',
+  
+  // New state fields
+  dietaryPreference: null,
+  otherDietaryPreference: '',
+  nonVegDays: [...defaultNonVegDays],
+  allergies: [...defaultAllergies],
+  otherAllergy: '',
+  mealTimes: null,
+  
+  // Original state fields
   medicalConditions: [...defaultMedicalConditions],
   otherMedicalCondition: '',
   religiousPreference: null,
@@ -74,7 +146,7 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
   dietaryRestrictions: [],
   
   currentStep: 1,
-  totalSteps: 8,
+  totalSteps: 13,
 
   // Actions
   setGender: (gender) => set({ gender }),
@@ -89,12 +161,50 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
   
   setTargetWeight: (value, unit) => set({ targetWeight: { value, unit } }),
   
+  setGoal: (goal) => set({ goal }),
+  
+  setOtherGoal: (text) => set({ otherGoal: text }),
+  
+  // New actions
+  setDietaryPreference: (dietaryPreference) => set({ dietaryPreference }),
+  
+  setOtherDietaryPreference: (text) => set({ otherDietaryPreference: text }),
+  
+  toggleNonVegDay: (day) => set((state) => ({
+    nonVegDays: state.nonVegDays.map(d => 
+      d.day === day ? { ...d, selected: !d.selected } : d
+    )
+  })),
+  
+  toggleAllergy: (id) => set((state) => ({
+    allergies: state.allergies.map(allergy =>
+      allergy.id === id
+        ? { ...allergy, selected: !allergy.selected }
+        // If selecting "None", unselect all others, and vice versa
+        : (id === '6' || allergy.id === '6')
+          ? { ...allergy, selected: false }
+          : allergy
+    )
+  })),
+  
+  addAllergy: (allergy) => set((state) => ({
+    allergies: [
+      ...state.allergies,
+      { id: `custom-${Date.now()}`, name: allergy, selected: true }
+    ]
+  })),
+  
+  setOtherAllergy: (text) => set({ otherAllergy: text }),
+  
+  setMealTimes: (mealTimes) => set({ mealTimes }),
+  
+  // Original actions
   toggleMedicalCondition: (id) => set((state) => ({
     medicalConditions: state.medicalConditions.map(condition =>
       condition.id === id
         ? { ...condition, selected: !condition.selected }
         // If selecting "None", unselect all others, and vice versa
-        : (id === '7' || condition.id === '7')
+        : (id === '9' || condition.id === '9')
           ? { ...condition, selected: false }
           : condition
     )
@@ -138,6 +248,18 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
     height: { value: null, unit: 'cm' },
     weight: { value: null, unit: 'kg' },
     targetWeight: { value: null, unit: 'kg' },
+    goal: null,
+    otherGoal: '',
+    
+    // Reset new fields
+    dietaryPreference: null,
+    otherDietaryPreference: '',
+    nonVegDays: [...defaultNonVegDays],
+    allergies: [...defaultAllergies],
+    otherAllergy: '',
+    mealTimes: null,
+    
+    // Reset original fields
     medicalConditions: [...defaultMedicalConditions],
     otherMedicalCondition: '',
     religiousPreference: null,

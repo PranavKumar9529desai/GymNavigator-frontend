@@ -11,24 +11,32 @@ import ActivityForm from './_components/activity-form';
 import AgeForm from './_components/age-form';
 // Form step components
 import GenderForm from './_components/gender-form';
+import GoalForm from './_components/goal-form';
 import HeightForm from './_components/height-form';
 import MedicalConditionsForm from './_components/medical-conditions-form';
+import AllergiesForm from './_components/allergies-form';
+import DietaryPreferencesForm from './_components/dietary-preferences-form';
+import NonVegDaysForm from './_components/non-veg-days-form';
+import MealTimesForm from './_components/meal-times-form';
 import ReligiousPreferencesForm from './_components/religious-preferences-form';
 import TargetWeightForm from './_components/target-weight-form';
 import WeightForm from './_components/weight-form';
 
 // Progress indicator component
 const ProgressIndicator = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
-  const { gender } = useHealthProfileStore();
+  const { gender, dietaryPreference } = useHealthProfileStore();
+  
+  // Adjust total steps if user is not non-vegetarian (skipping the non-veg days form)
+  const adjustedTotalSteps = dietaryPreference === 'non-vegetarian' ? totalSteps : totalSteps - 1;
   
   // Only show progress after gender is selected (first step completed)
-  // If gender is null, show 0%, otherwise calculate based on current step
-  const progressPercentage = !gender ? 0 : Math.floor((currentStep / totalSteps) * 100);
+  // If gender is null, show 0%, otherwise calculate based on completed steps
+  const progressPercentage = !gender ? 0 : Math.floor(((currentStep - 1) / adjustedTotalSteps) * 100);
   
   return (
     <div className="w-full mb-8">
       <div className="flex justify-between mb-2">
-        <span className="text-sm text-gray-500">Step {currentStep} of {totalSteps}</span>
+        <span className="text-sm text-gray-500">Step {currentStep} of {adjustedTotalSteps}</span>
         <span className="text-sm font-medium">{progressPercentage}%</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -51,6 +59,15 @@ export default function HealthProfileFormPage() {
   useEffect(() => {
     return () => resetForm();
   }, [resetForm]);
+
+  // Skip non-veg days form if user is not non-vegetarian
+  useEffect(() => {
+    const { dietaryPreference } = useHealthProfileStore.getState();
+    if (currentStep === 11 && dietaryPreference !== 'non-vegetarian') {
+      // Skip to step 12 if not a non-vegetarian
+      useHealthProfileStore.getState().nextStep();
+    }
+  }, [currentStep]);
 
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
@@ -91,6 +108,9 @@ export default function HealthProfileFormPage() {
 
   // Render the current step component
   const renderStep = () => {
+    const { dietaryPreference } = useHealthProfileStore();
+    const isNonVegetarian = dietaryPreference === 'non-vegetarian';
+    
     switch (currentStep) {
       case 1:
         return <GenderForm />;
@@ -103,10 +123,21 @@ export default function HealthProfileFormPage() {
       case 5:
         return <TargetWeightForm />;
       case 6:
-        return <ActivityForm />;
+        return <GoalForm />;
       case 7:
-        return <MedicalConditionsForm onSubmit={handleNextStep} isSubmitting={false} />;
+        return <ActivityForm />;
       case 8:
+        return <MedicalConditionsForm onSubmit={handleNextStep} isSubmitting={false} />;
+      case 9:
+        return <AllergiesForm />;
+      case 10:
+        return <DietaryPreferencesForm />;
+      case 11:
+        // Show NonVegDaysForm (useEffect will handle skipping)
+        return <NonVegDaysForm />;
+      case 12:
+        return <MealTimesForm />;
+      case 13:
         return <ReligiousPreferencesForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} isLast={true} />;
       default:
         return <GenderForm />;
