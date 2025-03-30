@@ -1,4 +1,6 @@
 import AttendanceFailure from '@/app/dashboard/client/attendance/markattendance/_components/AttendanceFailure';
+export const dynamic = 'force-dynamic';
+
 import AttendanceSuccess from '@/app/dashboard/client/attendance/markattendance/_components/AttendanceSuccess';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';

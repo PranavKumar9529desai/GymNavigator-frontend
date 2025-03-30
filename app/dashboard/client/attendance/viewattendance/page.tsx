@@ -1,4 +1,6 @@
 import { queryClient } from '@/lib/getQueryClient';
+export const dynamic = 'force-dynamic';
+
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';

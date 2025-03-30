@@ -1,4 +1,6 @@
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+export const dynamic = 'force-dynamic';
+
 import { fetchTodaysDiet } from './_actions/get-todays-diet';
 import TodaysDiet from './_components/todays-diet';
 

@@ -9,11 +9,11 @@
 export type AxiosHeaderValue = string | string[] | number | boolean | null;
 
 export interface RawAxiosHeaders {
-  [key: string]: AxiosHeaderValue;
+  [key: string]: AxiosHeaderValue | undefined;
 }
 
 export interface AxiosRequestHeaders extends RawAxiosHeaders {
-  [key: string]: AxiosHeaderValue;
+  [key: string]: AxiosHeaderValue | undefined;
   Accept?: AxiosHeaderValue;
   Authorization?: AxiosHeaderValue;
   "Content-Length"?: AxiosHeaderValue;
@@ -31,7 +31,7 @@ export interface AxiosRequestConfig {
 
 // Define headers interface to be compatible with axios
 export interface AxiosResponseHeaders {
-  [key: string]: string;
+  [key: string]: string | undefined;
   "Content-Type"?: string;
   "Content-Length"?: string;
   "Content-Encoding"?: string;

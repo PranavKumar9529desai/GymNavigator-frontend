@@ -1,9 +1,6 @@
-import { SessionProvider } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+
 import type React from 'react';
 import { auth } from '../(auth)/auth';
-import QueryClientProvider from '../providers/QueryClientProvider';
-import ClientSideProvider from './_components/ClientSideProvider';
 import DashboardBottomNav from './_components/DashboardBottomNav';
 import DashboardTopBar from './_components/DashboardTopBar';
 import {

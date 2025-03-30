@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+export const dynamic = 'force-dynamic';
+
 import { getTodaysDiet } from './_actions/get-todays-diet';
 import { getTodaysWorkout } from './_actions/get-todays-workout';
 import { DietNotAssigned } from './_component/diet-not-assigned';
