@@ -1,0 +1,32 @@
+# Exclude node_modules directory (likely default, but good to be explicit)
+node_modules/
+.next/
+.dist/
+.docs/
+
+# Exclude specific file types by extension
+*.sh
+tsconfig.tsbuildinfo
+*.md
+*.db
+*.sql
+*.lock
+*.lockb
+*.lock.json
+*.lock.json5
+*.lock.yaml
+*.lock.yml
+*.woff
+.gitignore
+.git
+.aidigestignore
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.development.local
+.env.production.local
+.html
+# You might also want to ignore your output file if it's inside the input dir
+codebase.md
