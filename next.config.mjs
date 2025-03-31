@@ -39,6 +39,35 @@ const nextConfig = {
     return config;
   },
 
+  // Configure Turbopack with equivalent string replacement
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "admin.gymnavigator.in",
+        "*.pages.dev",
+      ],
+    },
+    turbo: {
+      rules: {
+        // Add equivalent configuration for Turbopack
+        loaders: [
+          {
+            test: /troika-three-text.*\.js$/,
+            use: {
+              loader: 'string-replace-loader',
+              options: {
+                search: /\/\\p\{Script=Hangul\}\/u\.test\([^)]+\)/g,
+                replace: 'false',
+                flags: 'g'
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+
   async redirects() {
     return [
       {
@@ -93,16 +122,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-
-  experimental: {
-    serverActions: {
-      allowedOrigins: [
-        "localhost:3000",
-        "admin.gymnavigator.in",
-        "*.pages.dev",
-      ],
-    },
   },
 };
 

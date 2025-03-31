@@ -18,7 +18,7 @@ const openai = new OpenAI({
 console.log('Environment test var:', process.env.TEST_ENV);
 console.log('Initializing Gemini with API key available:', !!geminiApiKey);
 console.log('API key first 4 chars:', geminiApiKey ? geminiApiKey.substring(0, 4) : 'none');
-
+console.log('backend url is', process.env.NEXT_PUBLIC_BACKEND_URL);
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 
 /**
