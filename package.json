@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run --bun next dev --turbopack",
+    "prebuild": "node fix-axios-imports.mjs",
     "build": "bun run --bun next build",
     "start": "bun run --env-file=.env.production --bun next start",
     "format": "biome format --write .",
@@ -105,6 +106,7 @@
     "@types/react-headroom": "^3.2.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.2",
+    "string-replace-loader": "^3.1.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   },
