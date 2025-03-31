@@ -113,7 +113,7 @@ export async function submitHealthProfile(
 				: undefined,
 		allergies: formData.allergies?.filter((allergy) => allergy.selected) || [],
 		otherAllergy: formData.otherAllergy,
-		mealTimes: formData.mealTimes || '3-meals',
+		mealTimes: formData.mealTimes || '3',
 		// Original fields
 		medicalConditions:
 			formData.medicalConditions?.filter((condition) => condition.selected) ||

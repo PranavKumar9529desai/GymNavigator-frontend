@@ -7,7 +7,7 @@ interface WeeklyScheduleTabsProps {
 	plan: WorkoutPlan;
 	activeTab: string;
 	setActiveTab: (tab: string) => void;
-	tabsRef: RefObject<HTMLDivElement | null>;
+	tabsRef: RefObject<HTMLDivElement>;
 	scrollTabs: (direction: 'left' | 'right') => void;
 }
 

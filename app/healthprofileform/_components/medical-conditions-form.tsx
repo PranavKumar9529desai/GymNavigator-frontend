@@ -23,7 +23,7 @@ export default function MedicalConditionsForm({
 		toggleMedicalCondition,
 		setOtherMedicalCondition,
 		prevStep,
-		_nextStep,
+		// nextStep,
 	} = useHealthProfileStore();
 
 	const [newCondition, setNewCondition] = useState('');
