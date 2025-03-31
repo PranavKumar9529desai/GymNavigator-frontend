@@ -20,7 +20,7 @@ export default function MedicalConditionsForm({ onSubmit, isSubmitting }: Medica
     toggleMedicalCondition, 
     setOtherMedicalCondition,
     prevStep,
-    nextStep
+    _nextStep
   } = useHealthProfileStore();
   
   const [newCondition, setNewCondition] = useState('');

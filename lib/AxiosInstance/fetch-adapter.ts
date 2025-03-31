@@ -26,7 +26,7 @@ export interface AxiosRequestConfig {
   baseURL?: string;
   headers?: AxiosRequestHeaders;
   timeout?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Define headers interface to be compatible with axios
@@ -39,7 +39,7 @@ export interface AxiosResponseHeaders {
   "Cache-Control"?: string;
 }
 
-export interface AxiosResponse<T = any, D = any> {
+export interface AxiosResponse<T = unknown, _D = unknown> {
   data: T;
   status: number;
   statusText: string;
@@ -47,20 +47,20 @@ export interface AxiosResponse<T = any, D = any> {
   config: AxiosRequestConfig;
 }
 
-export interface AxiosError<T = any> {
+export interface AxiosError<T = unknown> {
   response?: AxiosResponse<T>;
   message: string;
   config: AxiosRequestConfig;
   code?: string;
-  request?: any;
+  request?: unknown;
 }
 
 export interface AxiosInstance {
-  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
-  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
-  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
-  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
-  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
+  get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
+  post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
+  put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
+  delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
+  patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>;
 }
 
 export interface AxiosStatic {
@@ -116,7 +116,7 @@ export const create = (defaultConfig: AxiosRequestConfig = {}): AxiosInstance =>
     try {
       // Try to parse as JSON
       axiosResponse.data = await response.json();
-    } catch (e) {
+    } catch (_e) {
       // If not JSON, get as text
       axiosResponse.data = await response.text() as unknown as T;
     }
@@ -150,7 +150,7 @@ export const create = (defaultConfig: AxiosRequestConfig = {}): AxiosInstance =>
       return handleResponse<T>(response, mergedConfig);
     },
 
-    post: async <T>(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
+    post: async <T>(url: string, data?: unknown, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
       const mergedConfig = mergeConfig(config);
       const fullUrl = buildUrl(url);
 
@@ -163,7 +163,7 @@ export const create = (defaultConfig: AxiosRequestConfig = {}): AxiosInstance =>
       return handleResponse<T>(response, mergedConfig);
     },
 
-    put: async <T>(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
+    put: async <T>(url: string, data?: unknown, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
       const mergedConfig = mergeConfig(config);
       const fullUrl = buildUrl(url);
 
@@ -188,7 +188,7 @@ export const create = (defaultConfig: AxiosRequestConfig = {}): AxiosInstance =>
       return handleResponse<T>(response, mergedConfig);
     },
 
-    patch: async <T>(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
+    patch: async <T>(url: string, data?: unknown, config: AxiosRequestConfig = {}): Promise<AxiosResponse<T>> => {
       const mergedConfig = mergeConfig(config);
       const fullUrl = buildUrl(url);
 

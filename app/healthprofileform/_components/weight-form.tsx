@@ -44,7 +44,7 @@ export default function WeightForm() {
   const minWeight = unit === 'kg' ? 40 : 88;
   const maxWeight = unit === 'kg' ? 200 : 440;
   
-  const getWeightDisplay = () => {
+  const _getWeightDisplay = () => {
     return `${value} ${unit}`;
   };
 

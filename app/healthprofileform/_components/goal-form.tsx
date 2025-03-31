@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useHealthProfileStore, GoalType } from '../_store/health-profile-store';
+import { useHealthProfileStore, type GoalType } from '../_store/health-profile-store';
 
 const goalOptions: { value: GoalType; label: string; description: string }[] = [
   { 
@@ -67,6 +67,7 @@ export default function GoalForm() {
         <div className="space-y-4">
           {goalOptions.map((option) => (
             <button
+              type="button"
               key={option.value}
               onClick={() => setGoal(option.value)}
               className={cn(

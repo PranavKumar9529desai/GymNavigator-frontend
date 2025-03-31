@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useHealthProfileStore, MealTimes } from '../_store/health-profile-store';
+import { useHealthProfileStore, type MealTimes } from '../_store/health-profile-store';
 
 const mealOptions: { value: MealTimes; label: string }[] = [
   { value: '2', label: '2 Meals per day' },
@@ -32,6 +32,7 @@ export default function MealTimesForm() {
         <div className="space-y-4">
           {mealOptions.map((option) => (
             <button
+              type="button"
               key={option.value}
               onClick={() => setMealTimes(option.value)}
               className={cn(

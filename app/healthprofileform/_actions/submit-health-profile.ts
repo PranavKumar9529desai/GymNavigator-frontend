@@ -3,7 +3,7 @@
 import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
 import {
   HealthProfileState,
-  ActivityLevel,
+  type ActivityLevel,
 } from "../_store/health-profile-store";
 
 // Define a type that matches what we need for the API request
@@ -32,7 +32,7 @@ export interface HealthProfileApiRequest {
 
 export interface HealthProfileResponse {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   details?: string;
 }

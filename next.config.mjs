@@ -24,7 +24,7 @@ const nextConfig = {
   },
 
   // Add webpack configuration to handle troika-three-text
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer: _isServer }) => {
     // Handle the troika-three-text module with regex issues
     config.module.rules.push({
       test: /troika-three-text.*\.js$/,

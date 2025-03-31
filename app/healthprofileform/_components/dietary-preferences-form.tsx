@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useHealthProfileStore, DietaryPreference } from '../_store/health-profile-store';
+import { useHealthProfileStore, type DietaryPreference } from '../_store/health-profile-store';
 
 const dietaryOptions: { value: DietaryPreference; label: string }[] = [
   { value: 'vegetarian', label: 'Vegetarian' },
@@ -36,6 +36,7 @@ export default function DietaryPreferencesForm() {
         <div className="space-y-4">
           {dietaryOptions.map((option) => (
             <button
+              type="button"
               key={option.value}
               onClick={() => setDietaryPreference(option.value)}
               className={cn(

@@ -52,7 +52,7 @@ interface DietResultsProps {
 }
 
 // Define result data type
-interface DietPlanResult {
+interface _DietPlanResult {
 	id: number;
 	name?: string;
 	description?: string | null;

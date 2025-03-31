@@ -18,7 +18,7 @@ export default function NonVegDaysForm() {
     nextStep();
   };
 
-  const anyDaySelected = nonVegDays.some(day => day.selected);
+  const _anyDaySelected = nonVegDays.some(day => day.selected);
 
   return (
     <div className="flex flex-col min-h-[60vh] justify-between">

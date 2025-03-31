@@ -30,7 +30,7 @@ export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
   };
 
   // Handler for when a diet is generated
-  const handleDietGenerated = (diet: { clientName: string; dietPlan: DietPlan }) => {
+  const handleDietGenerated = (_diet: { clientName: string; dietPlan: DietPlan }) => {
     // This function is called when a diet is successfully generated
     // We can prefetch the diet history data here to ensure it's up to date
     queryClient.invalidateQueries({ queryKey: [DIET_PLANS_QUERY_KEY, userId] });

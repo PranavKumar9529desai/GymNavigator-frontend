@@ -1,5 +1,5 @@
-import { Gender, ActivityLevel, GoalType } from '../_store/health-profile-store';
-import { HealthMetrics } from './health-data-types';
+import type { Gender, ActivityLevel, GoalType } from '../_store/health-profile-store';
+import type { HealthMetrics } from './health-data-types';
 import {
   calculateBMI,
   getBMICategory,

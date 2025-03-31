@@ -17,7 +17,7 @@ const normalizeDate = (dateStr?: string): Date => {
   if (!dateStr) return new Date();
   try {
     return new Date(dateStr);
-  } catch (e) {
+  } catch (_e) {
     return new Date();
   }
 };

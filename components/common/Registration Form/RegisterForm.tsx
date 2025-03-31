@@ -51,7 +51,7 @@ export default function RegisterForm() {
     const { email, password, name, role } = values;
 
     // Store the loading toast ID so we can dismiss it later
-    const loadingToastId = toast.loading('Processing registration...');
+    const _loadingToastId = toast.loading('Processing registration...');
 
     startTransition(async () => {
       try {

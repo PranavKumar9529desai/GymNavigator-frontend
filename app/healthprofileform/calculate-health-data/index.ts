@@ -1,4 +1,4 @@
-import { Gender, ActivityLevel, GoalType } from '../_store/health-profile-store';
+import type { Gender, ActivityLevel, GoalType } from '../_store/health-profile-store';
 
 // Export all functions from this directory
 export * from './calculate-all-metrics';
@@ -15,7 +15,7 @@ export * from './health-data-types';
 export function calculateBMI(weight: number, height: number): number {
   // Convert height from cm to meters and square it
   const heightInMeters = height / 100;
-  return weight / Math.pow(heightInMeters, 2);
+  return weight / (heightInMeters ** 2);
 }
 
 /**
@@ -48,10 +48,9 @@ export function getBMICategory(bmi: number): string {
 export function calculateBMR(gender: Gender, weight: number, height: number, age: number): number {
   if (gender === 'male') {
     return 66.5 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
-  } else {
-    // Use female formula for both 'female' and 'other' for now
-    return 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
   }
+  // Use female formula for both 'female' and 'other' for now
+  return 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age);
 }
 
 /**
@@ -99,9 +98,6 @@ export function calculateTargetCalories(tdee: number, goal: GoalType): number {
     case 'muscle-building-with-fat-loss':
     case 'bodybuilding':
       return tdee + 250; // 250 calorie surplus for muscle gain (approximately 0.25 kg/week)
-    case 'maintenance':
-    case 'general-fitness':
-    case 'other':
     default:
       return tdee; // Maintain current weight
   }
@@ -120,9 +116,8 @@ export function convertWeight(weight: number, fromUnit: 'kg' | 'lb', toUnit: 'kg
   
   if (fromUnit === 'lb' && toUnit === 'kg') {
     return weight * 0.45359237; // Convert pounds to kilograms
-  } else {
-    return weight * 2.20462262; // Convert kilograms to pounds
   }
+  return weight * 2.20462262; // Convert kilograms to pounds
 }
 
 /**
@@ -139,9 +134,8 @@ export function convertHeight(height: number, fromUnit: 'cm' | 'ft', toUnit: 'cm
   
   if (fromUnit === 'ft' && toUnit === 'cm') {
     return height * 30.48; // Convert feet to centimeters
-  } else {
-    return height / 30.48; // Convert centimeters to feet
   }
+  return height / 30.48; // Convert centimeters to feet
 }
 
 /**
@@ -170,11 +164,6 @@ export function calculateMacros(targetCalories: number, goal: GoalType) {
       carbsPercentage = 0.20;
       fatPercentage = 0.35;
       break;
-    case 'maintenance':
-    case 'general-fitness':
-    case 'muscle-building':
-    case 'muscle-building-with-fat-loss':
-    case 'other':
     default:
       // Maintenance/General macros: 30% protein, 40% carbs, 30% fat
       proteinPercentage = 0.30;

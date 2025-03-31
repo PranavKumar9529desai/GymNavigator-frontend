@@ -1,6 +1,6 @@
 // This script patches libraries with compatibility issues
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // Fix for axios Edge compatibility warnings
 const axiosUtilsPath = './node_modules/axios/lib/utils.js';

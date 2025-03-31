@@ -1,10 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { HealthProfileState, ReligiousPreference, DietaryPreference, MealTimes, GoalType } from '../_store/health-profile-store';
+import { type HealthProfileState, ReligiousPreference, DietaryPreference, MealTimes, GoalType } from '../_store/health-profile-store';
 import { z } from 'zod';
 import { calculateHealthMetrics } from '../calculate-health-data/calculate-all-metrics';
-import { HealthMetrics } from '../calculate-health-data/health-data-types';
+import type { HealthMetrics } from '../calculate-health-data/health-data-types';
 
 const healthProfileSchema = z.object({
   gender: z.enum(['male', 'female', 'other']),
@@ -55,23 +55,23 @@ export type HealthProfileData = z.infer<typeof healthProfileSchema>;
 export async function submitHealthProfile(formData: Partial<HealthProfileState>) {
   // Extract only the required fields from the form data
   const profileData: HealthProfileData = {
-    gender: formData.gender!,
-    age: formData.age!,
-    activityLevel: formData.activityLevel!,
+    gender: formData.gender || 'male',
+    age: formData.age || 30,
+    activityLevel: formData.activityLevel || 'moderate',
     height: formData.height as { value: number, unit: 'cm' | 'ft' },
     weight: formData.weight as { value: number, unit: 'kg' | 'lb' },
     targetWeight: formData.targetWeight as { value: number, unit: 'kg' | 'lb' },
-    goal: formData.goal!,
+    goal: formData.goal || 'maintenance',
     otherGoal: formData.goal === 'other' ? formData.otherGoal : undefined,
     // New fields
-    dietaryPreference: formData.dietaryPreference!,
+    dietaryPreference: formData.dietaryPreference || 'vegetarian',
     otherDietaryPreference: formData.otherDietaryPreference,
     nonVegDays: formData.dietaryPreference === 'non-vegetarian' ? formData.nonVegDays : undefined,
-    allergies: formData.allergies!.filter(allergy => allergy.selected),
+    allergies: formData.allergies?.filter(allergy => allergy.selected) || [],
     otherAllergy: formData.otherAllergy,
-    mealTimes: formData.mealTimes!,
+    mealTimes: formData.mealTimes || '3-meals',
     // Original fields
-    medicalConditions: formData.medicalConditions!.filter(condition => condition.selected),
+    medicalConditions: formData.medicalConditions?.filter(condition => condition.selected) || [],
     otherMedicalCondition: formData.otherMedicalCondition,
     religiousPreference: formData.religiousPreference || null,
     otherReligiousPreference: formData.otherReligiousPreference,
@@ -88,12 +88,12 @@ export async function submitHealthProfile(formData: Partial<HealthProfileState>)
     
     try {
       healthMetrics = calculateHealthMetrics({
-        gender: formData.gender!,
-        age: formData.age!,
+        gender: formData.gender || 'male',
+        age: formData.age || 30,
         weight: formData.weight as { value: number, unit: 'kg' | 'lb' },
         height: formData.height as { value: number, unit: 'cm' | 'ft' },
-        activityLevel: formData.activityLevel!,
-        goal: formData.goal!
+        activityLevel: formData.activityLevel || 'moderate',
+        goal: formData.goal || 'maintenance'
       });
       
       console.log("Calculated health metrics:", healthMetrics);

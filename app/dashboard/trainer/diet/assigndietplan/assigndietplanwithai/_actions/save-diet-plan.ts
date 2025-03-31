@@ -34,7 +34,7 @@ export interface DietPlanInput {
 }
 
 // Define a type for the API response
-interface ApiResponse {
+interface _ApiResponse {
   success: boolean;
   msg: string;
   data?: { id: number };

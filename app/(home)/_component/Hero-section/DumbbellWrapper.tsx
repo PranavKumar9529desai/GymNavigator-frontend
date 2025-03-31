@@ -24,8 +24,8 @@ const themeBlue = {
 // Cinematic lighting component for better visual control
 function CinematicLighting() {
 	// Main top spotlight - dramatic effect
-	const spotLightRef = useRef<THREE.SpotLight>(null);
-	const spotLightTarget = useRef<THREE.Object3D>(null);
+	const _spotLightRef = useRef<THREE.SpotLight>(null);
+	const _spotLightTarget = useRef<THREE.Object3D>(null);
 
 	return (
 		<>

@@ -109,7 +109,7 @@ export default function HealthProfileFormPage() {
   // Render the current step component
   const renderStep = () => {
     const { dietaryPreference } = useHealthProfileStore();
-    const isNonVegetarian = dietaryPreference === 'non-vegetarian';
+    const _isNonVegetarian = dietaryPreference === 'non-vegetarian';
     
     switch (currentStep) {
       case 1:
