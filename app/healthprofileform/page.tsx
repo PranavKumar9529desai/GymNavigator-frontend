@@ -9,15 +9,15 @@ import { useHealthProfileStore } from './_store/health-profile-store';
 
 import ActivityForm from './_components/activity-form';
 import AgeForm from './_components/age-form';
+import AllergiesForm from './_components/allergies-form';
+import DietaryPreferencesForm from './_components/dietary-preferences-form';
 // Form step components
 import GenderForm from './_components/gender-form';
 import GoalForm from './_components/goal-form';
 import HeightForm from './_components/height-form';
-import MedicalConditionsForm from './_components/medical-conditions-form';
-import AllergiesForm from './_components/allergies-form';
-import DietaryPreferencesForm from './_components/dietary-preferences-form';
-import NonVegDaysForm from './_components/non-veg-days-form';
 import MealTimesForm from './_components/meal-times-form';
+import MedicalConditionsForm from './_components/medical-conditions-form';
+import NonVegDaysForm from './_components/non-veg-days-form';
 import ReligiousPreferencesForm from './_components/religious-preferences-form';
 import TargetWeightForm from './_components/target-weight-form';
 import WeightForm from './_components/weight-form';

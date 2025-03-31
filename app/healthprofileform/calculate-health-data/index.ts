@@ -1,6 +1,6 @@
 import type {
-	Gender,
 	ActivityLevel,
+	Gender,
 	GoalType,
 } from '../_store/health-profile-store';
 

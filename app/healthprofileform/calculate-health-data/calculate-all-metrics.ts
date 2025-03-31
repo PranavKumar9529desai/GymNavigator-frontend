@@ -1,18 +1,18 @@
 import type {
-	Gender,
 	ActivityLevel,
+	Gender,
 	GoalType,
 } from '../_store/health-profile-store';
 import type { HealthMetrics } from './health-data-types';
 import {
 	calculateBMI,
-	getBMICategory,
 	calculateBMR,
+	calculateMacros,
 	calculateTDEE,
 	calculateTargetCalories,
-	calculateMacros,
-	convertWeight,
 	convertHeight,
+	convertWeight,
+	getBMICategory,
 } from './index';
 
 interface CalculateHealthMetricsParams {

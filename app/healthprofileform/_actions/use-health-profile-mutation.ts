@@ -1,14 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import {
-	type HealthProfileState,
-	ReligiousPreference,
-	DietaryPreference,
-	MealTimes,
-	GoalType,
-} from '../_store/health-profile-store';
 import { z } from 'zod';
+import {
+	DietaryPreference,
+	GoalType,
+	type HealthProfileState,
+	MealTimes,
+	ReligiousPreference,
+} from '../_store/health-profile-store';
 import { calculateHealthMetrics } from '../calculate-health-data/calculate-all-metrics';
 import type { HealthMetrics } from '../calculate-health-data/health-data-types';
 

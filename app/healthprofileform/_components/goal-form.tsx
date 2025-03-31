@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {
-	useHealthProfileStore,
 	type GoalType,
+	useHealthProfileStore,
 } from '../_store/health-profile-store';
 
 const goalOptions: { value: GoalType; label: string; description: string }[] = [

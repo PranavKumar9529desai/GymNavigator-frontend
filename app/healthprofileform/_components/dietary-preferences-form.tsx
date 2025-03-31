@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {
-	useHealthProfileStore,
 	type DietaryPreference,
+	useHealthProfileStore,
 } from '../_store/health-profile-store';
 
 const dietaryOptions: { value: DietaryPreference; label: string }[] = [

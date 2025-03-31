@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {
-	useHealthProfileStore,
 	type MealTimes,
+	useHealthProfileStore,
 } from '../_store/health-profile-store';
 
 const mealOptions: { value: MealTimes; label: string }[] = [

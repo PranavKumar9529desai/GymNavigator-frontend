@@ -2,8 +2,8 @@
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
 import {
-	HealthProfileState,
 	type ActivityLevel,
+	HealthProfileState,
 } from '../_store/health-profile-store';
 
 // Define a type that matches what we need for the API request
