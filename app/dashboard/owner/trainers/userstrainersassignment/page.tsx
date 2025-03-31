@@ -4,11 +4,11 @@ import { getTrainerAssociatedWithGym } from '../viewtrainers/GetTrainerAssociate
 import { getUsersAssociatedWithGym } from './GetUserAssociatedwithGym';
 
 export default async function page() {
-  const Trainers = await getTrainerAssociatedWithGym();
-  const Users = await getUsersAssociatedWithGym();
-  return (
-    <>
-      <UserTrainerTable trainers={Trainers} users={Users} />
-    </>
-  );
+	const Trainers = await getTrainerAssociatedWithGym();
+	const Users = await getUsersAssociatedWithGym();
+	return (
+		<>
+			<UserTrainerTable trainers={Trainers} users={Users} />
+		</>
+	);
 }

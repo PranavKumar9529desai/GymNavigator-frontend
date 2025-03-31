@@ -1,9 +1,9 @@
 import type React from 'react';
 
 export default function SignInLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return children;
+	return children;
 }

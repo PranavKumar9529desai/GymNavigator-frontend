@@ -34,81 +34,83 @@ const ProtectedRoutes: string[] = ['/dashboard', '/settings', '/profile'];
  * Main middleware function to handle authentication and authorization
  */
 export default async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const session = await auth();
+	const { pathname } = request.nextUrl;
+	const session = await auth();
 
-  // Check authentication status
-  const isLoggedIn = !!session;
+	// Check authentication status
+	const isLoggedIn = !!session;
 
-  // Check route types
-  const isApiRoute = pathname.startsWith(ApiRoutesPrefix);
-  const isPublicRoute = publicRoutes.some((route) => pathname === route);
-  const isAuthRoute = AuthRoutes.some((route) => pathname === route);
-  const isProtectedRoute = ProtectedRoutes.some((route) => pathname.startsWith(route));
+	// Check route types
+	const isApiRoute = pathname.startsWith(ApiRoutesPrefix);
+	const isPublicRoute = publicRoutes.some((route) => pathname === route);
+	const isAuthRoute = AuthRoutes.some((route) => pathname === route);
+	const isProtectedRoute = ProtectedRoutes.some((route) =>
+		pathname.startsWith(route),
+	);
 
-  // 1. API Routes - Always pass through
-  if (isApiRoute) {
-    return NextResponse.next();
-  }
+	// 1. API Routes - Always pass through
+	if (isApiRoute) {
+		return NextResponse.next();
+	}
 
-  // 2. Authentication Routes (signin/signup)
-  if (isAuthRoute) {
-    // If user is already logged in, redirect to their role-specific dashboard
-    if (isLoggedIn && session?.role) {
-      return NextResponse.redirect(
-        new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
-      );
-    }
-    return NextResponse.next();
-  }
+	// 2. Authentication Routes (signin/signup)
+	if (isAuthRoute) {
+		// If user is already logged in, redirect to their role-specific dashboard
+		if (isLoggedIn && session?.role) {
+			return NextResponse.redirect(
+				new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
+			);
+		}
+		return NextResponse.next();
+	}
 
-  // 3. Public Routes - Always accessible
-  if (isPublicRoute) {
-    return NextResponse.next();
-  }
+	// 3. Public Routes - Always accessible
+	if (isPublicRoute) {
+		return NextResponse.next();
+	}
 
-  // 4. Protected Routes - Requires authentication
-  if (isProtectedRoute) {
-    // Not logged in - redirect to signin
-    if (!isLoggedIn || !session) {
-      const redirectUrl = new URL('/signin', request.url);
-      redirectUrl.searchParams.set('callbackUrl', request.url);
-      return NextResponse.redirect(redirectUrl);
-    }
+	// 4. Protected Routes - Requires authentication
+	if (isProtectedRoute) {
+		// Not logged in - redirect to signin
+		if (!isLoggedIn || !session) {
+			const redirectUrl = new URL('/signin', request.url);
+			redirectUrl.searchParams.set('callbackUrl', request.url);
+			return NextResponse.redirect(redirectUrl);
+		}
 
-    // Role selection required
-    if (!session.role) {
-      return NextResponse.redirect(new URL('/selectrole', request.url));
-    }
+		// Role selection required
+		if (!session.role) {
+			return NextResponse.redirect(new URL('/selectrole', request.url));
+		}
 
-    // Trainer needs to select a gym
-    if (session.role === 'trainer' && !session.gym) {
-      return NextResponse.redirect(new URL('/selectgym', request.url));
-    }
+		// Trainer needs to select a gym
+		if (session.role === 'trainer' && !session.gym) {
+			return NextResponse.redirect(new URL('/selectgym', request.url));
+		}
 
-    // Role-based access control for specific dashboard paths
-    if (pathname.startsWith('/dashboard/owner')) {
-      if (!IsOwner(session)) {
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
-      }
-    } else if (pathname.startsWith('/dashboard/trainer')) {
-      if (!IsTrainer(session)) {
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
-      }
-    }
+		// Role-based access control for specific dashboard paths
+		if (pathname.startsWith('/dashboard/owner')) {
+			if (!IsOwner(session)) {
+				return NextResponse.redirect(new URL('/unauthorized', request.url));
+			}
+		} else if (pathname.startsWith('/dashboard/trainer')) {
+			if (!IsTrainer(session)) {
+				return NextResponse.redirect(new URL('/unauthorized', request.url));
+			}
+		}
 
-    // If accessing general dashboard, redirect to role-specific dashboard
-    if (pathname === '/dashboard') {
-      return NextResponse.redirect(
-        new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
-      );
-    }
+		// If accessing general dashboard, redirect to role-specific dashboard
+		if (pathname === '/dashboard') {
+			return NextResponse.redirect(
+				new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
+			);
+		}
 
-    return NextResponse.next();
-  }
+		return NextResponse.next();
+	}
 
-  // 5. Default behavior - allow access to any other routes
-  return NextResponse.next();
+	// 5. Default behavior - allow access to any other routes
+	return NextResponse.next();
 }
 
 /**
@@ -116,5 +118,5 @@ export default async function middleware(request: NextRequest) {
  * Excludes specific paths from middleware processing
  */
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
+	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };

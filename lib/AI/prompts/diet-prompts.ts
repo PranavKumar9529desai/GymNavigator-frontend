@@ -3,94 +3,94 @@ import type { AssignedUser } from '@/app/dashboard/trainer/workouts/assignworkou
 
 // Define interface for HealthProfile to properly type the properties
 interface HealthProfile {
-  height?: number;
-  weight?: number;
-  gender?: string;
-  goal?: string;
+	height?: number;
+	weight?: number;
+	gender?: string;
+	goal?: string;
 }
 
 /**
  * Generate a diet plan for a user based on their profile and trainer preferences
  */
 export function buildDietPlanPrompt(
-  user: AssignedUser,
-  preferences: {
-    dailyCalories?: number;
-    mealsPerDay?: number;
-    dietType?: string;
-    restrictions?: string[];
-    goal?: 'weight_loss' | 'maintenance' | 'muscle_gain';
-    proteinTarget?: 'high' | 'moderate' | 'low';
-    specialInstructions?: string;
-  },
+	user: AssignedUser,
+	preferences: {
+		dailyCalories?: number;
+		mealsPerDay?: number;
+		dietType?: string;
+		restrictions?: string[];
+		goal?: 'weight_loss' | 'maintenance' | 'muscle_gain';
+		proteinTarget?: 'high' | 'moderate' | 'low';
+		specialInstructions?: string;
+	},
 ) {
-  const {
-    dailyCalories,
-    mealsPerDay = 5,
-    dietType = 'balanced',
-    restrictions = [],
-    goal = 'maintenance',
-    proteinTarget = 'moderate',
-    specialInstructions = '',
-  } = preferences;
+	const {
+		dailyCalories,
+		mealsPerDay = 5,
+		dietType = 'balanced',
+		restrictions = [],
+		goal = 'maintenance',
+		proteinTarget = 'moderate',
+		specialInstructions = '',
+	} = preferences;
 
-  // Extract health profile data safely with proper typing
-  const healthProfile = (user.HealthProfile || {}) as HealthProfile;
-  const height = healthProfile.height || 'Unknown';
-  const weight = healthProfile.weight || 'Unknown';
-  const gender = healthProfile.gender || user.gender || 'Unknown';
-  const userGoal = healthProfile.goal || user.goal || 'General fitness';
+	// Extract health profile data safely with proper typing
+	const healthProfile = (user.HealthProfile || {}) as HealthProfile;
+	const height = healthProfile.height || 'Unknown';
+	const weight = healthProfile.weight || 'Unknown';
+	const gender = healthProfile.gender || user.gender || 'Unknown';
+	const userGoal = healthProfile.goal || user.goal || 'General fitness';
 
-  // Calculate daily calories if not provided
-  const calculatedCalories =
-    dailyCalories ||
-    (gender.toLowerCase() === 'male'
-      ? Math.round(
-          (typeof weight === 'number' ? weight : 70) * 10 +
-            (typeof height === 'number' ? height : 170) * 6.25 -
-            5 * 25 +
-            5,
-        ) * 1.55
-      : Math.round(
-          (typeof weight === 'number' ? weight : 60) * 10 +
-            (typeof height === 'number' ? height : 160) * 6.25 -
-            5 * 25 -
-            161,
-        ) * 1.55);
+	// Calculate daily calories if not provided
+	const calculatedCalories =
+		dailyCalories ||
+		(gender.toLowerCase() === 'male'
+			? Math.round(
+					(typeof weight === 'number' ? weight : 70) * 10 +
+						(typeof height === 'number' ? height : 170) * 6.25 -
+						5 * 25 +
+						5,
+				) * 1.55
+			: Math.round(
+					(typeof weight === 'number' ? weight : 60) * 10 +
+						(typeof height === 'number' ? height : 160) * 6.25 -
+						5 * 25 -
+						161,
+				) * 1.55);
 
-  // Adjust calories based on goal
-  const adjustedCalories =
-    goal === 'weight_loss'
-      ? Math.round(calculatedCalories * 0.8)
-      : goal === 'muscle_gain'
-        ? Math.round(calculatedCalories * 1.1)
-        : calculatedCalories;
+	// Adjust calories based on goal
+	const adjustedCalories =
+		goal === 'weight_loss'
+			? Math.round(calculatedCalories * 0.8)
+			: goal === 'muscle_gain'
+				? Math.round(calculatedCalories * 1.1)
+				: calculatedCalories;
 
-  // Calculate macros based on protein target - fixed variable declarations
-  let proteinPercentage: number;
-  let carbsPercentage: number;
-  let fatsPercentage: number;
+	// Calculate macros based on protein target - fixed variable declarations
+	let proteinPercentage: number;
+	let carbsPercentage: number;
+	let fatsPercentage: number;
 
-  switch (proteinTarget) {
-    case 'high':
-      proteinPercentage = 40;
-      carbsPercentage = 30;
-      fatsPercentage = 30;
-      break;
-    case 'low':
-      proteinPercentage = 15;
-      carbsPercentage = 60;
-      fatsPercentage = 25;
-      break;
-    // Combined moderate and default since they're the same
-    default:
-      proteinPercentage = 30;
-      carbsPercentage = 40;
-      fatsPercentage = 30;
-      break;
-  }
+	switch (proteinTarget) {
+		case 'high':
+			proteinPercentage = 40;
+			carbsPercentage = 30;
+			fatsPercentage = 30;
+			break;
+		case 'low':
+			proteinPercentage = 15;
+			carbsPercentage = 60;
+			fatsPercentage = 25;
+			break;
+		// Combined moderate and default since they're the same
+		default:
+			proteinPercentage = 30;
+			carbsPercentage = 40;
+			fatsPercentage = 30;
+			break;
+	}
 
-  return `
+	return `
 Create a personalized diet plan for a client with the following profile:
 - Gender: ${gender}
 - Weight: ${weight} kg
@@ -154,43 +154,43 @@ IMPORTANT:
 }
 
 interface DietGenerationParams {
-  dietPreference: string;
-  medicalConditions: string[];
-  location: string;
-  country: string;
-  targetCalories?: number;
-  specialInstructions?: string;
+	dietPreference: string;
+	medicalConditions: string[];
+	location: string;
+	country: string;
+	targetCalories?: number;
+	specialInstructions?: string;
 }
 
 /**
  * Generate a diet plan prompt based on user parameters
  */
 export function generateDietPrompt(params: DietGenerationParams): string {
-  const {
-    dietPreference,
-    medicalConditions = [],
-    location,
-    country,
-    targetCalories,
-    specialInstructions = '',
-  } = params;
+	const {
+		dietPreference,
+		medicalConditions = [],
+		location,
+		country,
+		targetCalories,
+		specialInstructions = '',
+	} = params;
 
-  // Format medical conditions for the prompt
-  const medicalConditionsText = medicalConditions.length
-    ? `The user has the following medical conditions to consider: ${medicalConditions.join(', ')}.`
-    : '';
+	// Format medical conditions for the prompt
+	const medicalConditionsText = medicalConditions.length
+		? `The user has the following medical conditions to consider: ${medicalConditions.join(', ')}.`
+		: '';
 
-  // Format special instructions
-  const specialInstructionsText = specialInstructions
-    ? `Additional requirements: ${specialInstructions}`
-    : '';
+	// Format special instructions
+	const specialInstructionsText = specialInstructions
+		? `Additional requirements: ${specialInstructions}`
+		: '';
 
-  // Format target calories
-  const caloriesText = targetCalories
-    ? `with a target caloric intake of ${targetCalories} calories per day`
-    : 'with appropriate caloric intake based on standard dietary guidelines';
+	// Format target calories
+	const caloriesText = targetCalories
+		? `with a target caloric intake of ${targetCalories} calories per day`
+		: 'with appropriate caloric intake based on standard dietary guidelines';
 
-  return `
+	return `
 Create a personalized diet plan for a client with ${dietPreference} dietary preference, located in ${location}, ${country} ${caloriesText}.
 ${medicalConditionsText}
 ${specialInstructionsText}
@@ -232,8 +232,11 @@ Please ensure the diet plan:
 /**
  * Generate feedback-based improvements to a diet plan
  */
-export function buildDietFeedbackPrompt(originalPlan: DietPlan, feedback: string): string {
-  return `
+export function buildDietFeedbackPrompt(
+	originalPlan: DietPlan,
+	feedback: string,
+): string {
+	return `
 I previously generated this diet plan:
 ${JSON.stringify(originalPlan, null, 2)}
 

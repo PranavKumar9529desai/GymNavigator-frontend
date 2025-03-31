@@ -3,50 +3,50 @@
  */
 
 export interface PasswordCredential extends Credential {
-  password: string;
+	password: string;
 }
 
 export interface PasswordCredentialData {
-  id: string;
-  password: string;
-  name?: string;
-  iconURL?: string;
+	id: string;
+	password: string;
+	name?: string;
+	iconURL?: string;
 }
 
 export interface FederatedCredentialData {
-  id: string;
-  provider: string;
-  name?: string;
-  iconURL?: string;
-  protocol?: string;
+	id: string;
+	provider: string;
+	name?: string;
+	iconURL?: string;
+	protocol?: string;
 }
 
 export interface CredentialCreationOptions {
-  password?: PasswordCredentialData;
-  federated?: FederatedCredentialData;
-  publicKey?: PublicKeyCredentialCreationOptions;
+	password?: PasswordCredentialData;
+	federated?: FederatedCredentialData;
+	publicKey?: PublicKeyCredentialCreationOptions;
 }
 
 // Augment the global interfaces for the Credential Management API
 declare global {
-  interface Window {
-    PasswordCredential?: {
-      new (data: PasswordCredentialData): PasswordCredential;
-    };
-    FederatedCredential?: {
-      new (data: FederatedCredentialData): FederatedCredential;
-    };
-  }
+	interface Window {
+		PasswordCredential?: {
+			new (data: PasswordCredentialData): PasswordCredential;
+		};
+		FederatedCredential?: {
+			new (data: FederatedCredentialData): FederatedCredential;
+		};
+	}
 
-  interface FederatedCredential extends Credential {
-    provider: string;
-    protocol?: string;
-  }
+	interface FederatedCredential extends Credential {
+		provider: string;
+		protocol?: string;
+	}
 
-  interface CredentialsContainer {
-    create(options?: CredentialCreationOptions): Promise<Credential | null>;
-    get(options?: CredentialRequestOptions): Promise<Credential | null>;
-    store(credential: Credential): Promise<Credential>;
-    preventSilentAccess(): Promise<void>;
-  }
+	interface CredentialsContainer {
+		create(options?: CredentialCreationOptions): Promise<Credential | null>;
+		get(options?: CredentialRequestOptions): Promise<Credential | null>;
+		store(credential: Credential): Promise<Credential>;
+		preventSilentAccess(): Promise<void>;
+	}
 }

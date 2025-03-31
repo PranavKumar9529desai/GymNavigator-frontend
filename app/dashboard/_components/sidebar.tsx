@@ -12,54 +12,55 @@ import type { MenuItem as BaseMenuItem, SubItem } from './menuItems';
 
 // Extend the MenuItem type to use iconName instead of icon
 interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
-  iconName: string;
+	iconName: string;
 }
 
 interface SidebarProps {
-  menuItems: MenuItem[];
+	menuItems: MenuItem[];
 }
 
 export default function Sidebar({ menuItems }: SidebarProps) {
-  const [activePage, setActivePage] = useState<string>('viewGymDetails');
-  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
-  const router = useRouter();
+	const [activePage, setActivePage] = useState<string>('viewGymDetails');
+	const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+	const router = useRouter();
 
-  // Function to get the icon component from its name
-  const getIconComponent = (iconName: string): LucideIcon => {
-    return (
-      (LucideIcons as unknown as Record<string, LucideIcon>)[iconName] || LucideIcons.HelpCircle
-    );
-  };
+	// Function to get the icon component from its name
+	const getIconComponent = (iconName: string): LucideIcon => {
+		return (
+			(LucideIcons as unknown as Record<string, LucideIcon>)[iconName] ||
+			LucideIcons.HelpCircle
+		);
+	};
 
-  const handleItemClick = (item: MenuItem) => {
-    if (item.subItems) {
-      setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
-      if (!openMenus[item.label]) {
-        setActivePage(item.label);
-      }
-    } else if (item.link) {
-      setActivePage(item.label);
-      router.push(`/${item.link}`);
-    }
-  };
+	const handleItemClick = (item: MenuItem) => {
+		if (item.subItems) {
+			setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
+			if (!openMenus[item.label]) {
+				setActivePage(item.label);
+			}
+		} else if (item.link) {
+			setActivePage(item.label);
+			router.push(`/${item.link}`);
+		}
+	};
 
-  const handleSubItemClick = (subItem: SubItem, parentLabel: string) => {
-    setActivePage(subItem.label);
-    setOpenMenus((prev) => ({ ...prev, [parentLabel]: true }));
-    router.push(`${subItem.link}`);
-  };
+	const handleSubItemClick = (subItem: SubItem, parentLabel: string) => {
+		setActivePage(subItem.label);
+		setOpenMenus((prev) => ({ ...prev, [parentLabel]: true }));
+		router.push(`${subItem.link}`);
+	};
 
-  const isActiveParent = (item: MenuItem) => {
-    return item.subItems
-      ? item.subItems.some((subItem) => subItem.label === activePage) ||
-          (!openMenus[item.label] && activePage === item.label)
-      : activePage === item.label;
-  };
+	const isActiveParent = (item: MenuItem) => {
+		return item.subItems
+			? item.subItems.some((subItem) => subItem.label === activePage) ||
+					(!openMenus[item.label] && activePage === item.label)
+			: activePage === item.label;
+	};
 
-  const handleLogout = async () => {
-    const result = await Swal.fire({
-      title: 'Ready to leave?',
-      html: `
+	const handleLogout = async () => {
+		const result = await Swal.fire({
+			title: 'Ready to leave?',
+			html: `
         <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
           <div class="text-center">
             <div class="text-red-400 mb-4">
@@ -73,104 +74,110 @@ export default function Sidebar({ menuItems }: SidebarProps) {
           </div>
         </div>
       `,
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Logout',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        confirmButton:
-          'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
-        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
-        title: 'text-white text-xl font-semibold',
-      },
-    });
+			showCancelButton: true,
+			confirmButtonText: 'Yes, Logout',
+			cancelButtonText: 'Cancel',
+			customClass: {
+				confirmButton:
+					'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
+				cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
+				title: 'text-white text-xl font-semibold',
+			},
+		});
 
-    if (result.isConfirmed) {
-      try {
-        await signOut({
-          callbackUrl: '/signin',
-          redirect: false,
-        });
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = '/signin';
-      } catch (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Logout failed',
-          icon: 'error',
-          color: '#fff',
-        });
-        console.error('Logout failed:', error);
-      }
-    }
-  };
+		if (result.isConfirmed) {
+			try {
+				await signOut({
+					callbackUrl: '/signin',
+					redirect: false,
+				});
+				localStorage.clear();
+				sessionStorage.clear();
+				window.location.href = '/signin';
+			} catch (error) {
+				Swal.fire({
+					title: 'Error!',
+					text: 'Logout failed',
+					icon: 'error',
+					color: '#fff',
+				});
+				console.error('Logout failed:', error);
+			}
+		}
+	};
 
-  return (
-    <div className="flex flex-col bg-gray-900 text-white w-64 h-screen">
-      <div className="px-4 w-full flex items-center justify-center">
-        <Image src={IconImage} alt="Gym Manager Icon" className="rounded-full" />
-      </div>
+	return (
+		<div className="flex flex-col bg-gray-900 text-white w-64 h-screen">
+			<div className="px-4 w-full flex items-center justify-center">
+				<Image
+					src={IconImage}
+					alt="Gym Manager Icon"
+					className="rounded-full"
+				/>
+			</div>
 
-      <nav className="flex-grow px-4 py-2">
-        <ul className="space-y-2">
-          {menuItems.map((item) => {
-            const Icon = getIconComponent(item.iconName);
-            return (
-              <li key={item.name} className="whitespace-nowrap">
-                <button
-                  type="button"
-                  onClick={() => handleItemClick(item)}
-                  className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+			<nav className="flex-grow px-4 py-2">
+				<ul className="space-y-2">
+					{menuItems.map((item) => {
+						const Icon = getIconComponent(item.iconName);
+						return (
+							<li key={item.name} className="whitespace-nowrap">
+								<button
+									type="button"
+									onClick={() => handleItemClick(item)}
+									className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                     ${
-                      isActiveParent(item)
-                        ? 'bg-blue-700 text-white'
-                        : 'text-gray-300 hover:bg-gray-800'
-                    }`}
-                >
-                  <Icon className="w-6 h-6 mr-3" />
-                  <span>{item.name}</span>
-                  {item.subItems &&
-                    (openMenus[item.label] ? (
-                      <ChevronDown className="w-6 h-6 ml-auto" />
-                    ) : (
-                      <ChevronRight className="w-6 h-6 ml-auto" />
-                    ))}
-                </button>
-                {item.subItems && openMenus[item.label] && (
-                  <ul className="ml-6 mt-2 space-y-2">
-                    {item.subItems.map((subItem) => (
-                      <li key={subItem.name}>
-                        <button
-                          type="button"
-                          onClick={() => handleSubItemClick(subItem, item.label)}
-                          className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+											isActiveParent(item)
+												? 'bg-blue-700 text-white'
+												: 'text-gray-300 hover:bg-gray-800'
+										}`}
+								>
+									<Icon className="w-6 h-6 mr-3" />
+									<span>{item.name}</span>
+									{item.subItems &&
+										(openMenus[item.label] ? (
+											<ChevronDown className="w-6 h-6 ml-auto" />
+										) : (
+											<ChevronRight className="w-6 h-6 ml-auto" />
+										))}
+								</button>
+								{item.subItems && openMenus[item.label] && (
+									<ul className="ml-6 mt-2 space-y-2">
+										{item.subItems.map((subItem) => (
+											<li key={subItem.name}>
+												<button
+													type="button"
+													onClick={() =>
+														handleSubItemClick(subItem, item.label)
+													}
+													className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
                             ${
-                              activePage === subItem.label
-                                ? 'bg-blue-600 text-white'
-                                : 'text-gray-300 hover:bg-gray-800'
-                            }`}
-                        >
-                          <span>{subItem.name}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-      <div className="p-4">
-        <button
-          type="button"
-          className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
-          onClick={handleLogout}
-        >
-          <LogOut className="w-6 h-6 mr-3" />
-          <span>Logout</span>
-        </button>
-      </div>
-    </div>
-  );
+															activePage === subItem.label
+																? 'bg-blue-600 text-white'
+																: 'text-gray-300 hover:bg-gray-800'
+														}`}
+												>
+													<span>{subItem.name}</span>
+												</button>
+											</li>
+										))}
+									</ul>
+								)}
+							</li>
+						);
+					})}
+				</ul>
+			</nav>
+			<div className="p-4">
+				<button
+					type="button"
+					className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
+					onClick={handleLogout}
+				>
+					<LogOut className="w-6 h-6 mr-3" />
+					<span>Logout</span>
+				</button>
+			</div>
+		</div>
+	);
 }

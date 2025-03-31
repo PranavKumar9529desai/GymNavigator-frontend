@@ -5,22 +5,30 @@ import type { MetadataRoute } from 'next';
  * Controls search engine crawling behavior
  */
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://admin.gymnavigator.in';
+	const baseUrl =
+		process.env.NEXT_PUBLIC_BASE_URL || 'https://admin.gymnavigator.in';
 
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: ['/', '/home', '/gym', '/dashboard'],
-        disallow: ['/api/*', '/_next/*', '/static/*', '/auth/*', '/*.json', '/*.xml'],
-      },
-      {
-        userAgent: 'Googlebot',
-        allow: ['/', '/dashboard'],
-        disallow: ['/api/', '/_next/', '/static/', '/auth/'],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
-  };
+	return {
+		rules: [
+			{
+				userAgent: '*',
+				allow: ['/', '/home', '/gym', '/dashboard'],
+				disallow: [
+					'/api/*',
+					'/_next/*',
+					'/static/*',
+					'/auth/*',
+					'/*.json',
+					'/*.xml',
+				],
+			},
+			{
+				userAgent: 'Googlebot',
+				allow: ['/', '/dashboard'],
+				disallow: ['/api/', '/_next/', '/static/', '/auth/'],
+			},
+		],
+		sitemap: `${baseUrl}/sitemap.xml`,
+		host: baseUrl,
+	};
 }

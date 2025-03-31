@@ -4,11 +4,11 @@ import GetTrainerStats from './(common)/GetTrainerstats';
 import TrainerStats from './(common)/components/TrainerStats';
 
 export default async function Page() {
-  const trainerData = await GetTrainerStats();
+	const trainerData = await GetTrainerStats();
 
-  if ('error' in trainerData) {
-    return <ErrorScreen error={trainerData.error} />;
-  }
+	if ('error' in trainerData) {
+		return <ErrorScreen error={trainerData.error} />;
+	}
 
-  return <TrainerStats data={trainerData} />;
+	return <TrainerStats data={trainerData} />;
 }

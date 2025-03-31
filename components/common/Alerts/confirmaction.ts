@@ -9,17 +9,20 @@ import Swal, { type SweetAlertResult } from 'sweetalert2';
  * @param text - The message/body of the confirmation dialog.
  * @returns A promise that resolves to `true` if confirmed, otherwise `false`.
  */
-export const confirmAction = async (title: string, text: string): Promise<boolean> => {
-  const result: SweetAlertResult = await Swal.fire({
-    title,
-    text,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, proceed!',
-    cancelButtonText: 'No, cancel',
-  });
+export const confirmAction = async (
+	title: string,
+	text: string,
+): Promise<boolean> => {
+	const result: SweetAlertResult = await Swal.fire({
+		title,
+		text,
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Yes, proceed!',
+		cancelButtonText: 'No, cancel',
+	});
 
-  return result.isConfirmed;
+	return result.isConfirmed;
 };

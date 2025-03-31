@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
 	ContactShadows,
@@ -7,18 +7,18 @@ import {
 	PerspectiveCamera,
 	SpotLight,
 	useHelper,
-} from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useRef, useState } from "react";
-import type * as THREE from "three";
-import { DumbbellScene } from "./Dumbbell";
+} from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import type * as THREE from 'three';
+import { DumbbellScene } from './Dumbbell';
 
 // Theme colors from theme.ts
 const themeBlue = {
-	light: "#66a9ff", // primary.300
-	medium: "#3390ff", // primary.400
-	main: "#0077ff", // primary.500
-	dark: "#004eac", // primary.700
+	light: '#66a9ff', // primary.300
+	medium: '#3390ff', // primary.400
+	main: '#0077ff', // primary.500
+	dark: '#004eac', // primary.700
 };
 
 // Cinematic lighting component for better visual control
@@ -91,10 +91,10 @@ export default function DumbbellWrapper() {
 				y: -(event.clientY / window.innerHeight) * 2 + 1,
 			};
 		};
-		window.addEventListener("mousemove", handleMouseMove);
+		window.addEventListener('mousemove', handleMouseMove);
 		return () => {
 			clearTimeout(timer);
-			window.removeEventListener("mousemove", handleMouseMove);
+			window.removeEventListener('mousemove', handleMouseMove);
 		};
 	}, []);
 
@@ -109,9 +109,9 @@ export default function DumbbellWrapper() {
 				gl={{
 					alpha: true,
 					antialias: true,
-					powerPreference: "high-performance",
+					powerPreference: 'high-performance',
 				}}
-				style={{ background: "transparent" }}
+				style={{ background: 'transparent' }}
 				camera={{ position: [0, 1.5, 11], fov: 45 }}
 			>
 				<Suspense fallback={null}>

@@ -10,51 +10,55 @@ import { useDietHistoryQuery } from './use-diet-history';
 // This provider is now a lightweight wrapper around React Query
 // It's kept for backward compatibility
 interface DietHistoryContextType {
-  loading: boolean;
-  history: DietHistoryItem[];
-  error: string | null;
-  refreshHistory: () => Promise<void>;
+	loading: boolean;
+	history: DietHistoryItem[];
+	error: string | null;
+	refreshHistory: () => Promise<void>;
 }
 
 const DietHistoryContext = createContext<DietHistoryContextType>({
-  loading: true,
-  history: [],
-  error: null,
-  refreshHistory: async () => {},
+	loading: true,
+	history: [],
+	error: null,
+	refreshHistory: async () => {},
 });
 
 export const useDietHistory = () => useContext(DietHistoryContext);
 
 export function DietHistoryProvider({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-  const userId = session?.user?.id || '';
-  
-  // Use the React Query hook
-  const { 
-    data = [], 
-    isLoading,
-    isError, 
-    error,
-    refetch 
-  } = useDietHistoryQuery(userId);
+	const { data: session } = useSession();
+	const userId = session?.user?.id || '';
 
-  // Convert React Query state to the old interface for backward compatibility
-  const contextValue = {
-    loading: isLoading,
-    history: data,
-    error: isError ? (error instanceof Error ? error.message : 'Error loading diet history') : null,
-    refreshHistory: async () => {
-      await refetch();
-    },
-  };
+	// Use the React Query hook
+	const {
+		data = [],
+		isLoading,
+		isError,
+		error,
+		refetch,
+	} = useDietHistoryQuery(userId);
 
-  return (
-    <DietHistoryContext.Provider value={contextValue}>
-      {children}
-    </DietHistoryContext.Provider>
-  );
+	// Convert React Query state to the old interface for backward compatibility
+	const contextValue = {
+		loading: isLoading,
+		history: data,
+		error: isError
+			? error instanceof Error
+				? error.message
+				: 'Error loading diet history'
+			: null,
+		refreshHistory: async () => {
+			await refetch();
+		},
+	};
+
+	return (
+		<DietHistoryContext.Provider value={contextValue}>
+			{children}
+		</DietHistoryContext.Provider>
+	);
 }

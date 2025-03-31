@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
-import { ArrowLeft, ArrowRight, Heart, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { cn } from '@/lib/utils';
+import { ArrowLeft, ArrowRight, Heart, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import {
 	type ReligiousPreference,
 	useHealthProfileStore,
-} from "../_store/health-profile-store";
+} from '../_store/health-profile-store';
 
 interface ReligiousPreferencesFormProps {
 	onSubmit: () => Promise<void>;
@@ -34,12 +34,12 @@ export default function ReligiousPreferencesForm({
 		prevStep,
 	} = useHealthProfileStore();
 
-	const [newRestriction, setNewRestriction] = useState("");
+	const [newRestriction, setNewRestriction] = useState('');
 
 	const handleAddRestriction = () => {
 		if (newRestriction.trim()) {
 			addDietaryRestriction(newRestriction.trim());
-			setNewRestriction("");
+			setNewRestriction('');
 		}
 	};
 
@@ -47,8 +47,8 @@ export default function ReligiousPreferencesForm({
 		setReligiousPreference(value as ReligiousPreference);
 
 		// Clear other preference when not selecting "other"
-		if (value !== "other") {
-			setOtherReligiousPreference("");
+		if (value !== 'other') {
+			setOtherReligiousPreference('');
 		}
 	};
 
@@ -73,19 +73,19 @@ export default function ReligiousPreferencesForm({
 
 						<RadioGroup
 							id="religious-preferences"
-							value={religiousPreference || ""}
+							value={religiousPreference || ''}
 							onValueChange={handlePreferenceChange}
 							className="space-y-3"
 						>
 							{[
-								{ value: "hindu", label: "Hindu" },
-								{ value: "muslim", label: "Muslim" },
-								{ value: "sikh", label: "Sikh" },
-								{ value: "jain", label: "Jain" },
-								{ value: "christian", label: "Christian" },
-								{ value: "buddhist", label: "Buddhist" },
-								{ value: "other", label: "Other" },
-								{ value: "none", label: "None / Not applicable" },
+								{ value: 'hindu', label: 'Hindu' },
+								{ value: 'muslim', label: 'Muslim' },
+								{ value: 'sikh', label: 'Sikh' },
+								{ value: 'jain', label: 'Jain' },
+								{ value: 'christian', label: 'Christian' },
+								{ value: 'buddhist', label: 'Buddhist' },
+								{ value: 'other', label: 'Other' },
+								{ value: 'none', label: 'None / Not applicable' },
 							].map((option) => (
 								<div key={option.value} className="flex items-center space-x-3">
 									<RadioGroupItem
@@ -103,7 +103,7 @@ export default function ReligiousPreferencesForm({
 							))}
 						</RadioGroup>
 
-						{religiousPreference === "other" && (
+						{religiousPreference === 'other' && (
 							<div className="mt-3 pl-7">
 								<Input
 									placeholder="Please specify"
@@ -163,8 +163,8 @@ export default function ReligiousPreferencesForm({
 					onClick={onSubmit}
 					disabled={isSubmitting}
 					className={cn(
-						"w-full py-6 flex items-center justify-center gap-2 text-base",
-						"bg-gradient-to-r from-blue-500 to-blue-600",
+						'w-full py-6 flex items-center justify-center gap-2 text-base',
+						'bg-gradient-to-r from-blue-500 to-blue-600',
 					)}
 				>
 					{isSubmitting ? (

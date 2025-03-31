@@ -1,9 +1,9 @@
 import type React from 'react';
 
 export default function SignUpLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return children;
+	return children;
 }

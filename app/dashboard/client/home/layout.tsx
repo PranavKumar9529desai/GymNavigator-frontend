@@ -1,9 +1,9 @@
 import type React from 'react';
 
 export default function HomeLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return <div className="container mx-auto px-4">{children}</div>;
+	return <div className="container mx-auto px-4">{children}</div>;
 }

@@ -6,9 +6,9 @@ import SelectRole from '@/components/common/SelectRole';
 export const dynamic = 'force-dynamic';
 
 export default function SelectRolePage() {
-  return (
-    <div className="min-h-screen bg-gray-950 relative">
-      <SelectRole />
-    </div>
-  );
+	return (
+		<div className="min-h-screen bg-gray-950 relative">
+			<SelectRole />
+		</div>
+	);
 }

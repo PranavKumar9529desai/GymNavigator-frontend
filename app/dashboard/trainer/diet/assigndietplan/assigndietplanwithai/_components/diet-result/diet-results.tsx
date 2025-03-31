@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	CheckCircle,
 	Clock,
@@ -9,13 +9,13 @@ import {
 	Trash2,
 	UserCheck,
 	Utensils,
-} from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { attachDietPlanToUser } from "../../../_actions /AttachDietPlanToUser";
-import type { DietPlan } from "../../../_actions /GetallDiets";
-import type { DietPlanInput } from "../../_actions/save-diet-plan";
-import { useSaveToBackendMutation } from "../diet-history/use-diet-history";
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { attachDietPlanToUser } from '../../../_actions /AttachDietPlanToUser';
+import type { DietPlan } from '../../../_actions /GetallDiets';
+import type { DietPlanInput } from '../../_actions/save-diet-plan';
+import { useSaveToBackendMutation } from '../diet-history/use-diet-history';
 
 // Extend the meal type to include optional ingredients
 interface MealWithIngredients {
@@ -39,7 +39,7 @@ interface MealWithIngredients {
 }
 
 // Extend DietPlan to ensure it has the right meal type
-interface ExtendedDietPlan extends Omit<DietPlan, "meals"> {
+interface ExtendedDietPlan extends Omit<DietPlan, 'meals'> {
 	meals: MealWithIngredients[];
 }
 
@@ -70,14 +70,14 @@ interface _DietPlanResult {
 export default function DietResults({
 	dietPlan,
 	onSuccess,
-	clientName = "Client",
+	clientName = 'Client',
 	userId,
 	userName,
 }: DietResultsProps) {
-	const [saveMessage, setSaveMessage] = useState("");
+	const [saveMessage, setSaveMessage] = useState('');
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [isAssigning, setIsAssigning] = useState(false);
-	const [assignMessage, setAssignMessage] = useState("");
+	const [assignMessage, setAssignMessage] = useState('');
 	const [assignSuccess, setAssignSuccess] = useState(false);
 
 	// Use the new backend-only mutation hook
@@ -112,32 +112,32 @@ export default function DietResults({
 	};
 
 	const handleSave = async () => {
-		setSaveMessage("");
+		setSaveMessage('');
 		setSaveSuccess(false);
 
 		try {
 			// Transform the diet plan
 			const transformedDietPlan = transformDietPlanForCreation(dietPlan);
-			console.log("Sending diet plan to backend:", transformedDietPlan);
-			
+			console.log('Sending diet plan to backend:', transformedDietPlan);
+
 			// Use the backend-only mutation to save the diet plan
 			const result = await saveToBackendMutation.mutateAsync({
 				dietPlan: transformedDietPlan,
 			});
 
-			console.log("Save result from backend:", result);
+			console.log('Save result from backend:', result);
 
 			if (result.success) {
 				setSaveSuccess(true);
-				setSaveMessage("Diet plan created successfully!");
-				toast.success("Diet plan created successfully!");
+				setSaveMessage('Diet plan created successfully!');
+				toast.success('Diet plan created successfully!');
 
 				// Update the local diet plan with the ID from the backend
 				if (result.dietPlanId) {
-					console.log("Diet plan ID from backend:", result.dietPlanId);
+					console.log('Diet plan ID from backend:', result.dietPlanId);
 					dietPlan.id = result.dietPlanId;
 				} else {
-					console.warn("No diet plan ID returned from backend");
+					console.warn('No diet plan ID returned from backend');
 				}
 
 				// Call the onSuccess callback if provided
@@ -147,34 +147,34 @@ export default function DietResults({
 					}, 1500);
 				}
 			} else {
-				console.error("Failed to save diet plan:", result);
+				console.error('Failed to save diet plan:', result);
 				setSaveSuccess(false);
-				setSaveMessage(result.message || "Failed to create diet plan");
-				toast.error(result.message || "Failed to create diet plan");
+				setSaveMessage(result.message || 'Failed to create diet plan');
+				toast.error(result.message || 'Failed to create diet plan');
 			}
 		} catch (error) {
-			console.error("Error saving diet plan:", error);
+			console.error('Error saving diet plan:', error);
 			setSaveSuccess(false);
-			setSaveMessage("An unexpected error occurred while saving");
-			toast.error("An unexpected error occurred while saving the diet plan");
+			setSaveMessage('An unexpected error occurred while saving');
+			toast.error('An unexpected error occurred while saving the diet plan');
 		}
 	};
 
 	const handleAssignDietPlan = async () => {
 		if (!dietPlan.id) {
-			console.log("dietplan id is , userid is ", dietPlan.id, userId);
-			setAssignMessage("Please save the diet plan first before assigning");
+			console.log('dietplan id is , userid is ', dietPlan.id, userId);
+			setAssignMessage('Please save the diet plan first before assigning');
 			setAssignSuccess(false);
-			toast.error("Please save the diet plan first before assigning");
+			toast.error('Please save the diet plan first before assigning');
 			return;
 		}
 
 		setIsAssigning(true);
-		setAssignMessage("");
+		setAssignMessage('');
 		setAssignSuccess(false);
 
 		try {
-			console.log("dietplan id is , userid is", dietPlan.id, userId);
+			console.log('dietplan id is , userid is', dietPlan.id, userId);
 			const result = await attachDietPlanToUser(userId, dietPlan.id.toString());
 
 			if (result.success) {
@@ -189,18 +189,18 @@ export default function DietResults({
 				);
 			} else {
 				setAssignSuccess(false);
-				setAssignMessage(result.message || "Failed to assign diet plan");
+				setAssignMessage(result.message || 'Failed to assign diet plan');
 				// Show error toast notification
-				toast.error(result.message || "Failed to assign diet ");
+				toast.error(result.message || 'Failed to assign diet ');
 			}
 		} catch (error) {
-			console.error("Error assigning diet plan:", error);
+			console.error('Error assigning diet plan:', error);
 			setAssignSuccess(false);
 			setAssignMessage(
-				"An unexpected error occurred while assigning diet plan",
+				'An unexpected error occurred while assigning diet plan',
 			);
 			// Show error toast notification
-			toast.error("An unexpected error occurred while assigning diet plan");
+			toast.error('An unexpected error occurred while assigning diet plan');
 		} finally {
 			setIsAssigning(false);
 		}
@@ -255,8 +255,8 @@ export default function DietResults({
 				<div
 					className={`p-3 rounded-md ${
 						saveSuccess
-							? "bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800/30"
-							: "bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800/30"
+							? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800/30'
+							: 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800/30'
 					}`}
 				>
 					{saveMessage}
@@ -321,21 +321,21 @@ export default function DietResults({
 									<CardContent className="p-4">
 										<div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
 											<div className="text-sm">
-												<span className="text-muted-foreground">Calories:</span>{" "}
+												<span className="text-muted-foreground">Calories:</span>{' '}
 												<span className="font-medium">
 													{meal.calories} kcal
 												</span>
 											</div>
 											<div className="text-sm">
-												<span className="text-muted-foreground">Protein:</span>{" "}
+												<span className="text-muted-foreground">Protein:</span>{' '}
 												<span className="font-medium">{meal.protein}g</span>
 											</div>
 											<div className="text-sm">
-												<span className="text-muted-foreground">Carbs:</span>{" "}
+												<span className="text-muted-foreground">Carbs:</span>{' '}
 												<span className="font-medium">{meal.carbs}g</span>
 											</div>
 											<div className="text-sm">
-												<span className="text-muted-foreground">Fats:</span>{" "}
+												<span className="text-muted-foreground">Fats:</span>{' '}
 												<span className="font-medium">{meal.fats}g</span>
 											</div>
 										</div>
@@ -421,8 +421,8 @@ export default function DietResults({
 				<div
 					className={`p-3 rounded-md mt-2 ${
 						assignSuccess
-							? "bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800/30"
-							: "bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800/30"
+							? 'bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800/30'
+							: 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800/30'
 					}`}
 				>
 					{assignMessage}

@@ -5,67 +5,70 @@ import { m } from 'framer-motion';
 import React from 'react';
 
 type PricingCardProps = {
-  plan: {
-    name: string;
-    price: string;
-    period: string;
-    description: string;
-    popular?: boolean;
-    features: string[];
-  };
-  index: number;
+	plan: {
+		name: string;
+		price: string;
+		period: string;
+		description: string;
+		popular?: boolean;
+		features: string[];
+	};
+	index: number;
 };
 
-export const ClientAnimatedPricingCard = ({ plan, index }: PricingCardProps) => {
-  return (
-    <m.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.2 }}
-      className={`
+export const ClientAnimatedPricingCard = ({
+	plan,
+	index,
+}: PricingCardProps) => {
+	return (
+		<m.div
+			initial={{ opacity: 0, y: 20 }}
+			whileInView={{ opacity: 1, y: 0 }}
+			transition={{ delay: index * 0.2 }}
+			className={`
         relative bg-gray-800/50 backdrop-blur-lg rounded-xl p-8 border 
         ${plan.popular ? 'border-blue-500 shadow-lg shadow-blue-500/20' : 'border-gray-700'}
       `}
-    >
-      {plan.popular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
-            Most Popular
-          </span>
-        </div>
-      )}
+		>
+			{plan.popular && (
+				<div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+					<span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
+						Most Popular
+					</span>
+				</div>
+			)}
 
-      <div className="text-center mb-8">
-        <h3 className="text-xl font-semibold text-white mb-2">{plan.name}</h3>
-        <p className="text-gray-400 mb-4">{plan.description}</p>
-        <div className="text-3xl font-bold text-white">
-          {plan.price}
-          <span className="text-sm text-gray-400">{plan.period}</span>
-        </div>
-      </div>
+			<div className="text-center mb-8">
+				<h3 className="text-xl font-semibold text-white mb-2">{plan.name}</h3>
+				<p className="text-gray-400 mb-4">{plan.description}</p>
+				<div className="text-3xl font-bold text-white">
+					{plan.price}
+					<span className="text-sm text-gray-400">{plan.period}</span>
+				</div>
+			</div>
 
-      <ul className="space-y-4 mb-8">
-        {plan.features.map((feature, i) => (
-          <li key={i as number} className="flex items-center text-gray-300">
-            <CheckCircleIcon className="w-5 h-5 text-blue-400 mr-2" />
-            {feature}
-          </li>
-        ))}
-      </ul>
+			<ul className="space-y-4 mb-8">
+				{plan.features.map((feature, i) => (
+					<li key={i as number} className="flex items-center text-gray-300">
+						<CheckCircleIcon className="w-5 h-5 text-blue-400 mr-2" />
+						{feature}
+					</li>
+				))}
+			</ul>
 
-      <button
-        type="button"
-        className={`
+			<button
+				type="button"
+				className={`
           w-full py-3 px-4 rounded-lg font-medium transition-all duration-200
           ${
-            plan.popular
-              ? 'bg-blue-500 hover:bg-blue-600 text-white'
-              : 'border border-gray-600 hover:border-blue-500 text-white'
-          }
+						plan.popular
+							? 'bg-blue-500 hover:bg-blue-600 text-white'
+							: 'border border-gray-600 hover:border-blue-500 text-white'
+					}
         `}
-      >
-        Get Started
-      </button>
-    </m.div>
-  );
+			>
+				Get Started
+			</button>
+		</m.div>
+	);
 };
