@@ -39,7 +39,7 @@ const nextConfig = {
     return config;
   },
 
-  // Configure Turbopack with equivalent string replacement
+  // Configure experimental features
   experimental: {
     serverActions: {
       allowedOrigins: [
@@ -48,22 +48,23 @@ const nextConfig = {
         "*.pages.dev",
       ],
     },
+    // Add proper Turbopack configuration
     turbo: {
       rules: {
-        // Add equivalent configuration for Turbopack
-        loaders: [
-          {
-            test: /troika-three-text.*\.js$/,
-            use: {
-              loader: 'string-replace-loader',
-              options: {
-                search: /\/\\p\{Script=Hangul\}\/u\.test\([^)]+\)/g,
-                replace: 'false',
-                flags: 'g'
-              }
+        // For troika-three-text.js files
+        '*.js': {
+          // Apply conditional transformation just for troika-three-text files
+          loader: {
+            // Only apply if file path includes troika-three-text
+            include: ['**/troika-three-text'],
+            // Use string-replace-loader
+            loaders: ['string-replace-loader'],
+            options: {
+              search: "/\\p{Script=Hangul}/u.test",
+              replace: "() => false" 
             }
           }
-        ]
+        }
       }
     }
   },
