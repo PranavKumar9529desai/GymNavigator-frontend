@@ -2,6 +2,9 @@
 const nextConfig = {
 	reactStrictMode: false,
 
+	// Configure for Cloudflare Pages deployment
+	output: 'standalone',
+
 	images: {
 		remotePatterns: [
 			{

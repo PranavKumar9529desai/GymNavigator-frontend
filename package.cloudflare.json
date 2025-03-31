@@ -3,13 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "bun run --bun next dev --turbopack",
+		"dev": "next dev",
 		"prebuild": "node fix-axios-imports.mjs",
-		"build": "bun run --bun next build",
-		"start": "bun run --env-file=.env.production --bun next start",
-		"format": "biome format --write .",
-		"lint": "biome lint . --write",
-		"check": "biome check --write ."
+		"build": "next build",
+		"start": "next start"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
@@ -121,4 +118,4 @@
 		"react": "19.0.0",
 		"react-dom": "19.0.0"
 	}
-}
+} 

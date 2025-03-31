@@ -113,10 +113,12 @@ Set the following in the Cloudflare Pages setup:
 - **Project name**: `gymnavigator-admin`
 - **Production branch**: `main` (or your primary branch)
 - **Framework preset**: `Next.js`
-- **Build command**: `npm run build`
+- **Build command**: `chmod +x .cloudflare/setup.sh && ./.cloudflare/setup.sh`
 - **Build output directory**: `.next`
 - **Root directory**: `/` (since admin is at the root)
 - **Node.js version**: 20.x (recommended for Next.js 15.2)
+
+> **IMPORTANT**: We're using a special setup script that handles the React 19 compatibility issues with npm on Cloudflare Pages. This script uses a modified package.json file and installs dependencies with the `--legacy-peer-deps` flag.
 
 ### 3.2 Environment Variables
 
@@ -282,6 +284,43 @@ For best performance with Next.js 15.2 on Cloudflare Pages:
   - Incompatible Node.js APIs
   - Missing environment variables
   - Invalid middleware configuration
+  
+#### React 19 Compatibility Issues
+
+If you encounter errors related to React 19 compatibility with other packages (like @react-spring/web), you have two options:
+
+**Option 1: Use npm with legacy-peer-deps flag**
+
+Update your Cloudflare Pages build command to:
+```
+npm install --legacy-peer-deps && npm run build
+```
+
+**Option 2: Use bun on Cloudflare Pages**
+
+1. We've created a `.cloudflare/build.sh` script that installs and uses bun.
+2. In your Cloudflare Pages settings, update the build command to:
+```
+chmod +x .cloudflare/build.sh && ./.cloudflare/build.sh
+```
+
+**Option 3: Package overrides**
+
+We've added overrides in package.json to force React 19 compatibility:
+```json
+"overrides": {
+  "@types/react": "19.0.10",
+  "@types/react-dom": "19.0.4",
+  "@react-spring/web": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  }
+},
+"resolutions": {
+  "react": "19.0.0",
+  "react-dom": "19.0.0"
+}
+```
 
 ### 8.2 API Connection Issues
 
