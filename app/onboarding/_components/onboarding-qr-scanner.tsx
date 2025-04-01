@@ -70,8 +70,8 @@ export default function OnboardingQrScanner() {
               }
 
               // Get the user's role from localStorage or a state management solution
-              const userRole = localStorage.getItem('userRole') || 'trainee'; // Default to 'trainee' if not found
-              
+              const userRole = localStorage.getItem("userRole") || "trainee"; // Default to 'trainee' if not found
+
               // Navigate to the gym enrollment page with the scanned parameters
               setTimeout(() => {
                 router.push(
@@ -153,25 +153,38 @@ export default function OnboardingQrScanner() {
     );
   }
 
-  return (
-    <div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
-      <div className="w-full max-w-sm mx-auto">
-        <div className="space-y-4">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <QrCode className="w-6 h-6 text-primary" />
-            <h2 className="text-xl font-semibold">Scan Gym QR Code</h2>
-          </div>
+  if (isScanning && !isProcessing) {
+    return (
+      <div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
+        <div className="w-full max-w-sm mx-auto">
+          <div className="space-y-4">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <QrCode className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold">Scan Gym QR Code</h2>
+            </div>
 
-          <div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-            {isScanning && <div id="qr-reader" className="mx-auto" />}
-          </div>
+            <div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+              <div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none"></div>
+              {isScanning && <div id="qr-reader" className="mx-auto" />}
+            </div>
 
-          <p className="text-sm text-center text-muted-foreground">
-            Scan the QR code provided by your gym to start the onboarding
-            process.
-          </p>
+            <div className="space-y-2">
+              <p className="text-sm text-center text-muted-foreground">
+                Scan the QR code provided by your gym to start the onboarding
+                process.
+              </p>
+              <ul className="text-xs text-muted-foreground space-y-1 list-disc pl-5">
+                <li>Make sure the QR code is within the scanning area</li>
+                <li>Ensure good lighting for better scanning</li>
+                <li>Hold your device steady while scanning</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // If none of the other states match, this is the default state
+  return null;
 }
