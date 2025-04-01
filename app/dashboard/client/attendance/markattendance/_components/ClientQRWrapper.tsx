@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 
 // Dynamically import QRScanner with no SSR since it uses browser APIs
-const AttendanceQRScanner = dynamic(() => import('./QRScanner'), {
+const AttendanceQRScanner = dynamic(() => import('./AttedanceQRScanner'), {
 	ssr: false,
 	loading: () => (
 		<div className="flex items-center justify-center h-full">
