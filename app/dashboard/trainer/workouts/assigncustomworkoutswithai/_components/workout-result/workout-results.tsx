@@ -1,7 +1,7 @@
 "use client";
 // @ts-nocheck
 import { toast } from "@/hooks/use-toast";
-import { useEffect, useRef, useState, RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { assignCustomWorkoutPlan } from "../../_actions/assign-workout-plan";
 import type {
   WorkoutPlan,

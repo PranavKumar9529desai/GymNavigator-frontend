@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, AlertTriangle, InfoIcon } from "lucide-react";
 import Link from "next/link";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Gym Onboarding | GymNavigator",
