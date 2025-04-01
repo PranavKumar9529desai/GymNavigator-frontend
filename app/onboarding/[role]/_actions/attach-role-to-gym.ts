@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import { ClientReqConfig } from "@/lib/AxiosInstance/clientAxios";
 
 interface AttachRoleToGymParams {
   gymname: string;
@@ -24,33 +24,33 @@ export async function attachRoleToGym({
   try {
     // Initialize client axios
     const clientAxios = await ClientReqConfig();
-    
+
     // Make request to the attach to gym endpoint
-    const response = await clientAxios.post('/gym/attachtogym', {
+    const response = await clientAxios.post("/gym/attachtogym", {
       gymname,
       gymid,
-      hash
+      hash,
     });
-    
+
     const data = response.data;
-    
+
     if (!data.success) {
       console.error("Failed to attach to gym:", data.error);
       return {
         success: false,
-        message: data.error || "Failed to attach to gym"
+        message: data.error || "Failed to attach to gym",
       };
     }
-    
+
     return {
       success: true,
-      message: data.message || "Successfully attached to gym"
+      message: data.message || "Successfully attached to gym",
     };
   } catch (error) {
     console.error("Error attaching to gym:", error);
     return {
       success: false,
-      message: "Failed to connect to server"
+      message: "Failed to connect to server",
     };
   }
-} 
+}
