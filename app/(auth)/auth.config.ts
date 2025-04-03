@@ -263,9 +263,6 @@ export default {
 					if (!selectedRole) {
 						// Return a URL to redirect to role selection
 						return '/selectrole';
-
-
-						
 					}
 
 					console.log('Signing up with Google:', {

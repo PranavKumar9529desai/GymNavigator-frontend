@@ -1,12 +1,14 @@
 'use server';
-import type { GymAtomType } from '@/app/state/Atoms/gymAtom';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import type { AxiosResponse } from 'axios';
+import type { gym } from '../_components/SelectGym';
+
 interface responseType {
 	success: boolean;
 	msg: string;
 }
-export const VerifyAuthToken = async (gym: GymAtomType, authToken: string) => {
+
+export const VerifyAuthToken = async (gym: gym, authToken: string) => {
 	try {
 		const trainerAxios = await TrainerReqConfig();
 		const response: AxiosResponse<responseType> = await trainerAxios.post(

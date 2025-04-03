@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 interface RoleStorageManagerProps {
-  role: string;
+	role: string;
 }
 
 export default function RoleStorageManager({ role }: RoleStorageManagerProps) {
-  useEffect(() => {
-    localStorage.setItem('userRole', role);
-  }, [role]);
+	useEffect(() => {
+		localStorage.setItem('userRole', role);
+	}, [role]);
 
-  return null;
-} 
+	return null;
+}

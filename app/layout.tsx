@@ -1,5 +1,4 @@
 import './globals.css';
-import RecoilContextProvider from '@/lib/RecoilContextProvider';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import type { Metadata } from 'next';
 // import Script from "next/script";
@@ -87,12 +86,10 @@ export default function RootLayout({
 			<body>
 				<Providers>
 					<QueryClientProvider>
-						<RecoilContextProvider>
-							<LazyMotion features={domAnimation}>
-								{children}
-								<Toaster {...toasterProps} />
-							</LazyMotion>
-						</RecoilContextProvider>
+						<LazyMotion features={domAnimation}>
+							{children}
+							<Toaster {...toasterProps} />
+						</LazyMotion>
 					</QueryClientProvider>
 				</Providers>
 			</body>
