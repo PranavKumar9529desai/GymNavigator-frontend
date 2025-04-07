@@ -3,7 +3,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { gymTheme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { submitHealthProfile } from "./_actions/use-health-profile-mutation";
 import { useHealthProfileStore } from "./_store/health-profile-store";
 import type { HealthMetrics } from "./calculate-health-data/health-data-types";
@@ -12,7 +12,6 @@ import ActivityForm from "./_components/activity-form";
 import AgeForm from "./_components/age-form";
 import AllergiesForm from "./_components/allergies-form";
 import DietaryPreferencesForm from "./_components/dietary-preferences-form";
-// Form step components
 import GenderForm from "./_components/gender-form";
 import GoalForm from "./_components/goal-form";
 import HeightForm from "./_components/height-form";
@@ -54,13 +53,8 @@ const ProgressIndicator = ({
 };
 
 export default function HealthProfileFormPage() {
-  const {
-    currentStep,
-    totalSteps,
-    dietaryPreference,
-    resetForm,
-    ...formState
-  } = useHealthProfileStore();
+  const { currentStep, resetForm, dietaryPreference, ...formState } =
+    useHealthProfileStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(
@@ -68,10 +62,10 @@ export default function HealthProfileFormPage() {
   );
   const { toast } = useToast();
 
-  // Determine whether to show non-veg days form based on dietary preference
+  // Determine whether the user is non-vegetarian
   const isNonVegetarian = dietaryPreference === "non-vegetarian";
 
-  // Reset form when component unmounts
+  // Remove auto-advance effect for veg flows
   useEffect(() => {
     return () => resetForm();
   }, [resetForm]);
@@ -81,19 +75,14 @@ export default function HealthProfileFormPage() {
     try {
       const result = await submitHealthProfile(formState);
       if (result.success) {
-        // Store the health metrics for the success page
         if (result.healthMetrics) {
           setHealthMetrics(result.healthMetrics);
         }
-
-        // Show success toast
         toast({
           title: "Success!",
           description: "Your health profile has been saved.",
           variant: "default",
         });
-
-        // Set completed state to display success form
         setIsCompleted(true);
       } else {
         toast({
@@ -116,125 +105,68 @@ export default function HealthProfileFormPage() {
     }
   };
 
-  // Modified to return a Promise to match expected type
   const handleNextStep = async (): Promise<void> => {
     useHealthProfileStore.getState().nextStep();
     return Promise.resolve();
   };
 
-  // Calculate effective total steps based on dietary preference
-  const effectiveTotalSteps = isNonVegetarian ? totalSteps : totalSteps - 1;
+  // Define form step arrays for non-vegetarian and vegetarian flows.
+  const forms = useMemo(() => {
+    return isNonVegetarian
+      ? [
+          <GenderForm key="1" />,
+          <AgeForm key="2" />,
+          <HeightForm key="3" />,
+          <WeightForm key="4" />,
+          <ActivityForm key="5" />,
+          <GoalForm key="6" />,
+          <DietaryPreferencesForm key="7" />,
+          <NonVegDaysForm key="8" />,
+          <MealTimesForm key="9" />,
+          <MealTimingsForm key="10" />,
+          <AllergiesForm key="11" />,
+          <MedicalConditionsForm
+            key="12"
+            onSubmit={handleNextStep}
+            isSubmitting={false}
+          />,
+          <ReligiousPreferencesForm
+            key="13"
+            onSubmit={handleFormSubmit}
+            isSubmitting={isSubmitting}
+            isLast={true}
+          />,
+        ]
+      : [
+          <GenderForm key="1" />,
+          <AgeForm key="2" />,
+          <HeightForm key="3" />,
+          <WeightForm key="4" />,
+          <ActivityForm key="5" />,
+          <GoalForm key="6" />,
+          <DietaryPreferencesForm key="7" />,
+          <MealTimesForm key="8" />,
+          <MealTimingsForm key="9" />,
+          <AllergiesForm key="10" />,
+          <MedicalConditionsForm
+            key="11"
+            onSubmit={handleNextStep}
+            isSubmitting={false}
+          />,
+          <ReligiousPreferencesForm
+            key="12"
+            onSubmit={handleFormSubmit}
+            isSubmitting={isSubmitting}
+            isLast={true}
+          />,
+        ];
+  }, [isNonVegetarian, isSubmitting]);
 
-  // Adjust step display for non-vegetarians (include non-veg days form)
-  const getDisplayStep = (step: number) => {
-    // If not non-vegetarian and past step 7 (dietary preferences), adjust the display step
-    if (!isNonVegetarian && step > 7) {
-      return step - 1;
-    }
-    return step;
-  };
+  const effectiveTotalSteps = forms.length;
 
-  // Handle automatic step advancement when dietary preference changes
-  useEffect(() => {
-    // If the user is on the non-veg days step (step 8) but is not non-vegetarian,
-    // automatically advance them to the next step (meal times)
-    if (currentStep === 8 && !isNonVegetarian) {
-      useHealthProfileStore.getState().nextStep();
-    }
-  }, [currentStep, isNonVegetarian]);
+  // Get current form using the currentStep index (1-indexed)
+  const currentForm = forms[currentStep - 1];
 
-  // Get actual form based on current step and dietary preference
-  const getFormForStep = (step: number) => {
-    // For non-vegetarians, show all steps normally
-    if (isNonVegetarian) {
-      switch (step) {
-        case 1:
-          return <GenderForm />;
-        case 2:
-          return <AgeForm />;
-        case 3:
-          return <HeightForm />;
-        case 4:
-          return <WeightForm />;
-        case 5:
-          return <ActivityForm />;
-        case 6:
-          return <GoalForm />;
-        case 7:
-          return <DietaryPreferencesForm />;
-        case 8:
-          return <NonVegDaysForm />;
-        case 9:
-          return <MealTimesForm />;
-        case 10:
-          return <MealTimingsForm />;
-        case 11:
-          return <AllergiesForm />;
-        case 12:
-          return (
-            <MedicalConditionsForm
-              onSubmit={handleNextStep}
-              isSubmitting={false}
-            />
-          );
-        case 13:
-          return (
-            <ReligiousPreferencesForm
-              onSubmit={handleFormSubmit}
-              isSubmitting={isSubmitting}
-              isLast={true}
-            />
-          );
-        default:
-          return <GenderForm />;
-      }
-    }
-    // For vegetarians and vegans, skip the non-veg days form
-    else {
-      switch (step) {
-        case 1:
-          return <GenderForm />;
-        case 2:
-          return <AgeForm />;
-        case 3:
-          return <HeightForm />;
-        case 4:
-          return <WeightForm />;
-        case 5:
-          return <ActivityForm />;
-        case 6:
-          return <GoalForm />;
-        case 7:
-          return <DietaryPreferencesForm />;
-        // Skip step 8 (NonVegDaysForm)
-        case 8:
-          return <MealTimesForm />;
-        case 9:
-          return <MealTimingsForm />;
-        case 10:
-          return <AllergiesForm />;
-        case 11:
-          return (
-            <MedicalConditionsForm
-              onSubmit={handleNextStep}
-              isSubmitting={false}
-            />
-          );
-        case 12:
-          return (
-            <ReligiousPreferencesForm
-              onSubmit={handleFormSubmit}
-              isSubmitting={isSubmitting}
-              isLast={true}
-            />
-          );
-        default:
-          return <GenderForm />;
-      }
-    }
-  };
-
-  // If form is completed, show the success form
   if (isCompleted) {
     return <SuccessForm healthMetrics={healthMetrics} />;
   }
@@ -242,10 +174,10 @@ export default function HealthProfileFormPage() {
   return (
     <div className="max-w-md mx-auto px-4 py-8">
       <ProgressIndicator
-        currentStep={getDisplayStep(currentStep)}
+        currentStep={currentStep}
         totalSteps={effectiveTotalSteps}
       />
-      {getFormForStep(currentStep)}
+      {currentForm}
     </div>
   );
 }
