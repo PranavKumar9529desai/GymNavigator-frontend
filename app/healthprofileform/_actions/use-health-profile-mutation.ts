@@ -106,8 +106,13 @@ export async function submitHealthProfile(
 		height: formData.height as { value: number; unit: 'cm' | 'ft' },
 		weight: formData.weight as { value: number; unit: 'kg' | 'lb' },
 		// Handle targetWeight with a conditional check
-		...(formData.targetWeight?.value 
-			? { targetWeight: formData.targetWeight as { value: number; unit: 'kg' | 'lb' } }
+		...(formData.targetWeight?.value
+			? {
+					targetWeight: formData.targetWeight as {
+						value: number;
+						unit: 'kg' | 'lb';
+					},
+				}
 			: {}),
 		goal: formData.goal || 'maintenance',
 		otherGoal: formData.goal === 'other' ? formData.otherGoal : undefined,

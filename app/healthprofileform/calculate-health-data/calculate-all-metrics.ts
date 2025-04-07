@@ -54,8 +54,14 @@ export function calculateHealthMetrics(
 	// Calculate TDEE
 	const tdee = calculateTDEE(bmr, params.activityLevel);
 
+	// Add target calories - weight catergory calories
+
 	// Calculate target calories
-	const targetCalories = calculateTargetCalories(tdee, params.goal);
+	const targetCalories = calculateTargetCalories(
+		tdee,
+		params.goal,
+		params.gender,
+	);
 
 	// Calculate macros
 	const macros = calculateMacros(targetCalories, params.goal);

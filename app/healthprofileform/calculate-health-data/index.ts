@@ -56,10 +56,14 @@ export function calculateBMR(
 	age: number,
 ): number {
 	if (gender === 'male') {
-		return 66.5 + 13.75 * weight + 5.003 * height - 6.755 * age;
+		// Mifflin-St Jeor for Men
+		return 10 * weight + 6.25 * height - 5 * age + 5;
+	} else {
+		// Mifflin-St Jeor for Women
+		// Using the female formula for 'female' and 'other' genders as a default.
+		// You might consider specific adjustments for 'other' if more data becomes available.
+		return 10 * weight + 6.25 * height - 5 * age - 161;
 	}
-	// Use female formula for both 'female' and 'other' for now
-	return 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
 }
 
 /**
@@ -102,22 +106,40 @@ export function calculateTDEE(
 }
 
 /**
- * Calculate Target Daily Caloric Intake based on TDEE and goal
+ * Calculate Target Daily Caloric Intake based on TDEE and goal (Updated Rules)
  *
  * @param tdee Calculated TDEE
  * @param goal User's weight goal
+ * @param gender User's gender (needed for bodybuilding)
  * @returns Target daily caloric intake
  */
-export function calculateTargetCalories(tdee: number, goal: GoalType): number {
+export function calculateTargetCalories(
+	tdee: number,
+	goal: GoalType,
+	gender: Gender, // Added gender for bodybuilding rule
+): number {
 	switch (goal) {
 		case 'fat-loss':
-			return tdee - 500; // 500 calorie deficit for fat loss (approximately 0.5 kg/week)
-		case 'muscle-building':
+			// Rule: Fat Loss for Obese Individuals
+			return tdee - 500;
 		case 'muscle-building-with-fat-loss':
+			// Rule: Fat Loss with Muscle Building (Body Recomposition)
+			// Using midpoint of 250-500 deficit
+			return tdee - 375;
+		case 'muscle-building':
+			// Rule: Normal Muscle Building for Skinny Individuals
+			// Using midpoint of 500-1000 surplus
+			return tdee + 750;
 		case 'bodybuilding':
-			return tdee + 250; // 250 calorie surplus for muscle gain (approximately 0.25 kg/week)
+			// Rule: Body Building for Professional Bodybuilders
+			// Using the specified ~3800 kcal for males, else TDEE + 500 (example adjustment)
+			// You might want a more specific input for female bodybuilders
+			return gender === 'male' ? 3800 : tdee + 500; // Adjusted for non-males, refine as needed
+		case 'maintenance':
+		case 'general-fitness':
 		default:
-			return tdee; // Maintain current weight
+			// Rule: Maintaining Health and Lean Muscles
+			return tdee;
 	}
 }
 
@@ -165,7 +187,8 @@ export function convertHeight(
 }
 
 /**
- * Calculate macronutrient distribution based on target calories and goal
+ * Calculate macronutrient distribution based on target calories and goal (Updated Rules)
+ * Uses midpoints for percentage ranges.
  *
  * @param targetCalories Target daily caloric intake
  * @param goal Weight goal
@@ -176,26 +199,45 @@ export function calculateMacros(targetCalories: number, goal: GoalType) {
 	let carbsPercentage: number;
 	let fatPercentage: number;
 
-	// Set macronutrient percentages based on goal
+	// Set macronutrient percentages based on goal using new rules (midpoints for ranges)
 	switch (goal) {
-		case 'bodybuilding':
-			// Body-Building macros: 30% protein, 50% carbs, 20% fat
-			proteinPercentage = 0.3;
-			carbsPercentage = 0.5;
-			fatPercentage = 0.2;
+		case 'fat-loss': // Fat Loss for Obese Individuals
+			proteinPercentage = 0.45; // Midpoint of 40-50%
+			carbsPercentage = 0.2; // Midpoint of 10-30%
+			fatPercentage = 0.35; // Midpoint of 30-40%
 			break;
-		case 'fat-loss':
-			// Weight Loss macros: 45% protein, 20% carbs, 35% fat
-			proteinPercentage = 0.45;
-			carbsPercentage = 0.2;
-			fatPercentage = 0.35;
+		case 'muscle-building-with-fat-loss': // Fat Loss with Muscle Building
+			proteinPercentage = 0.35; // Midpoint of 30-40%
+			carbsPercentage = 0.45; // Midpoint of 40-50%
+			fatPercentage = 0.2; // Midpoint of 15-25%
 			break;
+		case 'muscle-building': // Normal Muscle Building
+			proteinPercentage = 0.3; // Midpoint of 25-35%
+			carbsPercentage = 0.5; // Midpoint of 40-60%
+			fatPercentage = 0.2; // Midpoint of 15-25%
+			break;
+		case 'bodybuilding': // Body Building
+			proteinPercentage = 0.35; // Midpoint of 30-40%
+			carbsPercentage = 0.5; // Midpoint of 40-60%
+			fatPercentage = 0.2; // Midpoint of 15-25%
+			break;
+		case 'maintenance':
+		case 'general-fitness': // Maintaining Health
+		// @ts-ignore
 		default:
-			// Maintenance/General macros: 30% protein, 40% carbs, 30% fat
-			proteinPercentage = 0.3;
-			carbsPercentage = 0.4;
-			fatPercentage = 0.3;
+			proteinPercentage = 0.25; // Midpoint of 20-30%
+			carbsPercentage = 0.55; // Midpoint of 50-60%
+			fatPercentage = 0.25; // Midpoint of 20-30%
 			break;
+	}
+
+	// Ensure percentages add up to 1 (or 100%) - adjust primary levers if needed
+	// Basic check/adjustment - can be refined
+	const totalPercentage = proteinPercentage + carbsPercentage + fatPercentage;
+	if (Math.abs(totalPercentage - 1.0) > 0.01) {
+		// Simple adjustment: scale carbs to make it sum to 1
+		carbsPercentage = 1.0 - proteinPercentage - fatPercentage;
+		console.warn('Adjusted macro percentages to sum to 100%');
 	}
 
 	// Calculate macros in grams
