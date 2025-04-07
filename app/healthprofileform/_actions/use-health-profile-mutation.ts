@@ -68,6 +68,12 @@ const healthProfileSchema = z.object({
 	),
 	otherAllergy: z.string().optional(),
 	mealTimes: z.enum(['2', '3', '4+']),
+	mealTimings: z.array(
+		z.object({
+			name: z.string(),
+			time: z.string(),
+		}),
+	),
 	// Original fields
 	medicalConditions: z.array(
 		z.object({
@@ -126,6 +132,7 @@ export async function submitHealthProfile(
 		allergies: formData.allergies?.filter((allergy) => allergy.selected) || [],
 		otherAllergy: formData.otherAllergy,
 		mealTimes: formData.mealTimes || '3',
+		mealTimings: formData.mealTimings || getDefaultMealTimings(formData.mealTimes || '3'),
 		// Original fields
 		medicalConditions:
 			formData.medicalConditions?.filter((condition) => condition.selected) ||

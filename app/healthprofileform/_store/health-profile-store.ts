@@ -1,35 +1,35 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-export type Gender = 'male' | 'female' | 'other';
+export type Gender = "male" | "female" | "other";
 export type ActivityLevel =
-	| 'sedentary'
-	| 'light'
-	| 'moderate'
-	| 'active'
-	| 'veryActive';
+	| "sedentary"
+	| "light"
+	| "moderate"
+	| "active"
+	| "veryActive";
 export type DietaryPreference =
-	| 'vegetarian'
-	| 'non-vegetarian'
-	| 'vegan'
-	| 'other';
+	| "vegetarian"
+	| "non-vegetarian"
+	| "vegan"
+	| "other";
 export type ReligiousPreference =
-	| 'hindu'
-	| 'muslim'
-	| 'sikh'
-	| 'jain'
-	| 'christian'
-	| 'buddhist'
-	| 'other'
-	| 'none';
-export type MealTimes = '2' | '3' | '4+';
+	| "hindu"
+	| "muslim"
+	| "sikh"
+	| "jain"
+	| "christian"
+	| "buddhist"
+	| "other"
+	| "none";
+export type MealTimes = "2" | "3" | "4+";
 export type GoalType =
-	| 'fat-loss'
-	| 'muscle-building'
-	| 'muscle-building-with-fat-loss'
-	| 'bodybuilding'
-	| 'maintenance'
-	| 'general-fitness'
-	| 'other';
+	| "fat-loss"
+	| "muscle-building"
+	| "muscle-building-with-fat-loss"
+	| "bodybuilding"
+	| "maintenance"
+	| "general-fitness"
+	| "other";
 
 export interface MedicalCondition {
 	id: string;
@@ -48,6 +48,11 @@ export interface NonVegDay {
 	selected: boolean;
 }
 
+export interface MealTime {
+	name: string;
+	time: string;
+}
+
 export interface HealthProfileState {
 	// Form data
 	gender: Gender | null;
@@ -58,7 +63,7 @@ export interface HealthProfileState {
 	targetWeight: { value: number | null; unit: 'kg' | 'lb' };
 	goal: GoalType | null;
 	otherGoal: string;
-
+	
 	// New fields
 	dietaryPreference: DietaryPreference | null;
 	otherDietaryPreference: string;
@@ -66,18 +71,19 @@ export interface HealthProfileState {
 	allergies: Allergy[];
 	otherAllergy: string;
 	mealTimes: MealTimes | null;
-
+	mealTimings: MealTime[];
+	
 	// Original fields
 	medicalConditions: MedicalCondition[];
 	otherMedicalCondition: string;
 	religiousPreference: ReligiousPreference | null;
 	otherReligiousPreference: string;
 	dietaryRestrictions: string[];
-
+	
 	// Form navigation
 	currentStep: number;
 	totalSteps: number;
-
+	
 	// Actions
 	setGender: (gender: Gender) => void;
 	setAge: (age: number) => void;
@@ -87,7 +93,7 @@ export interface HealthProfileState {
 	setTargetWeight: (value: number, unit: 'kg' | 'lb') => void;
 	setGoal: (goal: GoalType) => void;
 	setOtherGoal: (text: string) => void;
-
+	
 	// New actions
 	setDietaryPreference: (preference: DietaryPreference) => void;
 	setOtherDietaryPreference: (text: string) => void;
@@ -96,7 +102,9 @@ export interface HealthProfileState {
 	addAllergy: (allergy: string) => void;
 	setOtherAllergy: (text: string) => void;
 	setMealTimes: (times: MealTimes) => void;
-
+	setMealTimings: (timings: MealTime[]) => void;
+	updateMealTime: (index: number, time: string) => void;
+	
 	// Original actions
 	toggleMedicalCondition: (id: string) => void;
 	addMedicalCondition: (condition: string) => void;
@@ -105,7 +113,8 @@ export interface HealthProfileState {
 	setOtherReligiousPreference: (text: string) => void;
 	addDietaryRestriction: (restriction: string) => void;
 	removeDietaryRestriction: (restriction: string) => void;
-
+	
+	// Navigation actions
 	nextStep: () => void;
 	prevStep: () => void;
 	goToStep: (step: number) => void;
@@ -143,6 +152,31 @@ export const defaultNonVegDays: NonVegDay[] = [
 	{ day: 'Sunday', selected: false },
 ];
 
+const getDefaultMealTimings = (mealCount: MealTimes): MealTime[] => {
+	switch (mealCount) {
+		case '2':
+			return [
+				{ name: 'Breakfast', time: '08:00' },
+				{ name: 'Dinner', time: '19:00' },
+			];
+		case '3':
+			return [
+				{ name: 'Breakfast', time: '08:00' },
+				{ name: 'Lunch', time: '13:00' },
+				{ name: 'Dinner', time: '19:00' },
+			];
+		case '4+':
+			return [
+				{ name: 'Breakfast', time: '08:00' },
+				{ name: 'Lunch', time: '13:00' },
+				{ name: 'Snack', time: '16:00' },
+				{ name: 'Dinner', time: '19:00' },
+			];
+		default:
+			return [{ name: 'Breakfast', time: '08:00' }];
+	}
+};
+
 export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 	// Initial state
 	gender: null,
@@ -153,7 +187,7 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 	targetWeight: { value: null, unit: 'kg' },
 	goal: null,
 	otherGoal: '',
-
+	
 	// New state fields
 	dietaryPreference: null,
 	otherDietaryPreference: '',
@@ -161,58 +195,50 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 	allergies: [...defaultAllergies],
 	otherAllergy: '',
 	mealTimes: null,
-
+	mealTimings: [],
+	
 	// Original state fields
 	medicalConditions: [...defaultMedicalConditions],
 	otherMedicalCondition: '',
 	religiousPreference: null,
 	otherReligiousPreference: '',
 	dietaryRestrictions: [],
-
+	
 	currentStep: 1,
-	totalSteps: 13,
-
+	totalSteps: 14, // Increased from 13 to 14 to accommodate the new form
+	
 	// Actions
 	setGender: (gender) => set({ gender }),
-
 	setAge: (age) => set({ age }),
-
 	setActivityLevel: (activityLevel) => set({ activityLevel }),
-
 	setHeight: (value, unit) => set({ height: { value, unit } }),
-
 	setWeight: (value, unit) => set({ weight: { value, unit } }),
-
 	setTargetWeight: (value, unit) => set({ targetWeight: { value, unit } }),
-
 	setGoal: (goal) => set({ goal }),
-
 	setOtherGoal: (text) => set({ otherGoal: text }),
-
+	
 	// New actions
 	setDietaryPreference: (dietaryPreference) => set({ dietaryPreference }),
-
 	setOtherDietaryPreference: (text) => set({ otherDietaryPreference: text }),
-
 	toggleNonVegDay: (day) =>
 		set((state) => ({
 			nonVegDays: state.nonVegDays.map((d) =>
 				d.day === day ? { ...d, selected: !d.selected } : d,
 			),
 		})),
-
+	
 	toggleAllergy: (id) =>
 		set((state) => ({
 			allergies: state.allergies.map((allergy) =>
 				allergy.id === id
 					? { ...allergy, selected: !allergy.selected }
 					: // If selecting "None", unselect all others, and vice versa
-						id === '6' || allergy.id === '6'
+					id === '6' || allergy.id === '6'
 						? { ...allergy, selected: false }
 						: allergy,
 			),
 		})),
-
+	
 	addAllergy: (allergy) =>
 		set((state) => ({
 			allergies: [
@@ -220,11 +246,23 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 				{ id: `custom-${Date.now()}`, name: allergy, selected: true },
 			],
 		})),
-
+	
 	setOtherAllergy: (text) => set({ otherAllergy: text }),
-
-	setMealTimes: (mealTimes) => set({ mealTimes }),
-
+	
+	setMealTimes: (mealTimes) => {
+		const defaultTimings = getDefaultMealTimings(mealTimes);
+		return set({ mealTimes, mealTimings: defaultTimings });
+	},
+	
+	setMealTimings: (mealTimings) => set({ mealTimings }),
+	
+	updateMealTime: (index, time) =>
+		set((state) => ({
+			mealTimings: state.mealTimings.map((meal, i) =>
+				i === index ? { ...meal, time } : meal
+			),
+		})),
+	
 	// Original actions
 	toggleMedicalCondition: (id) =>
 		set((state) => ({
@@ -232,12 +270,12 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 				condition.id === id
 					? { ...condition, selected: !condition.selected }
 					: // If selecting "None", unselect all others, and vice versa
-						id === '9' || condition.id === '9'
+					id === "9" || condition.id === "9"
 						? { ...condition, selected: false }
 						: condition,
 			),
 		})),
-
+	
 	addMedicalCondition: (condition) =>
 		set((state) => ({
 			medicalConditions: [
@@ -245,39 +283,37 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 				{ id: `custom-${Date.now()}`, name: condition, selected: true },
 			],
 		})),
-
+	
 	setOtherMedicalCondition: (text) => set({ otherMedicalCondition: text }),
-
-	setReligiousPreference: (preference) =>
-		set({ religiousPreference: preference }),
-
-	setOtherReligiousPreference: (text) =>
-		set({ otherReligiousPreference: text }),
-
+	
+	setReligiousPreference: (preference) => set({ religiousPreference: preference }),
+	
+	setOtherReligiousPreference: (text) => set({ otherReligiousPreference: text }),
+	
 	addDietaryRestriction: (restriction) =>
 		set((state) => ({
 			dietaryRestrictions: [...state.dietaryRestrictions, restriction],
 		})),
-
+	
 	removeDietaryRestriction: (restriction) =>
 		set((state) => ({
 			dietaryRestrictions: state.dietaryRestrictions.filter(
 				(item) => item !== restriction,
 			),
 		})),
-
+	
 	nextStep: () =>
 		set((state) => ({
 			currentStep: Math.min(state.currentStep + 1, state.totalSteps),
 		})),
-
+	
 	prevStep: () =>
 		set((state) => ({
 			currentStep: Math.max(state.currentStep - 1, 1),
 		})),
-
+	
 	goToStep: (step) => set({ currentStep: step }),
-
+	
 	resetForm: () =>
 		set({
 			gender: null,
@@ -296,6 +332,7 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 			allergies: [...defaultAllergies],
 			otherAllergy: '',
 			mealTimes: null,
+			mealTimings: [],
 
 			// Reset original fields
 			medicalConditions: [...defaultMedicalConditions],
