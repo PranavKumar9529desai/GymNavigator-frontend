@@ -21,7 +21,7 @@ export default function SetupScreen() {
 				</div>
 
 				<Link
-					href="/dashboard/owner/gymdetails/creategym"
+					href="/gymdetails/creategym"
 					className="inline-flex items-center justify-center w-full gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
 				>
 					<Plus className="w-4 h-4" />
