@@ -66,9 +66,7 @@ export default function HealthProfileFormPage() {
   // Determine whether the user is non-vegetarian
   const isNonVegetarian = dietaryPreference === "non-vegetarian";
 
-  useEffect(() => {
-    return () => resetForm();
-  }, [resetForm, handleFormSubmit, handleNextStep]);
+
 
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
