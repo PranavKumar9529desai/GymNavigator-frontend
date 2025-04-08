@@ -64,7 +64,7 @@ export interface HealthProfileState {
 	goal: GoalType | null;
 	otherGoal: string;
 	
-	// New fields
+	// New fieldscHealth profile submitted
 	dietaryPreference: DietaryPreference | null;
 	otherDietaryPreference: string;
 	nonVegDays: NonVegDay[];
@@ -244,12 +244,14 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 			allergies: [
 				...state.allergies,
 				{ id: `custom-${Date.now()}`, name: allergy, selected: true },
-			],
+				],
+			otherAllergy: allergy,
 		})),
 	
 	setOtherAllergy: (text) => set({ otherAllergy: text }),
 	
 	setMealTimes: (mealTimes) => {
+		// Always generate new default timings when meal times changes
 		const defaultTimings = getDefaultMealTimings(mealTimes);
 		return set({ mealTimes, mealTimings: defaultTimings });
 	},
@@ -281,7 +283,8 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 			medicalConditions: [
 				...state.medicalConditions,
 				{ id: `custom-${Date.now()}`, name: condition, selected: true },
-			],
+				],
+			otherMedicalCondition: condition,
 		})),
 	
 	setOtherMedicalCondition: (text) => set({ otherMedicalCondition: text }),

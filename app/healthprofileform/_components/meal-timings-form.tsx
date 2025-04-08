@@ -3,11 +3,19 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
+import { useEffect } from "react";
 import { useHealthProfileStore } from "../_store/health-profile-store";
 
 export default function MealTimingsForm() {
-  const { mealTimings, updateMealTime, nextStep, prevStep } =
+  const { mealTimes, mealTimings, updateMealTime, nextStep, prevStep, setMealTimes } =
     useHealthProfileStore();
+
+  // Ensure meal timings are populated even if somehow they're empty
+  useEffect(() => {
+    if (mealTimes && (!mealTimings || mealTimings.length === 0)) {
+      setMealTimes(mealTimes);
+    }
+  }, [mealTimes, mealTimings, setMealTimes]);
 
   const handleTimeChange = (index: number, time: string) => {
     updateMealTime(index, time);

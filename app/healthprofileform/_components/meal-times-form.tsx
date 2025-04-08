@@ -18,8 +18,15 @@ export default function MealTimesForm() {
 	const { mealTimes, setMealTimes, nextStep, prevStep } =
 		useHealthProfileStore();
 
+	const handleMealTimesChange = (count: MealTimes) => {
+		// Force recreate meal timings when changing meal count
+		setMealTimes(count);
+	};
+
 	const handleSubmit = () => {
-		nextStep();
+		if (mealTimes) {
+			nextStep();
+		}
 	};
 
 	return (
@@ -35,7 +42,7 @@ export default function MealTimesForm() {
 						<button
 							type="button"
 							key={option.value}
-							onClick={() => setMealTimes(option.value)}
+							onClick={() => handleMealTimesChange(option.value)}
 							className={cn(
 								'w-full p-4 rounded-lg border flex items-center justify-between',
 								mealTimes === option.value

@@ -22,21 +22,34 @@ export default function MedicalConditionsForm({
 		otherMedicalCondition,
 		toggleMedicalCondition,
 		setOtherMedicalCondition,
+		addMedicalCondition,
 		prevStep,
-		// nextStep,
 	} = useHealthProfileStore();
 
 	const [newCondition, setNewCondition] = useState('');
 
 	const handleAddCondition = () => {
 		if (newCondition.trim()) {
-			// Instead of directly adding, set to "other" field
-			setOtherMedicalCondition(newCondition.trim());
+			// Add a new medical condition instead of just setting the "other" field
+			addMedicalCondition(newCondition.trim());
 			setNewCondition('');
 		}
 	};
 
 	const handleSubmit = async () => {
+		// If "None" is selected, make sure it's the only one
+		if (medicalConditions.find(c => c.id === '9' && c.selected)) {
+			for (const c of medicalConditions) {
+				if (c.id !== '9' && c.selected) {
+					toggleMedicalCondition(c.id); // Unselect any other conditions
+				}
+			}
+		}
+		// If nothing is selected, select "None" by default
+		else if (!medicalConditions.some(condition => condition.selected) && !otherMedicalCondition) {
+			toggleMedicalCondition('9'); // Select "None"
+		}
+		
 		await onSubmit();
 	};
 

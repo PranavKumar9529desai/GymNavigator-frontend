@@ -3,7 +3,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { gymTheme } from "@/styles/theme";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { submitHealthProfile } from "./_actions/use-health-profile-mutation";
 import { useHealthProfileStore } from "./_store/health-profile-store";
 import type { HealthMetrics } from "./calculate-health-data/health-data-types";
@@ -61,19 +61,26 @@ export default function HealthProfileFormPage() {
     null
   );
   const { toast } = useToast();
+  const router = useRouter();
 
   // Determine whether the user is non-vegetarian
   const isNonVegetarian = dietaryPreference === "non-vegetarian";
 
-  // Remove auto-advance effect for veg flows
   useEffect(() => {
     return () => resetForm();
-  }, [resetForm]);
+  }, [resetForm, handleFormSubmit, handleNextStep]);
 
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const result = await submitHealthProfile(formState);
+      // Retrieve current state directly from the store
+      const currentState = useHealthProfileStore.getState();
+      // Use the current state as-is without forcing default meal timings
+      const result = await submitHealthProfile({
+        ...currentState,
+        dietaryPreference,
+      });
+
       if (result.success) {
         if (result.healthMetrics) {
           setHealthMetrics(result.healthMetrics);

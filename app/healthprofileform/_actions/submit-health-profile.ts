@@ -6,11 +6,16 @@ import {
   HealthProfileState,
 } from "../_store/health-profile-store";
 import type { HealthMetrics } from "../calculate-health-data/health-data-types";
-
 // Define a type that matches what we need for the API request
+
+export interface HealthProfileFormDataSubmissionType {
+  // Renamed property to match backend type
+  healthProfileFormData: HealthProfileApiRequest;
+  healthMetrics: HealthMetrics;
+}
+
 export interface HealthProfileApiRequest {
-  fullname: string;
-  contact: string;
+
   gender: string;
   age: number;
   activityLevel: ActivityLevel; // Use the ActivityLevel type for consistency
@@ -30,7 +35,6 @@ export interface HealthProfileApiRequest {
   religiousPreference: string | null;
   otherReligiousPreference?: string;
   dietaryRestrictions?: string[];
-  healthMetrics: HealthMetrics; // New property: include the pre-calculated health metrics
 }
 
 export interface HealthProfileResponse {
@@ -41,14 +45,14 @@ export interface HealthProfileResponse {
 }
 
 export const submitHealthProfileToApi = async (
-  profileData: HealthProfileApiRequest
+  healthProfileFormDataSubmissionType: HealthProfileFormDataSubmissionType
 ): Promise<HealthProfileResponse> => {
   try {
     const clientAxios = await ClientReqConfig();
-    console.log("Sending profileData: ", profileData);
+    // console.log("Sending profileData: ", profileData);
     const response = await clientAxios.post<HealthProfileResponse>(
       "/profile/healthprofileform",
-      profileData
+      healthProfileFormDataSubmissionType
     );
 
     return response.data;

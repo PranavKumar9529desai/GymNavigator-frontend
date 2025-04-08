@@ -121,3 +121,5 @@ Okay, here is a step-by-step breakdown of the formulas based on the provided flo
 *   **Fat:** 58 g
 
 You can now plug in any user's inputs into these steps to calculate their estimated needs. Remember these are estimates, and individual results may vary. Adjustments might be needed based on progress and individual response.
+
+

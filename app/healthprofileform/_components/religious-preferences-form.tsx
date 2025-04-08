@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, Heart, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	type ReligiousPreference,
 	useHealthProfileStore,
@@ -36,6 +36,13 @@ export default function ReligiousPreferencesForm({
 
 	const [newRestriction, setNewRestriction] = useState('');
 
+	// Set default value for religiousPreference if not already set
+	useEffect(() => {
+		if (!religiousPreference) {
+			setReligiousPreference('none');
+		}
+	}, [religiousPreference, setReligiousPreference]);
+
 	const handleAddRestriction = () => {
 		if (newRestriction.trim()) {
 			addDietaryRestriction(newRestriction.trim());
@@ -50,6 +57,14 @@ export default function ReligiousPreferencesForm({
 		if (value !== 'other') {
 			setOtherReligiousPreference('');
 		}
+	};
+
+	const handleSubmit = async () => {
+		// Make sure religiousPreference is not null
+		if (!religiousPreference) {
+			setReligiousPreference('none');
+		}
+		await onSubmit();
 	};
 
 	return (
@@ -73,7 +88,7 @@ export default function ReligiousPreferencesForm({
 
 						<RadioGroup
 							id="religious-preferences"
-							value={religiousPreference || ''}
+							value={religiousPreference || 'none'}
 							onValueChange={handlePreferenceChange}
 							className="space-y-3"
 						>
@@ -160,7 +175,7 @@ export default function ReligiousPreferencesForm({
 
 			<div className="mt-8 flex flex-col gap-3">
 				<Button
-					onClick={onSubmit}
+					onClick={handleSubmit}
 					disabled={isSubmitting}
 					className={cn(
 						'w-full py-6 flex items-center justify-center gap-2 text-base',

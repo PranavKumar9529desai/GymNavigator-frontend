@@ -10,11 +10,24 @@ export default function NonVegDaysForm() {
 	const { nonVegDays, toggleNonVegDay, nextStep, prevStep } =
 		useHealthProfileStore();
 
-	const handleSubmit = () => {
-		nextStep();
+	// Check if at least one day is selected
+	const anyDaySelected = nonVegDays.some((day) => day.selected);
+
+	const handleToggleDay = (day: string) => {
+		toggleNonVegDay(day);
 	};
 
-	const _anyDaySelected = nonVegDays.some((day) => day.selected);
+	const handleSubmit = () => {
+		// If no days are selected, select all days as a default
+		if (!anyDaySelected) {
+			nonVegDays.forEach(day => {
+				if (!day.selected) {
+					toggleNonVegDay(day.day);
+				}
+			});
+		}
+		nextStep();
+	};
 
 	return (
 		<div className="flex flex-col min-h-[60vh] justify-between">
@@ -32,7 +45,7 @@ export default function NonVegDaysForm() {
 							<Checkbox
 								id={`day-${day.day}`}
 								checked={day.selected}
-								onCheckedChange={() => toggleNonVegDay(day.day)}
+								onCheckedChange={() => handleToggleDay(day.day)}
 								className="border-gray-300 text-blue-600 focus:ring-blue-500"
 							/>
 							<label
@@ -43,6 +56,29 @@ export default function NonVegDaysForm() {
 							</label>
 						</div>
 					))}
+
+					{/* Add a "Select All" option */}
+					<div className="pt-3 border-t border-gray-200">
+						<Button
+							variant="outline"
+							type="button"
+							onClick={() => nonVegDays.forEach(day => {
+								if (!day.selected) toggleNonVegDay(day.day);
+							})}
+							className="mr-2"
+						>
+							Select All
+						</Button>
+						<Button
+							variant="outline"
+							type="button"
+							onClick={() => nonVegDays.forEach(day => {
+								if (day.selected) toggleNonVegDay(day.day);
+							})}
+						>
+							Clear All
+						</Button>
+					</div>
 				</div>
 			</div>
 
