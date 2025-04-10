@@ -68,9 +68,9 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
   ];
 
   const renderCustomizedLabel = (props: CustomPieLabelProps) => {
-    const { cx, cy, midAngle, innerRadius, outerRadius, index } = props;
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent, index } = props;
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const radius = outerRadius * 1.2;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
   
@@ -80,10 +80,11 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
       <text 
         x={x} 
         y={y} 
-        fill="white" 
+        fill={macroData[index].color}
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={12}
+        fontWeight="bold"
       >
         {`${macroData[index].name} ${macroData[index].value}%`}
       </text>
@@ -103,57 +104,35 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 
   return (
     <div className="border-b border-gray-100 pb-4">
-      <div className="py-2 border-l-4 border-indigo-500 pl-3">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-500">{formattedDate}</span>
-          <span className="text-xs font-semibold text-gray-700">{totalCalories} / {dietPlan.targetCalories} cal</span>
-        </div>
-        {dietPlan.description && (
-          <p className="mt-1 max-w-full text-xs text-gray-500">{dietPlan.description}</p>
-        )}
-      </div>
+     
       
       <div className="mt-4">
-        {/* Calorie Progress Chart */}
-        <div className="mb-4">
-          <span className="text-xs font-medium text-gray-700 mb-2 block">Daily Target</span>
-          
-          <div className="h-16">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={calorieData}
-                layout="vertical"
-                margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
-              >
-                <XAxis type="number" hide />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="calories" barSize={20} radius={[4, 4, 4, 4]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        
         
         {/* Macro Distribution Chart */}
         <div className="mb-4">
           <span className="text-xs font-medium text-gray-700 mb-2 block">Macro Distribution</span>
           
-          <div className="h-36">
+          <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
                 <Pie
                   data={macroData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
+                  labelLine={true}
                   label={renderCustomizedLabel}
-                  outerRadius={60}
+                  outerRadius={70}
+                  innerRadius={30}
                   fill="#8884d8"
                   dataKey="value"
+                  paddingAngle={2}
                 >
                   {macroData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
+                <Tooltip content={<CustomTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </div>
