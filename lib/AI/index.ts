@@ -1,6 +1,7 @@
 // Export all AI functionality
 export * from './client';
 export * from './schema-validation';
+export * from './grocery-list';
 
 // Export types
 export * from './types/workout-types';
