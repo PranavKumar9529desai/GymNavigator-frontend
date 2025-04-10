@@ -1,6 +1,9 @@
 import type { DietPlan } from "@/app/dashboard/trainer/diet/assigndietplan/_actions /GetallDiets";
 import type { AssignedUser } from "@/app/dashboard/trainer/workouts/assignworkout/GetuserassignedTotrainers";
-import type { HealthProfile, Selection } from "@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai2/_actions/get-healthprofile-by-id";
+import type {
+  HealthProfile,
+  Selection,
+} from "@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai2/_actions/get-healthprofile-by-id";
 
 /**
  * Generate a diet plan for a user based on their profile and trainer preferences
@@ -147,6 +150,7 @@ IMPORTANT:
 4. Ensure macronutrient percentages match the specified targets.
 5. Include practical, easy-to-prepare meals that are realistic for daily consumption.
 6. Consider the client's dietary restrictions.
+7. IMPORTANT: Use descriptive meal names that clearly indicate the actual dish.
 `;
 }
 
@@ -173,48 +177,119 @@ export function generateDietPrompt(params: DietGenerationParams): string {
   } = params;
 
   // Helper function to safely format selection arrays or strings
-  const formatSelections = (items: Selection[] | string | undefined): string => {
-    if (!items) return 'None';
-    
+  const formatSelections = (
+    items: Selection[] | string | undefined
+  ): string => {
+    if (!items) return "None";
+
     if (Array.isArray(items)) {
-      return items.map(item => item.name).join(', ') || 'None';
+      return items.map((item) => item.name).join(", ") || "None";
     }
-    
-    if (typeof items === 'string') {
+
+    if (typeof items === "string") {
       try {
         const parsed = JSON.parse(items) as Selection[];
-        return parsed.map(item => item.name).join(', ') || 'None';
+        return parsed.map((item) => item.name).join(", ") || "None";
       } catch {
-        return items || 'None';
+        return items || "None";
       }
     }
-    
-    return 'None';
+
+    return "None";
   };
+
+  // Parse non-veg days from health profile for dietary guidance
+  const parseNonVegDays = (): string => {
+    if (!healthProfile.nonVegDays) return "";
+
+    try {
+      if (typeof healthProfile.nonVegDays === "string") {
+        const parsed = JSON.parse(healthProfile.nonVegDays) as {
+          day: string;
+          selected: boolean;
+        }[];
+        const selectedDays = parsed
+          .filter((day) => day.selected)
+          .map((day) => day.day);
+        if (selectedDays.length > 0) {
+          return `- Non-Vegetarian Days: ${selectedDays.join(", ")}`;
+        }
+      } else if (Array.isArray(healthProfile.nonVegDays)) {
+        const selectedDays = healthProfile.nonVegDays
+          .filter((day) => day.selected)
+          .map((day) => day.day);
+        if (selectedDays.length > 0) {
+          return `- Non-Vegetarian Days: ${selectedDays.join(", ")}`;
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing nonVegDays:", error);
+    }
+    return "";
+  };
+
+  // Extract exact meal count and timings from health profile
+  const getMealTimingInstructions = (): string => {
+    let instructions = "";
+    if (healthProfile.mealTimes) {
+      instructions += `- Number of Meals Per Day: ${healthProfile.mealTimes}`;
+    }
+    if (healthProfile.mealTimings) {
+      instructions += `\n- Exact Meal Timings: ${healthProfile.mealTimings}`;
+    }
+    return instructions;
+  };
+
+  const nonVegDaysInfo = parseNonVegDays();
+  const mealTimingInstructions = getMealTimingInstructions();
+  const isVegetarian =
+    healthProfile.dietaryPreference?.toLowerCase().includes("vegetarian") ||
+    false;
 
   return `
 Create a personalized diet plan for a client with the following complete health profile:
 
 Basic Information:
-- Gender: ${healthProfile.gender || 'Unknown'}
-- Age: ${healthProfile.age || 'Unknown'}
-- Weight: ${healthProfile.weightValue || 'Unknown'} ${healthProfile.weightUnit || 'kg'}
-- Height: ${healthProfile.heightValue || 'Unknown'} ${healthProfile.heightUnit || 'cm'}
-- Activity Level: ${healthProfile.activityLevel || 'Moderate'}
-- Primary Goal: ${healthProfile.goal || 'General fitness'}
+- Gender: ${healthProfile.gender || "Unknown"}
+- Age: ${healthProfile.age || "Unknown"}
+- Weight: ${healthProfile.weightValue || "Unknown"} ${
+    healthProfile.weightUnit || "kg"
+  }
+- Height: ${healthProfile.heightValue || "Unknown"} ${
+    healthProfile.heightUnit || "cm"
+  }
+- Activity Level: ${healthProfile.activityLevel || "Moderate"}
+- Primary Goal: ${healthProfile.goal || "General fitness"}
+- BMI: ${healthProfile.bmi || "Not provided"} 
+- BMR: ${healthProfile.bmr || "Not provided"} calories/day
+- TDEE: ${healthProfile.tdee || "Not provided"} calories/day
 
 Dietary Preferences:
-- Dietary Preference: ${healthProfile.dietaryPreference || 'No specific preference'}
-- Religious Considerations: ${healthProfile.religiousPreference || 'None'}
-- Meal Times: ${healthProfile.mealTimes || 'Regular'}
-- Typical Meal Timings: ${healthProfile.mealTimings || 'Not specified'}
-${healthProfile.otherDietaryPreference ? `- Other Dietary Preference: ${healthProfile.otherDietaryPreference}` : ''}
+- Dietary Preference: ${
+    healthProfile.dietaryPreference || "No specific preference"
+  }
+- Religious Considerations: ${healthProfile.religiousPreference || "None"}
+${mealTimingInstructions}
+${nonVegDaysInfo}
+${
+  healthProfile.otherDietaryPreference
+    ? `- Other Dietary Preference: ${healthProfile.otherDietaryPreference}`
+    : ""
+}
 
 Health Considerations:
 - Medical Conditions: ${formatSelections(healthProfile.medicalConditions)}
-${healthProfile.otherMedicalCondition ? `- Other Medical Condition: ${healthProfile.otherMedicalCondition}` : ''}
+${
+  healthProfile.otherMedicalCondition
+    ? `- Other Medical Condition: ${healthProfile.otherMedicalCondition}`
+    : ""
+}
 - Allergies: ${formatSelections(healthProfile.allergies)}
-${healthProfile.otherAllergy ? `- Other Allergy: ${healthProfile.otherAllergy}` : ''}
+${
+  healthProfile.otherAllergy
+    ? `- Other Allergy: ${healthProfile.otherAllergy}`
+    : ""
+}
 - Dietary Restrictions: ${formatSelections(healthProfile.dietaryRestrictions)}
 
 Location & Cultural Context:
@@ -223,7 +298,12 @@ Location & Cultural Context:
 - Location: ${location}
 - Special Instructions: ${specialInstructions}
 
-Caloric Target: ${targetCalories || `Calculate based on profile (BMR: ${healthProfile.bmr || 'Unknown'}, TDEE: ${healthProfile.tdee || 'Unknown'})`}
+Caloric Target: ${
+    targetCalories ||
+    `Calculate based on profile (BMR: ${
+      healthProfile.bmr || "Calculate based on profile"
+    }, TDEE: ${healthProfile.tdee || "Calculate based on profile"})`
+  }
 
 Generate a complete diet plan in JSON format that strictly follows this structure:
 {
@@ -250,55 +330,33 @@ Generate a complete diet plan in JSON format that strictly follows this structur
 Requirements:
 1. Account for ALL dietary restrictions and health considerations
 2. Use culturally appropriate foods for ${state}, ${country}
-3. Match ${healthProfile.activityLevel || 'moderate'} activity level needs
-4. Align with ${healthProfile.dietaryPreference || 'balanced'} preferences
-5. ${targetCalories ? `Strictly adhere to ${targetCalories} daily calories` : 'Calculate appropriate calorie intake based on the user profile'}
+3. Match ${healthProfile.activityLevel || "moderate"} activity level needs
+4. Align with ${healthProfile.dietaryPreference || "balanced"} preferences
+5. ${
+    targetCalories
+      ? `Strictly adhere to ${targetCalories} daily calories`
+      : healthProfile.tdee
+      ? `Use the TDEE value of ${healthProfile.tdee} calories as a starting point, adjusting based on the client's goal`
+      : healthProfile.bmr
+      ? `Calculate calories based on BMR (${healthProfile.bmr}) and activity level`
+      : "Calculate appropriate calorie intake based on the user profile"
+  }
 6. Ensure macronutrient ratios sum to 1 exactly (proteinRatio + carbsRatio + fatsRatio = 1)
 7. Include practical meal preparation instructions
+8. IMPORTANT: Create ${
+    healthProfile.mealTimes || "3-5"
+  } meals per day, following the exact meal times specified: ${
+    healthProfile.mealTimings || "regular meal times"
+  }
+9. ${
+    isVegetarian
+      ? "Create a completely vegetarian meal plan"
+      : nonVegDaysInfo
+      ? "IMPORTANT: Only include non-vegetarian dishes on the specified non-vegetarian days. All other days must be strictly vegetarian."
+      : "Balance vegetarian and non-vegetarian options appropriately"
+  }
+10. IMPORTANT: Use descriptive meal names that clearly indicate the actual dish (like "Besan Chilla with Spinach and Tomato" or "Rajma Masala with Brown Rice") instead of generic labels like "Breakfast" or "Lunch"
 
 Respond ONLY with valid JSON. No additional text or explanations.
-`;
-}
-
-/**
- * Generate feedback-based improvements to a diet plan
- */
-export function buildDietFeedbackPrompt(
-  originalPlan: DietPlan,
-  feedback: string
-): string {
-  return `
-I previously generated this diet plan:
-${JSON.stringify(originalPlan, null, 2)}
-
-The trainer provided this feedback:
-"${feedback}"
-
-Please adjust the diet plan to address this feedback. Maintain the same JSON structure as the original plan:
-{
-  "name": "Plan name",
-  "description": "Plan description",
-  "targetCalories": number,
-  "proteinRatio": number,
-  "carbsRatio": number,
-  "fatsRatio": number,
-  "meals": [
-    {
-      "id": number,
-      "name": "Meal name",
-      "timeOfDay": "Time of day",
-      "calories": number,
-      "protein": number,
-      "carbs": number,
-      "fats": number,
-      "instructions": "Instructions"
-    }
-  ]
-}
-
-IMPORTANT:
-1. Respond ONLY with the updated JSON. No explanation needed.
-2. Keep the same structure but modify the content based on feedback.
-3. Ensure all fields from the original plan remain in the response.
 `;
 }

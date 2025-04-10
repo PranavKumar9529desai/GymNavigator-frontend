@@ -3,7 +3,7 @@ import { z } from 'zod';
 // Zod schemas for diet plan validation
 export const MealSchema = z.object({
 	id: z.number(),
-	name: z.string().min(1, 'Meal name is required'),
+	name: z.string().min(5, 'Meal name should be descriptive of the actual dish, not just "Breakfast" or "Lunch"'),
 	timeOfDay: z.string().min(1, 'Time of day is required'),
 	calories: z.number().min(1, 'Calories must be provided'),
 	protein: z.number().min(0, 'Protein must be non-negative'),
@@ -51,6 +51,7 @@ export function validateDietPlan(data: unknown) {
 				meals?: Array<{
 					name?: string;
 					timeOfDay?: string;
+					instructions?: string;
 					[key: string]: unknown;
 				}>;
 				proteinRatio?: number;
@@ -66,6 +67,31 @@ export function validateDietPlan(data: unknown) {
 				typedData.meals = typedData.meals.map((meal) => {
 					if (meal?.name) {
 						meal.name = meal.name.trim();
+                        
+						// Check if the meal name is generic and try to make it more descriptive
+						const genericNames = [
+                            'breakfast', 'lunch', 'dinner', 'snack', 'brunch', 
+                            'morning meal', 'afternoon meal', 'evening meal', 
+                            'morning snack', 'afternoon snack', 'evening snack',
+                            'meal 1', 'meal 2', 'meal 3', 'meal 4', 'meal 5'
+                        ];
+                        
+						if (genericNames.some(generic => 
+                            meal.name?.toLowerCase().includes(generic) && meal.name?.trim().length < 15
+                        )) {
+							// If the name is generic, try to extract a more descriptive name from the instructions
+							if (meal.instructions && typeof meal.instructions === 'string') {
+								// Look for food items in the instructions
+								const foodItems = meal.instructions.match(/prepare|have|enjoy|make|cook|eat|with\s+([^.,:;]+)/i);
+								if (foodItems && foodItems[0]) {
+									// Extract a reasonable length description
+									const description = foodItems[0].substring(0, 40).trim();
+									if (description.length > 10) {
+										meal.name = meal.name.trim() + ': ' + description;
+									}
+								}
+							}
+						}
 					}
 					if (meal?.timeOfDay) {
 						meal.timeOfDay = meal.timeOfDay.trim();

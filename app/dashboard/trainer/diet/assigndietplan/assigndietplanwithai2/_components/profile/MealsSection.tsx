@@ -56,6 +56,24 @@ export function MealsSection({ profile }: MealsSectionProps) {
 			: undefined;
 	};
 
+	// Helper to display meal name appropriately (handles both generic and descriptive names)
+	const displayMealName = (meal: MealTime, index: number): { mainTitle: string; subtitle?: string } => {
+		// If it's a descriptive name with a colon, split it
+		if (meal.name.includes(":")) {
+			const [mainTitle, subtitle] = meal.name.split(":", 2);
+			return { mainTitle: mainTitle.trim(), subtitle: subtitle.trim() };
+		}
+		
+		// If it's a basic meal type with no description
+		const basicMealTypes = ["Breakfast", "Lunch", "Dinner", "Snack"];
+		if (basicMealTypes.includes(meal.name)) {
+			return { mainTitle: meal.name };
+		}
+		
+		// For any other case
+		return { mainTitle: meal.name };
+	};
+
 	return (
 		<div className="p-4 border-b border-blue-100">
 			<h3 className="font-semibold text-blue-800 mb-3 flex items-center">
@@ -77,20 +95,26 @@ export function MealsSection({ profile }: MealsSectionProps) {
 			</h3>
 
 			<ul className="space-y-2">
-				{mealsToShow.map((meal: MealTime, index: number) => (
-					<li
-						key={index}
-						className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"
-					>
-						<span className="w-9 h-9 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mr-3 font-medium">
-							{index + 1}
-						</span>
-						<div>
-							<span className="font-medium text-blue-700">{meal.name}</span>
-							<span className="text-xs text-gray-500 ml-2">~ {meal.time}</span>
-						</div>
-					</li>
-				))}
+				{mealsToShow.map((meal: MealTime, index: number) => {
+					const { mainTitle, subtitle } = displayMealName(meal, index);
+					return (
+						<li
+							key={index}
+							className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"
+						>
+							<span className="w-9 h-9 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mr-3 font-medium">
+								{index + 1}
+							</span>
+							<div className="flex-1">
+								<span className="font-medium text-blue-700">{mainTitle}</span>
+								<span className="text-xs text-gray-500 ml-2">~ {meal.time}</span>
+								{subtitle && (
+									<p className="text-sm text-gray-600 mt-1">{subtitle}</p>
+								)}
+							</div>
+						</li>
+					);
+				})}
 			</ul>
 
 			{getNumberOfMeals(profile) && (

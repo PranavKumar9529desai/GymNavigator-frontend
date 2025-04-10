@@ -73,13 +73,14 @@ export async function generateDietWithAI(
         healthProfile,
         location,
         country,
-        specialInstructions: `This is a diet plan for ${day}. Consider typical ${day} activities and meal timing preferences.`
+        specialInstructions: `This is a diet plan for ${day}. Consider typical ${day} activities and meal timing preferences.`,
+        state: ""
       });
       
       // Call the AI API to generate the diet plan
       const response = await trainerAxios.post("/ai/generate", {
         prompt,
-        max_tokens: 2000,
+        max_tokens: 200000,
         temperature: 0.7,
       });
       

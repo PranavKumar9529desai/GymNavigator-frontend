@@ -1,11 +1,14 @@
 // src/app/diet-page/components/DietPlanner/DietDisplay.tsx
 import { type Meal, MealCard } from "../DietDisplay/MealCard"; // Adjust path if needed
+import { Button } from "@/components/ui/button";
 
 interface DietDisplayProps {
   dietPlan: Meal[]; // Expects an array of meal objects
+  onAssignDiet?: () => void;
+  isGeneratedDiet?: boolean;
 }
 
-export function DietDisplay({ dietPlan }: DietDisplayProps) {
+export function DietDisplay({ dietPlan, onAssignDiet, isGeneratedDiet = false }: DietDisplayProps) {
   if (!dietPlan || dietPlan.length === 0) {
     return null; // Don't render anything if there's no diet plan
   }
@@ -47,9 +50,24 @@ export function DietDisplay({ dietPlan }: DietDisplayProps) {
         </div>
       </div>
 
+      {isGeneratedDiet && onAssignDiet && (
+        <div className="mb-4">
+          <Button 
+            onClick={onAssignDiet}
+            className="w-full bg-green-600 hover:bg-green-700 text-white"
+          >
+            Assign Complete Weekly Diet Plan
+          </Button>
+        </div>
+      )}
+
       <div className="space-y-4">
         {dietPlan.map((meal) => (
-          <MealCard key={meal.id} meal={meal} />
+          <MealCard 
+            key={meal.id} 
+            meal={meal} 
+            isPartOfGeneratedPlan={false} // We'll use the global assign button instead
+          />
         ))}
       </div>
     </div>

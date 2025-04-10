@@ -1,6 +1,7 @@
 // src/app/diet-page/components/DietPlanner/DietDisplay/MealCard.tsx
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Utensils, Clock, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Define a type for the meal data (consider putting this in types.ts)
 export interface Meal {
@@ -16,9 +17,11 @@ export interface Meal {
 
 interface MealCardProps {
     meal: Meal;
+    isPartOfGeneratedPlan?: boolean;
+    onAssign?: () => void;
 }
 
-export function MealCard({ meal }: MealCardProps) {
+export function MealCard({ meal, isPartOfGeneratedPlan = false, onAssign }: MealCardProps) {
     // Extract percentage values from macros for progress bars
     const getPercentage = (macroStr: string): number => {
         const match = macroStr.match(/\((\d+)%\)/);
@@ -106,6 +109,17 @@ export function MealCard({ meal }: MealCardProps) {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                )}
+
+                {isPartOfGeneratedPlan && onAssign && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                        <Button 
+                            onClick={onAssign}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        >
+                            Assign Diet Plan
+                        </Button>
                     </div>
                 )}
             </CardContent>
