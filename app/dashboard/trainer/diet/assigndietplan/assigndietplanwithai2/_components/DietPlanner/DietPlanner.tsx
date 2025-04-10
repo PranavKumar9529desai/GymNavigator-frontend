@@ -49,7 +49,7 @@ export function DietPlanner() {
         setActiveDay(day);
     };
     
-    const handleGenerateDiet = async () => {
+    const handleGenerateDiet = async (location: { country: string; state: string }) => {
         toast.info("Generating diet plans for the week...");
         
         startTransition(async () => {
@@ -57,7 +57,8 @@ export function DietPlanner() {
                 // Generate diet plans for all days of the week directly using server action
                 const result = await generateDietWithAI2(
                     userId,
-                    ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                    ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                    location
                 );
                 
                 if (!result.success || !result.data) {
@@ -115,7 +116,11 @@ export function DietPlanner() {
                         </svg>
                     </div>
                     <p className="text-gray-600 mb-4">No diet plan available for {activeDay}.</p>
-                    <Button onClick={handleGenerateDiet} variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+                    <Button 
+                        onClick={() => handleGenerateDiet({ country: "", state: "" })} 
+                        variant="outline" 
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                    >
                         Generate diet plan
                     </Button>
                 </div>

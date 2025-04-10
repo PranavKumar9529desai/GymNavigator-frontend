@@ -34,12 +34,21 @@ export interface DietPlan {
 }
 
 /**
+ * Location information for diet generation
+ */
+export interface LocationInfo {
+  country: string;
+  state: string;
+}
+
+/**
  * Parameters needed for diet generation
  */
 export interface DietGenerationParams {
   healthProfile: HealthProfile;
   location: string;
   country: string;
+  state: string;
   targetCalories?: number;
   specialInstructions?: string;
 }
@@ -93,7 +102,8 @@ function validateDietPlanResponse(response: string) {
 export async function generateAIDiet(
 	userId: string,
   targetCalories?: number,
-  specialInstructions?: string
+  specialInstructions?: string,
+  locationInfo?: LocationInfo
 ): Promise<DietPlan> {
 	try {
 		// Get the health profile
@@ -105,16 +115,17 @@ export async function generateAIDiet(
     
     const healthProfile = healthProfileResult.data;
     
-    // Get trainer's location (this could be enhanced with actual data)
-    const trainerAxios = await TrainerReqConfig();
-    const location = "Your location";
-    const country = "Your country";
+    // Get location information
+    const location = locationInfo?.state ? `${locationInfo.state}, ${locationInfo.country}` : "Not specified";
+    const country = locationInfo?.country || "Not specified";
+    const state = locationInfo?.state || "";
 
 		// Prepare generation parameters
 		const generationParams: DietGenerationParams = {
       healthProfile,
       location,
       country,
+      state,
       targetCalories,
       specialInstructions
     };

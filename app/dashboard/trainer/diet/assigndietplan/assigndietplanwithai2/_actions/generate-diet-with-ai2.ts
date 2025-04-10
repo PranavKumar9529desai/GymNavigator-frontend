@@ -6,13 +6,19 @@ interface DietPlansByDay {
   [day: string]: DietPlan;
 }
 
+interface LocationInfo {
+  country: string;
+  state: string;
+}
+
 /**
  * Generates diet plans for multiple days of the week
  * Uses the AI-powered diet generator
  */
 export async function generateDietWithAI2(
   userId: string,
-  days?: string[]
+  days?: string[],
+  location?: LocationInfo
 ): Promise<{ success: boolean; data?: DietPlansByDay; error?: string }> {
   try {
     // If no specific days provided, generate for all days of the week
@@ -35,7 +41,8 @@ export async function generateDietWithAI2(
         const dietPlan = await generateAIDiet(
           userId,
           undefined, // Let AI calculate target calories based on profile
-          `This is a diet plan for ${day}. Consider typical ${day} activities and meal timing preferences.`
+          `This is a diet plan for ${day}. Consider typical ${day} activities and meal timing preferences.`,
+          location
         );
         
         // Add day identification to the diet plan

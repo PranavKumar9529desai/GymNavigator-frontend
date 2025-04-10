@@ -154,6 +154,7 @@ interface DietGenerationParams {
   healthProfile: HealthProfile;
   location: string;
   country: string;
+  state: string;
   targetCalories?: number;
   specialInstructions?: string;
 }
@@ -166,6 +167,7 @@ export function generateDietPrompt(params: DietGenerationParams): string {
     healthProfile,
     location,
     country,
+    state,
     targetCalories,
     specialInstructions = "",
   } = params;
@@ -216,7 +218,9 @@ ${healthProfile.otherAllergy ? `- Other Allergy: ${healthProfile.otherAllergy}` 
 - Dietary Restrictions: ${formatSelections(healthProfile.dietaryRestrictions)}
 
 Location & Cultural Context:
-- Location: ${location}, ${country}
+- Country: ${country}
+- State/Region: ${state}
+- Location: ${location}
 - Special Instructions: ${specialInstructions}
 
 Caloric Target: ${targetCalories || `Calculate based on profile (BMR: ${healthProfile.bmr || 'Unknown'}, TDEE: ${healthProfile.tdee || 'Unknown'})`}
@@ -245,7 +249,7 @@ Generate a complete diet plan in JSON format that strictly follows this structur
 
 Requirements:
 1. Account for ALL dietary restrictions and health considerations
-2. Use culturally appropriate foods for ${location}, ${country}
+2. Use culturally appropriate foods for ${state}, ${country}
 3. Match ${healthProfile.activityLevel || 'moderate'} activity level needs
 4. Align with ${healthProfile.dietaryPreference || 'balanced'} preferences
 5. ${targetCalories ? `Strictly adhere to ${targetCalories} daily calories` : 'Calculate appropriate calorie intake based on the user profile'}

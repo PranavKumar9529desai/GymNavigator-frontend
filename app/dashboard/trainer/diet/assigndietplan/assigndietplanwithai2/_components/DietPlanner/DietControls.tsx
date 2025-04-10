@@ -5,12 +5,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronDownIcon, SparklesIcon } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, SparklesIcon, MapPinIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface DietControlsProps {
-  onGenerate: () => void;
+  onGenerate: (location: { country: string; state: string }) => void;
   activeDay?: string;
   onDayChange?: (day: string) => void;
 }
@@ -27,6 +29,8 @@ export const DietControls: React.FC<DietControlsProps> = ({
     startDate.getDate()
   );
   const [selectedEndDate, setSelectedEndDate] = useState<Date>(defaultEndDate);
+  const [country, setCountry] = useState<string>("");
+  const [state, setState] = useState<string>("");
   const days = [
     "Monday",
     "Tuesday",
@@ -73,6 +77,10 @@ export const DietControls: React.FC<DietControlsProps> = ({
     if (onDayChange) {
       onDayChange(day);
     }
+  };
+
+  const handleGenerate = () => {
+    onGenerate({ country, state });
   };
 
   return (
@@ -128,12 +136,38 @@ export const DietControls: React.FC<DietControlsProps> = ({
 
         <button
           type="button"
-          onClick={onGenerate}
+          onClick={handleGenerate}
           className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-md shadow-sm transition flex items-center justify-center gap-2"
         >
           <SparklesIcon className="h-5 w-5" />
           Generate Diet Plan
         </button>
+      </div>
+
+      {/* Location Input Section */}
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="country" className="text-sm font-medium text-gray-700">Country</Label>
+          <div className="relative">
+            <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Input 
+              id="country"
+              placeholder="Enter country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="state" className="text-sm font-medium text-gray-700">State/Region</Label>
+          <Input 
+            id="state"
+            placeholder="Enter state or region"
+            value={state}
+            onChange={(e) => setState(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="mb-2">
