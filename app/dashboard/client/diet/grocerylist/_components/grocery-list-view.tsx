@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import type { GroceryListResponse, GroceryCategory, GroceryItem } from '@/lib/AI/prompts/grocery-list-prompts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -150,55 +148,54 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
   
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-medium">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-medium">
           {timeFrame === 'weekly' ? 'Weekly' : 'Monthly'} Grocery List
         </h2>
         <div className="flex space-x-2">
           <Button 
-            variant="outline" 
+            variant="ghost" 
             size="sm" 
-            className="flex items-center gap-1"
             onClick={copyToClipboard}
           >
-            <Clipboard className="w-4 h-4" />
-            <span className="hidden sm:inline">Copy</span>
+            <Clipboard className="w-4 h-4 mr-1 sm:mr-0" />
+            <span className="hidden sm:inline ml-1">Copy</span>
           </Button>
           <Button 
             variant="default" 
             size="sm" 
-            className="flex items-center gap-1"
             onClick={handleSaveList}
             disabled={isSaving}
           >
-            <Save className="w-4 h-4" />
-            <span className="hidden sm:inline">Save</span>
+            <Save className="w-4 h-4 mr-1 sm:mr-0" />
+            <span className="hidden sm:inline ml-1">Save</span>
           </Button>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {modifiedGroceryList.categories.map((category) => (
-          <Card key={category.id} className="shadow-sm">
-            <CardHeader className="pb-2 cursor-pointer" onClick={() => toggleCategory(category.id)}>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5 text-muted-foreground" />
-                  {category.name}
-                  <Badge variant="outline" className="ml-2">
-                    {category.items.length}
-                  </Badge>
-                </CardTitle>
-                {expandedCategories.has(category.id) ? (
-                  <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                )}
+          <div key={category.id} className="pb-2">
+            <div 
+              className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer" 
+              onClick={() => toggleCategory(category.id)}
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-primary/70" />
+                <span className="font-medium">{category.name}</span>
+                <span className="ml-1 text-xs text-muted-foreground">
+                  ({category.items.length})
+                </span>
               </div>
-            </CardHeader>
+              {expandedCategories.has(category.id) ? (
+                <ChevronUp className="w-4 h-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              )}
+            </div>
             
             {expandedCategories.has(category.id) && (
-              <CardContent>
+              <div className="pt-2 px-1">
                 <ul className="space-y-2">
                   {category.items.map((item) => {
                     const itemId = `${category.id}-${item.name}`;
@@ -208,8 +205,8 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
                       <li 
                         key={`${category.id}-${item.name}`}
                         className={cn(
-                          "flex items-center justify-between p-2 rounded-md",
-                          isPurchased ? "bg-muted/50" : "hover:bg-muted/20"
+                          "flex items-center justify-between p-2 rounded-md transition-all duration-200",
+                          isPurchased ? "bg-muted/40" : "bg-background"
                         )}
                       >
                         <div className="flex items-center gap-2">
@@ -217,15 +214,19 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
                             checked={isPurchased}
                             onCheckedChange={() => toggleItemPurchased(category.id, item.name)}
                             id={itemId}
+                            className={cn(
+                              "h-4 w-4 rounded-sm border-primary/50",
+                              isPurchased && "bg-primary border-primary"
+                            )}
                           />
                           <label 
                             htmlFor={itemId}
                             className={cn(
-                              "flex flex-col text-sm cursor-pointer",
+                              "flex flex-col cursor-pointer",
                               isPurchased && "line-through text-muted-foreground"
                             )}
                           >
-                            <span className="font-medium">{item.name}</span>
+                            <span className="text-sm font-medium">{item.name}</span>
                             {item.notes && (
                               <span className="text-xs text-muted-foreground">{item.notes}</span>
                             )}
@@ -234,8 +235,8 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
                         <div className="flex items-center gap-2">
                           <span 
                             className={cn(
-                              "text-sm font-medium",
-                              isPurchased && "text-muted-foreground"
+                              "text-xs font-medium px-2 py-1 rounded-md bg-primary/5",
+                              isPurchased && "bg-muted text-muted-foreground"
                             )}
                           >
                             {item.quantity} {item.unit}
@@ -243,38 +244,24 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0 text-red-500 hover:text-red-700"
+                            className="h-7 w-7 p-0 text-red-500/70 hover:text-red-600"
                             onClick={(e) => {
                               e.stopPropagation();
                               deleteItem(category.id, item.name);
                             }}
                           >
                             <MinusCircle className="h-4 w-4" />
-                            <span className="sr-only">Delete item</span>
+                            <span className="sr-only">Remove</span>
                           </Button>
                         </div>
                       </li>
                     );
                   })}
                 </ul>
-              </CardContent>
+              </div>
             )}
-          </Card>
+          </div>
         ))}
-      </div>
-      
-      <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
-          {purchasedItems.size} of {modifiedGroceryList.categories.reduce((acc, cat) => acc + cat.items.length, 0)} items purchased
-        </span>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => setPurchasedItems(new Set())}
-          disabled={purchasedItems.size === 0}
-        >
-          Reset
-        </Button>
       </div>
     </div>
   );

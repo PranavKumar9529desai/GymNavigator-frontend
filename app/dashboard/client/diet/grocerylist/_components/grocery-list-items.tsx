@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 type GroceryItemProps = {
 	id: string;
@@ -18,22 +20,30 @@ export function GroceryListItem({
 	onToggle,
 }: GroceryItemProps) {
 	return (
-		<div className="flex items-center justify-between p-3 border-b border-gray-200">
-			<div className="flex items-center space-x-3">
-				<input
-					type="checkbox"
+		<div className="flex items-center justify-between p-2 rounded-md bg-background hover:bg-muted/20 transition-colors">
+			<div className="flex items-center gap-2">
+				<Checkbox
 					checked={isPurchased}
-					onChange={() => onToggle(id)}
-					className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+					onCheckedChange={() => onToggle(id)}
 					id={`item-${id}`}
+					className={cn(
+						"h-4 w-4 rounded-sm border-primary/50",
+						isPurchased && "bg-primary border-primary"
+					)}
 				/>
 				<label
 					htmlFor={`item-${id}`}
-					className={`text-lg ${isPurchased ? 'line-through text-gray-500' : 'text-gray-900'}`}
+					className={cn(
+						"text-sm font-medium cursor-pointer",
+						isPurchased && "line-through text-muted-foreground"
+					)}
 				>
-					{name} ({quantity} {unit})
+					{name}
 				</label>
 			</div>
+			<span className="text-xs px-2 py-1 rounded-md bg-primary/5">
+				{quantity} {unit}
+			</span>
 		</div>
 	);
 }

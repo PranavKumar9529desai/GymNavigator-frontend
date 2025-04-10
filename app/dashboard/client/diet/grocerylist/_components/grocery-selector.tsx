@@ -10,7 +10,6 @@ import type { GroceryListResponse } from '@/lib/AI/prompts/grocery-list-prompts'
 import { cn } from '@/lib/utils';
 import { useTransition } from 'react';
 import { LoadingSpinner } from '@/components/ui/spinner';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { CalendarIcon, Clock, RefreshCcw, ShoppingCart } from 'lucide-react';
 import { format } from 'date-fns';
 import { SavedGroceryListView } from './saved-grocery-list-view';
@@ -106,9 +105,9 @@ export function GrocerySelector() {
   // Show loading state while checking for saved lists
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center p-10">
-        <LoadingSpinner className="w-10 h-10 text-primary" />
-        <p className="mt-4 text-muted-foreground">Loading your grocery lists...</p>
+      <div className="flex flex-col items-center justify-center p-6">
+        <LoadingSpinner className="w-8 h-8 text-primary" />
+        <p className="mt-3 text-sm text-muted-foreground">Loading your grocery lists...</p>
       </div>
     );
   }
@@ -116,8 +115,8 @@ export function GrocerySelector() {
   return (
     <div className="w-full">
       <Tabs defaultValue="weekly" onValueChange={handleTabChange} className="w-full">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold">Grocery List</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Grocery List</h2>
           <TabsList>
             <TabsTrigger value="weekly" disabled={isPending}>Weekly</TabsTrigger>
             <TabsTrigger value="monthly" disabled={isPending}>Monthly</TabsTrigger>
@@ -128,18 +127,18 @@ export function GrocerySelector() {
           {viewMode === 'generating' ? (
             <>
               {isPending ? (
-                <div className="flex flex-col items-center justify-center p-10">
-                  <LoadingSpinner className="w-10 h-10 text-primary" />
-                  <p className="mt-4 text-muted-foreground">
+                <div className="flex flex-col items-center justify-center p-6">
+                  <LoadingSpinner className="w-8 h-8 text-primary" />
+                  <p className="mt-3 text-sm text-muted-foreground">
                     Generating your {timeFrame} grocery list...
                   </p>
                 </div>
               ) : error ? (
-                <div className="p-6 text-center border rounded-lg bg-destructive/10 border-destructive/20">
-                  <p className="text-destructive">{error}</p>
+                <div className="p-4 text-center rounded-lg bg-destructive/10">
+                  <p className="text-destructive text-sm">{error}</p>
                   <Button 
                     variant="outline" 
-                    className="mt-4"
+                    className="mt-3"
                     onClick={() => fetchGroceryList(activeTab)}
                   >
                     Try Again
@@ -148,8 +147,8 @@ export function GrocerySelector() {
               ) : groceryList ? (
                 <GroceryListView groceryList={groceryList} timeFrame={activeTab} />
               ) : (
-                <div className="p-6 text-center border rounded-lg bg-muted">
-                  <p className="mb-4">Generate a new {activeTab} grocery list based on your diet plan</p>
+                <div className="p-4 text-center rounded-lg bg-muted/50">
+                  <p className="mb-3 text-sm">Generate a new {activeTab} grocery list based on your diet plan</p>
                   <Button 
                     onClick={() => fetchGroceryList(activeTab)}
                     className={cn(isPending && "opacity-50 cursor-not-allowed")}
@@ -163,7 +162,7 @@ export function GrocerySelector() {
                       className="ml-2"
                       onClick={() => setViewMode('saved')}
                     >
-                      View Saved List
+                      View Saved
                     </Button>
                   )}
                 </div>
@@ -172,41 +171,40 @@ export function GrocerySelector() {
           ) : (
             <>
               {savedLists[activeTab] ? (
-                <div className="space-y-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-xl">
-                          Your {activeTab === 'weekly' ? 'Weekly' : 'Monthly'} Grocery List
-                        </CardTitle>
-                        <div className="text-sm text-muted-foreground flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {format(new Date(savedLists[activeTab]!.createdAt), 'MMM d, yyyy')}
-                        </div>
+                <div className="space-y-3">
+                  <div className="bg-muted/20 p-3 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <ShoppingCart className="w-4 h-4 text-primary" />
+                        <h3 className="text-lg font-medium">
+                          {activeTab === 'weekly' ? 'Weekly' : 'Monthly'} Grocery List
+                        </h3>
                       </div>
-                    </CardHeader>
-                    <CardContent className="pt-4">
-                      <SavedGroceryListView groceryList={savedLists[activeTab]!} />
-                    </CardContent>
-                    <CardFooter className="justify-end">
+                      <div className="text-xs text-muted-foreground flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {format(new Date(savedLists[activeTab]!.createdAt), 'MMM d, yyyy')}
+                      </div>
+                    </div>
+                    <div className="mt-2">
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
-                        className="flex items-center gap-1"
+                        className="text-xs p-2 h-8"
                         onClick={() => {
                           setGroceryList(null);
                           setViewMode('generating');
                         }}
                       >
-                        <RefreshCcw className="w-4 h-4" />
-                        <span>Generate New List</span>
+                        <RefreshCcw className="w-3 h-3 mr-1" />
+                        <span>Generate New</span>
                       </Button>
-                    </CardFooter>
-                  </Card>
+                    </div>
+                  </div>
+                  <SavedGroceryListView groceryList={savedLists[activeTab]!} />
                 </div>
               ) : (
-                <div className="p-6 text-center border rounded-lg bg-muted">
-                  <p className="mb-4">You don't have a saved {activeTab} grocery list yet</p>
+                <div className="p-4 text-center rounded-lg bg-muted/50">
+                  <p className="mb-3 text-sm">You don't have a saved {activeTab} grocery list yet</p>
                   <Button 
                     onClick={() => fetchGroceryList(activeTab)}
                     className={cn(isPending && "opacity-50 cursor-not-allowed")}

@@ -2,15 +2,12 @@
 
 import { useState } from 'react';
 import type { SavedGroceryList } from '../_actions/fetch-saved-grocery-lists';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { 
   ChevronDown, 
   ChevronUp, 
-  Clipboard, 
   ShoppingCart 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -112,45 +109,45 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
     sum + cat.items.filter(item => item.isPurchased).length, 0);
   
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
+    <div className="space-y-5 px-1">
+      <div className="flex items-center justify-between mb-4">
+        {/* <div className="flex items-center gap-3">
           <ShoppingCart className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-medium">{groceryList.name}</h2>
+          <h2 className="text-xl font-semibold">{groceryList.name}</h2>
         </div>
         <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center gap-1"
+          variant="ghost" 
+          size="sm"
+          className="hover:bg-primary/10 transition-colors"
           onClick={copyToClipboard}
         >
-          <Clipboard className="w-4 h-4" />
-          <span className="hidden sm:inline">Copy</span>
-        </Button>
+          Copy
+        </Button> */}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {groceryList.categories.map((category) => (
-          <Card key={category.id} className="shadow-sm">
-            <CardHeader className="pb-2 cursor-pointer" onClick={() => toggleCategory(category.id)}>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5 text-muted-foreground" />
-                  {category.name}
-                  <Badge variant="outline" className="ml-2">
-                    {category.items.length}
-                  </Badge>
-                </CardTitle>
-                {expandedCategories.has(category.id) ? (
-                  <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                )}
+          <div key={category.id} className="pb-2">
+            <div 
+              className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer" 
+              onClick={() => toggleCategory(category.id)}
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-primary/70" />
+                <span className="font-medium">{category.name}</span>
+                <span className="ml-1 text-xs text-muted-foreground">
+                  ({category.items.length})
+                </span>
               </div>
-            </CardHeader>
+              {expandedCategories.has(category.id) ? (
+                <ChevronUp className="w-4 h-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              )}
+            </div>
             
             {expandedCategories.has(category.id) && (
-              <CardContent>
+              <div className="pt-2 px-1">
                 <ul className="space-y-2">
                   {category.items.map((item) => {
                     const isUpdatingThisItem = updatingItemId === item.id;
@@ -159,8 +156,8 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
                       <li 
                         key={item.id}
                         className={cn(
-                          "flex items-center justify-between p-2 rounded-md",
-                          item.isPurchased ? "bg-muted/50" : "hover:bg-muted/20",
+                          "flex items-center justify-between p-2 rounded-md transition-all duration-200",
+                          item.isPurchased ? "bg-muted/40" : "bg-background",
                           isUpdatingThisItem && "opacity-70"
                         )}
                       >
@@ -170,15 +167,19 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
                             onCheckedChange={() => handleToggleItem(item.id, item.isPurchased)}
                             id={`item-${item.id}`}
                             disabled={isUpdating && isUpdatingThisItem}
+                            className={cn(
+                              "h-4 w-4 rounded-sm border-primary/50",
+                              item.isPurchased && "bg-primary border-primary"
+                            )}
                           />
                           <label 
                             htmlFor={`item-${item.id}`}
                             className={cn(
-                              "flex flex-col text-sm cursor-pointer",
+                              "flex flex-col cursor-pointer",
                               item.isPurchased && "line-through text-muted-foreground"
                             )}
                           >
-                            <span className="font-medium">{item.name}</span>
+                            <span className="text-sm font-medium">{item.name}</span>
                             {item.notes && (
                               <span className="text-xs text-muted-foreground">{item.notes}</span>
                             )}
@@ -186,8 +187,8 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
                         </div>
                         <span 
                           className={cn(
-                            "text-sm font-medium",
-                            item.isPurchased && "text-muted-foreground"
+                            "text-xs font-medium px-2 py-1 rounded-md bg-primary/5",
+                            item.isPurchased && "bg-muted text-muted-foreground"
                           )}
                         >
                           {item.quantity} {item.unit}
@@ -196,16 +197,27 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
                     );
                   })}
                 </ul>
-              </CardContent>
+              </div>
             )}
-          </Card>
+          </div>
         ))}
       </div>
       
-      <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
-          {purchasedItems} of {totalItems} items purchased ({Math.round((purchasedItems / totalItems) * 100)}%)
-        </span>
+      <div className="sticky bottom-0 left-0 right-0 mt-4 p-3 bg-background border-t border-border shadow-md">
+        <div className="w-full bg-muted rounded-full h-2">
+          <div 
+            className="bg-primary h-2 rounded-full transition-all duration-300" 
+            style={{ width: `${Math.round((purchasedItems / totalItems) * 100)}%` }}
+          ></div>
+        </div>
+        <div className="flex items-center justify-between mt-2 text-xs">
+          <span>
+            {purchasedItems} of {totalItems} items
+          </span>
+          <span className="font-bold text-primary">
+            {Math.round((purchasedItems / totalItems) * 100)}%
+          </span>
+        </div>
       </div>
     </div>
   );
