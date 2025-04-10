@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GroceryListView } from './grocery-list-view';
@@ -13,80 +13,67 @@ import { LoadingSpinner } from '@/components/ui/spinner';
 import { CalendarIcon, Clock, RefreshCcw, ShoppingCart } from 'lucide-react';
 import { format } from 'date-fns';
 import { SavedGroceryListView } from './saved-grocery-list-view';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function GrocerySelector() {
-  const [groceryList, setGroceryList] = useState<GroceryListResponse | null>(null);
-  const [savedLists, setSavedLists] = useState<{
-    weekly: SavedGroceryList | null;
-    monthly: SavedGroceryList | null;
-    others: SavedGroceryList[];
-  }>({
-    weekly: null,
-    monthly: null,
-    others: []
-  });
   const [timeFrame, setTimeFrame] = useState<'weekly' | 'monthly'>('weekly');
-  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
   const [viewMode, setViewMode] = useState<'saved' | 'generating'>('saved');
+  const queryClient = useQueryClient();
   
-  // Fetch saved grocery lists on component mount
-  useEffect(() => {
-    const loadSavedLists = async () => {
-      setIsLoading(true);
-      try {
-        const result = await fetchSavedGroceryLists();
-        
-        if (result.success && result.groceryLists && result.groceryLists.length > 0) {
-          // Find the most recent weekly and monthly lists
-          const weeklies = result.groceryLists.filter(list => list.timeFrame === 'weekly');
-          const monthlies = result.groceryLists.filter(list => list.timeFrame === 'monthly');
-          
-          // Sort by date, most recent first
-          weeklies.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-          monthlies.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-          
-          // Set the most recent lists and all others
-          setSavedLists({
-            weekly: weeklies.length > 0 ? weeklies[0] : null,
-            monthly: monthlies.length > 0 ? monthlies[0] : null,
-            others: result.groceryLists.filter((list, index) => 
-              !(list.timeFrame === 'weekly' && index === 0) && 
-              !(list.timeFrame === 'monthly' && index === 0)
-            )
-          });
-        }
-      } catch (err) {
-        console.error('Error loading saved grocery lists:', err);
-      } finally {
-        setIsLoading(false);
+  // Use React Query to fetch saved grocery lists
+  const { data: savedListsData, isLoading } = useQuery({
+    queryKey: ['groceryLists'],
+    queryFn: async () => {
+      const result = await fetchSavedGroceryLists();
+      if (!result.success || !result.groceryLists) {
+        throw new Error(result.error || 'Failed to load grocery lists');
       }
-    };
-    
-    loadSavedLists();
-  }, []);
+      return result.groceryLists;
+    },
+  });
+
+  // Process the saved lists data
+  const savedLists = savedListsData ? {
+    weekly: savedListsData
+      .filter(list => list.timeFrame === 'weekly')
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] || null,
+    monthly: savedListsData
+      .filter(list => list.timeFrame === 'monthly')
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] || null,
+    others: savedListsData.filter((list, index, arr) => {
+      const sortedWeeklies = [...arr]
+        .filter(l => l.timeFrame === 'weekly')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const sortedMonthlies = [...arr]
+        .filter(l => l.timeFrame === 'monthly')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      return !(list.timeFrame === 'weekly' && list.id === sortedWeeklies[0]?.id) && 
+             !(list.timeFrame === 'monthly' && list.id === sortedMonthlies[0]?.id);
+    })
+  } : { weekly: null, monthly: null, others: [] };
+
+  // Use mutation for generating a new grocery list
+  const { mutate: generateGroceryList, data: groceryList, error, isPending: isGenerating } = useMutation({
+    mutationFn: async (selectedTimeFrame: 'weekly' | 'monthly') => {
+      const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
+      if (!result.success || !result.groceryList) {
+        throw new Error(result.error || 'Failed to load grocery list');
+      }
+      return result.groceryList;
+    },
+    onSuccess: () => {
+      // After successful generation, refetch the saved lists
+      queryClient.invalidateQueries({ queryKey: ['groceryLists'] });
+    },
+  });
   
-  const fetchGroceryList = async (selectedTimeFrame: 'weekly' | 'monthly') => {
-    setError(null);
+  const fetchGroceryList = (selectedTimeFrame: 'weekly' | 'monthly') => {
     setViewMode('generating');
-    startTransition(async () => {
-      try {
-        const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
-        
-        if (!result.success || !result.groceryList) {
-          setError(result.error || 'Failed to load grocery list');
-          return;
-        }
-        
-        setGroceryList(result.groceryList);
-        setTimeFrame(selectedTimeFrame);
-      } catch (err) {
-        setError('An unexpected error occurred');
-        console.error(err);
-      }
-    });
+    setTimeFrame(selectedTimeFrame);
+    generateGroceryList(selectedTimeFrame);
   };
   
   const handleTabChange = (value: string) => {
@@ -118,15 +105,15 @@ export function GrocerySelector() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Grocery List</h2>
           <TabsList>
-            <TabsTrigger value="weekly" disabled={isPending}>Weekly</TabsTrigger>
-            <TabsTrigger value="monthly" disabled={isPending}>Monthly</TabsTrigger>
+            <TabsTrigger value="weekly" disabled={isGenerating}>Weekly</TabsTrigger>
+            <TabsTrigger value="monthly" disabled={isGenerating}>Monthly</TabsTrigger>
           </TabsList>
         </div>
         
         <div className="mt-4">
           {viewMode === 'generating' ? (
             <>
-              {isPending ? (
+              {isGenerating ? (
                 <div className="flex flex-col items-center justify-center p-6">
                   <LoadingSpinner className="w-8 h-8 text-primary" />
                   <p className="mt-3 text-sm text-muted-foreground">
@@ -135,7 +122,7 @@ export function GrocerySelector() {
                 </div>
               ) : error ? (
                 <div className="p-4 text-center rounded-lg bg-destructive/10">
-                  <p className="text-destructive text-sm">{error}</p>
+                  <p className="text-destructive text-sm">{(error as Error).message}</p>
                   <Button 
                     variant="outline" 
                     className="mt-3"
@@ -151,8 +138,8 @@ export function GrocerySelector() {
                   <p className="mb-3 text-sm">Generate a new {activeTab} grocery list based on your diet plan</p>
                   <Button 
                     onClick={() => fetchGroceryList(activeTab)}
-                    className={cn(isPending && "opacity-50 cursor-not-allowed")}
-                    disabled={isPending}
+                    className={cn(isGenerating && "opacity-50 cursor-not-allowed")}
+                    disabled={isGenerating}
                   >
                     Generate List
                   </Button>
@@ -191,7 +178,6 @@ export function GrocerySelector() {
                         size="sm"
                         className="text-xs p-2 h-8"
                         onClick={() => {
-                          setGroceryList(null);
                           setViewMode('generating');
                         }}
                       >
@@ -207,8 +193,8 @@ export function GrocerySelector() {
                   <p className="mb-3 text-sm">You don't have a saved {activeTab} grocery list yet</p>
                   <Button 
                     onClick={() => fetchGroceryList(activeTab)}
-                    className={cn(isPending && "opacity-50 cursor-not-allowed")}
-                    disabled={isPending}
+                    className={cn(isGenerating && "opacity-50 cursor-not-allowed")}
+                    disabled={isGenerating}
                   >
                     Generate List
                   </Button>

@@ -1,9 +1,10 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchTodaysDiet } from '../_actions/get-todays-diet';
 import { DietSummaryCard } from './DietSummaryCard';
 import { MealCard } from './MealCard';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 // Helper function to determine meal type priority for sorting
 const getMealTypePriority = (timeOfDay: string): number => {
@@ -15,29 +16,74 @@ const getMealTypePriority = (timeOfDay: string): number => {
 };
 
 export default function TodaysDiet() {
-	const { data, error, isLoading } = useQuery({
+	const queryClient = useQueryClient();
+	
+	const { data, error, isLoading, isError, refetch } = useQuery({
 		queryKey: ['todaysDiet'],
 		queryFn: fetchTodaysDiet,
+		staleTime: 1000 * 60 * 15, // 15 minutes
+		refetchOnWindowFocus: true,
 	});
 
+	// Handle loading state
 	if (isLoading) {
 		return (
-			<div className="space-y-4">
+			<div className="space-y-6">
 				{/* Diet summary skeleton */}
-				<div className="animate-pulse h-36"></div>
+				<div className="border-b border-gray-100 pb-4">
+					<div className="h-52 bg-gray-50 animate-pulse rounded-lg"></div>
+					<div className="mt-3 grid grid-cols-4 gap-2">
+						{[...Array(4)].map((_, i) => (
+							<div key={`nutrition-skeleton-${i}`} className="flex flex-col items-center">
+								<div className="h-4 w-12 bg-gray-200 animate-pulse rounded"></div>
+								<div className="mt-1 h-3 w-8 bg-gray-100 animate-pulse rounded"></div>
+							</div>
+						))}
+					</div>
+				</div>
 				
 				{/* Meals skeletons */}
-				{[1, 2, 3].map((i) => (
-					<div key={`skeleton-${i}`} className="animate-pulse h-24 border-b border-gray-100 py-3"></div>
-				))}
+				<div>
+					<div className="h-5 w-32 bg-gray-200 animate-pulse rounded mb-3"></div>
+					<div className="space-y-4">
+						{[...Array(4)].map((_, i) => (
+							<div key={`meal-skeleton-${i}`} className="border-b border-gray-100 pb-3">
+								<div className="border-l-2 border-gray-200 pl-3 mb-2">
+									<div className="flex items-center justify-between">
+										<div>
+											<div className="h-4 w-40 bg-gray-200 animate-pulse rounded"></div>
+											<div className="mt-1 h-3 w-20 bg-gray-100 animate-pulse rounded"></div>
+										</div>
+										<div className="h-6 w-6 bg-gray-100 animate-pulse rounded-full"></div>
+									</div>
+								</div>
+								<div className="py-2 grid grid-cols-4 gap-2">
+									{[...Array(4)].map((_, j) => (
+										<div key={`meal-nutrition-skeleton-${i}-${j}`} className="flex flex-col items-center">
+											<div className="h-3 w-8 bg-gray-200 animate-pulse rounded"></div>
+											<div className="mt-1 h-2 w-6 bg-gray-100 animate-pulse rounded"></div>
+										</div>
+									))}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
 			</div>
 		);
 	}
 
-	if (error) {
+	// Handle error state
+	if (isError) {
 		return (
 			<div className="text-red-700 py-3 text-center">
-				<p className="text-sm">Failed to load diet information. Please try again later.</p>
+				<p className="text-sm">Failed to load diet information.</p>
+				<button 
+					onClick={() => refetch()} 
+					className="mt-2 text-xs text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-full"
+				>
+					Try Again
+				</button>
 			</div>
 		);
 	}

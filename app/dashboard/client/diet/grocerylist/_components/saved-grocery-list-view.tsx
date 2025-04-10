@@ -13,6 +13,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { updateGroceryItem } from '../_actions/update-grocery-item';
 import { useTransition } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface SavedGroceryListViewProps {
   groceryList: SavedGroceryList;
@@ -22,9 +23,9 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set(
     groceryList.categories.map(cat => cat.id) // Default all expanded
   )); 
-  const [isUpdating, startUpdating] = useTransition();
   const [updatingItemId, setUpdatingItemId] = useState<number | null>(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const toggleCategory = (categoryId: number) => {
     const newExpandedCategories = new Set(expandedCategories);
@@ -55,52 +56,90 @@ export function SavedGroceryListView({ groceryList }: SavedGroceryListViewProps)
     });
   };
   
-  const handleToggleItem = (itemId: number, currentStatus: boolean) => {
-    setUpdatingItemId(itemId);
-    startUpdating(async () => {
-      try {
-        const result = await updateGroceryItem({
-          itemId,
-          isPurchased: !currentStatus
-        });
-        
-        if (result.success) {
-          // Update the UI optimistically
-          const updatedCategories = groceryList.categories.map(category => ({
-            ...category,
-            items: category.items.map(item => 
-              item.id === itemId ? { ...item, isPurchased: !currentStatus } : item
-            )
-          }));
-          
-          // This is a trick to force a re-render since we're mutating a prop
-          // In a real app, you'd use a state management solution
-          groceryList.categories = updatedCategories;
-          
-          toast({
-            title: currentStatus ? "Item unmarked" : "Item marked as purchased",
-            duration: 2000,
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Update failed",
-            description: result.error || "Failed to update item status",
-            duration: 3000,
-          });
-        }
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Update failed",
-          description: "An unexpected error occurred",
-          duration: 3000,
-        });
-        console.error(error);
-      } finally {
-        setUpdatingItemId(null);
+  // Use React Query mutation for updating grocery items
+  const { mutate: toggleItemPurchased, isPending: isUpdating } = useMutation({
+    mutationFn: async ({ itemId, currentStatus }: { itemId: number; currentStatus: boolean }) => {
+      const result = await updateGroceryItem({
+        itemId,
+        isPurchased: !currentStatus
+      });
+      
+      if (!result.success) {
+        throw new Error(result.error || "Failed to update item status");
       }
-    });
+      
+      return { itemId, isPurchased: !currentStatus };
+    },
+    onMutate: async ({ itemId, currentStatus }) => {
+      setUpdatingItemId(itemId);
+      
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['groceryLists'] });
+      
+      // Snapshot the previous value
+      const previousGroceryLists = queryClient.getQueryData(['groceryLists']);
+      
+      // Optimistically update the UI
+      queryClient.setQueryData(['groceryLists'], (old: SavedGroceryList[] | undefined) => {
+        if (!old) return old;
+        
+        return old.map(list => {
+          if (list.id === groceryList.id) {
+            return {
+              ...list,
+              categories: list.categories.map(category => ({
+                ...category,
+                items: category.items.map(item => 
+                  item.id === itemId ? { ...item, isPurchased: !currentStatus } : item
+                )
+              }))
+            };
+          }
+          return list;
+        });
+      });
+      
+      // Update the current groceryList prop to reflect the change
+      const updatedCategories = groceryList.categories.map(category => ({
+        ...category,
+        items: category.items.map(item => 
+          item.id === itemId ? { ...item, isPurchased: !currentStatus } : item
+        )
+      }));
+      
+      groceryList.categories = updatedCategories;
+      
+      return { previousGroceryLists };
+    },
+    onSuccess: (data, variables) => {
+      toast({
+        title: variables.currentStatus ? "Item unmarked" : "Item marked as purchased",
+        duration: 2000,
+      });
+    },
+    onError: (error, variables, context) => {
+      // Revert to the previous state if mutation fails
+      if (context?.previousGroceryLists) {
+        queryClient.setQueryData(['groceryLists'], context.previousGroceryLists);
+      }
+      
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: (error as Error).message || "An unexpected error occurred",
+        duration: 3000,
+      });
+      console.error(error);
+    },
+    onSettled: () => {
+      setUpdatingItemId(null);
+      // Refresh the data
+      queryClient.invalidateQueries({ queryKey: ['groceryLists'] });
+    }
+  });
+  
+  const handleToggleItem = (itemId: number, currentStatus: boolean) => {
+    toggleItemPurchased({ itemId, currentStatus });
   };
   
   // Calculate statistics
