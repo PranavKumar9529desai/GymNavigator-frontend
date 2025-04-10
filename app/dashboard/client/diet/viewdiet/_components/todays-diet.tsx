@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { UtensilsCrossed } from 'lucide-react';
 import { fetchTodaysDiet } from '../_actions/get-todays-diet';
 import { DietSummaryCard } from './DietSummaryCard';
 import { MealCard } from './MealCard';
@@ -23,13 +22,13 @@ export default function TodaysDiet() {
 
 	if (isLoading) {
 		return (
-			<div className="space-y-3">
+			<div className="space-y-4">
 				{/* Diet summary skeleton */}
-				<div className="bg-gray-100 animate-pulse rounded-lg h-36 mb-3"></div>
+				<div className="animate-pulse h-36"></div>
 				
 				{/* Meals skeletons */}
 				{[1, 2, 3].map((i) => (
-					<div key={`skeleton-${i}`} className="bg-gray-100 animate-pulse rounded-lg h-24 mb-2"></div>
+					<div key={`skeleton-${i}`} className="animate-pulse h-24 border-b border-gray-100 py-3"></div>
 				))}
 			</div>
 		);
@@ -37,7 +36,7 @@ export default function TodaysDiet() {
 
 	if (error) {
 		return (
-			<div className="bg-red-50 text-red-700 p-3 rounded-lg text-center">
+			<div className="text-red-700 py-3 text-center">
 				<p className="text-sm">Failed to load diet information. Please try again later.</p>
 			</div>
 		);
@@ -47,9 +46,6 @@ export default function TodaysDiet() {
 	if (!data?.dietPlan || data.dietPlan.meals.length === 0) {
 		return (
 			<div className="text-center py-6">
-				<div className="mx-auto w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-					<UtensilsCrossed size={20} className="text-gray-500" />
-				</div>
 				<p className="text-sm text-gray-500">No diet plan available for today.</p>
 				<p className="text-xs text-gray-400 mt-1">Check back later or contact your trainer.</p>
 			</div>
@@ -64,17 +60,16 @@ export default function TodaysDiet() {
 	});
 
 	return (
-		<div className="space-y-3">
-			{/* Diet Plan Summary Card */}
+		<div>
+			{/* Diet Plan Summary */}
 			<DietSummaryCard dietPlan={data.dietPlan} />
 			
 			{/* Meals Section */}
-			<div>
-				<h2 className="text-sm font-semibold text-gray-800 mb-2 flex items-center">
-					<UtensilsCrossed size={16} className="mr-1" />
+			<div className="mt-5">
+				<h2 className="text-sm font-medium text-gray-800 mb-3 border-b border-gray-100 pb-2">
 					Your Meals Today
 				</h2>
-				<div className="space-y-3">
+				<div className="space-y-4">
 					{sortedMeals.map((meal, index) => (
 						<MealCard key={`meal-${meal.id}`} meal={meal} index={index} />
 					))}

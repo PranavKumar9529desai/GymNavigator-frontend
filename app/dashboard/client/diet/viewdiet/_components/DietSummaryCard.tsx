@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { DietPlan } from '../_actions/get-todays-diet';
-import { CalendarDays, TargetIcon, FlameIcon, BarChart3 } from 'lucide-react';
 import { NutritionCard } from './NutritionCard';
 
 interface DietSummaryCardProps {
@@ -27,71 +26,57 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
   });
 
   return (
-    <div className="bg-white overflow-hidden mb-4">
-      <div className="px-3 py-3 bg-gradient-to-r from-blue-600 to-indigo-700">
+    <div className="border-b border-gray-100 pb-4">
+      <div className="py-2 border-l-4 border-indigo-500 pl-3">
         <div className="flex justify-between items-center">
-          <h3 className="text-base font-medium text-white">{dietPlan.name}</h3>
-          <div className="flex items-center text-blue-100">
-            <CalendarDays className="h-3.5 w-3.5 mr-1" />
-            <span className="text-xs">{formattedDate}</span>
-          </div>
+          <h3 className="text-base font-medium text-gray-800">{dietPlan.name}</h3>
+          <span className="text-xs text-gray-500">{formattedDate}</span>
         </div>
         {dietPlan.description && (
-          <p className="mt-1 max-w-full text-xs text-blue-100">{dietPlan.description}</p>
+          <p className="mt-1 max-w-full text-xs text-gray-500">{dietPlan.description}</p>
         )}
       </div>
       
-      <div className="px-3 py-3">
+      <div className="mt-4">
         {/* Target vs. Actual */}
-        <div className="mb-3">
+        <div className="mb-4">
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center">
-              <TargetIcon className="h-4 w-4 text-indigo-600 mr-1.5" />
-              <span className="text-xs font-medium text-gray-700">Daily Target</span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-xs font-semibold text-gray-900">{totalCalories} / {dietPlan.targetCalories} cal</span>
-            </div>
+            <span className="text-xs font-medium text-gray-700">Daily Target</span>
+            <span className="text-xs font-semibold text-gray-900">{totalCalories} / {dietPlan.targetCalories} cal</span>
           </div>
           
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-100 h-2">
             <div 
-              className="bg-indigo-600 h-2 rounded-full" 
+              className="bg-indigo-600 h-2" 
               style={{ width: `${caloriePercentage}%` }}
             />
           </div>
         </div>
         
         {/* Macro ratio targets */}
-        <div className="mb-3">
-          <div className="flex items-center mb-1">
-            <BarChart3 className="h-4 w-4 text-indigo-600 mr-1.5" />
-            <span className="text-xs font-medium text-gray-700">Macro Targets</span>
-          </div>
+        <div className="mb-4">
+          <span className="text-xs font-medium text-gray-700 mb-2 block">Macro Targets</span>
           
-          <div className="grid grid-cols-3 gap-1.5 mt-1.5">
-            <div className="bg-purple-50 rounded p-1.5 text-center">
-              <span className="text-[10px] text-gray-500">Protein</span>
+          <div className="grid grid-cols-3 gap-3 mt-2">
+            <div className="border-b-2 border-purple-500 pb-1">
               <p className="text-xs font-semibold text-purple-700">{dietPlan.proteinRatio}%</p>
+              <span className="text-[10px] text-gray-500">Protein</span>
             </div>
-            <div className="bg-amber-50 rounded p-1.5 text-center">
-              <span className="text-[10px] text-gray-500">Carbs</span>
+            <div className="border-b-2 border-amber-500 pb-1">
               <p className="text-xs font-semibold text-amber-700">{dietPlan.carbsRatio}%</p>
+              <span className="text-[10px] text-gray-500">Carbs</span>
             </div>
-            <div className="bg-blue-50 rounded p-1.5 text-center">
-              <span className="text-[10px] text-gray-500">Fats</span>
+            <div className="border-b-2 border-blue-500 pb-1">
               <p className="text-xs font-semibold text-blue-700">{dietPlan.fatsRatio}%</p>
+              <span className="text-[10px] text-gray-500">Fats</span>
             </div>
           </div>
         </div>
         
         {/* Daily totals */}
         <div>
-          <div className="flex items-center mb-1">
-            <FlameIcon className="h-4 w-4 text-indigo-600 mr-1.5" />
-            <span className="text-xs font-medium text-gray-700">Daily Totals</span>
-          </div>
+          <span className="text-xs font-medium text-gray-700 mb-2 block">Daily Totals</span>
           <NutritionCard 
             calories={totalCalories}
             protein={totalProtein}

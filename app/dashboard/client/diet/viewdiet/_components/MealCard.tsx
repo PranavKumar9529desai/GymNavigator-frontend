@@ -2,17 +2,8 @@
 
 import React, { useState } from 'react';
 import { Meal } from '../_actions/get-todays-diet';
-import { Clock, ChevronDown, ChevronUp, List, UtensilsCrossed } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { NutritionCard } from './NutritionCard';
-
-// Import meal icon components
-import {
-  BreakfastIcon,
-  DefaultMealIcon,
-  DinnerIcon,
-  LunchIcon,
-  SnackIcon,
-} from './MealIcons';
 
 interface MealCardProps {
   meal: Meal;
@@ -27,51 +18,35 @@ export const MealCard = ({ meal, index }: MealCardProps) => {
     if (timeOfDay.includes('7:00 AM')) 
       return { 
         type: 'Breakfast', 
-        icon: BreakfastIcon, 
-        color: 'from-blue-500 to-blue-400', 
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-100',
-        textColor: 'text-blue-700'
+        color: 'text-blue-600',
+        borderColor: 'border-blue-500'
       };
     if (timeOfDay.includes('1:00 PM')) 
       return { 
         type: 'Lunch', 
-        icon: LunchIcon, 
-        color: 'from-amber-500 to-amber-400',
-        bgColor: 'bg-amber-50',
-        borderColor: 'border-amber-100',
-        textColor: 'text-amber-700'
+        color: 'text-amber-600',
+        borderColor: 'border-amber-500'
       };
     if (timeOfDay.includes('4:00 PM')) 
       return { 
         type: 'Snack', 
-        icon: SnackIcon, 
-        color: 'from-green-500 to-green-400',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-100',
-        textColor: 'text-green-700'
+        color: 'text-green-600',
+        borderColor: 'border-green-500'
       };
     if (timeOfDay.includes('7:00 PM')) 
       return { 
         type: 'Dinner', 
-        icon: DinnerIcon, 
-        color: 'from-purple-500 to-purple-400',
-        bgColor: 'bg-purple-50',
-        borderColor: 'border-purple-100',
-        textColor: 'text-purple-700'
+        color: 'text-purple-600',
+        borderColor: 'border-purple-500'
       };
     return { 
       type: 'Meal', 
-      icon: DefaultMealIcon, 
-      color: 'from-gray-500 to-gray-400',
-      bgColor: 'bg-gray-50',
-      borderColor: 'border-gray-100',
-      textColor: 'text-gray-700'
+      color: 'text-gray-600',
+      borderColor: 'border-gray-500'
     };
   };
 
   const mealInfo = getMealTypeInfo(meal.timeOfDay);
-  const MealIcon = mealInfo.icon;
 
   // Parse ingredients and instructions for display
   const ingredientsList = meal.ingredients.length > 0 
@@ -87,28 +62,22 @@ export const MealCard = ({ meal, index }: MealCardProps) => {
     : ['No specific instructions provided'];
 
   return (
-    <div className={`bg-white overflow-hidden mb-3 border-l-4 ${mealInfo.borderColor}`}>
-      {/* Card header with gradient */}
-      <div className={`bg-gradient-to-r ${mealInfo.color} px-3 py-2`}>
+    <div className={`border-b border-gray-100 pb-3`}>
+      {/* Meal header */}
+      <div className={`border-l-2 ${mealInfo.borderColor} pl-3 mb-2`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="bg-white rounded-full p-1 mr-2 shadow-sm">
-              <MealIcon size={18} className={mealInfo.textColor} />
-            </div>
-            <div>
-              <h3 className="font-medium text-sm text-white">
-                {mealInfo.type}: {meal.name}
-              </h3>
-              <div className="flex items-center text-xs text-white/80">
-                <Clock size={10} className="mr-1" />
-                {meal.timeOfDay}
-              </div>
+          <div>
+            <h3 className={`font-medium text-sm ${mealInfo.color}`}>
+              {mealInfo.type}: {meal.name}
+            </h3>
+            <div className="text-xs text-gray-500">
+              {meal.timeOfDay}
             </div>
           </div>
           
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-white hover:bg-white/10 rounded-full p-1 transition-colors"
+            className="text-gray-500 hover:bg-gray-50 rounded p-1 transition-colors"
             aria-expanded={isExpanded}
             aria-label={isExpanded ? "Collapse meal details" : "Expand meal details"}
           >
@@ -118,7 +87,7 @@ export const MealCard = ({ meal, index }: MealCardProps) => {
       </div>
       
       {/* Nutrition snapshot always visible */}
-      <div className="px-3 py-2">
+      <div className="py-2">
         <NutritionCard 
           calories={meal.calories}
           protein={meal.protein}
@@ -130,11 +99,10 @@ export const MealCard = ({ meal, index }: MealCardProps) => {
       
       {/* Expandable content */}
       {isExpanded && (
-        <div className={`px-3 py-2 ${mealInfo.bgColor} border-t border-gray-100`}>
+        <div className={`py-2 mt-2 border-t border-gray-100`}>
           {/* Ingredients */}
           <div className="mb-3">
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center">
-              <UtensilsCrossed size={14} className="mr-1" />
+            <h4 className="text-xs font-semibold text-gray-700 mb-1">
               Ingredients
             </h4>
             <ul className="space-y-1">
@@ -152,8 +120,7 @@ export const MealCard = ({ meal, index }: MealCardProps) => {
           
           {/* Instructions */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-700 mb-1 flex items-center">
-              <List size={14} className="mr-1" />
+            <h4 className="text-xs font-semibold text-gray-700 mb-1">
               Instructions
             </h4>
             <ol className="space-y-1 list-decimal pl-4">
