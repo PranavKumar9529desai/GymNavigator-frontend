@@ -6,39 +6,47 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ fullname, contact }: ProfileHeaderProps) {
-  // Get initials from fullname for avatar fallback
-  const getInitials = (name?: string): string => {
-    if (!name) return "CP";
-    return name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2);
-  };
+  // Generate initials from the name for the avatar or use placeholder
+  const initials = fullname 
+    ? fullname
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2)
+    : "CP"; // Client Profile default initials
+
+  const backgroundColors = [
+    "bg-blue-500",
+    "bg-blue-600", 
+    "bg-indigo-500",
+    "bg-blue-700",
+  ];
+  
+  // Choose a consistent background color based on the name
+  const colorIndex = fullname
+    ? fullname
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0) % backgroundColors.length
+    : 0;
+  
+  const avatarBgColor = backgroundColors[colorIndex];
+  const displayName = fullname || "Client Profile";
 
   return (
-    <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-      <div className="flex items-center gap-4">
-        <Avatar className="h-20 w-20 border-4 border-white shadow-sm">
-          <AvatarImage
-            src="/placeholder-avatar.jpg"
-            alt={fullname || "Client"}
-          />
-          <AvatarFallback className="bg-blue-600 text-white text-lg font-semibold">
-            {getInitials(fullname)}
+    <div className="p-4 pb-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+      <div className="flex items-center">
+        <Avatar className="h-16 w-16 rounded-full mr-4">
+          <AvatarImage src={undefined} />
+          <AvatarFallback className={`${avatarBgColor} text-white text-lg font-semibold`}>
+            {initials}
           </AvatarFallback>
         </Avatar>
-        <div className="flex-1 min-w-0">
-          <h2 className="font-bold text-xl text-gray-800 truncate">
-            {fullname || "Client Profile"}
-          </h2>
+        <div>
+          <h2 className="text-xl font-semibold text-blue-800">{displayName}</h2>
           {contact && (
-            <p className="text-gray-600 text-sm mt-1 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              {contact}
+            <p className="text-sm text-blue-600 mt-1">
+              {contact.includes("@") ? contact : `+${contact}`}
             </p>
           )}
         </div>

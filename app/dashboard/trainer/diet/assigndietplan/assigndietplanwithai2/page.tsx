@@ -12,16 +12,19 @@ export default async function AssignDietPlanWithAI2({
 
   return (
     <div className="mx-auto">
-      {/* Main container with improved mobile-friendly spacing and a light shadow */}
-      <div className="p-6 md:p-8 bg-white shadow-sm rounded-lg">
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-          {/* Left Section */}
+      {/* Main container with gradient background and improved styling */}
+      <div className="p-4 md:p-6 bg-gradient-to-b from-blue-50/50 to-white rounded-lg">
+        <h1 className="text-2xl font-bold text-blue-800 mb-6">Personalized Diet Plan Generator</h1>
+        
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Left Section - User Profile */}
           <div className="w-full md:w-1/3">
             <UserProfileCard
               profile={profileResult.success ? profileResult.data : undefined}
             />
           </div>
-          {/* Right Section */}
+          
+          {/* Right Section - Diet Planner */}
           <div className="w-full md:w-2/3">
             <DietPlanner />
           </div>

@@ -1,7 +1,7 @@
 import type { Selection } from "../../_actions/get-healthprofile-by-id";
 
 interface HealthConditionsSectionProps {
-	medicalConditions?: Selection[] | string;
+	medicalConditions?: string[];
 	otherMedicalCondition?: string;
 }
 
@@ -9,16 +9,23 @@ export function HealthConditionsSection({
 	medicalConditions,
 	otherMedicalCondition,
 }: HealthConditionsSectionProps) {
-	const hasMedicalConditions =
-		Array.isArray(medicalConditions) &&
-		medicalConditions.some((condition) => condition.selected);
+	// Combine standard and custom medical conditions
+	const allConditions = [
+		...(medicalConditions || []),
+		...(otherMedicalCondition ? [otherMedicalCondition] : []),
+	];
+
+	// Don't render the section if there are no conditions
+	if (allConditions.length === 0) {
+		return null;
+	}
 
 	return (
-		<div className="p-4 bg-gray-50 border-t border-gray-200">
-			<h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+		<div className="p-4 border-b border-blue-100">
+			<h3 className="font-semibold text-blue-800 mb-3 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					className="h-5 w-5 mr-2 text-red-500"
+					className="h-5 w-5 mr-2 text-blue-600"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -27,53 +34,26 @@ export function HealthConditionsSection({
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						strokeWidth={2}
-						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+						d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
 					/>
 				</svg>
 				Health Conditions
 			</h3>
 
-			{hasMedicalConditions ? (
-				<div>
-					<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
-						Medical Conditions
-					</span>
-					<div className="flex flex-wrap gap-2">
-						{Array.isArray(medicalConditions) &&
-							medicalConditions
-								.filter((condition) => condition.selected)
-								.map((condition) => (
-									<span
-										key={condition.id || `condition-${condition.name}`}
-										className="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-full text-sm"
-									>
-										{condition.name}
-									</span>
-								))}
-						{otherMedicalCondition && (
-							<span className="px-3 py-1.5 bg-purple-100 text-purple-800 rounded-full text-sm">
-								{otherMedicalCondition}
-							</span>
-						)}
-					</div>
+			{allConditions.length > 0 ? (
+				<div className="flex flex-wrap gap-2">
+					{allConditions.map((condition, index) => (
+						<span
+							key={index}
+							className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm"
+						>
+							{condition}
+						</span>
+					))}
 				</div>
 			) : (
-				<div className="p-3 bg-green-50 rounded-lg text-green-700 flex items-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="h-5 w-5 mr-2"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M5 13l4 4L19 7"
-						/>
-					</svg>
-					No medical conditions reported
+				<div className="p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-100">
+					<p className="text-sm">No health conditions specified</p>
 				</div>
 			)}
 		</div>

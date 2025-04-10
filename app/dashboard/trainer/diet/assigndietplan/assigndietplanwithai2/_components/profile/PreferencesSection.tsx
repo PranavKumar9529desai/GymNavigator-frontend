@@ -1,12 +1,10 @@
-import type { Selection } from "../../_actions/get-healthprofile-by-id";
-
 interface PreferencesSectionProps {
 	activityLevel?: string;
-	allergies?: Selection[] | string;
+	allergies?: string[];
 	otherAllergy?: string;
 	religiousPreference?: string;
 	otherReligiousPreference?: string;
-	dietaryRestrictions?: Selection[] | string;
+	dietaryRestrictions?: string[];
 }
 
 export function PreferencesSection({
@@ -17,18 +15,34 @@ export function PreferencesSection({
 	otherReligiousPreference,
 	dietaryRestrictions,
 }: PreferencesSectionProps) {
-	const hasAllergies =
-		Array.isArray(allergies) && allergies.some((allergy) => allergy.selected);
-	const hasRestrictions =
-		Array.isArray(dietaryRestrictions) &&
-		dietaryRestrictions.some((restriction) => restriction.selected);
+	// Combine standard and custom allergies
+	const allAllergies = [
+		...(allergies || []),
+		...(otherAllergy ? [otherAllergy] : []),
+	];
+
+	// Format religious preference
+	const formattedReligious = religiousPreference
+		? otherReligiousPreference && religiousPreference === "Other"
+			? otherReligiousPreference
+			: religiousPreference
+		: null;
+
+	// Check if any preferences exist to show section
+	const hasPreferences =
+		activityLevel ||
+		allAllergies.length > 0 ||
+		formattedReligious ||
+		(dietaryRestrictions && dietaryRestrictions.length > 0);
+
+	if (!hasPreferences) return null;
 
 	return (
-		<div className="p-4 bg-gray-50 border-t border-gray-200">
-			<h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+		<div className="p-4 border-b border-blue-100">
+			<h3 className="font-semibold text-blue-800 mb-3 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					className="h-5 w-5 mr-2 text-amber-500"
+					className="h-5 w-5 mr-2 text-blue-600"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -45,97 +59,55 @@ export function PreferencesSection({
 
 			<div className="space-y-4">
 				{activityLevel && (
-					<div className="p-3 bg-blue-50 rounded-lg">
+					<div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
 						<span className="text-xs font-medium text-gray-600 uppercase tracking-wide block mb-1">
 							Activity Level
 						</span>
-						<p className="font-medium text-blue-800">{activityLevel}</p>
+						<p className="font-medium text-blue-700">{activityLevel}</p>
 					</div>
 				)}
 
-				{hasAllergies && (
-					<div className="mt-4">
-						<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
+				{formattedReligious && (
+					<div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+						<span className="text-xs font-medium text-gray-600 uppercase tracking-wide block mb-1">
+							Religious Preference
+						</span>
+						<p className="font-medium text-blue-700">{formattedReligious}</p>
+					</div>
+				)}
+
+				{allAllergies.length > 0 && (
+					<div>
+						<span className="text-xs font-medium text-gray-600 uppercase tracking-wide block mb-2">
 							Allergies
 						</span>
 						<div className="flex flex-wrap gap-2">
-							{Array.isArray(allergies) &&
-								allergies
-									.filter((allergy) => allergy.selected)
-									.map((allergy) => (
-										<span
-											key={allergy.id || `allergy-${allergy.name}`}
-											className="px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-sm flex items-center"
-										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="h-4 w-4 mr-1"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={2}
-													d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-												/>
-											</svg>
-											{allergy.name}
-										</span>
-									))}
-							{otherAllergy && (
-								<span className="px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-sm flex items-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-4 w-4 mr-1"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-										/>
-									</svg>
-									{otherAllergy}
+							{allAllergies.map((allergy, index) => (
+								<span
+									key={index}
+									className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm"
+								>
+									{allergy}
 								</span>
-							)}
+							))}
 						</div>
 					</div>
 				)}
 
-				{religiousPreference && (
-					<div className="p-3 bg-amber-50 rounded-lg mt-4">
-						<span className="text-xs font-medium text-gray-600 uppercase tracking-wide block mb-1">
-							Religious Preferences
-						</span>
-						<p className="font-medium text-amber-800">
-							{religiousPreference}
-							{otherReligiousPreference && ` - ${otherReligiousPreference}`}
-						</p>
-					</div>
-				)}
-
-				{hasRestrictions && (
-					<div className="mt-4">
-						<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
+				{dietaryRestrictions && dietaryRestrictions.length > 0 && (
+					<div>
+						<span className="text-xs font-medium text-gray-600 uppercase tracking-wide block mb-2">
 							Dietary Restrictions
 						</span>
 						<div className="flex flex-wrap gap-2">
-							{Array.isArray(dietaryRestrictions) &&
-								dietaryRestrictions
-									.filter((restriction) => restriction.selected)
-									.map((restriction) => (
-										<span
-											key={restriction.id || `restriction-${restriction.name}`}
-											className="px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-full text-sm"
-										>
-											{restriction.name}
-										</span>
-									))}
+							{dietaryRestrictions.map((restriction, index) => (
+								<span
+									key={index}
+									className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm"
+								>
+									{restriction}
+								</span>
+							))}
 						</div>
 					</div>
 				)}

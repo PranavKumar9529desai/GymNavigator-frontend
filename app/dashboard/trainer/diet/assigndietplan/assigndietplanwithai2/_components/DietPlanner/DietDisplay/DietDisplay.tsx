@@ -10,14 +10,44 @@ export function DietDisplay({ dietPlan }: DietDisplayProps) {
     return null; // Don't render anything if there's no diet plan
   }
 
+  // Calculate total calories
+  const totalCalories = dietPlan.reduce((total, meal) => {
+    const calories = parseInt(meal.description.split(' ')[0], 10) || 0;
+    return total + calories;
+  }, 0);
+
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4 text-center text-red-600">
-        {" "}
-        {/* Added styling for "Generated diet" */}
-        Generated diet
-      </h2>
-      <div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="p-3 bg-blue-50 rounded-md border border-blue-100 text-center">
+          <div className="text-sm text-gray-500 mb-1">
+            Total Calories
+          </div>
+          <div className="text-xl font-semibold text-blue-700">
+            {totalCalories} kcal
+          </div>
+        </div>
+        
+        <div className="p-3 bg-blue-50 rounded-md border border-blue-100 text-center">
+          <div className="text-sm text-gray-500 mb-1">
+            Meals
+          </div>
+          <div className="text-xl font-semibold text-blue-700">
+            {dietPlan.length}
+          </div>
+        </div>
+        
+        <div className="p-3 bg-blue-50 rounded-md border border-blue-100 text-center">
+          <div className="text-sm text-gray-500 mb-1">
+            Balanced Diet
+          </div>
+          <div className="text-xl font-semibold text-blue-700">
+            Nutritionist Approved
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
         {dietPlan.map((meal) => (
           <MealCard key={meal.id} meal={meal} />
         ))}

@@ -1,5 +1,6 @@
 // src/app/diet-page/components/DietPlanner/DietDisplay/MealCard.tsx
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Utensils, Clock, Info } from "lucide-react";
 
 // Define a type for the meal data (consider putting this in types.ts)
 export interface Meal {
@@ -8,9 +9,9 @@ export interface Meal {
     time: string;
     description: string;
     instructions: string[];
-    protein: string; // e.g., "20% (100cal)"
-    fat: string;     // e.g., "30% (120cal)"
-    carbs: string;   // e.g., "50% (140cal)"
+    protein: string; // e.g., "20g (20%)"
+    fat: string;     // e.g., "30g (30%)"
+    carbs: string;   // e.g., "50g (50%)"
 }
 
 interface MealCardProps {
@@ -18,29 +19,95 @@ interface MealCardProps {
 }
 
 export function MealCard({ meal }: MealCardProps) {
+    // Extract percentage values from macros for progress bars
+    const getPercentage = (macroStr: string): number => {
+        const match = macroStr.match(/\((\d+)%\)/);
+        return match ? parseInt(match[1], 10) : 0;
+    };
+
+    const proteinPercentage = getPercentage(meal.protein);
+    const fatPercentage = getPercentage(meal.fat);
+    const carbsPercentage = getPercentage(meal.carbs);
+
     return (
-        <Card className="mb-4">
-            <CardHeader className="pb-2">
-                <CardTitle className="text-lg">{`${meal.name} : ${meal.time}`}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm space-y-2">
-                <p><span className="font-medium">Meal:</span> {meal.description}</p>
-                <div>
-                    <p className="font-medium">Instructions:</p>
-                    <ul className="list-disc list-inside text-muted-foreground pl-2">
-                        {meal.instructions.map((inst, index) => (
-                            <li key={index as number}>{inst}</li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
-                    <p className="font-medium">Macros:</p>
-                    <div className="text-muted-foreground pl-2">
-                        <p>Protein: {meal.protein}</p>
-                        <p>Fat: {meal.fat}</p>
-                        <p>Carbs: {meal.carbs}</p>
+        <Card className="overflow-hidden border border-blue-100">
+            <CardHeader className="py-3 px-4 bg-blue-50">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                        <Utensils className="h-5 w-5 text-blue-500 mr-2" />
+                        <h3 className="font-medium text-blue-800">{meal.name}</h3>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-500">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{meal.time}</span>
                     </div>
                 </div>
+            </CardHeader>
+
+            <CardContent className="p-4">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {meal.description}
+                    </span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Protein</span>
+                            <span className="font-medium">{meal.protein}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                                className="bg-blue-600 h-2.5 rounded-full" 
+                                style={{ width: `${proteinPercentage}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Carbs</span>
+                            <span className="font-medium">{meal.carbs}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                                className="bg-green-500 h-2.5 rounded-full" 
+                                style={{ width: `${carbsPercentage}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Fat</span>
+                            <span className="font-medium">{meal.fat}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                                className="bg-amber-500 h-2.5 rounded-full" 
+                                style={{ width: `${fatPercentage}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                {meal.instructions.length > 0 && (
+                    <div className="mt-4">
+                        <div className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <Info className="h-4 w-4 mr-1 text-blue-500" />
+                            <span>Instructions</span>
+                        </div>
+                        <ul className="space-y-1 text-sm text-gray-600 pl-2">
+                            {meal.instructions.map((inst, index) => (
+                                <li key={index} className="flex items-start">
+                                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500 mt-1.5 mr-2"></span>
+                                    <span>{inst}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

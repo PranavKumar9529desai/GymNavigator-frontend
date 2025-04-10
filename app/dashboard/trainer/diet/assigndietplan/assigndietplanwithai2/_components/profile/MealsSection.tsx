@@ -10,40 +10,58 @@ interface MealsSectionProps {
 }
 
 export function MealsSection({ profile }: MealsSectionProps) {
-	// Format meal preferences for better display
-	const formatMealPreferences = (mealTimes?: string): string[] => {
-		if (!mealTimes) return [];
+	// Default meal schedule if none provided
+	const defaultMeals: MealTime[] = [
+		{ name: "Breakfast", time: "08:00" },
+		{ name: "Lunch", time: "13:00" },
+		{ name: "Dinner", time: "19:00" },
+	];
 
-		// Remove quotes and split by commas
-		return mealTimes
-			.replace(/"/g, "")
-			.split(",")
-			.map((meal) => meal.trim())
-			.filter((meal) => meal.length > 0);
-	};
-
-	// Parse meal timings from JSON string
-	const parseMealTimings = (mealTimingsJson?: string): MealTime[] => {
-		if (!mealTimingsJson) return [];
+	// Helper function to extract mealPreferences from profile
+	const getMealPreferences = (profile?: HealthProfile): MealTime[] => {
+		if (!profile) return [];
 		
-		try {
-			return JSON.parse(mealTimingsJson);
-		} catch (error) {
-			console.error("Failed to parse meal timings:", error);
-			return [];
+		// Try to access mealPreferences if it exists
+		const mealPrefs = (profile as any).mealPreferences;
+		if (Array.isArray(mealPrefs) && mealPrefs.length > 0) {
+			return mealPrefs;
 		}
+		
+		// Try to access mealTimings if it exists
+		const mealTimings = (profile as any).mealTimings;
+		if (mealTimings && typeof mealTimings === 'string') {
+			try {
+				const parsed = JSON.parse(mealTimings);
+				if (Array.isArray(parsed)) {
+					return parsed;
+				}
+			} catch (e) {
+				console.error("Failed to parse meal timings", e);
+			}
+		}
+		
+		return [];
 	};
 
-	// Parse data
-	const mealTimings = parseMealTimings(profile?.mealTimings);
-	const mealPreferences = formatMealPreferences(profile?.mealTimes);
+	// Use profile meals or default if not available
+	const mealsToShow = getMealPreferences(profile).length > 0
+		? getMealPreferences(profile)
+		: defaultMeals;
+		
+	// Helper to get number of meals safely
+	const getNumberOfMeals = (profile?: HealthProfile): number | undefined => {
+		if (!profile) return undefined;
+		return typeof (profile as any).numberOfMeals === 'number'
+			? (profile as any).numberOfMeals 
+			: undefined;
+	};
 
 	return (
-		<div className="p-4 border-b border-gray-200">
-			<h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+		<div className="p-4 border-b border-blue-100">
+			<h3 className="font-semibold text-blue-800 mb-3 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					className="h-5 w-5 mr-2 text-green-600"
+					className="h-5 w-5 mr-2 text-blue-600"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -52,70 +70,39 @@ export function MealsSection({ profile }: MealsSectionProps) {
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						strokeWidth={2}
-						d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+						d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 					/>
 				</svg>
-				Meals
+				Meal Schedule
 			</h3>
 
-			{mealPreferences.length > 0 && (
-				<div className="mb-4">
-					<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
-						Meal Preferences
-					</span>
-					<div className="flex flex-wrap gap-2">
-						{mealPreferences.map((meal, index) => (
-							<span
-								key={`meal-${index}`}
-								className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-full text-sm"
-							>
-								{meal}
-							</span>
-						))}
-					</div>
-				</div>
-			)}
-
-			{mealTimings.length > 0 && (
-				<div className="mb-4">
-					<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
-						Meal Timings
-					</span>
-					<div className="flex flex-wrap gap-2">
-						{mealTimings.map((meal, index) => (
-							<div 
-								key={`timing-${index}`}
-								className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm flex items-center"
-							>
-								<span className="font-medium">{meal.name}</span>
-								<span className="mx-1">•</span>
-								<span>{meal.time}</span>
-							</div>
-						))}
-					</div>
-				</div>
-			)}
-
-			{Array.isArray(profile?.nonVegDays) &&
-				profile.nonVegDays.some((day) => day.selected) && (
-					<div className="mt-4">
-						<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-2">
-							Non-Veg Days
+			<ul className="space-y-2">
+				{mealsToShow.map((meal: MealTime, index: number) => (
+					<li
+						key={index}
+						className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"
+					>
+						<span className="w-9 h-9 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mr-3 font-medium">
+							{index + 1}
 						</span>
-						<div className="flex flex-wrap gap-2">
-							{profile.nonVegDays
-								.filter((day) => day.selected)
-								.map((day) => (
-									<span
-										key={day.day}
-										className="px-3 py-1.5 bg-red-50 text-red-700 rounded-full text-sm"
-									>
-										{day.day}
-									</span>
-								))}
+						<div>
+							<span className="font-medium text-blue-700">{meal.name}</span>
+							<span className="text-xs text-gray-500 ml-2">~ {meal.time}</span>
 						</div>
-					</div>
-				)}
+					</li>
+				))}
+			</ul>
+
+			{getNumberOfMeals(profile) && (
+				<div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+					<span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+						Preferred Meals Per Day
+					</span>
+					<p className="font-medium text-lg text-blue-700 mt-1">
+						{getNumberOfMeals(profile)}
+					</p>
+				</div>
+			)}
 		</div>
 	);
 }

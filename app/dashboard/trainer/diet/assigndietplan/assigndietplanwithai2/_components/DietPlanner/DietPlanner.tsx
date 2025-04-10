@@ -89,31 +89,47 @@ export function DietPlanner() {
             />
             
             {isPending && (
-                <div className="flex justify-center items-center p-12">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                    <p className="ml-2 text-blue-600">Generating personalized diet plans...</p>
+                <div className="flex flex-col justify-center items-center p-8 bg-white rounded-lg shadow-sm border border-blue-100">
+                    <Loader2 className="h-10 w-10 animate-spin text-blue-600 mb-4" />
+                    <p className="text-blue-700 font-medium">Generating personalized diet plans...</p>
+                    <p className="text-sm text-blue-500 mt-2">This may take a moment as we create the perfect meal plan</p>
                 </div>
             )}
             
             {!isPending && dietPlans && dietPlans[activeDay] && (
-                <div className="mt-4">
-                    <h2 className="text-lg font-semibold mb-2 text-blue-700">{activeDay} Diet Plan</h2>
-                    <DietDisplay dietPlan={dietPlans[activeDay]} />
+                <div className="mt-4 bg-white rounded-lg shadow-sm border border-blue-50 overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-blue-100">
+                        <h2 className="text-xl font-semibold text-blue-800">{activeDay} Meal Plan</h2>
+                    </div>
+                    <div className="p-4">
+                        <DietDisplay dietPlan={dietPlans[activeDay]} />
+                    </div>
                 </div>
             )}
             
             {!isPending && dietPlans && !dietPlans[activeDay] && (
-                <div className="text-center p-8 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No diet plan available for {activeDay}.</p>
-                    <Button onClick={handleGenerateDiet} variant="outline" className="mt-4">
+                <div className="bg-white rounded-lg shadow-sm border border-blue-50 p-6 text-center">
+                    <div className="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <p className="text-gray-600 mb-4">No diet plan available for {activeDay}.</p>
+                    <Button onClick={handleGenerateDiet} variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50">
                         Generate diet plan
                     </Button>
                 </div>
             )}
             
             {!isPending && !dietPlans && (
-                <div className="text-center p-8 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">Click "Generate Diet Plan" to create a personalized plan based on the user's profile.</p>
+                <div className="bg-white rounded-lg shadow-sm border border-blue-50 p-6 text-center">
+                    <div className="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p className="text-gray-600 mb-2">Ready to create a personalized nutrition plan?</p>
+                    <p className="text-sm text-gray-500 mb-4">Click "Generate Diet Plan" to create a customized plan based on the user's profile.</p>
                 </div>
             )}
         </div>

@@ -15,8 +15,26 @@ interface UserProfileCardProps {
 export function UserProfileCard({ profile }: UserProfileCardProps) {
 	const [showMore, setShowMore] = useState(false);
 
+	// Helper function to ensure we always pass string arrays to components
+	const ensureStringArray = (value: any): string[] => {
+		if (!value) return [];
+		if (Array.isArray(value)) {
+			// If it's an array of Selection objects, extract the names
+			if (value.length > 0 && typeof value[0] === 'object' && 'name' in value[0]) {
+				return value.filter(item => item.selected).map(item => item.name);
+			}
+			// If it's already a string array, return it
+			return value;
+		}
+		// If it's a string, convert to array with single item
+		if (typeof value === 'string') {
+			return [value];
+		}
+		return [];
+	};
+
 	return (
-		<div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+		<div className="bg-white rounded-lg shadow-sm overflow-hidden border border-blue-100">
 			{/* Profile Section - Avatar, Name, Contact */}
 			<ProfileHeader fullname={profile?.fullname} contact={profile?.contact} />
 
@@ -29,7 +47,7 @@ export function UserProfileCard({ profile }: UserProfileCardProps) {
 			{/* Show More Button */}
 			<button
 				onClick={() => setShowMore(!showMore)}
-				className="w-full py-3 text-center text-blue-600 font-medium hover:bg-blue-50 transition-colors"
+				className="w-full py-3 text-center text-blue-600 font-medium hover:bg-blue-50 transition-colors border-t border-blue-100"
 			>
 				{showMore ? "Show Less" : "Show More"}
 			</button>
@@ -39,18 +57,18 @@ export function UserProfileCard({ profile }: UserProfileCardProps) {
 				<>
 					{/* Health Conditions Section */}
 					<HealthConditionsSection
-						medicalConditions={profile?.medicalConditions}
+						medicalConditions={ensureStringArray(profile?.medicalConditions)}
 						otherMedicalCondition={profile?.otherMedicalCondition}
 					/>
 
 					{/* Preferences Section */}
 					<PreferencesSection
 						activityLevel={profile?.activityLevel}
-						allergies={profile?.allergies}
+						allergies={ensureStringArray(profile?.allergies)}
 						otherAllergy={profile?.otherAllergy}
 						religiousPreference={profile?.religiousPreference}
 						otherReligiousPreference={profile?.otherReligiousPreference}
-						dietaryRestrictions={profile?.dietaryRestrictions}
+						dietaryRestrictions={ensureStringArray(profile?.dietaryRestrictions)}
 					/>
 				</>
 			)}
