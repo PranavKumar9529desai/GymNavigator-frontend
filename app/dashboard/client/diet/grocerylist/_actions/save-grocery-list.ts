@@ -36,11 +36,11 @@ export async function saveGroceryList(
     
     // Save the grocery list to the backend
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.post('/client/diet/grocerylist', {
+    const response = await clientAxios.post('/diet/grocerylist', {
       timeFrame,
       groceryList
     });
-    
+    console.log('response from save grocery list', response);
     if (!response.data?.success) {
       return { 
         success: false, 

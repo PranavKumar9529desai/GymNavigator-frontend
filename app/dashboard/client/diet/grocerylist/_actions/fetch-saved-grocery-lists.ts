@@ -46,7 +46,7 @@ export async function fetchSavedGroceryLists(): Promise<FetchGroceryListsResult>
     
     // Fetch saved grocery lists from the backend
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.get('/client/diet/grocerylists');
+    const response = await clientAxios.get('/diet/grocerylists');
     
     if (!response.data?.success) {
       return { 
@@ -82,7 +82,7 @@ export async function fetchGroceryListById(id: number): Promise<FetchGroceryList
     
     // Fetch the specific grocery list from the backend
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.get(`/client/diet/grocerylist/${id}`);
+    const response = await clientAxios.get(`/diet/grocerylist/${id}`);
     
     if (!response.data?.success) {
       return { 

@@ -32,7 +32,7 @@ export async function updateGroceryItem(
     
     // Update the grocery item in the backend
     const clientAxios = await ClientReqConfig();
-    const response = await clientAxios.patch(`/client/diet/groceryitem/${itemId}`, {
+    const response = await clientAxios.patch(`/diet/groceryitem/${itemId}`, {
       isPurchased
     });
     

@@ -14,7 +14,8 @@ import {
   Clipboard, 
   Download, 
   Save,
-  ShoppingCart 
+  ShoppingCart,
+  MinusCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { saveGroceryList } from '../_actions/save-grocery-list';
@@ -32,6 +33,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
   )); 
   const [isSaving, startSaving] = useTransition();
   const { toast } = useToast();
+  const [modifiedGroceryList, setModifiedGroceryList] = useState<GroceryListResponse>(groceryList);
   
   const toggleItemPurchased = (categoryId: string, itemName: string) => {
     const itemId = `${categoryId}-${itemName}`;
@@ -44,6 +46,43 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
     }
     
     setPurchasedItems(newPurchasedItems);
+  };
+  
+  const deleteItem = (categoryId: string, itemName: string) => {
+    setModifiedGroceryList(prevList => {
+      const newList = {...prevList};
+      
+      // Find the category and remove the item
+      const categoryIndex = newList.categories.findIndex(cat => cat.id === categoryId);
+      if (categoryIndex !== -1) {
+        // Filter out the item with the matching name
+        newList.categories[categoryIndex] = {
+          ...newList.categories[categoryIndex],
+          items: newList.categories[categoryIndex].items.filter(item => item.name !== itemName)
+        };
+        
+        // If the category is now empty, remove it
+        if (newList.categories[categoryIndex].items.length === 0) {
+          newList.categories = newList.categories.filter((_, index) => index !== categoryIndex);
+        }
+      }
+      
+      // Also remove from purchased items if it was there
+      const itemId = `${categoryId}-${itemName}`;
+      if (purchasedItems.has(itemId)) {
+        const newPurchasedItems = new Set(purchasedItems);
+        newPurchasedItems.delete(itemId);
+        setPurchasedItems(newPurchasedItems);
+      }
+      
+      return newList;
+    });
+    
+    toast({
+      title: "Item removed",
+      description: `"${itemName}" has been removed from your grocery list`,
+      duration: 3000,
+    });
   };
   
   const toggleCategory = (categoryId: string) => {
@@ -59,7 +98,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
   };
   
   const copyToClipboard = () => {
-    const text = groceryList.categories
+    const text = modifiedGroceryList.categories
       .map(category => {
         return `== ${category.name} ==\n${category.items
           .map(item => `• ${item.name} - ${item.quantity} ${item.unit}`)
@@ -80,7 +119,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
       try {
         const result = await saveGroceryList({
           timeFrame,
-          groceryList
+          groceryList: modifiedGroceryList
         });
         
         if (result.success) {
@@ -126,7 +165,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
             <span className="hidden sm:inline">Copy</span>
           </Button>
           <Button 
-            variant="outline" 
+            variant="default" 
             size="sm" 
             className="flex items-center gap-1"
             onClick={handleSaveList}
@@ -139,7 +178,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {groceryList.categories.map((category) => (
+        {modifiedGroceryList.categories.map((category) => (
           <Card key={category.id} className="shadow-sm">
             <CardHeader className="pb-2 cursor-pointer" onClick={() => toggleCategory(category.id)}>
               <div className="flex items-center justify-between">
@@ -192,14 +231,28 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
                             )}
                           </label>
                         </div>
-                        <span 
-                          className={cn(
-                            "text-sm font-medium",
-                            isPurchased && "text-muted-foreground"
-                          )}
-                        >
-                          {item.quantity} {item.unit}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className={cn(
+                              "text-sm font-medium",
+                              isPurchased && "text-muted-foreground"
+                            )}
+                          >
+                            {item.quantity} {item.unit}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 text-red-500 hover:text-red-700"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteItem(category.id, item.name);
+                            }}
+                          >
+                            <MinusCircle className="h-4 w-4" />
+                            <span className="sr-only">Delete item</span>
+                          </Button>
+                        </div>
                       </li>
                     );
                   })}
@@ -212,7 +265,7 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
       
       <div className="mt-4 p-3 bg-primary/10 rounded-lg flex items-center justify-between">
         <span className="text-sm text-muted-foreground">
-          {purchasedItems.size} of {groceryList.categories.reduce((acc, cat) => acc + cat.items.length, 0)} items purchased
+          {purchasedItems.size} of {modifiedGroceryList.categories.reduce((acc, cat) => acc + cat.items.length, 0)} items purchased
         </span>
         <Button 
           variant="ghost" 
