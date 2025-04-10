@@ -46,15 +46,19 @@ export async function generateGroceryList(
       });
       
       // Log the raw response to help with debugging
-      console.log("Raw Gemini response:", rawResponse.substring(0, 100) + "...");
-      
-      // Validate and parse manually
-      const validationResult = validateGroceryList(rawResponse);
-      
-      if (validationResult.valid && validationResult.data) {
-        return validationResult.data;
+      if (rawResponse) {
+        console.log("Raw Gemini response:", rawResponse.substring(0, 100) + "...");
+        
+        // Validate and parse manually
+        const validationResult = validateGroceryList(rawResponse);
+        
+        if (validationResult.valid && validationResult.data) {
+          return validationResult.data;
+        } else {
+          throw new Error(`Validation failed: ${JSON.stringify(validationResult.errors)}`);
+        }
       } else {
-        throw new Error(`Validation failed: ${JSON.stringify(validationResult.errors)}`);
+        throw new Error('Received null response from Gemini');
       }
     } catch (fallbackError) {
       console.error("Fallback approach also failed:", fallbackError);

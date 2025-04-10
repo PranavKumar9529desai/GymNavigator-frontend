@@ -13,8 +13,12 @@ import {
   ChevronUp, 
   Clipboard, 
   Download, 
+  Save,
   ShoppingCart 
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { saveGroceryList } from '../_actions/save-grocery-list';
+import { useTransition } from 'react';
 
 interface GroceryListViewProps {
   groceryList: GroceryListResponse;
@@ -26,6 +30,8 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(
     groceryList.categories.map(cat => cat.id) // Default all expanded
   )); 
+  const [isSaving, startSaving] = useTransition();
+  const { toast } = useToast();
   
   const toggleItemPurchased = (categoryId: string, itemName: string) => {
     const itemId = `${categoryId}-${itemName}`;
@@ -62,7 +68,45 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
       .join('\n\n');
     
     navigator.clipboard.writeText(text);
-    // You could add a toast notification here
+    toast({
+      title: "Copied to clipboard",
+      description: "Grocery list copied to clipboard",
+      duration: 3000,
+    });
+  };
+  
+  const handleSaveList = () => {
+    startSaving(async () => {
+      try {
+        const result = await saveGroceryList({
+          timeFrame,
+          groceryList
+        });
+        
+        if (result.success) {
+          toast({
+            title: "Grocery list saved",
+            description: "Your grocery list has been saved successfully",
+            duration: 3000,
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Save failed",
+            description: result.error || "Failed to save grocery list",
+            duration: 3000,
+          });
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Save failed",
+          description: "An unexpected error occurred",
+          duration: 3000,
+        });
+        console.error(error);
+      }
+    });
   };
   
   return (
@@ -85,9 +129,11 @@ export function GroceryListView({ groceryList, timeFrame }: GroceryListViewProps
             variant="outline" 
             size="sm" 
             className="flex items-center gap-1"
+            onClick={handleSaveList}
+            disabled={isSaving}
           >
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Export</span>
+            <Save className="w-4 h-4" />
+            <span className="hidden sm:inline">Save</span>
           </Button>
         </div>
       </div>
