@@ -4,7 +4,8 @@
 import React, { useState, useTransition } from 'react';
 import { DietControls } from '../DietPlanner/DietControls'; // Adjust path if needed
 import { DietDisplay } from './DietDisplay/DietDisplay';   // Adjust path if needed
-import { generateDietWithAI, type DietPlan } from '../../_actions/generate-diet-with-ai';
+import { generateDietWithAI2 } from '../../_actions/generate-diet-with-ai2';
+import { type DietPlan } from '../../_actions/generate-ai-diet';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from "lucide-react";
@@ -54,7 +55,7 @@ export function DietPlanner() {
         startTransition(async () => {
             try {
                 // Generate diet plans for all days of the week directly using server action
-                const result = await generateDietWithAI(
+                const result = await generateDietWithAI2(
                     userId,
                     ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
                 );

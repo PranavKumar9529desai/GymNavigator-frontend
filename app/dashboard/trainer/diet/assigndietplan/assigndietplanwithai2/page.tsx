@@ -5,9 +5,9 @@ import { UserProfileCard } from "./_components/UserProfileCard";
 export default async function AssignDietPlanWithAI2({
   searchParams,
 }: {
-  searchParams: { userId?: string };
+  searchParams: Promise<{ userId?: string }>;
 }) {
-  const userId = searchParams.userId || "defaultUserId";
+  const userId = (await searchParams).userId || "defaultUserId";
   const profileResult = await gethealthprofileById(userId);
 
   return (
