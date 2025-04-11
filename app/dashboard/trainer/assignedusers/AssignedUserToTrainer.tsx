@@ -8,10 +8,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { AssignedUser } from './GetuserassignedTotrainers';
-
-interface AssignedUserToTrainerProps {
-	users: AssignedUser[];
-}
+import { getUsersAssignedToTrainer } from './GetuserassignedTotrainers';
+import { useQuery } from '@tanstack/react-query';
 
 const columns: ColumnDef<AssignedUser>[] = [
 	{
@@ -82,9 +80,12 @@ const columns: ColumnDef<AssignedUser>[] = [
 	},
 ];
 
-export default function AssignedUserToTrainer({
-	users,
-}: AssignedUserToTrainerProps) {
+export default function AssignedUserToTrainer() {
+	const { data: users = [] } = useQuery({
+		queryKey: ['assigned-users'],
+		queryFn: getUsersAssignedToTrainer,
+	});
+
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filteredUsers, setFilteredUsers] = useState<AssignedUser[]>(users);
 

@@ -256,54 +256,95 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
 			<div className="md:hidden">
 				<DataCard
 					data={filteredUsers}
-					renderCard={(user) => {
-						const hasDiet = !!user.dietPlanId;
-						const currentPlan = dietPlans.find((p) => p.id === user.dietPlanId);
+					renderCard={(user) => (
+						<div className="p-4 space-y-4 bg-white rounded-lg shadow">
+							<div className="flex justify-between items-start">
+								<div>
+									<h3 className="font-medium text-lg">{user.name}</h3>
+									<p className="text-sm text-gray-500">{user.email}</p>
+								</div>
+								<div className={`px-3 py-1 rounded-full text-sm ${
+									user.dietPlanId
+										? 'bg-green-100 text-green-800'
+										: 'bg-red-100 text-red-800'
+								}`}>
+									{user.dietPlanId ? 'Has Diet Plan' : 'No Diet Plan'}
+								</div>
+							</div>
 
-						return (
-							<div className="p-4 space-y-2">
-								<h3 className="font-medium">{user.name}</h3>
-								<p className="text-sm text-gray-500">{user.email}</p>
+							<div className="grid grid-cols-2 gap-2">
+								<p className="text-sm">
+									<span className="text-gray-600">Gender: </span>
+									<span className={user.HealthProfile?.gender ? 'text-gray-900' : 'text-gray-500'}>
+										{user.HealthProfile?.gender || 'Not Updated'}
+									</span>
+								</p>
+								<p className="text-sm">
+									<span className="text-gray-600">Goal: </span>
+									<span className={user.HealthProfile?.goal ? 'text-gray-900' : 'text-gray-500'}>
+										{user.HealthProfile?.goal || 'Not Updated'}
+									</span>
+								</p>
+								<p className="text-sm">
+									<span className="text-gray-600">Weight: </span>
+									<span className={user.HealthProfile?.weight ? 'text-gray-900' : 'text-gray-500'}>
+										{user.HealthProfile?.weight ? `${user.HealthProfile.weight} kg` : 'Not Updated'}
+									</span>
+								</p>
+								<p className="text-sm">
+									<span className="text-gray-600">Height: </span>
+									<span className={user.HealthProfile?.height ? 'text-gray-900' : 'text-gray-500'}>
+										{user.HealthProfile?.height ? `${user.HealthProfile.height} cm` : 'Not Updated'}
+									</span>
+								</p>
+							</div>
+
+							<div className="space-y-2">
 								<Select
-									onValueChange={(value) =>
-										handleDietAssignment(user.id, value)
-									}
+									defaultValue={user.dietPlanId?.toString()}
+									onValueChange={(value) => {
+										handleDietAssignment(
+											user.id,
+											value,
+											user.dietPlanId || undefined
+										);
+									}}
 								>
 									<SelectTrigger
-										className={`w-full mt-2 ${
-											hasDiet
-												? 'bg-green-50 border-green-200'
+										className={`w-full ${
+											user.dietPlanId
+												? 'bg-green-50 border-green-200 text-green-700'
 												: 'bg-red-50 border-red-200'
 										}`}
 									>
-										<SelectValue
-											placeholder={
-												hasDiet ? 'Change Diet Plan' : 'No diet plan assigned'
-											}
-										/>
+										<SelectValue placeholder="Select a diet plan" />
 									</SelectTrigger>
 									<SelectContent>
 										{dietPlans.map((plan) => (
-											<SelectItem key={plan.id} value={plan.id.toString()}>
+											<SelectItem
+												key={plan.id}
+												value={plan.id.toString()}
+												className={
+													user.dietPlanId === plan.id
+														? 'bg-green-50 text-green-700'
+														: ''
+												}
+											>
 												{plan.name} ({plan.targetCalories} cal)
 											</SelectItem>
 										))}
 									</SelectContent>
 								</Select>
+
 								<Link
 									href={`/dashboard/trainer/diet/assigndietplan/assigndietplanwithai?userId=${user.id}`}
 									className="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
 								>
 									Generate Diet Plan with AI
 								</Link>
-								{hasDiet && (
-									<div className="mt-2 text-xs text-green-600">
-										Current Plan: {currentPlan?.name}
-									</div>
-								)}
 							</div>
-						);
-					}}
+						</div>
+					)}
 				/>
 			</div>
 		</div>
