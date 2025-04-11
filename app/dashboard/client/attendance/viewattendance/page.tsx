@@ -24,6 +24,7 @@ export default async function ViewAttendancePage() {
 	]);
 
 	// If no cached data, prefetch it
+	// TODO remove this initial data fetching
 	if (!cachedData) {
 		await queryClient.prefetchQuery({
 			queryKey: ['attendanceDays'],
