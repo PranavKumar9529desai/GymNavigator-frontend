@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSelectedLayoutSegments } from "next/navigation";
 import type { ReactNode } from "react";
+import NoAssignmentMessage from "./NoAssignmentMessage";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -36,35 +37,12 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   if (needsWorkoutProtection || needsDietProtection) {
     // For workout routes, check workout assignment
     if (needsWorkoutProtection && !assignmentStatus?.data?.workout_assigned) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-semibold mb-2">
-              You don't have any workout plans assigned yet.
-            </p>
-            <p className="text-gray-600">
-              You can explore available workouts in the "All Workouts" section.
-              Contact your trainer to get a personalized workout plan.
-            </p>
-          </div>
-        </div>
-      );
+      return <NoAssignmentMessage type="workout" />;
     }
 
     // For diet routes, check diet assignment
     if (needsDietProtection && !assignmentStatus?.data?.diet_assigned) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-semibold mb-2">
-              You don't have any diet plans assigned yet.
-            </p>
-            <p className="text-gray-600">
-              Please contact your trainer to get a personalized diet plan.
-            </p>
-          </div>
-        </div>
-      );
+      return <NoAssignmentMessage type="diet" />;
     }
   }
 
