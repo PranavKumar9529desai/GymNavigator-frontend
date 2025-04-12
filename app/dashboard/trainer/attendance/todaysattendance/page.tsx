@@ -1,26 +1,31 @@
 export const dynamic = 'force-dynamic';
-import React from 'react';
+import { Suspense } from 'react';
 import UserAttendance from './UserAttendance';
 import { TodayAttendance } from './getTodayAttendance';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { queryClient } from '@/app/queryClient';
+import { Loader2 } from 'lucide-react';
 
-const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
-	return shift === 'MORNING' ? 'Morning' : 'Evening';
-};
+function LoadingSpinner() {
+	return (
+		<div className="flex h-screen w-full items-center justify-center">
+			<Loader2 className="h-8 w-8 animate-spin text-primary" />
+		</div>
+	);
+}
 
 export default async function AttendancePage() {
-	const attendanceData = await TodayAttendance();
+	await queryClient.prefetchQuery({
+		queryKey: ['todays-attendance'],
+		queryFn: TodayAttendance,
+		staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
+	});
 
-	if (!attendanceData.users) {
-		return <div>Failed to load attendance data</div>;
-	}
-
-	const formattedUsers = attendanceData.users.map((user) => ({
-		id: user.id,
-		name: user.name,
-		shift: formatShift(user.shift),
-		todaysAttendance: user.isPresent,
-		attendanceTime: user.attendanceTime,
-	}));
-
-	return <UserAttendance initialUsers={formattedUsers} />;
+	return (
+		<Suspense fallback={<LoadingSpinner />}>
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<UserAttendance />
+			</HydrationBoundary>
+		</Suspense>
+	);
 }

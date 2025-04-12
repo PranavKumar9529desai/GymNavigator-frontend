@@ -13,10 +13,16 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, UserCheck, UserX, Users } from 'lucide-react';
+import { ArrowUpDown, Search, UserCheck, UserX, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { TodayAttendance, type AttendanceUser } from './getTodayAttendance';
 
-interface AttendanceUser {
+const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
+	return shift === 'MORNING' ? 'Morning' : 'Evening';
+};
+
+interface FormattedUser {
 	id: number;
 	name: string;
 	shift: 'Morning' | 'Evening';
@@ -24,11 +30,7 @@ interface AttendanceUser {
 	attendanceTime: string | null;
 }
 
-interface UserAttendanceProps {
-	initialUsers: AttendanceUser[];
-}
-
-const columns: ColumnDef<AttendanceUser>[] = [
+const columns: ColumnDef<FormattedUser>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
@@ -106,18 +108,26 @@ const columns: ColumnDef<AttendanceUser>[] = [
 	},
 ];
 
-export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
-	const [users] = useState<AttendanceUser[]>(initialUsers);
+export default function UserAttendance() {
+	const { data: attendanceData } = useQuery({
+		queryKey: ['todays-attendance'],
+		queryFn: TodayAttendance,
+	});
+
+	const formattedUsers: FormattedUser[] = attendanceData?.users?.map((user) => ({
+		id: user.id,
+		name: user.name,
+		shift: formatShift(user.shift),
+		todaysAttendance: user.isPresent,
+		attendanceTime: user.attendanceTime,
+	})) || [];
+
 	const [searchTerm, setSearchTerm] = useState('');
-	const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>(
-		'All',
-	);
-	const [filteredUsers, setFilteredUsers] =
-		useState<AttendanceUser[]>(initialUsers);
+	const [filteredUsers, setFilteredUsers] = useState<FormattedUser[]>(formattedUsers);
 
 	// Calculate stats
-	const totalUsers = users.length;
-	const presentUsers = users.filter((user) => user.todaysAttendance).length;
+	const totalUsers = formattedUsers.length;
+	const presentUsers = formattedUsers.filter((u) => u.todaysAttendance).length;
 	const absentUsers = totalUsers - presentUsers;
 
 	const statusCards = [
@@ -128,13 +138,13 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 			gradient: 'blue',
 		},
 		{
-			title: 'Present Today',
+			title: 'Present Users',
 			value: presentUsers,
 			icon: UserCheck,
 			gradient: 'green',
 		},
 		{
-			title: 'Absent Today',
+			title: 'Absent Users',
 			value: absentUsers,
 			icon: UserX,
 			gradient: 'red',
@@ -142,50 +152,36 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 	] as const;
 
 	useEffect(() => {
-		const filtered = users.filter(
-			(user) =>
-				user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-				(shiftFilter === 'All' || user.shift === shiftFilter),
+		const filtered = formattedUsers.filter((user) =>
+			user.name.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 		setFilteredUsers(filtered);
-	}, [searchTerm, shiftFilter, users]);
+	}, [searchTerm, formattedUsers]);
+
+	if (!attendanceData?.users) {
+		return <div>Failed to load attendance data</div>;
+	}
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
-			<h1 className="text-2xl font-bold text-center">
-				Today&apos;s Attendance
-			</h1>
+			<h1 className="text-2xl font-bold text-center">Today's Attendance</h1>
 
 			{/* Stats Cards */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 				{statusCards.map((card) => (
 					<StatusCard key={card.title} {...card} />
 				))}
 			</div>
 
-			{/* Filters */}
-			<div className="flex flex-col md:flex-row gap-4 mb-6">
+			{/* Search */}
+			<div className="flex items-center space-x-2 mb-6">
+				<Search className="w-5 h-5 text-gray-400" />
 				<Input
 					placeholder="Search users..."
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 					className="max-w-sm"
 				/>
-				<Select
-					value={shiftFilter}
-					onValueChange={(value: 'Morning' | 'Evening' | 'All') =>
-						setShiftFilter(value)
-					}
-				>
-					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Select shift" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="All">All Shifts</SelectItem>
-						<SelectItem value="Morning">Morning</SelectItem>
-						<SelectItem value="Evening">Evening</SelectItem>
-					</SelectContent>
-				</Select>
 			</div>
 
 			{/* Desktop View */}
@@ -198,16 +194,32 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 				<DataCard
 					data={filteredUsers}
 					renderCard={(user) => (
-						<div className="p-4 space-y-1">
+						<div className="p-4 space-y-2">
 							<h3 className="font-medium">{user.name}</h3>
-							<p className="text-sm text-gray-500">Shift: {user.shift}</p>
-							<p
-								className={`text-sm font-medium ${
-									user.todaysAttendance ? 'text-green-600' : 'text-red-600'
-								}`}
-							>
-								Status: {user.todaysAttendance ? 'Present' : 'Absent'}
-							</p>
+							<div className="grid grid-cols-2 gap-2 mt-2">
+								<p className="text-sm">
+									<span className="text-gray-600">Shift: </span>
+									{user.shift}
+								</p>
+								<p className="text-sm">
+									<span className="text-gray-600">Status: </span>
+									<span
+										className={
+											user.todaysAttendance
+												? 'text-green-600'
+												: 'text-red-600'
+										}
+									>
+										{user.todaysAttendance ? 'Present' : 'Absent'}
+									</span>
+								</p>
+								{user.attendanceTime && (
+									<p className="text-sm col-span-2">
+										<span className="text-gray-600">Time: </span>
+										{new Date(user.attendanceTime).toLocaleTimeString()}
+									</p>
+								)}
+							</div>
 						</div>
 					)}
 				/>

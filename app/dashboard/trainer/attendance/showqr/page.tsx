@@ -1,29 +1,33 @@
 import GymQRCode from '@/app/dashboard/owner/attendance/showqr/QrCode';
-import React from 'react';
+import { Suspense } from 'react';
 import { GetAttendanceQrData } from './GetAttendanceQrData';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { queryClient } from '@/app/queryClient';
+import { Loader2 } from 'lucide-react';
+import QRDisplay from './QRDisplay';
+
+function LoadingSpinner() {
+	return (
+		<div className="flex h-screen w-full items-center justify-center">
+			<Loader2 className="h-8 w-8 animate-spin text-primary" />
+		</div>
+	);
+}
 
 export default async function ShowQRPage() {
-	const gymData = await GetAttendanceQrData();
-
-	if (!gymData) {
-		return <div>Unable to load gym data</div>;
-	}
-
-	const qrValue = JSON.stringify({
-		AttendanceAction: {
-			gymname: gymData.gymname,
-			gymid: gymData.gymid,
-			timestamp: new Date().setMinutes(0, 0, 0),
-		},
+	await queryClient.prefetchQuery({
+		queryKey: ['attendance-qr'],
+		queryFn: GetAttendanceQrData,
+		staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
 	});
 
 	return (
 		<div className="min-h-screen flex flex-col items-center justify-center p-4">
-			<GymQRCode
-				qrdata={qrValue}
-				title="Today's Attendance"
-				subtitle="Scan this QR code to mark your attendance"
-			/>
+			<Suspense fallback={<LoadingSpinner />}>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<QRDisplay />
+				</HydrationBoundary>
+			</Suspense>
 		</div>
 	);
 }
