@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import {
 	type AssignedUser,
 	getUsersAssignedToTrainer,
-} from '../../../assignedusers/GetuserassignedTotrainers';
+} from '../_actions/GetuserassignedTotrainers';
 import { type WorkoutPlan, getAllWorkoutPlans } from '../Getworkout';
 import UserWorkoutAssignmentDetails from './_components/UserWorkoutAssignmentDetails';
 

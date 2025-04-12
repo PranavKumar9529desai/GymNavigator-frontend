@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import type { AssignedUser } from '../../../../assignedusers/GetuserassignedTotrainers';
-import { assignWorkoutPlan } from '../../_actions/assign-workout-plan';
+import { assignWorkoutPlanToUser } from '../_actions/assign-workout';
 import type { WorkoutPlan } from '../../_actions/get-workout-plans';
 import CreateWOrkoutImaage from '../_assests/gemini-logo.png';
 import WorkoutSearchFilters from './workout-search-filters';
@@ -31,11 +31,17 @@ export default function UserWorkoutAssignmentDetails({
 
 		try {
 			setIsAssigning(true);
-			await assignWorkoutPlan(user.id, selectedPlan);
-			toast.success('Workout plan assigned successfully');
+			const result = await assignWorkoutPlanToUser(user.id, selectedPlan);
+			
+			if (result.success) {
+				toast.success(result.message || 'Workout plan assigned successfully');
+				// You might want to refresh the page or update the UI to show the new assignment
+			} else {
+				toast.error('Failed to assign workout plan');
+			}
 		} catch (error) {
-			toast.error('Failed to assign workout plan');
 			console.error('Error assigning workout plan:', error);
+			toast.error(error instanceof Error ? error.message : 'Failed to assign workout plan');
 		} finally {
 			setIsAssigning(false);
 		}

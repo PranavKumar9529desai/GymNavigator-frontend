@@ -1,4 +1,4 @@
-import { getUsersAssignedToTrainer } from '../../assignedusers/GetuserassignedTotrainers';
+import { getUsersAssignedToTrainer } from './_actions/GetuserassignedTotrainers';
 import UserWorkoutList from './_components/user-workout-list';
 
 export default async function AssignWorkoutPage() {
