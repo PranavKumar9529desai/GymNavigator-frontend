@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import AssignedUserToTrainer from "./AssignedUserToTrainer";
-import { getUsersAssignedToTrainer } from "./GetuserassignedTotrainers";
+import AssignedUserToTrainer from "./_components/AssignedUserToTrainer";
+import { getUsersAssignedToTrainer } from "./_actiions/GetuserassignedTotrainers";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { queryClient } from "@/app/queryClient";
 import { Loader2 } from "lucide-react";

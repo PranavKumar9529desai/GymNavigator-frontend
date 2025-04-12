@@ -5,13 +5,12 @@ export interface AssignedUser {
 	id: string;
 	name: string;
 	email: string;
+	gender: string;
+	dietaryPreference: string;
 	membershipStatus: 'active' | 'inactive';
-	HealthProfile: {
-		weight: number;
-		height: number;
-		goal: string | null;
-		gender: string;
-	} | null;
+	activeWorkoutPlanId: number | null;
+	activeWorkoutPlanName: string | null;
+	hasActiveWorkoutPlan: boolean;
 }
 
 export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
@@ -25,6 +24,7 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 		if (response.data.msg === 'success' && Array.isArray(response.data.users)) {
 			return response.data.users;
 		}
+		console.log('response.data from the getUsersAssignedToTrainer', response.data);
 		return [];
 	} catch (error) {
 		console.error('Error fetching assigned users:', error);

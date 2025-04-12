@@ -35,6 +35,14 @@ const nextConfig = {
 				protocol: 'https',
 				hostname: 'cdn.muscleandstrength.com',
 			},
+			{
+				protocol: 'https',
+				hostname: 'avatar-placeholder.iran.liara.run',
+			},
+			{
+				protocol: 'https',
+				hostname: 'avatar.iran.liara.run',
+			},
 		],
 	},
 
