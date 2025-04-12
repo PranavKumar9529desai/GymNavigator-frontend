@@ -4,6 +4,7 @@ import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
 	Select,
 	SelectContent,
@@ -12,8 +13,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, type LucideIcon } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { ArrowUpDown, Search, UserCheck, Users, Dumbbell, UserX } from 'lucide-react';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
 import { attachWorkoutPlanToUser } from './AttachWorkoutplantoUser';
@@ -42,7 +42,6 @@ interface UserType {
 
 interface UserWorkoutAssignmentProps {
 	Users: UserType[];
-	statusCards: StatusCardProps[];
 	workoutPlans: WorkoutPlan[];
 }
 
@@ -69,19 +68,28 @@ const createColumns = (
 		},
 	},
 	{
-		accessorKey: 'gender',
-		header: 'Gender',
-	},
-	{
 		accessorKey: 'goal',
 		header: 'Fitness Goal',
+		cell: ({ row }) => (
+			<Badge variant="secondary" className="bg-purple-100 text-purple-800">
+				{row.getValue('goal')}
+			</Badge>
+		),
+	},
+	{
+		accessorKey: 'gender',
+		header: 'Gender',
+		cell: ({ row }) => (
+			<Badge variant="secondary" className="bg-gray-100 text-gray-800">
+				{row.getValue('gender')}
+			</Badge>
+		),
 	},
 	{
 		accessorKey: 'assignedWorkout',
-		header: 'Assign Workout',
+		header: 'Workout Plan',
 		cell: ({ row }) => {
 			const user = row.original;
-			console.log('Rendering workout for user:', user); // Debug log
 
 			return (
 				<div className="flex flex-col gap-1">
@@ -92,14 +100,14 @@ const createColumns = (
 						<SelectTrigger
 							className={`w-[200px] ${
 								user.hasActiveWorkoutPlan
-									? 'bg-green-50 border-green-200 text-green-700'
-									: 'bg-red-50 border-red-200 text-red-700'
+									? 'bg-green-100 text-green-800 border-green-200'
+									: 'bg-gray-100 text-gray-600 border-gray-200'
 							}`}
 						>
 							<SelectValue
 								placeholder={
 									user.hasActiveWorkoutPlan
-										? `Current: ${user.activeWorkoutPlanName}`
+										? user.activeWorkoutPlanName
 										: 'No workout assigned'
 								}
 							/>
@@ -121,11 +129,6 @@ const createColumns = (
 							))}
 						</SelectContent>
 					</Select>
-					{user.hasActiveWorkoutPlan && (
-						<p className="text-xs text-green-600">
-							Active Plan: {user.activeWorkoutPlanName}
-						</p>
-					)}
 				</div>
 			);
 		},
@@ -134,7 +137,6 @@ const createColumns = (
 
 export default function UserWorkoutAssignment({
 	Users,
-	statusCards,
 	workoutPlans,
 }: UserWorkoutAssignmentProps) {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -197,15 +199,38 @@ export default function UserWorkoutAssignment({
 		[handleWorkoutAssignment, workoutPlans],
 	);
 
-	// Helper function to get icon component
-	const getIcon = (iconName: string): LucideIcon => {
-		const Icon = LucideIcons[
-			iconName as keyof typeof LucideIcons
-		] as LucideIcon;
-		return Icon || (LucideIcons.HelpCircle as LucideIcon);
-	};
-
 	// Calculate stats
+	const totalUsers = Users.length;
+	const assignedUsers = Users.filter((u) => u.hasActiveWorkoutPlan).length;
+	const unassignedUsers = totalUsers - assignedUsers;
+	const activeUsers = Users.filter((u) => u.membershipStatus === 'active').length;
+
+	const statusCards = [
+		{
+			title: 'Total Users',
+			value: totalUsers,
+			icon: Users,
+			gradient: 'blue',
+		},
+		{
+			title: 'Active Users',
+			value: activeUsers,
+			icon: UserCheck,
+			gradient: 'green',
+		},
+		{
+			title: 'Assigned Plans',
+			value: assignedUsers,
+			icon: Dumbbell,
+			gradient: 'yellow',
+		},
+		{
+			title: 'Unassigned Users',
+			value: unassignedUsers,
+			icon: UserX,
+			gradient: 'red',
+		},
+	] as const;
 
 	useEffect(() => {
 		const filtered = Users.filter(
@@ -221,30 +246,30 @@ export default function UserWorkoutAssignment({
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
-			<h1 className="text-2xl font-bold text-center">Workout Assignment</h1>
-
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-				{statusCards.map((card) => {
-					const IconComponent = getIcon(card.iconName);
-					return (
-						<StatusCard
-							key={card.title}
-							title={card.title}
-							value={card.value}
-							icon={IconComponent}
-							gradient={card.gradient as 'blue' | 'green' | 'red'}
-						/>
-					);
-				})}
+			<div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+				<h1 className="text-3xl font-bold text-gray-900 text-center w-full">
+					Workout Plan Assignment
+				</h1>
 			</div>
 
-			<div className="flex flex-col md:flex-row gap-4 mb-6">
-				<Input
-					placeholder="Search users..."
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-					className="max-w-sm"
-				/>
+			{/* Stats Cards */}
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+				{statusCards.map((card) => (
+					<StatusCard key={card.title} {...card} />
+				))}
+			</div>
+
+			<div className="flex flex-col md:flex-row gap-4">
+				<div className="flex items-center space-x-2">
+					<Search className="w-5 h-5 text-gray-400" />
+					<Input
+						placeholder="Search users..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						className="w-full md:w-[300px]"
+					/>
+				</div>
+
 				<Select
 					value={genderFilter}
 					onValueChange={(value: 'Male' | 'Female' | 'All') =>
@@ -252,14 +277,15 @@ export default function UserWorkoutAssignment({
 					}
 				>
 					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Select gender" />
+						<SelectValue placeholder="Filter by gender" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="All">All</SelectItem>
+						<SelectItem value="All">All Genders</SelectItem>
 						<SelectItem value="Male">Male</SelectItem>
 						<SelectItem value="Female">Female</SelectItem>
 					</SelectContent>
 				</Select>
+
 				<Select
 					value={assignmentFilter}
 					onValueChange={(value: 'all' | 'assigned' | 'unassigned') =>
@@ -267,18 +293,18 @@ export default function UserWorkoutAssignment({
 					}
 				>
 					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Filter by assignment" />
+						<SelectValue placeholder="Filter by status" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="all">All Users</SelectItem>
-						<SelectItem value="assigned">Assigned</SelectItem>
-						<SelectItem value="unassigned">Unassigned</SelectItem>
+						<SelectItem value="assigned">With Plan</SelectItem>
+						<SelectItem value="unassigned">Without Plan</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
 
 			{/* Desktop View */}
-			<div className="hidden md:block">
+			<div className="hidden md:block rounded-lg border bg-card">
 				<DataTable data={filteredUsers} columns={columns} filterColumn="name" />
 			</div>
 
@@ -286,62 +312,76 @@ export default function UserWorkoutAssignment({
 			<div className="md:hidden">
 				<DataCard
 					data={filteredUsers}
-					renderCard={(user) => {
-						const hasWorkout = user.hasActiveWorkoutPlan;
-
-						return (
-							<div className="p-4 space-y-2">
-								<h3 className="font-medium">{user.name}</h3>
-								<p className="text-sm text-gray-500">Gender: {user.gender}</p>
-								<p className="text-sm text-gray-500">Goal: {user.goal}</p>
-								<Select
-									value={user.activeWorkoutPlanId?.toString()}
-									onValueChange={(value) =>
-										handleWorkoutAssignment(user.id, value)
-									}
+					renderCard={(user) => (
+						<div className="p-4 space-y-3 bg-white rounded-lg border hover:border-primary transition-colors">
+							<div className="flex items-center justify-between">
+								<h3 className="font-medium text-lg">{user.name}</h3>
+								<Badge
+									variant="secondary"
+									className="bg-gray-100 text-gray-800"
 								>
-									<SelectTrigger
-										className={`w-full ${
-											hasWorkout
-												? 'bg-green-50 border-green-200 text-green-700'
-												: 'bg-red-50 border-red-200 text-red-700'
-										}`}
-									>
-										<SelectValue
-											placeholder={
-												hasWorkout
-													? `Current: ${user.activeWorkoutPlanName}`
-													: 'No workout assigned'
-											}
-										/>
-									</SelectTrigger>
-									<SelectContent>
-										{workoutPlans.map((plan) => (
-											<SelectItem
-												key={plan.id}
-												value={plan.id.toString()}
-												className={
-													plan.id === user.activeWorkoutPlanId
-														? 'bg-green-50'
-														: ''
-												}
-											>
-												{plan.name}
-												{plan.id === user.activeWorkoutPlanId && (
-													<span className="ml-2 text-green-600">•</span>
-												)}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-								{hasWorkout && (
-									<p className="text-xs text-green-600">
-										Active Plan: {user.activeWorkoutPlanName}
-									</p>
-								)}
+									{user.gender}
+								</Badge>
 							</div>
-						);
-					}}
+
+							<div className="space-y-3">
+								<div className="p-3 bg-gray-50 rounded-lg">
+									<p className="text-sm font-medium text-gray-600 mb-2">
+										Fitness Goal
+									</p>
+									<Badge className="bg-purple-100 text-purple-800">
+										{user.goal}
+									</Badge>
+								</div>
+
+								<div className="p-3 bg-gray-50 rounded-lg">
+									<p className="text-sm font-medium text-gray-600 mb-2">
+										Workout Plan
+									</p>
+									<Select
+										value={user.activeWorkoutPlanId?.toString()}
+										onValueChange={(value) =>
+											handleWorkoutAssignment(user.id, value)
+										}
+									>
+										<SelectTrigger
+											className={`w-full ${
+												user.hasActiveWorkoutPlan
+													? 'bg-green-100 text-green-800 border-green-200'
+													: 'bg-gray-100 text-gray-600 border-gray-200'
+											}`}
+										>
+											<SelectValue
+												placeholder={
+													user.hasActiveWorkoutPlan
+														? user.activeWorkoutPlanName
+														: 'No workout assigned'
+												}
+											/>
+										</SelectTrigger>
+										<SelectContent>
+											{workoutPlans.map((plan) => (
+												<SelectItem
+													key={plan.id}
+													value={plan.id.toString()}
+													className={
+														plan.id === user.activeWorkoutPlanId
+															? 'bg-green-50'
+															: ''
+													}
+												>
+													{plan.name}
+													{plan.id === user.activeWorkoutPlanId && (
+														<span className="ml-2 text-green-600">•</span>
+													)}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+						</div>
+					)}
 				/>
 			</div>
 		</div>

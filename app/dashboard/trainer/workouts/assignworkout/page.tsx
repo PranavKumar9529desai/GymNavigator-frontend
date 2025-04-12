@@ -1,13 +1,20 @@
 import { getUsersAssignedToTrainer } from './_actions/GetuserassignedTotrainers';
-import UserWorkoutList from './_components/user-workout-list';
+import { getWorkoutPlans } from './_actions/Getworkout';
+import UserWorkoutAssignment from './UserWorkoutAssignment';
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 
 export default async function AssignWorkoutPage() {
-	const users = await getUsersAssignedToTrainer();
+	const [users, workoutPlans] = await Promise.all([
+		getUsersAssignedToTrainer(),
+		getWorkoutPlans(),
+	]);
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<h1 className="text-2xl font-bold mb-6">Assign Workout Plans</h1>
-			<UserWorkoutList users={users} />
+			{/* <Suspense fallback={<Loading />}>
+				<UserWorkoutAssignment Users={users} workoutPlans={workoutPlans} />
+			</Suspense> */}
 		</div>
 	);
 }
