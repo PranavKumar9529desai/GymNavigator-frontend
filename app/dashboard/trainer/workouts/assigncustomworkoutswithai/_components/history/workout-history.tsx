@@ -26,6 +26,7 @@ import type {
 } from '../../_actions/generate-ai-workout';
 import type { WorkoutHistoryItem } from '../../_actions/get-workout-history';
 import { useWorkoutChatStore } from '../../_store/workout-chat-store';
+import { useWorkoutViewStore } from '../../_store/workout-view-store';
 import Exercise from './exercise';
 
 // Define interfaces for handling alternative property names
@@ -118,7 +119,8 @@ export default function WorkoutHistory({
 		workoutId: string;
 		dayIndex: number;
 	} | null>(null);
-	const { initializeConversation, reset } = useWorkoutChatStore();
+	const { initializeConversation, reset: resetChat } = useWorkoutChatStore();
+	const { loadSavedWorkout } = useWorkoutViewStore();
 
 	const toggleExpand = (id: string) => {
 		// If we're viewing exercises for a day in this workout, close that view first
@@ -138,25 +140,31 @@ export default function WorkoutHistory({
 
 	const handleViewWorkout = (workout: WorkoutHistoryItem) => {
 		try {
-			// Reset the current conversation first
-			reset();
+			// Reset chat store first
+			resetChat();
 
-			// If conversation history exists, restore it instead of just initializing
+			// Initialize chat conversation if history exists
 			if (
 				workout.conversationHistory &&
 				workout.conversationHistory.length > 0
 			) {
-				// Load the entire conversation history
-				for (const message of workout.conversationHistory) {
-					if (message.type === 'ai' && message.workout) {
-						initializeConversation(message.workout);
-					}
+				// Find the first AI message with a workout to initialize
+				const initialAiMessage = workout.conversationHistory.find(
+					(msg) => msg.type === 'ai' && msg.workout,
+				);
+				if (initialAiMessage?.workout) {
+					initializeConversation(initialAiMessage.workout);
+				} else {
+					initializeConversation(workout.workoutPlan); // Fallback
 				}
 			} else {
-				// Fallback to just initializing with the workout plan
 				initializeConversation(workout.workoutPlan);
 			}
 
+			// Load the workout into the view store
+			loadSavedWorkout(workout);
+
+			// Call the callback passed from parent (WorkoutTabs) to switch the tab
 			if (onViewWorkout) {
 				onViewWorkout(workout);
 			}

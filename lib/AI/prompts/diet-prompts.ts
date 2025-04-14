@@ -1,5 +1,5 @@
 import type { DietPlan } from "@/app/dashboard/trainer/diet/assigndietplan/_actions /GetallDiets";
-import type { AssignedUser } from "@/app/dashboard/trainer/workouts/assignworkout/GetuserassignedTotrainers";
+import type { AssignedUser } from "@/app/dashboard/trainer/workouts/assignworkout/_actions/GetuserassignedTotrainers";
 import type {
   HealthProfile,
   Selection,

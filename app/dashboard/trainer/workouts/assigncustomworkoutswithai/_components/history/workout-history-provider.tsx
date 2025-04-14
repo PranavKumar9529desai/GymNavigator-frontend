@@ -2,90 +2,63 @@
 
 import { useEffect, useState } from 'react';
 import type { WorkoutHistoryItem } from '../../_actions/get-workout-history';
-import { useWorkoutChatStore } from '../../_store/workout-chat-store';
+import { getWorkoutHistory } from '../../_actions/get-workout-history';
 import WorkoutHistory from './workout-history';
 
 interface WorkoutHistoryProviderProps {
 	userId: string;
 	serverFallbackHistory: WorkoutHistoryItem[];
+	onViewWorkout?: (workout: WorkoutHistoryItem) => void; // Add prop
 }
 
 export function WorkoutHistoryProvider({
 	userId,
 	serverFallbackHistory,
+	onViewWorkout, // Destructure prop
 }: WorkoutHistoryProviderProps) {
-	const [isLoading, setIsLoading] = useState(true);
 	const [history, setHistory] = useState<WorkoutHistoryItem[]>(
 		serverFallbackHistory,
 	);
-	const { getSavedWorkouts, initializeConversation, reset } =
-		useWorkoutChatStore();
+	const [isLoading, setIsLoading] = useState(false);
+	const [dataSource, setDataSource] = useState<'local' | 'server'>('server'); // Default to server
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		// This runs on client-side only
-		try {
-			// Get saved workouts from localStorage
-			const savedWorkouts = getSavedWorkouts(userId);
-
-			// If we have saved workouts, use those instead of the server fallback
-			if (savedWorkouts && savedWorkouts.length > 0) {
-				setHistory(savedWorkouts);
+		async function fetchHistory() {
+			setIsLoading(true);
+			// Try fetching from server first
+			const serverResponse = await getWorkoutHistory(userId);
+			if (serverResponse.success && serverResponse.data) {
+				setHistory(serverResponse.data);
+				setDataSource('server');
+			} else {
+				// Fallback to local storage (or show error)
+				// In this example, we stick with the server fallback if server fails
+				console.warn(
+					'Failed to fetch server history, using initial fallback.',
+					serverResponse.error,
+				);
+				setHistory(serverFallbackHistory); // Keep using fallback
+				setDataSource('server'); // Indicate we attempted server
 			}
-		} catch (error) {
-			console.error('Error fetching saved workouts:', error);
-		} finally {
 			setIsLoading(false);
 		}
-	}, [userId, getSavedWorkouts, serverFallbackHistory]);
 
-	// Handle view workout functionality
-	const handleViewWorkout = (workout: WorkoutHistoryItem) => {
-		try {
-			// Reset the current conversation first
-			reset();
-
-			// If conversation history exists, restore it
-			if (
-				workout.conversationHistory &&
-				workout.conversationHistory.length > 0
-			) {
-				// Load the conversation history
-				for (const message of workout.conversationHistory) {
-					if (message.type === 'ai' && message.workout) {
-						initializeConversation(message.workout);
-						break; // We only need the last workout from AI
-					}
-				}
-			} else {
-				// Fallback to just initializing with the workout plan
-				initializeConversation(workout.workoutPlan);
-			}
-		} catch (error) {
-			console.error('Error viewing workout:', error);
+		// Fetch history when userId changes
+		if (userId) {
+			void fetchHistory();
+		} else {
+			// Clear history if no user ID
+			setHistory([]);
+			setIsLoading(false);
 		}
-	};
+	}, [userId, serverFallbackHistory]); // Depend on userId and the fallback
 
 	return (
-		<>
-			{/* Show debug info about data source */}
-			{/* <div className="text-xs text-muted-foreground mb-4">
-        Showing {history.length} workout(s)
-        {history.length > 0 && history[0].id.startsWith("workout-")
-          ? " from localStorage"
-          : " from server"}
-      </div> */}
-
-			<WorkoutHistory
-				history={history}
-				isLoading={isLoading}
-				onViewWorkout={handleViewWorkout}
-				dataSource={
-					history.length > 0 && history[0].id.startsWith('workout-')
-						? 'local'
-						: 'server'
-				}
-			/>
-		</>
+		<WorkoutHistory
+			history={history}
+			isLoading={isLoading}
+			onViewWorkout={onViewWorkout} // Pass prop down
+			dataSource={dataSource}
+		/>
 	);
 }

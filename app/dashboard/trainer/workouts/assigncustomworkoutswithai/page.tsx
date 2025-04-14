@@ -44,7 +44,7 @@ export default async function AssignCustomWorkoutsWithAI({
 		<div className="container max-w-5xl pb-16">
 			{/* Navigation with improved mobile tap target */}
 			<Link
-				href="/dashboard/trainer/workouts"
+				href="/dahboard/trainer/workouts/assignworkout"
 				className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 py-2 transition-colors"
 			>
 				<ChevronLeft className="h-4 w-4 mr-1" />

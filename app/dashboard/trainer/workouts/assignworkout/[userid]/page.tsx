@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation';
 import {
 	type AssignedUser,
 	getUsersAssignedToTrainer,
-} from '../_actions/GetuserassignedTotrainers';
-import { type WorkoutPlan, getAllWorkoutPlans } from '../Getworkout';
+} from './_actions/GetuserassignedTotrainers';
+import { type WorkoutPlan, getAllWorkoutPlans } from './_actions/Getworkout';
 import UserWorkoutAssignmentDetails from './_components/UserWorkoutAssignmentDetails';
 
 export default async function AssignWorkoutToUserPage({

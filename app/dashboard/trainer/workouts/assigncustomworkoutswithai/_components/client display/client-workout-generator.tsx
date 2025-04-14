@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
@@ -12,73 +11,37 @@ import WorkoutForm from '../workout-form/workout-form';
 import WorkoutResults from '../workout-result/workout-results';
 import ClientDisplay from './client-display';
 
-interface GeneratedWorkout {
-	clientName: string;
-	workoutPlan: WorkoutPlan;
-}
-
 interface ClientWorkoutGeneratorProps {
 	user: UserData | null;
-	onWorkoutGenerated?: (workout: GeneratedWorkout) => void;
+	onWorkoutGenerated?: () => void;
 }
 
 export default function ClientWorkoutGenerator({
 	user,
 	onWorkoutGenerated,
 }: ClientWorkoutGeneratorProps) {
-	const { toast } = useToast();
-	const { loadWorkout } = useWorkoutViewStore();
-	const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
-	const [isSaving, setIsSaving] = useState(false);
+	const { loadGeneratedPlan } = useWorkoutViewStore();
+	const [showResults, setShowResults] = useState(false);
 
 	const handleWorkoutGenerated = (plan: WorkoutPlan) => {
-		setWorkoutPlan(plan);
-	};
-
-	const handleSaveWorkout = async (plan: WorkoutPlan) => {
-		if (!user) return;
-
-		setIsSaving(true);
-
-		try {
-			// Create a complete workout object
-			const workout: GeneratedWorkout = {
-				clientName: user.name || 'Client',
-				workoutPlan: plan,
-			};
-
-			// Load the workout into the store
-			loadWorkout(workout);
-
-			// Call the callback to switch to the workout tab
-			onWorkoutGenerated?.(workout);
-
-			toast({
-				title: 'Success',
-				description: 'Workout plan has been generated successfully!',
-			});
-
-			// Reset state after save
-			setWorkoutPlan(null);
-		} catch (error) {
-			console.error('Error saving workout plan:', error);
-			toast({
-				title: 'Error',
-				description: 'Failed to generate the workout plan',
-				variant: 'destructive',
-			});
-		} finally {
-			setIsSaving(false);
-		}
+		loadGeneratedPlan(plan);
+		setShowResults(true);
+		onWorkoutGenerated?.();
 	};
 
 	const handleDiscardWorkout = () => {
-		setWorkoutPlan(null);
+		setShowResults(false);
 	};
+
+	const { currentWorkout } = useWorkoutViewStore.getState();
+	const planToShow =
+		currentWorkout && !('clientName' in currentWorkout)
+			? currentWorkout
+			: null;
 
 	return (
 		<div className="space-y-6">
-			{!workoutPlan ? (
+			{!showResults ? (
 				<motion.div
 					className="grid gap-6 md:grid-cols-5"
 					initial={{ opacity: 0, y: 10 }}
@@ -98,7 +61,7 @@ export default function ClientWorkoutGenerator({
 						/>
 					</div>
 				</motion.div>
-			) : (
+			) : planToShow ? (
 				<motion.div
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -117,14 +80,13 @@ export default function ClientWorkoutGenerator({
 						</Button>
 					</div>
 					<WorkoutResults
-						workoutPlan={workoutPlan}
-						onSave={handleSaveWorkout}
+						workoutPlan={planToShow}
 						onDiscard={handleDiscardWorkout}
-						isLoading={isSaving}
 						userId={user?.id || ''}
+						userName={user?.name}
 					/>
 				</motion.div>
-			)}
+			) : null}
 		</div>
 	);
 }

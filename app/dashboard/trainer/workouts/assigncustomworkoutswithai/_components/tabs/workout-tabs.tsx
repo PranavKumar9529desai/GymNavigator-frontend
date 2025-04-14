@@ -5,18 +5,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, Dumbbell, Loader2, Sparkles } from 'lucide-react';
 import { Suspense, useState } from 'react';
-import type { WorkoutPlan } from '../../_actions/generate-ai-workout';
 import type { UserData } from '../../_actions/get-user-by-id';
 import type { WorkoutHistoryItem } from '../../_actions/get-workout-history';
 import { useWorkoutViewStore } from '../../_store/workout-view-store';
 import ClientWorkoutGenerator from '../client display/client-workout-generator';
 import { WorkoutHistoryProvider } from '../history/workout-history-provider';
 import WorkoutResults from '../workout-result/workout-results';
-
-interface GeneratedWorkout {
-	clientName: string;
-	workoutPlan: WorkoutPlan;
-}
 
 interface WorkoutTabsProps {
 	userId: string;
@@ -81,37 +75,52 @@ export default function WorkoutTabs({
 	user,
 	serverFallbackHistory,
 }: WorkoutTabsProps) {
-	// Use local state for activeTab instead of store
 	const [activeTab, setActiveTab] = useState<
 		'generate' | 'history' | 'workout'
 	>('generate');
 
 	const {
-		activeWorkout,
+		currentWorkout,
+		showWorkoutDetails,
 		setShowWorkoutDetails,
-		// reset,
+		reset: resetWorkoutView,
 	} = useWorkoutViewStore();
 
 	const handleTabChange = (value: string) => {
-		setActiveTab(value as 'generate' | 'history' | 'workout');
+		const newTab = value as 'generate' | 'history' | 'workout';
+		setActiveTab(newTab);
 
-		// If switching away from workout tab, reset the workout view
-		if (value !== 'workout') {
+		if (newTab !== 'workout') {
+			resetWorkoutView();
 			setShowWorkoutDetails(false);
+		} else {
+			if (currentWorkout) {
+				setShowWorkoutDetails(true);
+			}
 		}
 	};
 
 	const handleBackToHistory = () => {
+		resetWorkoutView();
 		setActiveTab('history');
 		setShowWorkoutDetails(false);
 	};
 
-	const handleWorkoutGenerated = (workout: GeneratedWorkout) => {
-		console.log('workout', workout);
-		// When a workout is generated, switch to the workout tab
+	const handleWorkoutGeneratedOrViewed = () => {
 		setActiveTab('workout');
-		setShowWorkoutDetails(true);
 	};
+
+	const planToShow = currentWorkout
+		? 'workoutPlan' in currentWorkout
+			? currentWorkout.workoutPlan
+			: currentWorkout
+		: null;
+
+	const clientName = currentWorkout
+		? 'clientName' in currentWorkout
+			? currentWorkout.clientName
+			: user?.name
+		: user?.name;
 
 	return (
 		<Tabs
@@ -139,7 +148,8 @@ export default function WorkoutTabs({
 							</TabsTrigger>
 							<TabsTrigger
 								value="workout"
-								className="flex-1 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-600/90 data-[state=active]:via-blue-600/80 data-[state=active]:to-indigo-700/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 rounded-md py-2"
+								disabled={!currentWorkout && !showWorkoutDetails}
+								className="flex-1 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-600/90 data-[state=active]:via-blue-600/80 data-[state=active]:to-indigo-700/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 rounded-md py-2 disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								<Loader2 className="h-4 w-4 mr-2" />
 								Workout
@@ -157,7 +167,7 @@ export default function WorkoutTabs({
 					<Suspense fallback={<GenerateWorkoutSkeleton />}>
 						<ClientWorkoutGenerator
 							user={user}
-							onWorkoutGenerated={handleWorkoutGenerated}
+							onWorkoutGenerated={handleWorkoutGeneratedOrViewed}
 						/>
 					</Suspense>
 				</div>
@@ -181,6 +191,7 @@ export default function WorkoutTabs({
 							<WorkoutHistoryProvider
 								userId={userId}
 								serverFallbackHistory={serverFallbackHistory}
+								onViewWorkout={handleWorkoutGeneratedOrViewed}
 							/>
 						</div>
 					</Suspense>
@@ -192,7 +203,7 @@ export default function WorkoutTabs({
 				className="focus-visible:outline-none focus-visible:ring-0"
 			>
 				<div className="container max-w-5xl mx-auto px-4">
-					{activeWorkout ? (
+					{planToShow ? (
 						<div className="space-y-6">
 							<div className="bg-gradient-to-br from-indigo-50/50 via-blue-50/30 to-indigo-50/50 dark:from-indigo-950/50 dark:via-blue-950/30 dark:to-indigo-950/50 p-4 rounded-lg border border-indigo-100/50 dark:border-indigo-800/20 flex items-center justify-between">
 								<Button
@@ -207,20 +218,16 @@ export default function WorkoutTabs({
 								<div className="text-sm">
 									Workout for:{' '}
 									<span className="font-medium text-indigo-700 dark:text-indigo-400">
-										{activeWorkout.clientName}
+										{clientName || 'Selected Client'}
 									</span>
 								</div>
 							</div>
 
 							<WorkoutResults
-								workoutPlan={activeWorkout.workoutPlan}
-								onSave={() => {
-									// After saving, you might want to go back to history
-									handleBackToHistory();
-								}}
+								workoutPlan={planToShow}
 								onDiscard={handleBackToHistory}
 								userId={userId}
-								userName={user?.name}
+								userName={clientName}
 							/>
 						</div>
 					) : (

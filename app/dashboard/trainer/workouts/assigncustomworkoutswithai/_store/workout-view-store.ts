@@ -4,81 +4,47 @@ import type { SavedWorkout } from './workout-chat-store';
 
 interface WorkoutViewStore {
 	// State
-	activeWorkout: SavedWorkout | null;
-	isAssigning: boolean;
-	assignmentError: string | null;
-	showWorkoutDetails: boolean;
+	currentWorkout: SavedWorkout | WorkoutPlan | null; // Holds either saved or newly generated plan
+	isAssigning: boolean; // Keep assignment state if needed globally, though it's local in WorkoutResults now
+	assignmentError: string | null; // Keep if needed globally
+	showWorkoutDetails: boolean; // Keep for controlling visibility/tab
 
 	// Actions
-	setActiveWorkout: (workout: SavedWorkout | null) => void;
+	loadGeneratedPlan: (plan: WorkoutPlan) => void; // Load a newly generated plan
+	loadSavedWorkout: (workout: SavedWorkout) => void; // Load a plan from history
 	setShowWorkoutDetails: (show: boolean) => void;
-	assignWorkout: (workout: SavedWorkout) => Promise<void>;
-	loadWorkout: (workout: {
-		clientName: string;
-		workoutPlan: WorkoutPlan;
-	}) => void;
 	reset: () => void;
 }
 
 export const useWorkoutViewStore = create<WorkoutViewStore>((set) => ({
 	// Initial state
-	activeWorkout: null,
+	currentWorkout: null,
 	isAssigning: false,
 	assignmentError: null,
 	showWorkoutDetails: false,
 
 	// Actions
-	setActiveWorkout: (workout) =>
+	loadGeneratedPlan: (plan) =>
 		set({
-			activeWorkout: workout,
-			showWorkoutDetails: !!workout,
+			currentWorkout: plan, // Store the raw WorkoutPlan
+			showWorkoutDetails: true,
+			isAssigning: false, // Reset assignment state
+			assignmentError: null,
+		}),
+
+	loadSavedWorkout: (workout) =>
+		set({
+			currentWorkout: workout, // Store the full SavedWorkout object
+			showWorkoutDetails: true,
+			isAssigning: false,
+			assignmentError: null,
 		}),
 
 	setShowWorkoutDetails: (show) => set({ showWorkoutDetails: show }),
 
-	loadWorkout: (workout) => {
-		// Convert the workout format to SavedWorkout format and set as active
-		const savedWorkout: SavedWorkout = {
-			id: Date.now().toString(), // Generate a temporary ID
-			clientName: workout.clientName,
-			workoutPlan: workout.workoutPlan,
-			createdAt: new Date().toISOString(),
-			clientId: '', // Default empty client ID
-			conversationHistory: [], // Default empty conversation history
-		};
-
-		set({
-			activeWorkout: savedWorkout,
-			showWorkoutDetails: true,
-		});
-	},
-
-	assignWorkout: async (_workout) => {
-		try {
-			set({ isAssigning: true, assignmentError: null });
-
-			// TODO: Implement the actual assignment logic here
-			// This would typically involve:
-			// 1. Calling an API to assign the workout
-			// 2. Updating the workout status in the database
-			// 3. Notifying the client
-
-			// For now, we'll just simulate a delay
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-
-			set({ isAssigning: false });
-		} catch (error) {
-			set({
-				isAssigning: false,
-				assignmentError:
-					error instanceof Error ? error.message : 'Failed to assign workout',
-			});
-		}
-	},
-
 	reset: () =>
 		set({
-			activeWorkout: null,
+			currentWorkout: null,
 			isAssigning: false,
 			assignmentError: null,
 			showWorkoutDetails: false,
