@@ -33,7 +33,6 @@ export const getAllWorkoutPlans = async () => {
 		const data = response.data;
 
 		if (data.msg === 'success') {
-			// console.log("this are the all of the workous" , data.workoutPlans);
 			return {
 				success: true,
 				workoutPlans: data.workoutPlans as WorkoutPlan[],

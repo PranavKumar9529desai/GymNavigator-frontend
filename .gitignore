@@ -6,3 +6,4 @@ middleware.ts
 .gitignore
 .env
 .vercel
+tsconfig.tsbuildinfo

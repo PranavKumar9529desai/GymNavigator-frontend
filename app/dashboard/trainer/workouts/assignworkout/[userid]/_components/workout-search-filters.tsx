@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { WorkoutPlan } from '../../_actions/get-workout-plans';
+import type { WorkoutPlan } from '../_actions/Getworkout';
 
 interface Props {
 	workoutPlans: WorkoutPlan[];

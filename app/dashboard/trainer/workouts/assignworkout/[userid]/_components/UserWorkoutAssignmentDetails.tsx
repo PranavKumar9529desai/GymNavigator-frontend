@@ -1,16 +1,27 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import type { AssignedUser } from '../../../../assignedusers/GetuserassignedTotrainers';
-import { assignWorkoutPlanToUser } from '../_actions/assign-workout';
-import type { WorkoutPlan } from '../../_actions/get-workout-plans';
-import CreateWOrkoutImaage from '../_assests/gemini-logo.png';
-import WorkoutSearchFilters from './workout-search-filters';
+import type { AssignedUser } from "@/app/dashboard/trainer/workouts/assignworkout/[userid]/_actions/GetuserassignedTotrainers";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { WorkoutPlan } from "../_actions/Getworkout";
+import { assignWorkoutPlanToUser } from "../_actions/assign-workout";
+import CreateWOrkoutImaage from "../_assests/gemini-logo.png";
+import WorkoutSearchFilters from "./workout-search-filters";
+
+// Extended user type to include health profile
+interface ExtendedUser extends AssignedUser {
+	HealthProfile?: {
+		height: number;
+		weight: number;
+		gender: string;
+		goal: string | null;
+	} | null;
+}
+
 interface Props {
-	user: AssignedUser;
+	user: ExtendedUser;
 	workoutPlans: WorkoutPlan[];
 }
 
@@ -25,23 +36,27 @@ export default function UserWorkoutAssignmentDetails({
 
 	const handleAssignWorkout = async () => {
 		if (!selectedPlan) {
-			toast.error('Please select a workout plan');
+			toast.error("Please select a workout plan");
 			return;
 		}
 
 		try {
 			setIsAssigning(true);
 			const result = await assignWorkoutPlanToUser(user.id, selectedPlan);
-			
+
 			if (result.success) {
-				toast.success(result.message || 'Workout plan assigned successfully');
+				toast.success(result.message || "Workout plan assigned successfully");
 				// You might want to refresh the page or update the UI to show the new assignment
 			} else {
-				toast.error('Failed to assign workout plan');
+				toast.error("Failed to assign workout plan");
 			}
 		} catch (error) {
-			console.error('Error assigning workout plan:', error);
-			toast.error(error instanceof Error ? error.message : 'Failed to assign workout plan');
+			console.error("Error assigning workout plan:", error);
+			toast.error(
+				error instanceof Error
+					? error.message
+					: "Failed to assign workout plan",
+			);
 		} finally {
 			setIsAssigning(false);
 		}
@@ -110,7 +125,7 @@ export default function UserWorkoutAssignmentDetails({
 								<div className="bg-gray-50 p-3 rounded-lg">
 									<p className="text-sm text-gray-600 mb-1">Goal</p>
 									<p className="font-medium text-gray-900">
-										{user.HealthProfile.goal || 'Not specified'}
+										{user.HealthProfile.goal || "Not specified"}
 									</p>
 								</div>
 							</div>
@@ -160,8 +175,8 @@ export default function UserWorkoutAssignmentDetails({
 								type="button"
 								className={`group w-full text-left p-4 border rounded-lg transition-all ${
 									selectedPlan === plan.id
-										? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-										: 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+										? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
+										: "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
 								}`}
 								onClick={() => setSelectedPlan(plan.id)}
 							>
@@ -240,8 +255,8 @@ export default function UserWorkoutAssignmentDetails({
 						disabled={!selectedPlan || isAssigning}
 						className={`px-6 py-2.5 rounded-md text-white font-medium transition-all ${
 							!selectedPlan || isAssigning
-								? 'bg-gray-400 cursor-not-allowed'
-								: 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+								? "bg-gray-400 cursor-not-allowed"
+								: "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						}`}
 					>
 						{isAssigning ? (
@@ -270,7 +285,7 @@ export default function UserWorkoutAssignmentDetails({
 								Assigning...
 							</span>
 						) : (
-							'Assign Workout Plan'
+							"Assign Workout Plan"
 						)}
 					</button>
 				</div>

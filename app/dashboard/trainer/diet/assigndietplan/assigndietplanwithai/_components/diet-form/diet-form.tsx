@@ -72,8 +72,17 @@ export function DietForm({
         onGenerateStateChange(true);
       }
 
-      // Call our server action directly with simplified error handling
-      const result = await generateAIDiet(data);
+      
+      // Call our server action with the correct parameters
+      const result = await generateAIDiet(
+        userId,
+        data.targetCalories,
+        data.specialInstructions,
+        {
+          country: data.country,
+          state: data.location // Using location as state since the form doesn't have a separate state field
+        }
+      );
 
       // Create diet object with client name
       const dietData = {

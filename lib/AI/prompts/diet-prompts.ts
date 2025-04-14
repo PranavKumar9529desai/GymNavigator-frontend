@@ -1,5 +1,5 @@
 import type { DietPlan } from "@/app/dashboard/trainer/diet/assigndietplan/_actions /GetallDiets";
-import type { AssignedUser } from "@/app/dashboard/trainer/workouts/assignworkout/_actions/GetuserassignedTotrainers";
+import type { AssignedUser } from '@/app/dashboard/trainer/diet/assigndietplan/_actions /GetassignedUserDietInfo';
 import type {
   HealthProfile,
   Selection,
@@ -31,11 +31,11 @@ export function buildDietPlanPrompt(
   } = preferences;
 
   // Extract health profile data safely with proper typing
-  const healthProfile = (user.HealthProfile || {}) as any;
+  const healthProfile = (user.HealthProfile || {}) as HealthProfile; // Cast to HealthProfile type
   const height = healthProfile.heightValue || "Unknown";
   const weight = healthProfile.weightValue || "Unknown";
-  const gender = healthProfile.gender || user.gender || "Unknown";
-  const userGoal = healthProfile.goal || user.goal || "General fitness";
+  const gender = healthProfile.gender || "Unknown";
+  const userGoal = healthProfile.goal || "General fitness";
 
   // Calculate daily calories if not provided
   const calculatedCalories =
