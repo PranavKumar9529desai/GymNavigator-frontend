@@ -1,17 +1,20 @@
 "use client";
+import { queryClient } from "@/app/queryClient";
 import { DataCard } from "@/components/Table/UserCard";
 import { DataTable } from "@/components/Table/UsersTable";
 import { StatusCard } from "@/components/common/StatusCard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Search, UserCheck, Users, Dumbbell } from "lucide-react";
+import { ArrowUpDown, Dumbbell, Search, UserCheck, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { AssignableUser } from "../_actions/get-assignable-users";
+import { getAssignableUsers } from "../_actions/get-assignable-users";
 import type { WorkoutPlan } from "../_actions/get-workout-plans";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { getWorkoutPlans } from "../_actions/get-workout-plans";
 
 const columns: ColumnDef<AssignableUser>[] = [
   {
@@ -28,9 +31,25 @@ const columns: ColumnDef<AssignableUser>[] = [
     cell: ({ row }) => {
       const router = useRouter();
       return (
-        <div className="cursor-pointer hover:text-primary" onClick={() => row.original.id && router.push(`/dashboard/trainer/workouts/assignworkout/${row.original.id}`)}>
+        <button
+          type="button"
+          className="cursor-pointer hover:text-primary w-full text-left"
+          onClick={() =>
+            row.original.id &&
+            router.push(
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+            )
+          }
+          onKeyDown={(e) =>
+            e.key === "Enter" &&
+            row.original.id &&
+            router.push(
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+            )
+          }
+        >
           {row.getValue("name")}
-        </div>
+        </button>
       );
     },
   },
@@ -65,7 +84,12 @@ const columns: ColumnDef<AssignableUser>[] = [
       return (
         <Button
           size="sm"
-          onClick={() => row.original.id && router.push(`/dashboard/trainer/workouts/assignworkout/${row.original.id}`)}
+          onClick={() =>
+            row.original.id &&
+            router.push(
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+            )
+          }
         >
           {row.original.hasActiveWorkoutPlan ? "Change Plan" : "Assign Plan"}
         </Button>
@@ -74,23 +98,17 @@ const columns: ColumnDef<AssignableUser>[] = [
   },
 ];
 
-interface UserWorkoutAssignmentProps {
-  initialUsers: AssignableUser[];
-  initialWorkoutPlans: WorkoutPlan[];
-}
-
-export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlans }: UserWorkoutAssignmentProps) {
+export default function UserWorkoutAssignment() {
   const router = useRouter();
-  const { data: users = initialUsers } = useQuery({
+
+  const { data: users = [] } = useQuery({
     queryKey: ["assignable-users"],
-    queryFn: () => initialUsers,
-    initialData: initialUsers,
+    queryFn: getAssignableUsers,
   });
 
-  const { data: workoutPlans = initialWorkoutPlans } = useQuery({
+  const { data: workoutPlans = [] } = useQuery({
     queryKey: ["workout-plans"],
-    queryFn: () => initialWorkoutPlans,
-    initialData: initialWorkoutPlans,
+    queryFn: getWorkoutPlans,
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -132,12 +150,24 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
   ] as const;
 
   useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
+
+  const handleAssignWorkout = async () => {
+    // ...existing assignment code...
+
+    const response = { success: true }; // Mock response for demonstration
+    if (response.success) {
+      // Invalidate all relevant caches to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ["assignable-users"] });
+      queryClient.invalidateQueries({ queryKey: ["workout-plans"] });
+
+      // ...existing success handling...
+    }
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -153,7 +183,7 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
           <StatusCard key={card.title} {...card} />
         ))}
       </div>
-      
+
       <div className="flex items-center space-x-2">
         <Search className="w-5 h-5 text-gray-400" />
         <Input
@@ -163,7 +193,7 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
           className="w-full md:w-[300px]"
         />
       </div>
-      
+
       {/* Desktop View */}
       <div className="hidden md:block rounded-lg border bg-card">
         <DataTable data={filteredUsers} columns={columns} filterColumn="name" />
@@ -174,9 +204,15 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
         <DataCard
           data={filteredUsers}
           renderCard={(user) => (
-            <div 
+            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+<div
               className="p-4 space-y-3 bg-white rounded-lg border cursor-pointer hover:border-primary transition-colors"
-              onClick={() => user.id && router.push(`/dashboard/trainer/workouts/assignworkout/${user.id}`)}
+              onClick={() =>
+                user.id &&
+                router.push(
+                  `/dashboard/trainer/workouts/assignworkout/${user.id}`
+                )
+              }
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-lg">{user.name}</h3>
@@ -188,14 +224,19 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
               <div className="space-y-3">
                 {/* Workout Plan Section */}
                 <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Current Workout Plan</p>
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Current Workout Plan
+                  </p>
                   {user.hasActiveWorkoutPlan ? (
                     <Badge className="bg-green-100 text-green-800">
                       <Dumbbell className="w-3 h-3 mr-1" />
                       {user.activeWorkoutPlanName}
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-100 text-gray-600"
+                    >
                       No Active Plan
                     </Badge>
                   )}
@@ -207,4 +248,4 @@ export default function UserWorkoutAssignment({ initialUsers, initialWorkoutPlan
       </div>
     </div>
   );
-} 
+}

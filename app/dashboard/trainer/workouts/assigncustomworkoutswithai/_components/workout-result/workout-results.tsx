@@ -1,4 +1,5 @@
 'use client';
+import { invalidateQueries, queryClient } from "@/app/queryClient";
 // @ts-nocheck
 import { toast } from '@/hooks/use-toast';
 import { type RefObject, useEffect, useRef, useState } from 'react';
@@ -79,17 +80,25 @@ export default function WorkoutResults({
 
 		try {
 			const planToSave = { ...plan, id: savedWorkoutPlanId ?? undefined };
-
 			const result = await createOrUpdateCustomWorkoutPlan(planToSave);
 
 			if (result.success && result.workoutPlanId) {
 				setSavedWorkoutPlanId(result.workoutPlanId);
 				setPlan((prevPlan) => ({ ...prevPlan, id: result.workoutPlanId }));
 
-				toast({
-					title: 'Workout Saved',
-					description: `"${result.workoutPlanName}" has been saved successfully.`,
-				});
+				// Add delay for toast visibility
+				setTimeout(() => {
+					toast({
+						title: 'Workout Saved',
+						description: `"${result.workoutPlanName}" has been saved successfully.`,
+					});
+
+					// Log for debugging
+					console.log('Toast notification triggered:', {
+						type: 'save',
+						plan: result.workoutPlanName,
+					});
+				}, 100);
 
 				if (onSave) {
 					onSave({ ...plan, id: result.workoutPlanId });
@@ -129,25 +138,46 @@ export default function WorkoutResults({
 
 			if (result.success) {
 				const wasUpdate = result.previousPlan !== null;
-				toast({
-					title: wasUpdate ? 'Workout Updated' : 'Workout Assigned',
-					description: wasUpdate
-						? `Previous plan "${result.previousPlan?.name}" replaced with "${result.newPlan.name}".`
-						: `Workout "${result.newPlan.name}" assigned to ${userName}.`,
-				});
+
+				 // Invalidate relevant queries if specified in the response
+				if (result.invalidateQueries && result.invalidateQueries.length > 0) {
+					invalidateQueries(result.invalidateQueries);
+				} else {
+					// Fallback to invalidating common queries
+					queryClient.invalidateQueries({ queryKey: ["assignable-users"] });
+					queryClient.invalidateQueries({ queryKey: ["workout-plans"] });
+				}
+
+				// Force a small delay to ensure UI updates before showing toast
+				setTimeout(() => {
+					toast({
+						title: wasUpdate ? 'Workout Updated' : 'Workout Assigned',
+						description: wasUpdate
+							? `Previous plan "${result.previousPlan?.name}" replaced with "${result.newPlan.name}".`
+							: `Workout "${result.newPlan.name}" assigned to ${userName}.`,
+					});
+
+					// Log toast call for debugging
+					console.log('Toast notification triggered:', {
+						type: wasUpdate ? 'update' : 'assign',
+						plan: result.newPlan.name,
+					});
+				}, 100);
 			} else {
 				throw new Error(result.error || 'Failed to assign workout');
 			}
 		} catch (error) {
 			console.error('Error assigning workout:', error);
-			toast({
-				title: 'Assignment Failed',
-				description:
-					error instanceof Error
-						? error.message
-						: 'There was a problem assigning the workout.',
-				variant: 'destructive',
-			});
+			setTimeout(() => {
+				toast({
+					title: 'Assignment Failed',
+					description:
+						error instanceof Error
+							? error.message
+							: 'There was a problem assigning the workout.',
+					variant: 'destructive',
+				});
+			}, 100);
 		} finally {
 			setIsAssigning(false);
 		}

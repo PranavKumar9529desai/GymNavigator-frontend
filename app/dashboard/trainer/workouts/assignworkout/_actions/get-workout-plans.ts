@@ -12,7 +12,7 @@ export interface WorkoutPlan {
 export async function getWorkoutPlans(): Promise<WorkoutPlan[]> {
   try {
     const trainerAxios = await TrainerReqConfig();
-    const response = await trainerAxios.get('/workout/allworkoutplans');
+    const response = await trainerAxios.get('/workouts/allworkoutplans');
     
     if (response.data.msg === 'success' && Array.isArray(response.data.workoutPlans)) {
       return response.data.workoutPlans;

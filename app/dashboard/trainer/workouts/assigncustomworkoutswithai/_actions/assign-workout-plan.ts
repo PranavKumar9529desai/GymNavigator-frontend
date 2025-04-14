@@ -53,6 +53,8 @@ export interface AssignExistingWorkoutResponse {
 	error?: string;
 	previousPlan: WorkoutPlanInfo | null;
 	newPlan: WorkoutPlanInfo;
+	timestamp?: number; // Add timestamp for cache invalidation
+	invalidateQueries?: string[]; // Add list of query keys to invalidate
 }
 
 // Response type for creating/updating a plan
@@ -156,6 +158,8 @@ export async function assignExistingWorkoutPlan(
 			msg: response.data.msg,
 			previousPlan: response.data.previousPlan,
 			newPlan: response.data.newPlan,
+			timestamp: Date.now(), // Add timestamp
+			invalidateQueries: ["assignable-users", "workout-plans"], // Add queries to invalidate
 		};
 	} catch (error) {
 		console.error('Error assigning existing workout plan:', error);

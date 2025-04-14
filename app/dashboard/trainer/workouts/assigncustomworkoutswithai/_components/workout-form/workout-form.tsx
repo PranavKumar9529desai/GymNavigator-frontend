@@ -226,11 +226,11 @@ export default function WorkoutForm({
 									defaultValue={field.value}
 								>
 									<FormControl>
-										<SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600 bg-white-500 z-10">
+										<SelectTrigger className="h-11 border-gray-200 focus:border-indigo-600 bg-white-500 z-50 bg-white">
 											<SelectValue placeholder="Select goal" />
 										</SelectTrigger>
 									</FormControl>
-									<SelectContent>
+									<SelectContent className="z-50 bg-white">
 										<SelectItem value="strength">Strength Building</SelectItem>
 										<SelectItem value="hypertrophy">Muscle Growth</SelectItem>
 										<SelectItem value="endurance">Endurance</SelectItem>
