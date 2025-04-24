@@ -29,23 +29,23 @@ export default async function OnboardingPage({ params }: RoleProps) {
 	// If user is already enrolled in a gym, show enrolled status
 	if (enrollmentStatus.isEnrolled) {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-[80vh] p-4">
-				<Card className="w-full max-w-md border-green-500">
+			<div className="flex flex-col items-center sm:justify-center min-h-[80vh] p-4">
+				<Card className="w-full max-w-md bg-transparent border-none">
 					<CardHeader className="text-center">
 						<div className="mx-auto mb-4 bg-green-100 dark:bg-green-900/20 w-12 h-12 rounded-full flex items-center justify-center">
 							<ShieldCheck className="h-6 w-6 text-green-500" />
 						</div>
-						<CardTitle>Already Enrolled</CardTitle>
-						<CardDescription>
-							You are already connected to a gym.
-						</CardDescription>
+						<CardTitle className="text-white/80">Already Enrolled</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<p className="text-center text-muted-foreground">
 							{enrollmentStatus.msg}
 						</p>
 						<div className="flex justify-center">
-							<Button asChild>
+							<Button
+								asChild
+								className="infince-flex justify-center items-center bg-green-600 text-white"
+							>
 								<Link href="/dashboard">Go to Dashboard</Link>
 							</Button>
 						</div>

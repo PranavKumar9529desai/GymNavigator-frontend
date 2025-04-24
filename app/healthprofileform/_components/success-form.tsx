@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import type { HealthMetrics } from '../calculate-health-data/health-data-types';
 
 interface SuccessFormProps {
@@ -10,8 +10,8 @@ interface SuccessFormProps {
 }
 
 export default function SuccessForm({ healthMetrics }: SuccessFormProps) {
-	const router = useRouter();
-	const [countdown, setCountdown] = useState(5);
+	const _router = useRouter();
+	const [_countdown, _setCountdown] = useState(5);
 
 	// Handle automatic redirection
 	//   useEffect(() => {

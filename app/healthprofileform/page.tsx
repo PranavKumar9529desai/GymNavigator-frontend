@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from "react";
 import { submitHealthProfile } from "./_actions/use-health-profile-mutation";
 import { useHealthProfileStore } from "./_store/health-profile-store";
 import type { HealthMetrics } from "./calculate-health-data/health-data-types";
-import type { HealthProfileResponse } from "./_actions/submit-health-profile";
 
 import ActivityForm from "./_components/activity-form";
 import AgeForm from "./_components/age-form";
@@ -58,12 +57,16 @@ export default function HealthProfileFormPage() {
     useHealthProfileStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(null);
+  const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(
+    null
+  );
   const { toast } = useToast();
   const router = useRouter();
 
   // Determine whether the user is non-vegetarian
   const isNonVegetarian = dietaryPreference === "non-vegetarian";
+
+
 
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
@@ -77,10 +80,9 @@ export default function HealthProfileFormPage() {
       });
 
       if (result.success) {
-        // Check if result has data and healthMetrics
-        const data = result.data as { healthMetrics?: HealthMetrics };
-        if (data?.healthMetrics) {
-          setHealthMetrics(data.healthMetrics);
+        if (result.data) {
+          
+          setHealthMetrics(result.data.healthMetrics);
         }
         toast({
           title: "Success!",

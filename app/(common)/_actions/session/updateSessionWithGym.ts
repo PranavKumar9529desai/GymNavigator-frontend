@@ -1,7 +1,7 @@
 'use client';
 
 export async function updateSesionWithGym(
-	gym: gym,
+	gym: GymInfo,
 	update: (data: unknown) => Promise<unknown>,
 ) {
 	try {

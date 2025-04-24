@@ -1,7 +1,10 @@
-import type React from "react";
-import { getIsWorkoutAndDietAssignedStatus } from "./_actions/get-isworkoutanddietassigned-status";
+import { auth } from "@/app/(auth)/auth";
+import { queryClient } from "@/lib/queryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { queryClient } from "@/app/queryClient";
+import Link from "next/link";
+import type React from "react";
+import NotOnboarded from "../_components/not-onboarded/not-onboarded";
+import { getIsWorkoutAndDietAssignedStatus } from "./_actions/get-isworkoutanddietassigned-status";
 import ClientLayout from "./_components/ClientLayout";
 
 export const dynamic = "force-dynamic";
@@ -11,17 +14,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Prefetch the assignment status data
-  await queryClient.prefetchQuery({
-    queryKey: ["assignmentStatus"],
-    queryFn: getIsWorkoutAndDietAssignedStatus,
-  });
+  const session = await auth();
+  const IsOnboarded = !!session?.gym;
+  console.log("session is ", session);
+  console.log("IsOnboarded ", IsOnboarded);
 
   return (
     <div className="min-h-screen">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ClientLayout>{children}</ClientLayout>
-      </HydrationBoundary>
+      <ClientLayout>{IsOnboarded ? children : <NotOnboarded />}</ClientLayout>
     </div>
   );
 }

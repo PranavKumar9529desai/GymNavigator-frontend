@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface SuccessStateProps {
 	message: string;
@@ -20,9 +21,17 @@ interface SuccessStateProps {
 export function SuccessState({ message, gymName }: SuccessStateProps) {
 	const router = useRouter();
 
+	useEffect(() => {
+		const redirectTimer = setTimeout(() => {
+			router.push('/dashboard');
+		}, 5000);
+
+		return () => clearTimeout(redirectTimer);
+	}, [router]);
+
 	return (
-		<div className="flex items-center justify-center min-h-[70vh]">
-			<Card className="w-full max-w-md border-2 border-green-500 shadow-lg">
+		<div className="flex items-center justify-center min-h-[70vh] bg-inherit">
+			<Card className="w-full max-w-md ">
 				<CardHeader className="text-center">
 					<div className="mx-auto w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4 animate-pulse">
 						<CheckCircle className="h-12 w-12 text-green-500 animate-bounce" />
@@ -41,6 +50,9 @@ export function SuccessState({ message, gymName }: SuccessStateProps) {
 					</p>
 					<p className="mt-2 text-sm text-gray-600">
 						You can now access all the features available for your role.
+					</p>
+					<p className="mt-2 text-sm text-gray-500">
+						Redirecting to dashboard in 5 seconds...
 					</p>
 				</CardContent>
 				<CardFooter className="flex flex-col sm:flex-row gap-3 justify-center">

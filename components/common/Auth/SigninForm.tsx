@@ -113,7 +113,7 @@ export default function SignInForm() {
 			toast.success('Welcome back!', {
 				description: 'Redirecting to dashboard...',
 			});
-			Router.refresh();
+			Router.push('/dashboard');
 		}
 	};
 

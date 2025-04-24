@@ -58,12 +58,11 @@ export function calculateBMR(
 	if (gender === 'male') {
 		// Mifflin-St Jeor for Men
 		return 10 * weight + 6.25 * height - 5 * age + 5;
-	} else {
-		// Mifflin-St Jeor for Women
-		// Using the female formula for 'female' and 'other' genders as a default.
-		// You might consider specific adjustments for 'other' if more data becomes available.
-		return 10 * weight + 6.25 * height - 5 * age - 161;
 	}
+	// Mifflin-St Jeor for Women
+	// Using the female formula for 'female' and 'other' genders as a default.
+	// You might consider specific adjustments for 'other' if more data becomes available.
+	return 10 * weight + 6.25 * height - 5 * age - 161;
 }
 
 /**
@@ -135,8 +134,6 @@ export function calculateTargetCalories(
 			// Using the specified ~3800 kcal for males, else TDEE + 500 (example adjustment)
 			// You might want a more specific input for female bodybuilders
 			return gender === 'male' ? 3800 : tdee + 500; // Adjusted for non-males, refine as needed
-		case 'maintenance':
-		case 'general-fitness':
 		default:
 			// Rule: Maintaining Health and Lean Muscles
 			return tdee;
@@ -221,8 +218,6 @@ export function calculateMacros(targetCalories: number, goal: GoalType) {
 			carbsPercentage = 0.5; // Midpoint of 40-60%
 			fatPercentage = 0.2; // Midpoint of 15-25%
 			break;
-		case 'maintenance':
-		case 'general-fitness': // Maintaining Health
 		// @ts-ignore
 		default:
 			proteinPercentage = 0.25; // Midpoint of 20-30%

@@ -13,8 +13,8 @@ const INITIAL_ROTATION_Y_DEGREES = -35; // Left side back, right side forward
 const INITIAL_ROLL_Z_DEGREES = 10; // Slight roll (positive makes right side lower) - Adjust as needed (e.g., 3 to 8)
 
 // --- Define Movement Sensitivity (Higher numbers = LESS movement) ---
-const BASE_ANIM_AMP_X = 180; // Further reduced movement
-const BASE_ANIM_AMP_Y = 150; // Further reduced movement
+const BASE_ANIM_AMP_X = 360; // Further reduced movement
+const BASE_ANIM_AMP_Y = 360; // Further reduced movement
 const BASE_ANIM_AMP_Z = 350; // Make Z wobble very minimal
 const MOUSE_SENSITIVITY_X = 100; // Further reduced movement
 const MOUSE_SENSITIVITY_Y = 90; // Further reduced movement
@@ -37,7 +37,9 @@ interface DumbbellProps {
 // Export Dumbbell Scene directly without a Canvas wrapper
 export function DumbbellScene({
 	mousePos,
-}: { mousePos?: React.MutableRefObject<{ x: number; y: number }> }) {
+}: {
+	mousePos?: React.MutableRefObject<{ x: number; y: number }>;
+}) {
 	// Create a default mousePos ref if none is provided
 	const defaultMousePos = useRef({ x: 0, y: 0 });
 	const safeMousePos = mousePos || defaultMousePos;

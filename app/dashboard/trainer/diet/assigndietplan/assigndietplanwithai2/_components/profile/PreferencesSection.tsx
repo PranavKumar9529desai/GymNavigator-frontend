@@ -23,7 +23,7 @@ export function PreferencesSection({
 
 	// Format religious preference
 	const formattedReligious = religiousPreference
-		? otherReligiousPreference && religiousPreference === "Other"
+		? otherReligiousPreference && religiousPreference === 'Other'
 			? otherReligiousPreference
 			: religiousPreference
 		: null;

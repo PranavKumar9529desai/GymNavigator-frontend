@@ -263,11 +263,13 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
 									<h3 className="font-medium text-lg">{user.name}</h3>
 									<p className="text-sm text-gray-500">{user.email}</p>
 								</div>
-								<div className={`px-3 py-1 rounded-full text-sm ${
-									user.dietPlanId
-										? 'bg-green-100 text-green-800'
-										: 'bg-red-100 text-red-800'
-								}`}>
+								<div
+									className={`px-3 py-1 rounded-full text-sm ${
+										user.dietPlanId
+											? 'bg-green-100 text-green-800'
+											: 'bg-red-100 text-red-800'
+									}`}
+								>
 									{user.dietPlanId ? 'Has Diet Plan' : 'No Diet Plan'}
 								</div>
 							</div>
@@ -275,26 +277,54 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
 							<div className="grid grid-cols-2 gap-2">
 								<p className="text-sm">
 									<span className="text-gray-600">Gender: </span>
-									<span className={user.HealthProfile?.gender ? 'text-gray-900' : 'text-gray-500'}>
+									<span
+										className={
+											user.HealthProfile?.gender
+												? 'text-gray-900'
+												: 'text-gray-500'
+										}
+									>
 										{user.HealthProfile?.gender || 'Not Updated'}
 									</span>
 								</p>
 								<p className="text-sm">
 									<span className="text-gray-600">Goal: </span>
-									<span className={user.HealthProfile?.goal ? 'text-gray-900' : 'text-gray-500'}>
+									<span
+										className={
+											user.HealthProfile?.goal
+												? 'text-gray-900'
+												: 'text-gray-500'
+										}
+									>
 										{user.HealthProfile?.goal || 'Not Updated'}
 									</span>
 								</p>
 								<p className="text-sm">
 									<span className="text-gray-600">Weight: </span>
-									<span className={user.HealthProfile?.weight ? 'text-gray-900' : 'text-gray-500'}>
-										{user.HealthProfile?.weight ? `${user.HealthProfile.weight} kg` : 'Not Updated'}
+									<span
+										className={
+											user.HealthProfile?.weight
+												? 'text-gray-900'
+												: 'text-gray-500'
+										}
+									>
+										{user.HealthProfile?.weight
+											? `${user.HealthProfile.weight} kg`
+											: 'Not Updated'}
 									</span>
 								</p>
 								<p className="text-sm">
 									<span className="text-gray-600">Height: </span>
-									<span className={user.HealthProfile?.height ? 'text-gray-900' : 'text-gray-500'}>
-										{user.HealthProfile?.height ? `${user.HealthProfile.height} cm` : 'Not Updated'}
+									<span
+										className={
+											user.HealthProfile?.height
+												? 'text-gray-900'
+												: 'text-gray-500'
+										}
+									>
+										{user.HealthProfile?.height
+											? `${user.HealthProfile.height} cm`
+											: 'Not Updated'}
 									</span>
 								</p>
 							</div>
@@ -306,7 +336,7 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
 										handleDietAssignment(
 											user.id,
 											value,
-											user.dietPlanId || undefined
+											user.dietPlanId || undefined,
 										);
 									}}
 								>

@@ -1,4 +1,4 @@
-import type { HealthProfile } from "../../_actions/get-healthprofile-by-id";
+import type { HealthProfile } from '../../_actions/get-healthprofile-by-id';
 
 interface MealTime {
 	name: string;
@@ -12,21 +12,21 @@ interface MealsSectionProps {
 export function MealsSection({ profile }: MealsSectionProps) {
 	// Default meal schedule if none provided
 	const defaultMeals: MealTime[] = [
-		{ name: "Breakfast", time: "08:00" },
-		{ name: "Lunch", time: "13:00" },
-		{ name: "Dinner", time: "19:00" },
+		{ name: 'Breakfast', time: '08:00' },
+		{ name: 'Lunch', time: '13:00' },
+		{ name: 'Dinner', time: '19:00' },
 	];
 
 	// Helper function to extract mealPreferences from profile
 	const getMealPreferences = (profile?: HealthProfile): MealTime[] => {
 		if (!profile) return [];
-		
+
 		// Try to access mealPreferences if it exists
 		const mealPrefs = (profile as any).mealPreferences;
 		if (Array.isArray(mealPrefs) && mealPrefs.length > 0) {
 			return mealPrefs;
 		}
-		
+
 		// Try to access mealTimings if it exists
 		const mealTimings = (profile as any).mealTimings;
 		if (mealTimings && typeof mealTimings === 'string') {
@@ -36,40 +36,44 @@ export function MealsSection({ profile }: MealsSectionProps) {
 					return parsed;
 				}
 			} catch (e) {
-				console.error("Failed to parse meal timings", e);
+				console.error('Failed to parse meal timings', e);
 			}
 		}
-		
+
 		return [];
 	};
 
 	// Use profile meals or default if not available
-	const mealsToShow = getMealPreferences(profile).length > 0
-		? getMealPreferences(profile)
-		: defaultMeals;
-		
+	const mealsToShow =
+		getMealPreferences(profile).length > 0
+			? getMealPreferences(profile)
+			: defaultMeals;
+
 	// Helper to get number of meals safely
 	const getNumberOfMeals = (profile?: HealthProfile): number | undefined => {
 		if (!profile) return undefined;
 		return typeof (profile as any).numberOfMeals === 'number'
-			? (profile as any).numberOfMeals 
+			? (profile as any).numberOfMeals
 			: undefined;
 	};
 
 	// Helper to display meal name appropriately (handles both generic and descriptive names)
-	const displayMealName = (meal: MealTime, index: number): { mainTitle: string; subtitle?: string } => {
+	const displayMealName = (
+		meal: MealTime,
+		_index: number,
+	): { mainTitle: string; subtitle?: string } => {
 		// If it's a descriptive name with a colon, split it
-		if (meal.name.includes(":")) {
-			const [mainTitle, subtitle] = meal.name.split(":", 2);
+		if (meal.name.includes(':')) {
+			const [mainTitle, subtitle] = meal.name.split(':', 2);
 			return { mainTitle: mainTitle.trim(), subtitle: subtitle.trim() };
 		}
-		
+
 		// If it's a basic meal type with no description
-		const basicMealTypes = ["Breakfast", "Lunch", "Dinner", "Snack"];
+		const basicMealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 		if (basicMealTypes.includes(meal.name)) {
 			return { mainTitle: meal.name };
 		}
-		
+
 		// For any other case
 		return { mainTitle: meal.name };
 	};
@@ -107,7 +111,9 @@ export function MealsSection({ profile }: MealsSectionProps) {
 							</span>
 							<div className="flex-1">
 								<span className="font-medium text-blue-700">{mainTitle}</span>
-								<span className="text-xs text-gray-500 ml-2">~ {meal.time}</span>
+								<span className="text-xs text-gray-500 ml-2">
+									~ {meal.time}
+								</span>
 								{subtitle && (
 									<p className="text-sm text-gray-600 mt-1">{subtitle}</p>
 								)}

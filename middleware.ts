@@ -55,12 +55,7 @@ export default async function middleware(request: NextRequest) {
 
 	// 2. Authentication Routes (signin/signup)
 	if (isAuthRoute) {
-		// If user is already logged in, redirect to their role-specific dashboard
-		if (isLoggedIn && session?.role) {
-			return NextResponse.redirect(
-				new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
-			);
-		}
+		// Allow access to auth routes if not logged in
 		return NextResponse.next();
 	}
 
@@ -78,34 +73,8 @@ export default async function middleware(request: NextRequest) {
 			return NextResponse.redirect(redirectUrl);
 		}
 
-		// Role selection required
-		if (!session.role) {
-			return NextResponse.redirect(new URL('/selectrole', request.url));
-		}
-
-		// Trainer needs to select a gym
-		if (session.role === 'trainer' && !session.gym) {
-			return NextResponse.redirect(new URL('/selectgym', request.url));
-		}
-
-		// Role-based access control for specific dashboard paths
-		if (pathname.startsWith('/dashboard/owner')) {
-			if (!IsOwner(session)) {
-				return NextResponse.redirect(new URL('/unauthorized', request.url));
-			}
-		} else if (pathname.startsWith('/dashboard/trainer')) {
-			if (!IsTrainer(session)) {
-				return NextResponse.redirect(new URL('/unauthorized', request.url));
-			}
-		}
-
-		// If accessing general dashboard, redirect to role-specific dashboard
-		if (pathname === '/dashboard') {
-			return NextResponse.redirect(
-				new URL(`/dashboard/${session.role.toLowerCase()}`, request.url),
-			);
-		}
-
+		// If authenticated and accessing a protected route, allow access
+		// Specific dashboard/role logic will be handled in the layout/page components
 		return NextResponse.next();
 	}
 

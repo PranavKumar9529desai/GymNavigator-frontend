@@ -1,4 +1,4 @@
-import { queryClient } from "@/app/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";

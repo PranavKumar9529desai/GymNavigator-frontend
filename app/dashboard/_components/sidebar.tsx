@@ -1,5 +1,5 @@
 'use client';
-import IconImage from '@/app/assests/gym-manager.webp';
+import IconImage from '@/assests/gym-manager.webp';
 import { signOut } from '@/node_modules/next-auth/react';
 import * as LucideIcons from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -125,7 +125,7 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 								<button
 									type="button"
 									onClick={() => handleItemClick(item)}
-									className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+									className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200
                     ${
 											isActiveParent(item)
 												? 'bg-blue-700 text-white'
@@ -150,7 +150,7 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 													onClick={() =>
 														handleSubItemClick(subItem, item.label)
 													}
-													className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+													className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200
                             ${
 															activePage === subItem.label
 																? 'bg-blue-600 text-white'

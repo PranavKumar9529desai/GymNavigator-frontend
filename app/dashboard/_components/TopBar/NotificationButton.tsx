@@ -63,6 +63,7 @@ const NotificationButton: FC = () => {
 					<div
 						className="fixed inset-0 bg-black/20 z-10"
 						onClick={() => setShowNotifications(false)}
+						onKeyUp={() => setShowNotifications(false)}
 					/>
 
 					{/* Notification panel */}
@@ -94,6 +95,7 @@ const NotificationButton: FC = () => {
 										className={`p-3 border-b hover:bg-gray-50 cursor-pointer transition-all ${
 											!notification.read ? 'bg-blue-50' : 'bg-white'
 										}`}
+										onKeyUp={() => markAsRead(notification.id)}
 										onClick={() => markAsRead(notification.id)}
 									>
 										<div className="flex items-start">

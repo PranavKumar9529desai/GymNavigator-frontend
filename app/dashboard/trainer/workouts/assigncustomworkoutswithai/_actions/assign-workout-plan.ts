@@ -138,10 +138,13 @@ export async function assignExistingWorkoutPlan(
 	const trainerAxios = await TrainerReqConfig();
 
 	try {
-		const response = await trainerAxios.post('/workouts/assign-custom-workout', {
-			userId, // Send as string
-			workoutPlanId,
-		});
+		const response = await trainerAxios.post(
+			'/workouts/assign-custom-workout',
+			{
+				userId, // Send as string
+				workoutPlanId,
+			},
+		);
 
 		if (!response.data.success) {
 			throw new Error(
@@ -159,7 +162,7 @@ export async function assignExistingWorkoutPlan(
 			previousPlan: response.data.previousPlan,
 			newPlan: response.data.newPlan,
 			timestamp: Date.now(), // Add timestamp
-			invalidateQueries: ["assignable-users", "workout-plans"], // Add queries to invalidate
+			invalidateQueries: ['assignable-users', 'workout-plans'], // Add queries to invalidate
 		};
 	} catch (error) {
 		console.error('Error assigning existing workout plan:', error);

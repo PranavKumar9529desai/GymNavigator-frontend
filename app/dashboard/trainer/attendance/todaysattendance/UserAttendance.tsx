@@ -12,11 +12,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, UserX, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { TodayAttendance, type AttendanceUser } from './getTodayAttendance';
+import { type AttendanceUser, TodayAttendance } from './getTodayAttendance';
 
 const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
 	return shift === 'MORNING' ? 'Morning' : 'Evening';
@@ -114,16 +114,18 @@ export default function UserAttendance() {
 		queryFn: TodayAttendance,
 	});
 
-	const formattedUsers: FormattedUser[] = attendanceData?.users?.map((user) => ({
-		id: user.id,
-		name: user.name,
-		shift: formatShift(user.shift),
-		todaysAttendance: user.isPresent,
-		attendanceTime: user.attendanceTime,
-	})) || [];
+	const formattedUsers: FormattedUser[] =
+		attendanceData?.users?.map((user) => ({
+			id: user.id,
+			name: user.name,
+			shift: formatShift(user.shift),
+			todaysAttendance: user.isPresent,
+			attendanceTime: user.attendanceTime,
+		})) || [];
 
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filteredUsers, setFilteredUsers] = useState<FormattedUser[]>(formattedUsers);
+	const [filteredUsers, setFilteredUsers] =
+		useState<FormattedUser[]>(formattedUsers);
 
 	// Calculate stats
 	const totalUsers = formattedUsers.length;
@@ -153,7 +155,7 @@ export default function UserAttendance() {
 
 	useEffect(() => {
 		const filtered = formattedUsers.filter((user) =>
-			user.name.toLowerCase().includes(searchTerm.toLowerCase())
+			user.name.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 		setFilteredUsers(filtered);
 	}, [searchTerm, formattedUsers]);
@@ -205,9 +207,7 @@ export default function UserAttendance() {
 									<span className="text-gray-600">Status: </span>
 									<span
 										className={
-											user.todaysAttendance
-												? 'text-green-600'
-												: 'text-red-600'
+											user.todaysAttendance ? 'text-green-600' : 'text-red-600'
 										}
 									>
 										{user.todaysAttendance ? 'Present' : 'Absent'}

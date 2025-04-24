@@ -57,7 +57,7 @@ export default function ActionButtons({
 					variant="secondary"
 					size="sm"
 					onClick={onSave}
-					 // Only disable if currently saving - removed the !needsSaving condition
+					// Only disable if currently saving - removed the !needsSaving condition
 					disabled={isSaving}
 					className="flex-1 sm:flex-none h-10 px-5"
 				>
@@ -73,7 +73,7 @@ export default function ActionButtons({
 					variant="default"
 					size="sm"
 					onClick={onAssign}
-					 // Only disable during loading operations
+					// Only disable during loading operations
 					disabled={isLoading}
 					className="flex-1 sm:flex-none h-10 px-5 bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 text-white hover:opacity-90 shadow-md disabled:opacity-50"
 				>

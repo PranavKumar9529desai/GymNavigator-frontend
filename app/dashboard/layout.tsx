@@ -1,3 +1,7 @@
+import { IsOwner } from '@/lib/is-owner'; // Assuming path alias @/lib
+import { IsTrainer } from '@/lib/is-trainer'; // Assuming path alias @/lib
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type React from 'react';
 import { auth } from '../(auth)/auth';
 import DashboardBottomNav from './_components/DashboardBottomNav';
@@ -16,8 +20,40 @@ export default async function Layout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
+	const headersList = await headers();
+	const pathname = headersList.get('x-next-pathname') || ''; // Get pathname
 
-	const role = session?.user?.role || session?.role;
+	// 1. Authentication Check (Safeguard)
+	if (!session) {
+		redirect('/signin');
+	}
+
+	// 2. Role Selection Check
+	if (!session.role) {
+		// Allow access to role selection page itself if needed, otherwise redirect
+		if (pathname !== '/selectrole') {
+			// Adjust if role selection path is different
+			redirect('/selectrole');
+		}
+		// If on selectrole page, prevent further rendering of dashboard layout
+		return null; // Or render a minimal loading/message state
+	}
+
+	// 3. Role-based Path Authorization & Base Redirection
+	const role = session.role; // Use validated role
+
+	if (pathname.startsWith('/dashboard/owner') && !IsOwner(session)) {
+		redirect('/unauthorized');
+	} else if (pathname.startsWith('/dashboard/trainer') && !IsTrainer(session)) {
+		// Ensure only trainers access trainer section, specific checks (like gym) in trainer layout
+		redirect('/unauthorized');
+	} else if (pathname === '/dashboard' || pathname === '/dashboard/') {
+		// Redirect from base dashboard to role-specific dashboard
+		redirect(`/dashboard/${role.toLowerCase()}`);
+	}
+	// Note: Client role access is implicitly allowed if not owner/trainer path
+
+	// Trainer-specific checks (like gym selection) are moved to trainer layout
 
 	const getMenuItems = (): MenuItem[] => {
 		switch (role) {

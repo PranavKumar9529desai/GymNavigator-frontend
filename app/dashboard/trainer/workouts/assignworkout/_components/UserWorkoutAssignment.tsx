@@ -1,5 +1,5 @@
 "use client";
-import { queryClient } from "@/app/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import { DataCard } from "@/components/Table/UserCard";
 import { DataTable } from "@/components/Table/UsersTable";
 import { StatusCard } from "@/components/common/StatusCard";
@@ -37,14 +37,14 @@ const columns: ColumnDef<AssignableUser>[] = [
           onClick={() =>
             row.original.id &&
             router.push(
-              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`,
             )
           }
           onKeyDown={(e) =>
             e.key === "Enter" &&
             row.original.id &&
             router.push(
-              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`,
             )
           }
         >
@@ -87,7 +87,7 @@ const columns: ColumnDef<AssignableUser>[] = [
           onClick={() =>
             row.original.id &&
             router.push(
-              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`
+              `/dashboard/trainer/workouts/assignworkout/${row.original.id}`,
             )
           }
         >
@@ -118,7 +118,7 @@ export default function UserWorkoutAssignment() {
   const totalUsers = users.length;
   const totalWorkoutPlans = workoutPlans.length;
   const usersWithWorkoutPlan = users.filter(
-    (u) => u.hasActiveWorkoutPlan
+    (u) => u.hasActiveWorkoutPlan,
   ).length;
   const usersWithoutWorkoutPlan = totalUsers - usersWithWorkoutPlan;
 
@@ -151,12 +151,12 @@ export default function UserWorkoutAssignment() {
 
   useEffect(() => {
     const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
-  const handleAssignWorkout = async () => {
+  const _handleAssignWorkout = async () => {
     // ...existing assignment code...
 
     const response = { success: true }; // Mock response for demonstration
@@ -205,12 +205,12 @@ export default function UserWorkoutAssignment() {
           data={filteredUsers}
           renderCard={(user) => (
             // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-<div
+            <div
               className="p-4 space-y-3 bg-white rounded-lg border cursor-pointer hover:border-primary transition-colors"
               onClick={() =>
                 user.id &&
                 router.push(
-                  `/dashboard/trainer/workouts/assignworkout/${user.id}`
+                  `/dashboard/trainer/workouts/assignworkout/${user.id}`,
                 )
               }
             >

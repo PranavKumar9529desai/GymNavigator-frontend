@@ -2,16 +2,23 @@
 import { DataCard } from "@/components/Table/UserCard";
 import { DataTable } from "@/components/Table/UsersTable";
 import { StatusCard } from "@/components/common/StatusCard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Search, UserCheck, Users, Dumbbell, UtensilsCrossed } from "lucide-react";
+import {
+  ArrowUpDown,
+  Dumbbell,
+  Search,
+  UserCheck,
+  Users,
+  UtensilsCrossed,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { AssignedUser } from "../_actiions/GetuserassignedTotrainers";
 import { getUsersAssignedToTrainer } from "../_actiions/GetuserassignedTotrainers";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 const columns: ColumnDef<AssignedUser>[] = [
   {
@@ -28,7 +35,21 @@ const columns: ColumnDef<AssignedUser>[] = [
     cell: ({ row }) => {
       const router = useRouter();
       return (
-        <div className="cursor-pointer hover:text-primary" onClick={() => row.original.id && router.push(`/dashboard/trainer/assignedusers/assignedusersroute/${row.original.id}`)}>
+        <div
+          className="cursor-pointer hover:text-primary"
+          onClick={() =>
+            row.original.id &&
+            router.push(
+              `/dashboard/trainer/assignedusers/assignedusersroute/${row.original.id}`,
+            )
+          }
+          onKeyUp={() =>
+            row.original.id &&
+            router.push(
+              `/dashboard/trainer/assignedusers/assignedusersroute/${row.original.id}`,
+            )
+          }
+        >
           {row.getValue("name")}
         </div>
       );
@@ -113,14 +134,12 @@ export default function AssignedUserToTrainer() {
   // Calculate stats
   const totalUsers = users.length;
   const activeUsers = users.filter(
-    (u) => u.membershipStatus === "active"
+    (u) => u.membershipStatus === "active",
   ).length;
   const usersWithWorkoutPlan = users.filter(
-    (u) => u.hasActiveWorkoutPlan
+    (u) => u.hasActiveWorkoutPlan,
   ).length;
-  const usersWithDietPlan = users.filter(
-    (u) => u.hasActiveDietPlan
-  ).length;
+  const usersWithDietPlan = users.filter((u) => u.hasActiveDietPlan).length;
 
   const statusCards = [
     {
@@ -150,9 +169,8 @@ export default function AssignedUserToTrainer() {
   ] as const;
 
   useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
@@ -190,9 +208,20 @@ export default function AssignedUserToTrainer() {
         <DataCard
           data={filteredUsers}
           renderCard={(user) => (
-            <div 
+            <div
               className="p-4 space-y-3 bg-white rounded-lg border cursor-pointer hover:border-primary transition-colors"
-              onClick={() => user.id && router.push(`/dashboard/trainer/assignedusers/assignedusersroute/${user.id}`)}
+              onClick={() =>
+                user.id &&
+                router.push(
+                  `/dashboard/trainer/assignedusers/assignedusersroute/${user.id}`,
+                )
+              }
+              onKeyUp={() =>
+                user.id &&
+                router.push(
+                  `/dashboard/trainer/assignedusers/assignedusersroute/${user.id}`,
+                )
+              }
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-lg">{user.name}</h3>
@@ -210,14 +239,19 @@ export default function AssignedUserToTrainer() {
               <div className="space-y-3">
                 {/* Workout Plan Section */}
                 <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Workout Plan</p>
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Workout Plan
+                  </p>
                   {user.hasActiveWorkoutPlan ? (
                     <Badge className="bg-green-100 text-green-800">
                       <Dumbbell className="w-3 h-3 mr-1" />
                       {user.activeWorkoutPlanName}
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-100 text-gray-600"
+                    >
                       No Active Plan
                     </Badge>
                   )}
@@ -225,14 +259,19 @@ export default function AssignedUserToTrainer() {
 
                 {/* Diet Plan Section */}
                 <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Diet Plan</p>
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    Diet Plan
+                  </p>
                   {user.hasActiveDietPlan ? (
                     <Badge className="bg-blue-100 text-blue-800">
                       <UtensilsCrossed className="w-3 h-3 mr-1" />
                       {user.dietPlanName}
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-100 text-gray-600"
+                    >
                       No Diet Plan
                     </Badge>
                   )}

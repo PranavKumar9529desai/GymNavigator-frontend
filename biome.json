@@ -1,39 +1,39 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "error",
-        "noUndeclaredVariables": "off"
-      },
-      "suspicious": {
-        "noExplicitAny": "error",
-        "noArrayIndexKey": "error"
-      },
-      "performance": {
-        "noAccumulatingSpread": "error"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "error",
-        "useButtonType": "error"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "enabled": true,
-      "quoteStyle": "single",
-      "trailingCommas": "all",
-      "semicolons": "always"
-    }
-  },
-  "files": {
-    "ignore": ["node_modules/*", "dist/*", ".next/*", "public/*"]
-  }
+	"$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUnusedVariables": "error",
+				"useExhaustiveDependencies": "error",
+				"noUndeclaredVariables": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "error",
+				"noArrayIndexKey": "error"
+			},
+			"performance": {
+				"noAccumulatingSpread": "error"
+			},
+			"a11y": {
+				"useKeyWithClickEvents": "error",
+				"useButtonType": "error"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"enabled": true,
+			"quoteStyle": "single",
+			"trailingCommas": "all",
+			"semicolons": "always"
+		}
+	},
+	"files": {
+		"ignore": ["node_modules/*", "dist/*", ".next/*", "public/*"]
+	}
 }

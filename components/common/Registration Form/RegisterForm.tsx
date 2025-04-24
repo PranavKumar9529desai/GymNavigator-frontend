@@ -136,6 +136,7 @@ export default function RegisterForm() {
 				console.error('Registration error:', error);
 			} finally {
 				// Always dismiss the loading toast when the operation completes
+				router.push('/dashboard');
 				toast.dismiss();
 			}
 		});
@@ -199,7 +200,9 @@ export default function RegisterForm() {
 									<FormLabel className="text-sm font-medium text-gray-300">
 										<div className="flex items-center space-x-2">
 											<User
-												className={`w-4 h-4 ${errors.name ? 'text-destructive' : 'text-blue-400'}`}
+												className={`w-4 h-4 ${
+													errors.name ? 'text-destructive' : 'text-blue-400'
+												}`}
 											/>
 											<span>Username</span>
 										</div>
@@ -308,7 +311,9 @@ export default function RegisterForm() {
 									<FormLabel className="text-sm font-medium text-gray-300">
 										<div className="flex items-center space-x-2">
 											<UserRoundCogIcon
-												className={`w-4 h-4 ${errors.role ? 'text-destructive' : 'text-blue-400'}`}
+												className={`w-4 h-4 ${
+													errors.role ? 'text-destructive' : 'text-blue-400'
+												}`}
 											/>
 											<span>Role</span>
 										</div>

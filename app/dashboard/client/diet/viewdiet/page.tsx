@@ -1,13 +1,10 @@
-import {
-  HydrationBoundary,
-  dehydrate,
-} from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
 export const dynamic = "force-dynamic";
 
+import { queryClient } from "@/lib/queryClient";
 import { fetchTodaysDiet } from "./_actions/get-todays-diet";
 import TodaysDiet from "./_components/todays-diet";
-import { queryClient } from "@/app/queryClient";
 
 export default async function ViewDietPage() {
   // Prefetch the data on the server

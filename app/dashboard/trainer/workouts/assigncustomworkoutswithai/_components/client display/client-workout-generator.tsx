@@ -35,9 +35,7 @@ export default function ClientWorkoutGenerator({
 
 	const { currentWorkout } = useWorkoutViewStore.getState();
 	const planToShow =
-		currentWorkout && !('clientName' in currentWorkout)
-			? currentWorkout
-			: null;
+		currentWorkout && !('clientName' in currentWorkout) ? currentWorkout : null;
 
 	return (
 		<div className="space-y-6">

@@ -1,4 +1,4 @@
-import type { HealthProfile } from "../../_actions/get-healthprofile-by-id";
+import type { HealthProfile } from '../../_actions/get-healthprofile-by-id';
 
 interface HealthMetricsSectionProps {
 	profile?: HealthProfile;
@@ -7,30 +7,30 @@ interface HealthMetricsSectionProps {
 export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 	// Format utility functions
 	const formatHeight = (value?: number, unit?: string): string => {
-		if (!value) return "N/A";
-		return `${value} ${unit || "cm"}`;
+		if (!value) return 'N/A';
+		return `${value} ${unit || 'cm'}`;
 	};
 
 	const formatWeight = (value?: number, unit?: string): string => {
-		if (!value) return "N/A";
-		return `${value} ${unit || "kg"}`;
+		if (!value) return 'N/A';
+		return `${value} ${unit || 'kg'}`;
 	};
 
 	// BMI utility functions
 	const getBmiColor = (bmi: number): string => {
-		if (bmi < 18.5) return "bg-blue-50 text-blue-700";
-		if (bmi < 25) return "bg-green-50 text-green-700";
-		if (bmi < 30) return "bg-yellow-50 text-yellow-700";
-		return "bg-red-50 text-red-700";
+		if (bmi < 18.5) return 'bg-blue-50 text-blue-700';
+		if (bmi < 25) return 'bg-green-50 text-green-700';
+		if (bmi < 30) return 'bg-yellow-50 text-yellow-700';
+		return 'bg-red-50 text-red-700';
 	};
 
 	const getBmiClassification = (bmi: number): string => {
-		if (bmi < 18.5) return "Underweight";
-		if (bmi < 25) return "Normal weight";
-		if (bmi < 30) return "Overweight";
-		if (bmi < 35) return "Obesity Class I";
-		if (bmi < 40) return "Obesity Class II";
-		return "Obesity Class III";
+		if (bmi < 18.5) return 'Underweight';
+		if (bmi < 25) return 'Normal weight';
+		if (bmi < 30) return 'Overweight';
+		if (bmi < 35) return 'Obesity Class I';
+		if (bmi < 40) return 'Obesity Class II';
+		return 'Obesity Class III';
 	};
 
 	return (
@@ -58,7 +58,9 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 					<span className="text-xs font-medium text-gray-500 uppercase tracking-wide block mb-1">
 						Age
 					</span>
-					<span className="font-medium text-lg text-blue-700">{profile?.age || "N/A"}</span>
+					<span className="font-medium text-lg text-blue-700">
+						{profile?.age || 'N/A'}
+					</span>
 				</div>
 
 				<div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
@@ -66,7 +68,7 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 						Gender
 					</span>
 					<span className="font-medium text-lg text-blue-700">
-						{profile?.gender || "N/A"}
+						{profile?.gender || 'N/A'}
 					</span>
 				</div>
 

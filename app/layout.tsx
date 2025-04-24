@@ -1,11 +1,11 @@
-import './globals.css';
+import '@/globals.css';
+import Providers from '@/providers/provider';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import type { Metadata } from 'next';
 // import Script from "next/script";
 import { Toaster } from 'sonner';
 import type { ToasterProps } from 'sonner';
-import QueryClientProvider from './providers/QueryClientProvider';
-import Providers from './providers/provider';
+import QueryClientProvider from '../providers/QueryClientProvider';
 const siteUrl = 'https://admin.gymnavigator.in';
 
 export const metadata: Metadata = {

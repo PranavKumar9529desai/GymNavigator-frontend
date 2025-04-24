@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 type GroceryItemProps = {
 	id: string;
@@ -27,15 +27,15 @@ export function GroceryListItem({
 					onCheckedChange={() => onToggle(id)}
 					id={`item-${id}`}
 					className={cn(
-						"h-4 w-4 rounded-sm border-primary/50",
-						isPurchased && "bg-primary border-primary"
+						'h-4 w-4 rounded-sm border-primary/50',
+						isPurchased && 'bg-primary border-primary',
 					)}
 				/>
 				<label
 					htmlFor={`item-${id}`}
 					className={cn(
-						"text-sm font-medium cursor-pointer",
-						isPurchased && "line-through text-muted-foreground"
+						'text-sm font-medium cursor-pointer',
+						isPurchased && 'line-through text-muted-foreground',
 					)}
 				>
 					{name}

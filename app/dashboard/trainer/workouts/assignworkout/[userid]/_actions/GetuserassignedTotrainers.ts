@@ -29,18 +29,21 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 				id: user.id,
 				name: user.name,
 				email: user.email,
-				gender: user.gender || "Not specified",
-				dietaryPreference: user.dietaryPreference || "Not specified",
-				membershipStatus: "active",
+				gender: user.gender || 'Not specified',
+				dietaryPreference: user.dietaryPreference || 'Not specified',
+				membershipStatus: 'active',
 				activeWorkoutPlanId: user.activeWorkoutPlanId || null,
 				activeWorkoutPlanName: user.activeWorkoutPlanName || null,
 				hasActiveWorkoutPlan: !!user.activeWorkoutPlanId,
 				dietPlanId: user.dietPlanId || null,
 				dietPlanName: user.dietPlanName || null,
-				hasActiveDietPlan: !!user.dietPlanId
+				hasActiveDietPlan: !!user.dietPlanId,
 			}));
 		}
-		console.log('response.data from the getUsersAssignedToTrainer', response.data);
+		console.log(
+			'response.data from the getUsersAssignedToTrainer',
+			response.data,
+		);
 		return [];
 	} catch (error) {
 		console.error('Error fetching assigned users:', error);

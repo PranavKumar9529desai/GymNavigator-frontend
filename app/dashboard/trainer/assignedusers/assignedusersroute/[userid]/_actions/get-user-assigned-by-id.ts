@@ -1,6 +1,7 @@
 "use server";
 
 import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+import Error from "next/error";
 
 export interface CompleteUserInfo {
   id: string;
@@ -81,6 +82,7 @@ export async function getUserCompleteInfo(userId: string): Promise<{
         message: response.data.msg || "Failed to fetch user information",
       },
     };
+    // @ts-ignore
   } catch (error: any) {
     console.error("Error fetching user complete info:", error);
     return {

@@ -6,6 +6,7 @@ import {
   HealthProfileState,
 } from "../_store/health-profile-store";
 import type { HealthMetrics } from "../calculate-health-data/health-data-types";
+import { HealthProfileSubmissionResponse } from "./types";
 // Define a type that matches what we need for the API request
 
 export interface HealthProfileFormDataSubmissionType {
@@ -15,7 +16,6 @@ export interface HealthProfileFormDataSubmissionType {
 }
 
 export interface HealthProfileApiRequest {
-
   gender: string;
   age: number;
   activityLevel: ActivityLevel; // Use the ActivityLevel type for consistency
@@ -39,7 +39,7 @@ export interface HealthProfileApiRequest {
 
 export interface HealthProfileResponse {
   success: boolean;
-  data?: unknown;
+  data?: HealthProfileApiRequest ;
   error?: string;
   details?: string;
 }

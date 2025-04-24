@@ -143,17 +143,17 @@ export function UserValidityPeriod({
 	};
 
 	return (
-		<div className="w-full max-w-2xl mx-auto p-4 sm:p-8 bg-white rounded-xl shadow-sm space-y-6 sm:space-y-8">
+		<div className="w-full max-w-2xl mx-auto p-4 sm:p-3 e rounded-xl shadow-sm space-y- sm:space-y-8">
 			<Toaster position="top-right" />
 
 			{/* Header Section with Avatar - Made responsive */}
-			<div className="flex flex-col sm:flex-row items-center sm:space-x-6 pb-4 sm:pb-6 border-b border-gray-100">
-				<Avatar className="w-20 h-20 sm:w-24 sm:h-24 ring-2 ring-gray-100 mb-4 sm:mb-0">
+			<div className="flex flex-col sm:flex-row  sm:space-x-6 pb-4 sm:pb-6 border-b border-gray-100 w-full">
+				<Avatar className="w-20 h-20 sm:w-24 sm:h-24 ring-2 ring-gray-100 mb-4 sm:mb-0 border mx-auto">
 					<AvatarImage
 						src={userImage ? userImage : defaultImage}
 						alt={userName}
 					/>
-					<AvatarFallback className="bg-blue-50 text-blue-700 text-xl font-medium">
+					<AvatarFallback className="bg-blue-50 text-blue-700 text-xl font-medium  ">
 						{userName
 							.split(' ')
 							.map((n) => n[0])
@@ -186,7 +186,7 @@ export function UserValidityPeriod({
 									variant="outline"
 									className="w-full h-12 sm:h-10 justify-start text-left font-normal hover:bg-gray-50 active:scale-[0.98] transition-transform"
 								>
-									<CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500" />
+									<CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500 " />
 									{format(startDate, 'PPP')}
 								</Button>
 							</PopoverTrigger>
@@ -207,7 +207,7 @@ export function UserValidityPeriod({
 										date < new Date() || date < new Date('1900-01-01')
 									}
 									initialFocus
-									className="rounded-md border shadow-lg mx-auto"
+									className="rounded-md border shadow-lg mx-auto bg-white"
 									classNames={{
 										months: 'space-y-4 sm:space-y-0',
 										month: 'space-y-4',

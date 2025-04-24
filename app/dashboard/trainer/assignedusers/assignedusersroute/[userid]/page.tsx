@@ -1,4 +1,4 @@
-import { queryClient } from "@/app/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { getUserCompleteInfo } from "./_actions/get-user-assigned-by-id";
