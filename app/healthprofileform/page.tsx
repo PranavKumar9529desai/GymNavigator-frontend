@@ -58,15 +58,13 @@ export default function HealthProfileFormPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(
-    null
+    null,
   );
   const { toast } = useToast();
   const router = useRouter();
 
   // Determine whether the user is non-vegetarian
   const isNonVegetarian = dietaryPreference === "non-vegetarian";
-
-
 
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
@@ -81,7 +79,6 @@ export default function HealthProfileFormPage() {
 
       if (result.success) {
         if (result.data) {
-          
           setHealthMetrics(result.data.healthMetrics);
         }
         toast({

@@ -39,20 +39,20 @@ export interface HealthProfileApiRequest {
 
 export interface HealthProfileResponse {
   success: boolean;
-  data?: HealthProfileApiRequest ;
+  data?: HealthProfileFormDataSubmissionType;
   error?: string;
   details?: string;
 }
 
 export const submitHealthProfileToApi = async (
-  healthProfileFormDataSubmissionType: HealthProfileFormDataSubmissionType
+  healthProfileFormDataSubmissionType: HealthProfileFormDataSubmissionType,
 ): Promise<HealthProfileResponse> => {
   try {
     const clientAxios = await ClientReqConfig();
     // console.log("Sending profileData: ", profileData);
     const response = await clientAxios.post<HealthProfileResponse>(
       "/profile/healthprofileform",
-      healthProfileFormDataSubmissionType
+      healthProfileFormDataSubmissionType,
     );
 
     return response.data;
