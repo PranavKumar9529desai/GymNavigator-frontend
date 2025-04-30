@@ -23,6 +23,7 @@ import ReligiousPreferencesForm from "./_components/religious-preferences-form";
 import SuccessForm from "./_components/success-form";
 import TargetWeightForm from "./_components/target-weight-form";
 import WeightForm from "./_components/weight-form";
+import { auth } from "../(auth)/auth";
 
 // Progress indicator component
 const ProgressIndicator = ({
@@ -58,7 +59,7 @@ export default function HealthProfileFormPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(
-    null,
+    null
   );
   const { toast } = useToast();
   const router = useRouter();
@@ -87,6 +88,7 @@ export default function HealthProfileFormPage() {
           variant: "default",
         });
         setIsCompleted(true);
+        router.push(`/dashboard/`);
       } else {
         toast({
           title: "Something went wrong",
@@ -175,7 +177,7 @@ export default function HealthProfileFormPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8">
+    <div className="max-w-md mx-auto px-4 py-8 pt-2">
       <ProgressIndicator
         currentStep={currentStep}
         totalSteps={effectiveTotalSteps}

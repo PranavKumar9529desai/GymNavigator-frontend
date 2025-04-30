@@ -46,22 +46,6 @@ const nextConfig = {
     ],
   },
 
-  // Add webpack configuration to handle troika-three-text
-  webpack: (config, { isServer: _isServer }) => {
-    // Handle the troika-three-text module with regex issues
-    config.module.rules.push({
-      test: /troika-three-text.*\.js$/,
-      loader: "string-replace-loader",
-      options: {
-        search: /\/\\p\{Script=Hangul\}\/u\.test\([^)]+\)/g,
-        replace: "false",
-        flags: "g",
-      },
-    });
-
-    return config;
-  },
-
   // Configure experimental features
   experimental: {
     serverActions: {

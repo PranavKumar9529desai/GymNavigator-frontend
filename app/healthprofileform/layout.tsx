@@ -8,7 +8,7 @@ export default function HealtProfileFormLayout({
 	return (
 		<main className="min-h-screen">
 			<div className="container mx-auto px-4 pt-6">
-				<div className="flex flex-col items-center justify-center mb-10 sm:flex-row sm:gap-4">
+				<div className="flex flex-col items-center justify-center mb-6 sm:flex-row sm:gap-4">
 					<div className="relative h-20 w-20 mb-4 sm:mb-0">
 						<Image
 							src="/android-chrome-512x512.png"
