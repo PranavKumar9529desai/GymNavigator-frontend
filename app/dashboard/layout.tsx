@@ -75,14 +75,14 @@ export default async function Layout({
 				<Sidebar menuItems={getMenuItems()} />
 			</div>
 
-			<div className="w-full flex flex-col overflow-hidden">
-				{/* Topbar with logo and subroute navigation - visible only on mobile */}
-				<div className="md:hidden">
-					<DashboardTopBar />
-				</div>
-
+			{/* Removed overflow-hidden to allow sticky positioning below */}
+			<div className="w-full flex flex-col">
 				{/* Main content area with proper height calculations */}
 				<div className="flex-1 overflow-y-auto scroll-container relative pb-16 md:pb-0">
+					{/* Topbar with logo and subroute navigation - visible only on mobile */}
+					<div className="md:hidden">
+						<DashboardTopBar />
+					</div>
 					<div className="container mx-auto px-4 py-4 md:py-6 max-w-7xl">
 						{children}
 					</div>
