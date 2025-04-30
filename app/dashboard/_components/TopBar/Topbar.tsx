@@ -1,8 +1,12 @@
+"use client"; // Keep for usePathname
+
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { FC } from "react";
+// Removed unused hooks: useEffect, useRef, useState
 import { Skeleton } from "../../../../components/ui/skeleton";
-import type { MenuItem, SubItem } from "../menuItems";
+// Removed unused cn import
+import type { MenuItem } from "../menuItems";
 import NotificationButton from "./NotificationButton";
 import QRCodeButton from "./QRCodeButton";
 import SubrouteNav from "./SubrouteNav";
@@ -22,6 +26,7 @@ const Topbar: FC<TopbarProps> = ({
   status,
 }) => {
   const pathname = usePathname();
+  // Removed Intersection Observer state and ref
 
   // First, extract the main route segment from the pathname
   // For example, from "/dashboard/owner/onboarding/onboardingqr" we want to extract "onboarding"
@@ -55,50 +60,52 @@ const Topbar: FC<TopbarProps> = ({
 
   return (
     <>
-      {/* Removed sticky from the main wrapper */}
-      <div className="w-full flex flex-col shadow-md bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 pt-2 ">
-        {/* Top section with logo, name, and buttons */}
-        <div className="h-12 md:h-16 flex items-center justify-between px-4 border-b border-blue-100">
-          <div className="flex items-center space-x-3">
-            <div className="relative h-9 w-9 rounded-md overflow-hidden shadow-sm">
-              <Image
-                src="/apple-touch-icon.png"
-                alt="Gym Logo"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg tracking-tight text-blue-900">
-                {gymName}
-              </h1>
-              {userRole ? (
-                <div className="flex items-center">
-                  <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5" />
-                  <p className="text-xs text-blue-700 capitalize">{userRole}</p>
-                </div>
-              ) : (
-                <Skeleton className="h-2 w-24 mx-auto bg-transparent" />
-              )}
-            </div>
+      {/* Part 1: Scrolls away (Logo, Name, Buttons) */}
+      <div
+        className="h-12 md:h-16 flex items-center justify-between px-4 border-b border-blue-100 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 pt-2
+        sm:hidden
+      "
+      >
+        <div className="flex items-center space-x-3">
+          <div className="relative h-9 w-9 rounded-md overflow-hidden shadow-sm">
+            <Image
+              src="/apple-touch-icon.png"
+              alt="Gym Logo"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
-
-          <div className="flex items-center space-x-2">
-            <NotificationButton />
-            <QRCodeButton userRole={userRole} />
-            <UserMenuButton />
+          <div>
+            <h1 className="font-bold text-lg tracking-tight text-blue-900">
+              {gymName}
+            </h1>
+            {userRole ? (
+              <div className="flex items-center">
+                <span className="h-2 w-2 rounded-full bg-green-500 mr-1.5" />
+                <p className="text-xs text-blue-700 capitalize">{userRole}</p>
+              </div>
+            ) : (
+              <Skeleton className="h-2 w-24 mx-auto bg-transparent" />
+            )}
           </div>
         </div>
-
-        {/* Subroute navigation - Apply sticky directly to this container */}
-        <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100">
-          {status === "loading" ? (
-            <Skeleton className="h-10 w-64 mx-auto bg-transparent" />
-          ) : (
-            <SubrouteNav subroutes={subroutes} status={status} />
-          )}
+        <div className="flex items-center space-x-2">
+          <NotificationButton />
+          <QRCodeButton userRole={userRole} />
+          <UserMenuButton />
         </div>
+      </div>
+
+      {/* Part 2: Sticks to the top (Subroute Navigation) */}
+      <div className="sticky top-0 z-10  bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 shadow-md sm:hidden">
+        {" "}
+        {/* Added shadow here */}
+        {status === "loading" ? (
+          <Skeleton className="h-10 w-64 mx-auto bg-transparent" />
+        ) : (
+          <SubrouteNav subroutes={subroutes} status={status} />
+        )}
       </div>
     </>
   );

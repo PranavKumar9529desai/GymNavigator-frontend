@@ -6,6 +6,7 @@ import type React from "react";
 import NotOnboarded from "../_components/not-onboarded/not-onboarded";
 import { getIsWorkoutAndDietAssignedStatus } from "./_actions/get-isworkoutanddietassigned-status";
 import ClientLayout from "./_components/ClientLayout";
+import DashboardTopBar from "../_components/DashboardTopBar";
 
 export const dynamic = "force-dynamic";
 
