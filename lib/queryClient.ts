@@ -1,17 +1,30 @@
 // Import both QueryClient and onlineManager from '@tanstack/react-query'
 import { QueryClient, onlineManager } from '@tanstack/react-query';
 
-// Set up online manager to use navigator.onLine
-onlineManager.setEventListener((setOnline) => {
-  window.addEventListener('online', () => setOnline(true));
-  window.addEventListener('offline', () => setOnline(false));
-  // Initial check
-  setOnline(navigator.onLine);
-  return () => {
-    window.removeEventListener('online', () => setOnline(true));
-    window.removeEventListener('offline', () => setOnline(false));
-  };
-});
+// Set up online manager only on the client-side
+if (typeof window !== 'undefined') {
+  onlineManager.setEventListener((setOnline) => {
+    // Ensure navigator.onLine is checked before adding listeners
+    setOnline(navigator.onLine);
+
+    const onlineHandler = () => setOnline(true);
+    const offlineHandler = () => setOnline(false);
+
+    window.addEventListener('online', onlineHandler);
+    window.addEventListener('offline', offlineHandler);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('online', onlineHandler);
+      window.removeEventListener('offline', offlineHandler);
+    };
+  });
+} else {
+  // Optional: Set a default behavior for server-side or environments without window
+  // For example, assume online by default during SSR/build
+  onlineManager.setOnline(true);
+}
+
 
 export const queryClient = new QueryClient({
   defaultOptions: {
