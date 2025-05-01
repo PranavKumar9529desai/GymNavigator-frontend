@@ -4,8 +4,9 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
-import QueryClientProvider from "../providers/QueryClientProvider";
+import QueryClientProvider, { useOnlineStatus } from "../providers/QueryClientProvider"; // Import useOnlineStatus
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
+import { useEffect, useState } from "react"; // Import useEffect and useState
 
 const siteUrl = "https://admin.gymnavigator.in";
 // export const dynamic = "force-static";
@@ -91,6 +92,47 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  // Define the OfflineIndicator component directly within the layout
+  const OfflineIndicator = () => {
+    const isOnline = useOnlineStatus();
+    const [showIndicator, setShowIndicator] = useState(!isOnline);
+
+    // Use useEffect to manage the visibility with a slight delay to avoid flicker
+    useEffect(() => {
+      if (!isOnline) {
+        setShowIndicator(true);
+      } else {
+        // Optionally hide immediately or after a delay when back online
+        const timer = setTimeout(() => setShowIndicator(false), 2000); // Hide after 2 seconds
+        return () => clearTimeout(timer);
+      }
+    }, [isOnline]);
+
+    if (!showIndicator) {
+      return null;
+    }
+
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '10px',
+          left: '10px',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: 'white',
+          padding: '8px 15px',
+          borderRadius: '5px',
+          zIndex: 10000, // Ensure it's on top
+          fontSize: '0.9rem',
+        }}
+      >
+        You are currently offline. Some features may be limited.
+      </div>
+    );
+  };
+
+
   const toasterProps: ToasterProps = {
     richColors: true,
     theme: "light",
@@ -103,9 +145,10 @@ export default function RootLayout({
       <body>
         <Providers>
           <QueryClientProvider>
+            <OfflineIndicator /> {/* Add the indicator here */}
             <LazyMotion features={domAnimation}>
               {children}
-<RegisterServiceWorker />
+              <RegisterServiceWorker />
               <Toaster {...toasterProps} />
             </LazyMotion>
           </QueryClientProvider>
