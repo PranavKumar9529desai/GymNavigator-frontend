@@ -1,4 +1,6 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
+import withPWA from "next-pwa";
+import runtimeCaching from "next-pwa/cache";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -6,16 +8,10 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-
   // Configure for Cloudflare Pages deployment
   // output: "standalone",
 
   // SWC Compiler Configuration
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-    styledComponents: true,
-  },
 
   images: {
     remotePatterns: [
@@ -46,19 +42,8 @@ const nextConfig = {
     ],
   },
 
-  // Configure experimental features
-  experimental: {
-    serverActions: {
-      allowedOrigins: [
-        "localhost:3000",
-        "admin.gymnavigator.in",
-        "*.pages.dev",
-      ],
-    },
-    // ppr: true,
 
-    // Add proper Turbopack configuration
-  },
+  // Removed experimental.serverActions to satisfy Next.js 15 config requirements
 
   async headers() {
     return [
@@ -99,6 +84,11 @@ const nextConfig = {
       },
     ];
   },
+  // Alias troika-three-text to its UMD bundle to avoid Babel regex AST errors
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  runtimeCaching,
+})(withBundleAnalyzer(nextConfig));

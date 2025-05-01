@@ -7,3 +7,5 @@ middleware.ts
 .env
 .vercel
 tsconfig.tsbuildinfo
+public/sw.js
+public/workbox-1bb06f5e.js

@@ -1,21 +1,46 @@
 import "@/globals.css";
 import Providers from "@/providers/provider";
 import { LazyMotion, domAnimation } from "framer-motion";
-import type { Metadata } from "next";
-// import Script from "next/script";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
 import QueryClientProvider from "../providers/QueryClientProvider";
+import RegisterServiceWorker from "@/components/RegisterServiceWorker";
+
 const siteUrl = "https://admin.gymnavigator.in";
 // export const dynamic = "force-static";
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "GymNavigator - Gym Management System",
   description:
     "Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.",
-  metadataBase: new URL(siteUrl),
+  applicationName: "GymNavigator",
   alternates: {
     canonical: "/",
+  },
+  verification: {
+    google: "LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  appLinks: {
+    web: {
+      url: siteUrl,
+      should_fallback: true,
+    },
   },
   openGraph: {
     title: "GymNavigator - Gym Management System",
@@ -74,21 +99,13 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <head>
-        <meta
-          name="google-site-verification"
-          content="LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI"
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-        />
-      </head>
+      <head />
       <body>
         <Providers>
           <QueryClientProvider>
             <LazyMotion features={domAnimation}>
               {children}
+<RegisterServiceWorker />
               <Toaster {...toasterProps} />
             </LazyMotion>
           </QueryClientProvider>
