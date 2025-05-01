@@ -4,18 +4,19 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
-import QueryClientProvider, { useOnlineStatus } from "../providers/QueryClientProvider"; // Import useOnlineStatus
+import QueryClientProvider from "../providers/QueryClientProvider"; // Removed useOnlineStatus
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
-import { useEffect, useState } from "react"; // Import useEffect and useState
+// Removed useEffect, useState
+import OfflineIndicator from "@/components/common/OfflineIndicator"; // Import the new component
 
 const siteUrl = "https://admin.gymnavigator.in";
 // export const dynamic = "force-static";
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-  maximumScale: 1
-}
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   verification: {
-    google: "LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI"
+    google: "LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI",
   },
   robots: {
     index: true,
@@ -92,46 +93,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  // Define the OfflineIndicator component directly within the layout
-  const OfflineIndicator = () => {
-    const isOnline = useOnlineStatus();
-    const [showIndicator, setShowIndicator] = useState(!isOnline);
-
-    // Use useEffect to manage the visibility with a slight delay to avoid flicker
-    useEffect(() => {
-      if (!isOnline) {
-        setShowIndicator(true);
-      } else {
-        // Optionally hide immediately or after a delay when back online
-        const timer = setTimeout(() => setShowIndicator(false), 2000); // Hide after 2 seconds
-        return () => clearTimeout(timer);
-      }
-    }, [isOnline]);
-
-    if (!showIndicator) {
-      return null;
-    }
-
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          left: '10px',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          color: 'white',
-          padding: '8px 15px',
-          borderRadius: '5px',
-          zIndex: 10000, // Ensure it's on top
-          fontSize: '0.9rem',
-        }}
-      >
-        You are currently offline. Some features may be limited.
-      </div>
-    );
-  };
-
+  // Removed the inline OfflineIndicator component definition
 
   const toasterProps: ToasterProps = {
     richColors: true,
