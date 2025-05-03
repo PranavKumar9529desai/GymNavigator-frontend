@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "github.com/Saik0s/mcp-browser-use": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "mcp-servers/mcp-browser-use",
+        "run",
+        "mcp-browser-use"
+      ],
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONUTF8": "1"
+      }
+    }
+  }
+}
