@@ -45,7 +45,7 @@ export default function Herosection() {
           </div>
 
           <div className="hidden lg:flex justify-end">
-            {/* <DumbbellWrapper /> */}
+            <DumbbellWrapper />
           </div>
         </div>
       </div>

@@ -144,11 +144,11 @@ function Dumbbell({ mousePos }: DumbbellProps) {
   const detailArgs: [number, number, number, number] = [0.05, 0.05, 0.68, 8];
   const labelPlateArgs: [number, number, number, number] = [0.5, 0.5, 0.67, 32];
   const physicalMaterialProps = {
-    roughness: 0.4,
-    metalness: 0.8,
-    clearcoat: 0.3,
-    clearcoatRoughness: 0.3,
-    reflectivity: 0.6,
+      roughness: 0.3,
+      metalness: 0.7,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.2,
+      reflectivity: 0.8,
   };
   const plateDetailMaterial = (
     <meshPhysicalMaterial color={detailColor} roughness={0.5} metalness={0.6} />
