@@ -1,28 +1,37 @@
-"use client";
+import type { Metadata } from 'next';
+import { auth } from '@/app/(auth)/auth';
+import SettingsMenu from './_components/SettingsMenu';
+import DashboardBottomNav from '@/app/dashboard/_components/DashboardBottomNav';
+import { ReactNode } from 'react';
+import { settingsMenuItems } from './menuitems';
 
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { settingsMenuItems } from "./menuitems";
-import DashboardBottomNav from "@/app/dashboard/_components/DashboardBottomNav";
+export const metadata: Metadata = {
+  title: 'Settings',
+};
 
 interface SettingsLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
-  const { data: session, status } = useSession();
-  if (status === "loading") {
-    return <div>Loading settings...</div>;
-  }
-
-  const role = session?.role as "owner" | "client" | "trainer";
+export default async function SettingsLayout({ children }: SettingsLayoutProps) {
+  const session = await auth();
+  const role = session?.role as 'owner' | 'client' | 'trainer';
   const menuItems = settingsMenuItems[role] || [];
 
   return (
-    <>
-      <div className="flex min-h-screen bg-white">
-        <main className="flex-1 ">{children}</main>
+    <div className="flex min-h-screen bg-white">
+      {/* Sidebar for desktop */}
+      <aside className="hidden md:block w-60 border-r bg-gray-50 p-4">
+        <SettingsMenu items={menuItems} />
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 p-6">{children}</main>
+
+      {/* Bottom nav for mobile */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t">
+        <DashboardBottomNav />
       </div>
-    </>
+    </div>
   );
 }
