@@ -11,7 +11,7 @@ import ReligiousDisplay from "./display/ReligiousDisplay";
 
 // Define props interface to accept searchParams
 interface HealthProfileProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  selectedTopic?: string; // Changed from searchParams to selectedTopic prop
 }
 
 // Define the structure for the fetched data and error
@@ -21,7 +21,7 @@ interface HealthDataState {
   loading: boolean;
 }
 
-export default async function HealthProfile2({ searchParams }: HealthProfileProps) {
+export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }: HealthProfileProps) { // Destructure and rename prop
   const TopicsArray = [
     "General",
     "Activity",
@@ -30,13 +30,11 @@ export default async function HealthProfile2({ searchParams }: HealthProfileProp
     "Religious",
   ];
 
-  // Get the selected topic from URL query params, default to undefined if not present
-  const topicParam = searchParams?.topic;
-  const topicString = Array.isArray(topicParam) ? topicParam[0] : topicParam; // Handle string array case, take first element if array
-  const selectedTopic = topicString
-    ? (topicString.charAt(0).toUpperCase() + topicString.slice(1)) as keyof UserHealthprofile
+  // Capitalize the selected topic from the prop to match keys/array values
+  const selectedTopic = rawSelectedTopic
+    ? (rawSelectedTopic.charAt(0).toUpperCase() + rawSelectedTopic.slice(1)) as keyof UserHealthprofile
     : undefined;
-  // console.log("Selected Topic:", selectedTopic); // For debugging
+  // console.log("Selected Topic from prop:", selectedTopic); // For debugging
 
   let healthData: HealthDataState = { data: null, error: null, loading: false };
 
@@ -57,42 +55,44 @@ export default async function HealthProfile2({ searchParams }: HealthProfileProp
     } finally {
       healthData.loading = false; // Reset loading state
     }
-  } else if (searchParams?.topic) {
-      // Handle invalid topic in URL
-      healthData.error = `Invalid topic: ${searchParams.topic}`;
+  } else if (rawSelectedTopic) {
+      // Handle invalid topic from URL prop
+      healthData.error = `Invalid topic: ${rawSelectedTopic}`;
   }
 
 
   return (
-    <div className="p-10 grid grid-cols-1 md:grid-cols-3 gap-10">
-      {/* Topics List - Takes 1 column on medium screens and up */}
-      <div className="md:col-span-1">
-        <h2 className="text-xl font-bold mb-4">Topics</h2>
-        {TopicsArray.map((topic, index) => {
-          const topicKey = topic as keyof UserHealthprofile;
-          const isActive = selectedTopic === topicKey;
-          return (
-            <Link
-              href={`?topic=${topic.toLowerCase()}`} // Use lowercase for URL consistency
-              key={index}
-              className={`block my-2 p-3 rounded-md transition-colors ${
-                isActive
-                  ? "bg-blue-100 text-blue-800 font-semibold"
-                  : "hover:bg-gray-100 text-black"
-              }`}
-              scroll={false} // Prevent page scroll jump on link click
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-lg">{topic}</p>
-                <ChevronRight size={20} />
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+    <div className={`p-10 grid grid-cols-1 ${selectedTopic ? '' : 'md:grid-cols-3'} gap-10`}>
+      {/* Adjust grid layout based on whether a topic is selected */}
 
-      {/* Data Display Area - Takes 2 columns on medium screens and up */}
-      <div className="md:col-span-2">
+      {/* Topics List - Only show if no topic is selected */}
+      {!selectedTopic && (
+        <div className="md:col-span-1">
+          <h2 className="text-xl font-bold mb-4">Topics</h2>
+          {TopicsArray.map((topic: string, index: number) => { // Added types for topic and index
+            // No need for isActive check here since the list is hidden when a topic is active
+            return (
+              <Link
+                href={`/settings/healthprofile/${topic.toLowerCase()}`} // Use path segments for navigation
+                key={index}
+                className="block my-2 p-3 rounded-md transition-colors hover:bg-gray-100 text-black" // Simplified style
+                scroll={false} // Prevent page scroll jump
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-lg">{topic}</p>
+                  <ChevronRight size={20} />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Data Display Area - Spans appropriately based on topic selection */}
+      {/* If a topic is selected, parent grid is grid-cols-1, so this takes full width */}
+      {/* If no topic is selected, parent grid is md:grid-cols-3, this takes 2 columns */}
+      {/* If no topic is selected, parent grid is md:grid-cols-3, this takes 2 columns */}
+      <div className={selectedTopic ? 'col-span-1' : 'md:col-span-2'}> {/* Ensure full width when topic selected */}
         <Suspense fallback={<div className="p-6 text-center">Loading topic data...</div>}>
           {healthData.loading && <div className="p-6 text-center">Loading...</div>}
           {healthData.error && <div className="p-6 text-center text-red-600">Error: {healthData.error}</div>}
@@ -107,11 +107,13 @@ export default async function HealthProfile2({ searchParams }: HealthProfileProp
               {selectedTopic === "Religious" && <ReligiousDisplay data={healthData.data.Religious} />}
             </div>
           )}
+          {/* Show data or prompt to select a topic */}
           {!selectedTopic && !healthData.loading && !healthData.error && (
-             <div className="p-6 text-center text-gray-500">Select a topic to view details.</div>
+             <div className="p-6 text-center text-gray-500">Select a topic from the list to view details.</div>
           )}
         </Suspense>
       </div>
     </div>
   );
 }
+
