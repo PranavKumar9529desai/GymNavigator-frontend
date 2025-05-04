@@ -15,7 +15,7 @@ import {
 	getBMICategory,
 } from './index';
 
-interface CalculateHealthMetricsParams {
+export interface CalculateHealthMetricsParams {
 	gender: Gender;
 	age: number;
 	weight: { value: number; unit: 'kg' | 'lb' };
