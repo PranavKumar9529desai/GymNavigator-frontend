@@ -6,13 +6,11 @@ import type React from "react";
 import { auth } from "../(auth)/auth";
 import DashboardBottomNav from "./_components/DashboardBottomNav";
 import DashboardTopBar from "./_components/DashboardTopBar";
-import {
-  ClientDashboardMenuItems,
-  type MenuItem,
-  OwnerDashboardMenuItems,
-  TrainerDashboardMenuItems,
-} from "./_components/menuItems";
+import { type MenuItem } from "./_components/menuItems";
+import { getDashboardMenuItems } from "./_components/use-dashboard-menu";
 import Sidebar from "./_components/sidebar";
+// Import the preload function for performance improvement
+import { preloadCommonIcons } from "./_components/common-icons";
 
 export default async function Layout({
   children,
@@ -55,24 +53,18 @@ export default async function Layout({
 
   // Trainer-specific checks (like gym selection) are moved to trainer layout
 
-  const getMenuItems = (): MenuItem[] => {
-    switch (role) {
-      case "owner":
-        return OwnerDashboardMenuItems;
-      case "trainer":
-        return TrainerDashboardMenuItems;
-      case "client":
-        return ClientDashboardMenuItems;
-      default:
-        return [];
-    }
-  };
+  // Get menu items efficiently using the optimized function
+  const menuItems = getDashboardMenuItems(role);
+  
+  // This is a no-op at runtime but helps with bundling optimization
+  // It ensures common icons are available immediately for faster rendering
+  preloadCommonIcons();
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Server-rendered sidebar - visible only on desktop */}
       <div className="hidden md:block h-screen">
-        <Sidebar menuItems={getMenuItems()} />
+        <Sidebar menuItems={menuItems} />
       </div>
 
       {/* Removed overflow-hidden to allow sticky positioning below */}

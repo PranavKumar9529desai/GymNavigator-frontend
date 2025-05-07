@@ -1,0 +1,68 @@
+
+<context>
+# Overview
+The Settings page in the GymNavigator admin app is being optimized for mobile usage and improved UI. The goal is to ensure a seamless, mobile-first experience for gym owners and trainers managing their settings, with a focus on accessibility, performance, and code quality.
+
+# Core Features
+- Mobile-first, responsive layout for the Settings page
+- Large, accessible touch targets (min 44px)
+- No card-wrapped content; use plain containers/sections
+- Skeleton loaders for async content
+- Error/success feedback for all actions
+- Semantic HTML and SEO best practices
+- Minimized client bundle size
+- Biome linting and code quality compliance
+
+# User Experience
+- Primary users: gym owners, trainers
+- Flows: updating profile, changing password, managing notifications, etc.
+- UI/UX: single-column, mobile-optimized, clear section titles, proper spacing, accessible controls, fast feedback on actions
+</context>
+<PRD>
+# Technical Architecture
+- Next.js 15.2.1 (canary), Bun, Tailwind CSS
+- Server components for data fetching, client components for interactivity
+- Server actions for mutations
+- Skeleton loaders using @/components/ui/skeleton
+- Biome for linting
+
+# Development Roadmap
+- Refactor layout for mobile-first, single-column flow
+- Remove card wrappers, use sections/containers
+- Ensure all interactive elements are at least 44px
+- Add skeleton loaders for async content
+- Add error/success feedback for all actions
+- Use semantic HTML and ARIA labels
+- Minimize client bundle size
+- Remove unused imports/variables
+- Memoize client components as needed
+- Test on multiple mobile devices
+- Validate with Biome linting
+
+# Logical Dependency Chain
+1. Refactor layout and remove card wrappers
+2. Add skeleton loaders and feedback states
+3. Improve accessibility and semantic HTML
+4. Optimize performance and bundle size
+5. Test and validate with Biome
+
+# Risks and Mitigations
+- Risk: Overcomplicating UI; Mitigation: Stick to mobile-first, minimal design
+- Risk: Missing accessibility; Mitigation: Use semantic HTML, ARIA, test with screen readers
+- Risk: Linting errors; Mitigation: Run Biome and fix all issues before delivery
+</PRD>
+
+6. **Code Quality**
+   - Follow project conventions for file/folder structure
+   - Use proper types, avoid explicit any, no array index as key
+   - Use server actions for mutations
+
+## Out of Scope
+- Backend changes unless required for UI/data
+- Non-settings pages
+
+## Success Criteria
+- Settings page passes mobile usability tests
+- No Biome lint errors
+- All interactive flows have proper loading/error/success states
+- Bundle size for settings route is minimized

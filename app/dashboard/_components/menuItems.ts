@@ -1,22 +1,6 @@
-import {
-	Building2,
-	CalendarCheck,
-	ClipboardCheck,
-	ClipboardList,
-	Dumbbell,
-	Eye,
-	UtensilsCrossed as ForkKnife,
-	Home,
-	ListChecks,
-	MapPin,
-	Plus,
-	QrCode,
-	ShoppingBasket,
-	UserCheck,
-	UserPlus,
-	Users,
-	UtensilsCrossed,
-} from 'lucide-react';
+// Icon names are used as strings instead of importing all icons
+// This reduces the bundle size and improves performance
+// The actual icons are dynamically imported in the Sidebar component
 
 export interface SubItem {
 	name: string;

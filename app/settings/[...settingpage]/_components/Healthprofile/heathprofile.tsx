@@ -62,43 +62,47 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
 
 
   return (
-    <div className={`p-10 grid grid-cols-1 ${selectedTopic ? '' : 'md:grid-cols-3'} gap-10`}>
+    <section className={`px-4 py-6 pb-20 md:pb-6 grid grid-cols-1 ${selectedTopic ? '' : 'md:grid-cols-3'} gap-6`}>
       {/* Adjust grid layout based on whether a topic is selected */}
 
       {/* Topics List - Only show if no topic is selected */}
       {!selectedTopic && (
         <div className="md:col-span-1">
-          <h2 className="text-xl font-bold mb-4">Topics</h2>
-          {TopicsArray.map((topic: string, index: number) => { // Added types for topic and index
-            // No need for isActive check here since the list is hidden when a topic is active
-            return (
-              <Link
-                href={`/settings/healthprofile/${topic.toLowerCase()}`} // Use path segments for navigation
-                key={index}
-                className="block my-2 p-3 rounded-md transition-colors hover:bg-gray-100 text-black" // Simplified style
-                scroll={false} // Prevent page scroll jump
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-lg">{topic}</p>
-                  <ChevronRight size={20} />
-                </div>
-              </Link>
-            );
-          })}
+          <h2 className="text-xl font-semibold mb-6">Health Profile Sections</h2>
+          <nav aria-label="Health profile sections">
+            {TopicsArray.map((topic: string, index: number) => {
+              return (
+                <Link
+                  href={`/settings/healthprofile/${topic.toLowerCase()}`}
+                  key={index}
+                  className="block border-b border-gray-100 min-h-[56px] transition-colors hover:bg-gray-50 text-black"
+                  scroll={false}
+                >
+                  <div className="flex items-center justify-between py-4 px-2">
+                    <p className="text-base md:text-lg">{topic}</p>
+                    <ChevronRight className="h-6 w-6 text-gray-400" />
+                  </div>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       )}
 
       {/* Data Display Area - Spans appropriately based on topic selection */}
-      {/* If a topic is selected, parent grid is grid-cols-1, so this takes full width */}
-      {/* If no topic is selected, parent grid is md:grid-cols-3, this takes 2 columns */}
-      {/* If no topic is selected, parent grid is md:grid-cols-3, this takes 2 columns */}
-      <div className={selectedTopic ? 'col-span-1' : 'md:col-span-2'}> {/* Ensure full width when topic selected */}
-        <Suspense fallback={<div className="p-6 text-center">Loading topic data...</div>}>
-          {healthData.loading && <div className="p-6 text-center">Loading...</div>}
-          {healthData.error && <div className="p-6 text-center text-red-600">Error: {healthData.error}</div>}
+      <div className={selectedTopic ? 'col-span-1' : 'md:col-span-2'}>
+        <Suspense fallback={<div className="py-4 px-2 flex justify-center items-center min-h-[100px]">
+          <div className="animate-pulse w-full h-32 bg-gray-200 rounded"></div>
+        </div>}>
+          {healthData.loading && <div className="py-4 px-2 flex justify-center items-center">Loading...</div>}
+          {healthData.error && <div className="py-4 px-2 text-red-600 flex items-center justify-center">
+            <p className="bg-red-50 p-4 rounded-md border border-red-100 w-full max-w-md">
+              Error: {healthData.error}
+            </p>
+          </div>}
           {selectedTopic && healthData.data && !healthData.loading && !healthData.error && (
-            <div className="p-6 border rounded-md shadow-sm bg-white">
-              <h2 className="text-2xl font-bold mb-4 capitalize">{selectedTopic} Details</h2>
+            <div className="py-4">
+              <h2 className="text-xl font-semibold mb-6 capitalize">{selectedTopic} Details</h2>
               {/* Render the appropriate display component based on selectedTopic */}
               {selectedTopic === "General" && <GeneralDisplay data={healthData.data.General} />}
               {selectedTopic === "Activity" && <ActivityDisplay data={healthData.data.Activity} />}
@@ -109,11 +113,13 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
           )}
           {/* Show data or prompt to select a topic */}
           {!selectedTopic && !healthData.loading && !healthData.error && (
-             <div className="p-6 text-center text-gray-500">Select a topic from the list to view details.</div>
+             <div className="py-6 px-4 text-center text-gray-500 bg-gray-50 rounded-md min-h-[100px] flex items-center justify-center">
+                Select a topic from the list to view details.
+             </div>
           )}
         </Suspense>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -11,6 +11,7 @@ public/sw.js
 public/workbox-1bb06f5e.js
 *.md
 .roo
+.cursor
 
 # Added by Claude Task Master
 # Logs
@@ -36,3 +37,7 @@ node_modules/
 # Task files
 tasks.json
 tasks/ 
+.gitignore
+.taskmasterconfig
+.windsurfrules
+.roomodes

@@ -1,49 +1,13 @@
 'use client';
 
 import { AnimatePresence, m } from 'framer-motion';
-import {
-	Building2,
-	CalendarCheck,
-	ClipboardCheck,
-	ClipboardList,
-	Dumbbell,
-	Eye,
-	Home,
-	ListChecks,
-	type LucideIcon,
-	MapPin,
-	Plus,
-	QrCode,
-	ShoppingBasket,
-	UserCheck,
-	UserPlus,
-	Users,
-	UtensilsCrossed,
-} from 'lucide-react';
+import { Home, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '../../../../components/ui/skeleton';
-
-// Map of icon names to Lucide React components
-const iconComponents: Record<string, LucideIcon> = {
-	building2: Building2,
-	calendarcheck: CalendarCheck,
-	clipboardcheck: ClipboardCheck,
-	clipboardlist: ClipboardList,
-	dumbbell: Dumbbell,
-	eye: Eye,
-	utensilscrossed: UtensilsCrossed,
-	home: Home,
-	listchecks: ListChecks,
-	mappin: MapPin,
-	plus: Plus,
-	qrcode: QrCode,
-	shoppingbasket: ShoppingBasket,
-	usercheck: UserCheck,
-	userplus: UserPlus,
-	users: Users,
-};
+import { useLucideIcons } from '../use-lucide-icons';
+import { preloadCommonIcons } from '../common-icons';
 
 interface SubrouteNavProps {
 	subroutes: {
@@ -58,6 +22,11 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
 	const pathname = usePathname();
 	const [, setIsScrolled] = useState(false);
 	const [showLabels, setShowLabels] = useState(true);
+	const { getIconByName } = useLucideIcons();
+	
+	// Call this to ensure common icons are included in the bundle
+	// This is a no-op function at runtime but helps with optimization
+	preloadCommonIcons();
 
 	if (status === 'loading')
 		return (
@@ -91,9 +60,8 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
 			<div className="h-14 flex items-center justify-around md:justify-center md:gap-8 px-1">
 				{subroutes.map((route) => {
 					const isActive = pathname === route.href;
-					// Ensure icon name is properly formatted for lookup
-					const iconKey = route.icon.toLowerCase();
-					const IconComponent = iconComponents[iconKey] || Home;
+					// Use our optimized icon lookup - Keep the icon name as is
+					const IconComponent = getIconByName(route.icon) || Home;
 
 					return (
 						<Link

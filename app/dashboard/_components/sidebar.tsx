@@ -1,14 +1,13 @@
 'use client';
 import IconImage from '@/assests/gym-manager.webp';
 import { signOut } from '@/node_modules/next-auth/react';
-import * as LucideIcons from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { ChevronDown, ChevronRight, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import type { MenuItem as BaseMenuItem, SubItem } from './menuItems';
+import { useLucideIcons } from './use-lucide-icons';
 
 // Extend the MenuItem type to use iconName instead of icon
 interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
@@ -23,14 +22,10 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 	const [activePage, setActivePage] = useState<string>('viewGymDetails');
 	const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 	const router = useRouter();
-
-	// Function to get the icon component from its name
-	const getIconComponent = (iconName: string): LucideIcon => {
-		return (
-			(LucideIcons as unknown as Record<string, LucideIcon>)[iconName] ||
-			LucideIcons.HelpCircle
-		);
-	};
+	const { getIconByName } = useLucideIcons();
+	
+	// Use our optimized hook for icon loading
+	const getIconComponent = getIconByName;
 
 	const handleItemClick = (item: MenuItem) => {
 		if (item.subItems) {

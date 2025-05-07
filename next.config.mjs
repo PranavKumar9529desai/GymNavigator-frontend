@@ -85,7 +85,21 @@ const nextConfig = {
       },
     ];
   },
-  // Alias troika-three-text to its UMD bundle to avoid Babel regex AST errors
+  // Fix for invalid regex in troika-three-text
+  webpack: (config) => {
+    // Create a custom rule to exclude troika-three-text from normal processing
+    config.module.rules.unshift({
+      test: /troika-three-text\.esm\.js$/,
+      loader: require.resolve('string-replace-loader'),
+      options: {
+        search: /\\p\{Script=Hangul\}/u,
+        replace: '\\uAC00-\\uD7A3', // Hangul Unicode range
+        flags: 'g'
+      }
+    });
+    
+    return config;
+  }
 };
 
 export default withPWA({

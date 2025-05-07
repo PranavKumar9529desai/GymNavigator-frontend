@@ -47,16 +47,14 @@ const Topbar: FC<TopbarProps> = ({
       (item.subItems?.some((subItem) => pathname.includes(subItem.link)) ??
         false)
     );
-  });
-
-  // Get subroutes from the active menu item
-  const subroutes =
-    activeMenuItem?.subItems?.map((subItem) => ({
-      name: subItem.name,
-      href: subItem.link,
-      // Ensure iconName is passed correctly
-      icon: subItem.iconName ? subItem.iconName.toLowerCase() : "home",
-    })) || [];
+  });    // Get subroutes from the active menu item
+    const subroutes =
+      activeMenuItem?.subItems?.map((subItem) => ({
+        name: subItem.name,
+        href: subItem.link,
+        // Pass the iconName directly without converting to lowercase
+        icon: subItem.iconName || "Home",
+      })) || [];
 
   return (
     <>

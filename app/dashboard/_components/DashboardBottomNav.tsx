@@ -2,24 +2,17 @@
 
 import BottomNavigation from '@/components/common/Bottomnavigation/bottomnavigation';
 import { useSession } from 'next-auth/react';
-import {
-	ClientDashboardMenuItems,
-	type MenuItem,
-	OwnerDashboardMenuItems,
-	TrainerDashboardMenuItems,
-} from './menuItems';
+import { useDashboardMenu } from './use-dashboard-menu';
+import { useMenuPerformanceMetrics } from './use-menu-performance';
 
 export default function DashboardBottomNav() {
 	const { data: session } = useSession();
-
-	// Determine which menu items to show based on user role
-	let menuItems: MenuItem[] = ClientDashboardMenuItems; // Default
-
-	if (session?.role === 'owner') {
-		menuItems = OwnerDashboardMenuItems;
-	} else if (session?.role === 'trainer') {
-		menuItems = TrainerDashboardMenuItems;
-	}
+	
+	// Use our optimized hook to get menu items - efficient and memoized
+	const menuItems = useDashboardMenu(session?.role || 'client');
+	
+	// Track performance metrics in development only
+	useMenuPerformanceMetrics('BottomNav');
 
 	return <BottomNavigation menuItems={menuItems} />;
 }

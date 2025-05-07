@@ -26,10 +26,10 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 pb-20 md:p-6 w-full">{children}</main>
 
       {/* Bottom nav for mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-10">
         <DashboardBottomNav />
       </div>
     </div>
