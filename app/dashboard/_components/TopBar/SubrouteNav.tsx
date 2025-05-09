@@ -60,7 +60,8 @@ const SubrouteNav: React.FC<SubrouteNavProps> = ({ subroutes, status }) => {
 			<div className="h-14 flex items-center justify-around md:justify-center md:gap-8 px-1">
 				{subroutes.map((route) => {
 					const isActive = pathname === route.href;
-					// Use our optimized icon lookup - Keep the icon name as is
+					// Ensure we're using exactly the same icon names as defined in Lucide
+					// Lucide icons use PascalCase
 					const IconComponent = getIconByName(route.icon) || Home;
 
 					return (

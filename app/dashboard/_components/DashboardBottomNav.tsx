@@ -11,8 +11,8 @@ export default function DashboardBottomNav() {
 	// Use our optimized hook to get menu items - efficient and memoized
 	const menuItems = useDashboardMenu(session?.role || 'client');
 	
-	// Track performance metrics in development only
-	useMenuPerformanceMetrics('BottomNav');
+	// // Temporarily disable performance metrics to avoid excessive renders
+	// useMenuPerformanceMetrics('BottomNav');
 
 	return <BottomNavigation menuItems={menuItems} />;
 }

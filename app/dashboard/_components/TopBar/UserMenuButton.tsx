@@ -57,6 +57,7 @@ const UserMenuButton: FC = () => {
 						src="/apple-touch-icon.png"
 						alt="User avatar"
 						fill
+						sizes="32px"
 						className="object-cover"
 					/>
 				</div>
@@ -89,6 +90,7 @@ const UserMenuButton: FC = () => {
 											src="/apple-touch-icon.png"
 											alt="User avatar"
 											fill
+											sizes="40px"
 											className="object-cover"
 										/>
 									</div>

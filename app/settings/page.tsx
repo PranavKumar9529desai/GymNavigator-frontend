@@ -1,12 +1,25 @@
 "use client";
 
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useMemo, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { settingsMenuItems, Role, MenuItem } from "./menuitems";
 import SettingsHeader from "./SettingsHeader";
+import SettingsItem from "./_components/SettingsItem";
+import SettingsItemSkeleton from "./_components/SettingsItemSkeleton";
+import SettingsTitle from "./_components/SettingsTitle";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function SettingsIndexPage(): ReactElement {
+function LoadingSettingsItems() {
+  return (
+    <div className="space-y-3">
+      <SettingsItemSkeleton />
+      <SettingsItemSkeleton />
+      <SettingsItemSkeleton />
+    </div>
+  );
+}
+
+function SettingsList() {
   const { data: session } = useSession();
   const role = session?.role as Role;
   
@@ -15,27 +28,42 @@ export default function SettingsIndexPage(): ReactElement {
     return settingsMenuItems[role] || [];
   }, [role]);
 
+  if (!session) {
+    return <LoadingSettingsItems />;
+  }
+
   return (
-    <section className="max-w-4xl mx-auto px-4 pb-20 md:pb-6">
+    <div className="space-y-4">
+      {items.map((item) => (
+        <SettingsItem
+          key={item.path}
+          icon={item.icon}
+          label={item.label}
+          href={item.path}
+          description={item.description}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function SettingsIndexPage(): ReactElement {
+  return (
+    <section className="flex flex-col h-full">
       <SettingsHeader title="Settings" />
-      <nav aria-label="Settings navigation">
-        <ul className="py-6 space-y-4">
-          {items.map((item) => (
-            <li key={item.path}>
-              <Link href={item.path} className="block">
-                <div className="flex items-center gap-4 py-4 px-5 min-h-[56px] hover:bg-gray-50 transition-colors border-b border-gray-100">
-                  {item.icon && (
-                    <div className="flex-shrink-0 w-6 h-6 text-gray-600">
-                      {item.icon}
-                    </div>
-                  )}
-                  <span className="text-base md:text-lg font-medium text-gray-800">{item.label}</span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <ScrollArea className="flex-1 px-4 pb-20 md:pb-6">
+        <div className="max-w-2xl mx-auto py-6">
+          {/* <SettingsTitle 
+            title="Settings" 
+            description="Manage your account settings and preferences" 
+          /> */}
+          <nav aria-label="Settings navigation">
+            <Suspense fallback={<LoadingSettingsItems />}>
+              <SettingsList />
+            </Suspense>
+          </nav>
+        </div>
+      </ScrollArea>
     </section>
   );
 }

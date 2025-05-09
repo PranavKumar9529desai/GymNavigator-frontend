@@ -13,6 +13,7 @@ export function useMenuPerformance(label: string = 'Menu') {
   // Track component renders
   useEffect(() => {
     const start = performance.now();
+    const currentCount = renderCount; // Capture current count to avoid dependency loop
     
     return () => {
       const end = performance.now();
@@ -22,20 +23,24 @@ export function useMenuPerformance(label: string = 'Menu') {
       
       // Only log in development
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[Performance] ${label} render #${renderCount + 1}: ${time.toFixed(2)}ms`);
+        console.log(`[Performance] ${label} render #${currentCount + 1}: ${time.toFixed(2)}ms`);
       }
     };
-  }, [label, renderCount]);
+  }, [label]); // Remove renderCount from dependencies
 
   // Log accumulated metrics
   const logMetrics = useCallback(() => {
     if (renderCount === 0) return;
     
-    const avgTime = renderTime / renderCount;
-    console.log(`[Performance Summary] ${label}:`);
-    console.log(`  - Total renders: ${renderCount}`);
-    console.log(`  - Total render time: ${renderTime.toFixed(2)}ms`);
-    console.log(`  - Average render time: ${avgTime.toFixed(2)}ms`);
+    // Only log if we have a reasonable number of renders to report
+    // This prevents excessive logging during development
+    if (renderCount > 5) {
+      const avgTime = renderTime / renderCount;
+      console.log(`[Performance Summary] ${label}:`);
+      console.log(`  - Total renders: ${renderCount}`);
+      console.log(`  - Total render time: ${renderTime.toFixed(2)}ms`);
+      console.log(`  - Average render time: ${avgTime.toFixed(2)}ms`);
+    }
   }, [label, renderCount, renderTime]);
 
   useEffect(() => {
@@ -65,7 +70,12 @@ export function useMenuPerformanceDisabled() {
 /**
  * Returns the appropriate hook based on environment
  */
+/**
+ * Set to true to disable performance metrics even in development
+ */
+const DISABLE_PERFORMANCE_METRICS = false;
+
 export const useMenuPerformanceMetrics = 
-  process.env.NODE_ENV === 'development' 
+  process.env.NODE_ENV === 'development' && !DISABLE_PERFORMANCE_METRICS
     ? useMenuPerformance 
     : useMenuPerformanceDisabled;

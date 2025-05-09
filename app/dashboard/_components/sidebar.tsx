@@ -22,10 +22,8 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 	const [activePage, setActivePage] = useState<string>('viewGymDetails');
 	const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 	const router = useRouter();
-	const { getIconByName } = useLucideIcons();
-	
 	// Use our optimized hook for icon loading
-	const getIconComponent = getIconByName;
+	const { getIconByName } = useLucideIcons();
 
 	const handleItemClick = (item: MenuItem) => {
 		if (item.subItems) {
@@ -114,7 +112,7 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 			<nav className="flex-grow px-4 py-2">
 				<ul className="space-y-2">
 					{menuItems.map((item) => {
-						const Icon = getIconComponent(item.iconName);
+						const Icon = getIconByName(item.iconName);
 						return (
 							<li key={item.name} className="whitespace-nowrap">
 								<button

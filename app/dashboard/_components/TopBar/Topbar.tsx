@@ -52,7 +52,7 @@ const Topbar: FC<TopbarProps> = ({
       activeMenuItem?.subItems?.map((subItem) => ({
         name: subItem.name,
         href: subItem.link,
-        // Pass the iconName directly without converting to lowercase
+        // Ensure iconName is passed correctly (Lucide icons use PascalCase)
         icon: subItem.iconName || "Home",
       })) || [];
 
@@ -70,6 +70,7 @@ const Topbar: FC<TopbarProps> = ({
               src="/apple-touch-icon.png"
               alt="Gym Logo"
               fill
+              sizes="(max-width: 768px) 36px, 36px"
               className="object-cover"
               priority
             />

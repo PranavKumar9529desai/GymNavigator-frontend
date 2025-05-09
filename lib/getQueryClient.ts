@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-
+// Use this queryclient configurations every time you need to use the queryclient
 export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
