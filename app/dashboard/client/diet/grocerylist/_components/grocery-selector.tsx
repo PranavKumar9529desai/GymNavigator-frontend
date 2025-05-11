@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { GroceryListResponse } from "@/lib/AI/prompts/grocery-list-prompts";
 import { cn } from "@/lib/utils";
@@ -127,7 +127,7 @@ export function GrocerySelector() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-6">
-        <LoadingSpinner className="w-8 h-8 text-primary" />
+        <Spinner className="w-8 h-8 text-primary" />
         <p className="mt-3 text-sm text-muted-foreground">
           Loading your grocery lists...
         </p>
@@ -159,7 +159,7 @@ export function GrocerySelector() {
             <>
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center p-6">
-                  <LoadingSpinner className="w-8 h-8 text-primary" />
+                  <Spinner className="w-8 h-8 text-primary" />
                   <p className="mt-3 text-sm text-muted-foreground">
                     Generating your {timeFrame} grocery list...
                   </p>

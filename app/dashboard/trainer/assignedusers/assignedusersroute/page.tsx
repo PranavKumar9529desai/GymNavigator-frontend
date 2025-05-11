@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { getUsersAssignedToTrainer } from "./_actiions/GetuserassignedTotrainers";
 import AssignedUserToTrainer from "./_components/AssignedUserToTrainer";
 
-function LoadingSpinner() {
+function Spinner() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -22,7 +22,7 @@ export default async function AssignedUsersPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<Spinner />}>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <AssignedUserToTrainer />
         </HydrationBoundary>

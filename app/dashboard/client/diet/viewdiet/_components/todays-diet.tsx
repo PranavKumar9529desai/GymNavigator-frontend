@@ -1,6 +1,6 @@
 "use client";
 
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchTodaysDiet } from "../_actions/get-todays-diet";
 import { DietSummaryCard } from "./DietSummaryCard";

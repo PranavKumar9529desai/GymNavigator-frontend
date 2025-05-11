@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { LoadingSpinner } from '@/components/ui/spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Loading() {
 	return (
@@ -10,7 +10,7 @@ export default function Loading() {
 			</div>
 
 			<div className="flex flex-col items-center justify-center py-20">
-				<LoadingSpinner size="lg" className="text-primary" />
+				<Spinner size="lg" className="text-primary" />
 				<p className="mt-4 text-muted-foreground">
 					Loading your grocery list...
 				</p>

@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import UserAttendance from "./UserAttendance";
 import { TodayAttendance } from "./getTodayAttendance";
 
-function LoadingSpinner() {
+function Spinner() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -22,7 +22,7 @@ export default async function AttendancePage() {
   });
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<Spinner />}>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <UserAttendance />
       </HydrationBoundary>

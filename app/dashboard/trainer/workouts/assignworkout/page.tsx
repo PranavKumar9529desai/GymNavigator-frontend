@@ -6,7 +6,7 @@ import { getAssignableUsers } from "./_actions/get-assignable-users";
 import { getWorkoutPlans } from "./_actions/get-workout-plans";
 import UserWorkoutAssignment from "./_components/UserWorkoutAssignment";
 
-function LoadingSpinner() {
+function Spinner() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -30,7 +30,7 @@ export default async function AssignWorkoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<Spinner />}>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <UserWorkoutAssignment />
         </HydrationBoundary>
