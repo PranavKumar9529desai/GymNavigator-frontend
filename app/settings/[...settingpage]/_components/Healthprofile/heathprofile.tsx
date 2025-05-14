@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Pencil } from "lucide-react";
 import { gethealthprofileById, UserHealthprofile } from "./_actions/get-client-healthprofie"; // Import UserHealthprofile type
 import Link from "next/link"; // Import Link
 import { Suspense } from "react"; // Import Suspense for cleaner loading states (optional but good practice)
@@ -7,6 +7,7 @@ import ActivityDisplay from "./display/ActivityDisplay";
 import DietaryDisplay from "./display/DietaryDisplay";
 import MedicalDisplay from "./display/MedicalDisplay";
 import ReligiousDisplay from "./display/ReligiousDisplay";
+import { Button } from "@/components/ui/button";
 
 
 // Define props interface to accept searchParams
@@ -68,7 +69,15 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
       {/* Topics List - Only show if no topic is selected */}
       {!selectedTopic && (
         <div className="md:col-span-1">
-          <h2 className="text-xl font-semibold mb-6">Health Profile Sections</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold">Health Profile Sections</h2>
+            <Link href="/healthprofileform">
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
+                <Pencil className="h-4 w-4" />
+                <span className="sr-only md:not-sr-only md:inline-block">Edit Profile</span>
+              </Button>
+            </Link>
+          </div>
           <nav aria-label="Health profile sections">
             {TopicsArray.map((topic: string, index: number) => {
               return (
@@ -102,7 +111,15 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
           </div>}
           {selectedTopic && healthData.data && !healthData.loading && !healthData.error && (
             <div className="py-4">
-              <h2 className="text-xl font-semibold mb-6 capitalize">{selectedTopic} Details</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold capitalize">{selectedTopic} Details</h2>
+                <Link href="/healthprofileform">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only md:not-sr-only md:inline-block">Edit Profile</span>
+                  </Button>
+                </Link>
+              </div>
               {/* Render the appropriate display component based on selectedTopic */}
               {selectedTopic === "General" && <GeneralDisplay data={healthData.data.General} />}
               {selectedTopic === "Activity" && <ActivityDisplay data={healthData.data.Activity} />}
@@ -113,9 +130,15 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
           )}
           {/* Show data or prompt to select a topic */}
           {!selectedTopic && !healthData.loading && !healthData.error && (
-             <div className="py-6 px-4 text-center text-gray-500 bg-gray-50 rounded-md min-h-[100px] flex items-center justify-center">
-                Select a topic from the list to view details.
-             </div>
+            <div className="py-6 px-4 text-center text-gray-500 bg-gray-50 rounded-md min-h-[100px] flex flex-col items-center justify-center gap-4">
+              <p>Select a topic from the list to view details.</p>
+              <Link href="/healthprofileform">
+                <Button variant="ghost" size="sm" className="flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200">
+                  <Pencil className="h-4 w-4" />
+                  <span>Edit Health Profile</span>
+                </Button>
+              </Link>
+            </div>
           )}
         </Suspense>
       </div>
