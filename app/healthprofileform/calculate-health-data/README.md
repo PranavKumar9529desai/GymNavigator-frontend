@@ -1,4 +1,4 @@
-# Health Data Calculation Functions
+s# Health Data Calculation Functions
 
 This directory contains functions for calculating various health-related metrics based on the user's health profile data. These calculations are based on formulas documented in `diet-formulas.md`.
 

@@ -5,7 +5,7 @@ import { ChevronRight, LogOut, Settings, User, UserCircle } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { type FC, useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 interface MenuItem {
 	label: string;
 	icon: React.ReactNode;
@@ -15,6 +15,7 @@ interface MenuItem {
 
 const UserMenuButton: FC = () => {
 	const [showMenu, setShowMenu] = useState(false);
+	const Router = useRouter();
 
 	const toggleMenu = () => {
 		setShowMenu(!showMenu);
@@ -35,7 +36,7 @@ const UserMenuButton: FC = () => {
 			label: 'Settings',
 			description: 'App preferences and configuration',
 			icon: <Settings className="h-4 w-4" />,
-			onClick: () => console.log('Settings clicked'),
+			onClick: () => Router.push('/settings'),
 		},
 		{
 			label: 'Sign Out',

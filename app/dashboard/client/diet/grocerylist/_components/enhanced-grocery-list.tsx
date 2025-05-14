@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import type {
@@ -21,62 +22,43 @@ import type {
 import { cn } from '@/lib/utils';
 import {
   Check,
-  ChevronDown,
-  ChevronUp,
   Clipboard,
   Download,
-  MinusCircle,
+  Filter,
   Printer,
   Save,
   Search,
   ShoppingCart,
   Trash2,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { saveGroceryList } from '../_actions/save-grocery-list';
 
-// Grocery list print styles
-const printStyles = `
-@media print {
-  @page { size: portrait; margin: 1cm; }
-  body * { visibility: hidden; }
-  .grocery-print-content, .grocery-print-content * { visibility: visible; }
-  .grocery-print-content { position: absolute; left: 0; top: 0; width: 100%; }
-  .print-hidden { display: none !important; }
-  .accordion-content { display: block !important; }
-}`;
+// Import print styles
+import './grocery-print.css';
 
-interface GroceryListViewProps {
+/**
+ * Enhanced Grocery List Component with improved UI/UX
+ * @param props - Component properties
+ */
+interface EnhancedGroceryListProps {
   groceryList: GroceryListResponse;
   timeFrame: 'weekly' | 'monthly';
 }
 
-export function GroceryListView({
+export function EnhancedGroceryList({
   groceryList,
   timeFrame,
-}: GroceryListViewProps) {
+}: EnhancedGroceryListProps) {
   const [purchasedItems, setPurchasedItems] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [isSaving, startSaving] = useTransition();
   const { toast } = useToast();
-  const [modifiedGroceryList, setModifiedGroceryList] = 
-    useState<GroceryListResponse>(groceryList);
+  const [modifiedList, setModifiedList] = useState<GroceryListResponse>(groceryList);
   const [filterPurchased, setFilterPurchased] = useState<'all' | 'purchased' | 'unpurchased'>('all');
-  
-  // Add print styles to document head
-  useEffect(() => {
-    const styleElement = document.createElement('style');
-    styleElement.textContent = printStyles;
-    document.head.appendChild(styleElement);
-    
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
 
   // Calculate stats
-  const totalItems = modifiedGroceryList.categories.reduce((acc, cat) => acc + cat.items.length, 0);
+  const totalItems = modifiedList.categories.reduce((acc, cat) => acc + cat.items.length, 0);
   const totalPurchased = purchasedItems.size;
   const progress = totalItems > 0 ? Math.round((totalPurchased / totalItems) * 100) : 0;
 
@@ -99,54 +81,68 @@ export function GroceryListView({
   /**
    * Remove an item from the grocery list
    */
-  const deleteItem = (categoryId: string, itemName: string) => {
-    setModifiedGroceryList((prevList) => {
-      const newList = { ...prevList };
+  const removeItem = (categoryId: string, itemName: string) => {
+    const itemId = `${categoryId}-${itemName}`;
+    
+    // Remove from purchased items if it exists
+    if (purchasedItems.has(itemId)) {
+      const newPurchasedItems = new Set(purchasedItems);
+      newPurchasedItems.delete(itemId);
+      setPurchasedItems(newPurchasedItems);
+    }
 
-      // Find the category and remove the item
-      const categoryIndex = newList.categories.findIndex(
-        (cat) => cat.id === categoryId,
-      );
-      if (categoryIndex !== -1) {
-        // Filter out the item with the matching name
-        newList.categories[categoryIndex] = {
-          ...newList.categories[categoryIndex],
-          items: newList.categories[categoryIndex].items.filter(
-            (item) => item.name !== itemName,
-          ),
-        };
-
-        // If the category is now empty, remove it
-        if (newList.categories[categoryIndex].items.length === 0) {
-          newList.categories = newList.categories.filter(
-            (_, index) => index !== categoryIndex,
-          );
+    // Remove from modified list
+    setModifiedList(prevList => {
+      const updatedList = { ...prevList };
+      updatedList.categories = updatedList.categories.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            items: category.items.filter(item => item.name !== itemName)
+          };
         }
-      }
-
-      // Also remove from purchased items if it was there
-      const itemId = `${categoryId}-${itemName}`;
-      if (purchasedItems.has(itemId)) {
-        const newPurchasedItems = new Set(purchasedItems);
-        newPurchasedItems.delete(itemId);
-        setPurchasedItems(newPurchasedItems);
-      }
-
-      return newList;
+        return category;
+      }).filter(category => category.items.length > 0); // Remove empty categories
+      
+      return updatedList;
     });
 
     toast({
-      title: 'Item removed',
-      description: `"${itemName}" has been removed from your grocery list`,
-      duration: 3000,
+      description: `Removed ${itemName} from your grocery list`,
     });
   };
 
   /**
-   * Copy grocery list to clipboard with purchase status
+   * Save grocery list to database
+   */
+  const handleSaveList = () => {
+    startSaving(async () => {
+      try {
+        await saveGroceryList({
+          groceryList: modifiedList,
+          timeFrame
+        });
+        
+        toast({
+          title: "Saved",
+          description: `Your ${timeFrame} grocery list has been saved successfully.`,
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Save failed",
+          description: "Could not save your grocery list. Please try again.",
+        });
+        console.error("Error saving grocery list:", error);
+      }
+    });
+  };
+
+  /**
+   * Copy grocery list to clipboard
    */
   const copyToClipboard = () => {
-    const text = modifiedGroceryList.categories
+    const text = modifiedList.categories
       .map(category => {
         const header = `== ${category.name.toUpperCase()} ==\n`;
         const items = category.items
@@ -162,12 +158,10 @@ export function GroceryListView({
 
     navigator.clipboard.writeText(text);
     toast({
-      title: 'Copied to clipboard',
-      description: 'Grocery list copied to clipboard',
-      duration: 3000,
+      description: "Grocery list copied to clipboard",
     });
   };
-  
+
   /**
    * Print grocery list
    */
@@ -180,7 +174,7 @@ export function GroceryListView({
    */
   const exportAsCsv = () => {
     const headers = "Category,Item,Quantity,Unit,Notes,Purchased\n";
-    const rows = modifiedGroceryList.categories
+    const rows = modifiedList.categories
       .flatMap(category => {
         return category.items.map(item => {
           const itemId = `${category.id}-${item.name}`;
@@ -204,47 +198,13 @@ export function GroceryListView({
     document.body.removeChild(link);
   };
 
-  const handleSaveList = () => {
-    startSaving(async () => {
-      try {
-        const result = await saveGroceryList({
-          timeFrame,
-          groceryList: modifiedGroceryList,
-        });
-
-        if (result.success) {
-          toast({
-            title: 'Grocery list saved',
-            description: 'Your grocery list has been saved successfully',
-            duration: 3000,
-          });
-        } else {
-          toast({
-            variant: 'destructive',
-            title: 'Save failed',
-            description: result.error || 'Failed to save grocery list',
-            duration: 3000,
-          });
-        }
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Save failed',
-          description: 'An unexpected error occurred',
-          duration: 3000,
-        });
-        console.error(error);
-      }
-    });
-  };
-
   // Filter items based on search query and purchase status
-  const filteredCategories = modifiedGroceryList.categories
+  const filteredCategories = modifiedList.categories
     .map(category => {
       const filteredItems = category.items.filter(item => {
         const itemId = `${category.id}-${item.name}`;
         const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            category.name.toLowerCase().includes(searchQuery.toLowerCase());
+                             category.name.toLowerCase().includes(searchQuery.toLowerCase());
         
         const matchesPurchaseFilter = 
           filterPurchased === 'all' ||
@@ -260,7 +220,7 @@ export function GroceryListView({
       };
     })
     .filter(category => category.filteredItems.length > 0);
-    
+
   return (
     <Card className="w-full shadow-md print:shadow-none grocery-print-content">
       <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2 print:hidden">
@@ -365,7 +325,7 @@ export function GroceryListView({
             </p>
           </div>
         )}
-        
+
         {/* Grocery list accordion */}
         <ScrollArea className="max-h-[60vh] pr-4 print:max-h-full">
           <Accordion type="multiple" defaultValue={filteredCategories.map(c => c.id)} className="w-full">
@@ -425,7 +385,7 @@ export function GroceryListView({
                               variant="ghost"
                               size="icon"
                               className="h-7 w-7 opacity-50 hover:opacity-100"
-                              onClick={() => deleteItem(category.id, item.name)}
+                              onClick={() => removeItem(category.id, item.name)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
