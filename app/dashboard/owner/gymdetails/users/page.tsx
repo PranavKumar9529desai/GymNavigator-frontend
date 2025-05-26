@@ -42,12 +42,12 @@ export default function GymManagement() {
 	const pendingUsers = enrollments.filter((e) => e.status === 'pending').length;
 
 	return (
-		<div className="container mx-auto p-6 space-y-8">
-			<h1 className="text-3xl font-bold text-center mb-8">
+		<div className="container mx-auto p-4 md:p-6 space-y-6 md:space-y-8">
+			<h1 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8">
 				Gym Enrollment Management
 			</h1>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 				<StatCard
 					title="Total Users"
 					value={totalUsers}
@@ -68,16 +68,10 @@ export default function GymManagement() {
 				/>
 			</div>
 
-			<div className="hidden md:block">
-				<EnrollmentTable
-					enrollments={enrollments}
-					setEnrollments={setEnrollments}
-				/>
-			</div>
-
-			<div className="md:hidden">
-				<EnrollmentCards enrollments={enrollments} />
-			</div>
+			<EnrollmentTable
+				enrollments={enrollments}
+				setEnrollments={setEnrollments}
+			/>
 		</div>
 	);
 }

@@ -18,7 +18,7 @@ export function TableUI<TData>({ table, columns }: TableUIProps<TData>) {
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id}>
+									<TableHead key={header.id} className="p-2 md:p-4 text-xs md:text-sm">
 										{header.isPlaceholder
 											? null
 											: flexRender(
@@ -38,7 +38,7 @@ export function TableUI<TData>({ table, columns }: TableUIProps<TData>) {
 									data-state={row.getIsSelected() && 'selected'}
 								>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
+										<TableCell key={cell.id} className="p-2 md:p-4 text-xs md:text-sm">
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext(),
@@ -60,7 +60,7 @@ export function TableUI<TData>({ table, columns }: TableUIProps<TData>) {
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
+			<div className="flex flex-col md:flex-row items-center justify-end space-y-2 md:space-y-0 md:space-x-2 py-4">
 				<div className="space-x-2">
 					<Button
 						variant="outline"
