@@ -1,4 +1,4 @@
-import CreateGymDetails from './CreateGymDetails';
+import CreateGymDetails from './_components/CreateGymDetails';
 
 export default function CreateGymPage() {
 	return (

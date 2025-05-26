@@ -2,7 +2,7 @@ import { queryClient } from '@/lib/getQueryClient';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { getOnboardingUsersServer } from './actions/GetOnBoardingUser';
-import OnboardedUsersClient from './client-components/OnboardedUsersClient';
+import OnboardedUsersClient from './components/OnboardedUsersClient';
 import Loading from './loading';
 
 export const dynamic = 'force-dynamic';

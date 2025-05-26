@@ -1,6 +1,7 @@
 'use server';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
+import { CreateGymDetailsSchemaType } from './_components/CreateGymDetails';
 
 interface GymResponse {
 	msg: string;
@@ -13,7 +14,7 @@ interface GymResponse {
 	};
 }
 
-interface FormData {
+interface formData {
 	gym_name: string;
 	gym_logo: File | null;
 	address: string;
@@ -21,17 +22,18 @@ interface FormData {
 	Email: string;
 }
 
-export default async function PostGymDetails(formData: string, image: string) {
+export default async function PostGymDetails(formData: CreateGymDetailsSchemaType, image: string) {
 	console.log('received the request from the postgymdetails ', image, formData);
 	try {
-		const formdata: FormData = JSON.parse(formData);
+     
+		// const formData: formData = JSON.parse(formData);
 		const ownerAxios = await OwnerReqConfig();
 		const payload = {
-			gym_name: formdata.gym_name,
+			gym_name: formData.gym_name,
 			gym_logo: image, // Use the provided image URL directly
-			address: formdata.address,
-			phone_number: formdata.phone_number,
-			Email: formdata.Email,
+			address: formData.address,
+			phone_number: formData.phone_number,
+			Email: formData.Email,
 		};
 
 		console.log('payload is ', payload);
