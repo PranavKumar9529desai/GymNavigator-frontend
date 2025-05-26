@@ -10,17 +10,17 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import { 
-	ArrowUpDown, 
-	ChevronDown, 
-	MoreHorizontal, 
-	Search, 
+import {
+	ArrowUpDown,
+	ChevronDown,
+	MoreHorizontal,
+	Search,
 	SlidersHorizontal,
 	CheckCircle2,
 	Clock,
 	XCircle
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -50,30 +50,9 @@ import type {
 	EnrollmentStatus,
 	EnrollmentTableProps,
 } from './types';
+import { columns } from './_components/enrollment-columns';
+import { statusStyles, statusIcons } from './_components/status-cards';
 
-const statusIcons = {
-	active: CheckCircle2,
-	pending: Clock,
-	inactive: XCircle,
-};
-
-const statusStyles: Record<EnrollmentStatus, { bg: string, text: string, border: string }> = {
-	active: { 
-		bg: 'bg-green-100 dark:bg-green-900/20', 
-		text: 'text-green-800 dark:text-green-400',
-		border: 'border-green-200 dark:border-green-800'
-	},
-	pending: { 
-		bg: 'bg-yellow-100 dark:bg-yellow-900/20', 
-		text: 'text-yellow-800 dark:text-yellow-400',
-		border: 'border-yellow-200 dark:border-yellow-800'
-	},
-	inactive: { 
-		bg: 'bg-red-100 dark:bg-red-900/20', 
-		text: 'text-red-800 dark:text-red-400',
-		border: 'border-red-200 dark:border-red-800'
-	},
-};
 
 export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -84,149 +63,26 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 		actions: false,
 	});
 	const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
-	const [viewMode, setViewMode] = useState<'table' | 'card'>('table');
+	const [viewMode, setViewMode] = useState<'table' | 'card'>(typeof window !== 'undefined' && window.innerWidth < 768 ? 'card' : 'table');
 
-	const columns: ColumnDef<Enrollment>[] = [
-		{
-			id: 'select',
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && 'indeterminate')
-					}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-					className="translate-y-[2px]"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-					className="translate-y-[2px]"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'userName',
-			header: ({ column }) => {
-				return (
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-						className="text-xs md:text-sm font-medium"
-					>
-						User Name
-						<ArrowUpDown className="ml-2 h-3 w-3 md:h-4 md:w-4" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => (
-				<div className="text-xs md:text-sm font-medium">{row.getValue('userName')}</div>
-			),
-		},
-		{
-			accessorKey: 'startDate',
-			header: ({ column }) => (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-					className="text-xs md:text-sm font-medium"
-				>
-					Start Date
-					<ArrowUpDown className="ml-2 h-3 w-3 md:h-4 md:w-4" />
-				</Button>
-			),
-			cell: ({ row }) => {
-				const date = new Date(row.getValue('startDate'));
-				return <div className="text-xs md:text-sm">{date.toLocaleDateString()}</div>;
-			},
-		},
-		{
-			accessorKey: 'endDate',
-			header: ({ column }) => (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-					className="text-xs md:text-sm font-medium"
-				>
-					End Date
-					<ArrowUpDown className="ml-2 h-3 w-3 md:h-4 md:w-4" />
-				</Button>
-			),
-			cell: ({ row }) => {
-				const date = new Date(row.getValue('endDate'));
-				return <div className="text-xs md:text-sm">{date.toLocaleDateString()}</div>;
-			},
-		},
-		{
-			accessorKey: 'status',
-			header: ({ column }) => (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-					className="text-xs md:text-sm font-medium"
-				>
-					Status
-					<ArrowUpDown className="ml-2 h-3 w-3 md:h-4 md:w-4" />
-				</Button>
-			),
-			cell: ({ row }) => {
-				const status = row.getValue('status') as EnrollmentStatus;
-				const StatusIcon = statusIcons[status];
-				return (
-					<div className="flex items-center">
-						<Badge 
-							variant="outline" 
-							className={`
-								flex items-center gap-1 px-2 py-1 text-[10px] md:text-xs font-medium
-								${statusStyles[status].bg} ${statusStyles[status].text} ${statusStyles[status].border}
-							`}
-						>
-							<StatusIcon className="h-3 w-3 md:h-3.5 md:w-3.5" />
-							{status.charAt(0).toUpperCase() + status.slice(1)}
-						</Badge>
-					</div>
-				);
-			},
-		},
-		{
-			id: 'actions',
-			enableHiding: false,
-			cell: ({ row }) => {
-				const enrollment = row.original;
+	// Effect to update viewMode on window resize
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
 
-				return (
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" className="h-6 w-6 md:h-8 md:w-8 p-0">
-								<span className="sr-only">Open menu</span>
-								<MoreHorizontal className="h-3 w-3 md:h-4 md:w-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end" className="w-[160px]">
-							<DropdownMenuLabel className="text-xs">Actions</DropdownMenuLabel>
-							<DropdownMenuItem
-								onClick={() =>
-									navigator.clipboard.writeText(enrollment.id.toString())
-								}
-								className="text-xs"
-							>
-								Copy user ID
-							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem className="text-xs">View user details</DropdownMenuItem>
-							<DropdownMenuItem className="text-xs">Update enrollment</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
-				);
-			},
-		},
-	];
+		const handleResize = () => {
+			const isMobile = window.innerWidth < 768;
+			setViewMode(isMobile ? 'card' : 'table');
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		// Initial check in case the useState hook didn't catch it correctly
+		handleResize();
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
 
 	const table = useReactTable({
 		data: enrollments,
@@ -262,17 +118,17 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 					/>
 				</div>
 				<div className="flex items-center gap-2 w-full md:w-auto">
-					<Button 
-						variant={viewMode === 'table' ? 'default' : 'outline'} 
-						size="sm" 
+					<Button
+						variant={viewMode === 'table' ? 'default' : 'outline'}
+						size="sm"
 						onClick={() => setViewMode('table')}
 						className="text-xs md:text-sm"
 					>
 						Table
 					</Button>
-					<Button 
-						variant={viewMode === 'card' ? 'default' : 'outline'} 
-						size="sm" 
+					<Button
+						variant={viewMode === 'card' ? 'default' : 'outline'}
+						size="sm"
 						onClick={() => setViewMode('card')}
 						className="text-xs md:text-sm"
 					>
@@ -321,9 +177,9 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 												{header.isPlaceholder
 													? null
 													: flexRender(
-															header.column.columnDef.header,
-															header.getContext(),
-														)}
+														header.column.columnDef.header,
+														header.getContext(),
+													)}
 											</TableHead>
 										);
 									})}
@@ -368,10 +224,10 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 							const enrollment = row.original;
 							const status = enrollment.status;
 							const StatusIcon = statusIcons[status];
-							
+
 							return (
-								<Card 
-									key={row.id} 
+								<Card
+									key={row.id}
 									className={`
 										overflow-hidden transition-all duration-200
 										${row.getIsSelected() ? 'ring-2 ring-primary' : ''}
@@ -389,8 +245,8 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 												</div>
 											</div>
 											<div className="flex items-center gap-2">
-												<Badge 
-													variant="outline" 
+												<Badge
+													variant="outline"
 													className={`
 														flex items-center gap-1 px-2 py-1 text-[10px] md:text-xs font-medium
 														${statusStyles[status].bg} ${statusStyles[status].text} ${statusStyles[status].border}
@@ -477,5 +333,3 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 	);
 }
 
-// Example usage
-// ... existing code ...
