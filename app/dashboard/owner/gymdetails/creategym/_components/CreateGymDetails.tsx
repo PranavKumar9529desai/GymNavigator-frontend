@@ -25,7 +25,7 @@ import ReviewChanges from './ReviewChanges';
 export const CreateGymDetailsSchema = z.object({
 	gym_name: z.string().nonempty('Gym name is required'),
 	gym_logo: z.string().nonempty('Gym logo is required'),
-	address: z.string().nonempty('Address is required'),
+	// address: z.string().nonempty('Address is required'),
 	phone_number: z.string().nonempty('Phone number is required'),
 	Email: z
 		.string()
@@ -49,7 +49,7 @@ export default function CreateGymDetails() {
 		defaultValues: {
 			gym_name: '',
 			gym_logo: '',
-			address: '',
+			// address: '',
 			phone_number: '',
 			Email: '',
 		},
@@ -178,7 +178,7 @@ export default function CreateGymDetails() {
 						)}
 					</div>
 
-					<div className="space-y-2">
+					{/* <div className="space-y-2">
 						<Label htmlFor="address">Address</Label>
 						<div className="relative">
 							<MapPin className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
@@ -192,7 +192,7 @@ export default function CreateGymDetails() {
 						{form.formState.errors.address && (
 							<p className="text-red-500 text-sm">{form.formState.errors.address.message}</p>
 						)}
-					</div>
+					</div> */}
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div className="space-y-2">

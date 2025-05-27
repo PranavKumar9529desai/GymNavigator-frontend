@@ -15,7 +15,7 @@ interface ReviewChangesProps {
   data: {
     gym_name: string;
     gym_logo: string;
-    address: string;
+    // address : string'
     phone_number: string;
     Email: string;
   };
@@ -48,10 +48,10 @@ export default function ReviewChanges({
             <span className="text-gray-600 font-medium w-32 shrink-0">Gym Name:</span>
             <span className="text-gray-900 ml-4 truncate text-left flex-grow">{data.gym_name}</span>
           </div>
-          <div className="flex items-center border-b border-gray-100 py-3">
+          {/* <div className="flex items-center border-b border-gray-100 py-3">
             <span className="text-gray-600 font-medium w-32 shrink-0">Address:</span>
             <span className="text-gray-900 ml-4 truncate text-left flex-grow">{data.address}</span>
-          </div>
+          </div> */}
           <div className="flex items-center border-b border-gray-100 py-3">
             <span className="text-gray-600 font-medium w-32 shrink-0">Phone:</span>
             <span className="text-gray-900 ml-4 truncate text-left flex-grow">{data.phone_number}</span>

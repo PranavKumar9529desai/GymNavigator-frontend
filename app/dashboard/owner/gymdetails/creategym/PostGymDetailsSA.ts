@@ -8,7 +8,7 @@ interface GymResponse {
 	gym: {
 		gym_name: string;
 		gym_logo: string;
-		address: string;
+		// address: string;
 		phone_number: string;
 		Email: string;
 	};
@@ -31,7 +31,7 @@ export default async function PostGymDetails(formData: CreateGymDetailsSchemaTyp
 		const payload = {
 			gym_name: formData.gym_name,
 			gym_logo: image, // Use the provided image URL directly
-			address: formData.address,
+			// address: formData.address,
 			phone_number: formData.phone_number,
 			Email: formData.Email,
 		};
