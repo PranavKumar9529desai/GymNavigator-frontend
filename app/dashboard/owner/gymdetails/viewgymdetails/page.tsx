@@ -46,9 +46,11 @@ export default function GymLayout() {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
-           <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600">
-            <Edit className="mr-2 h-4 w-4" />
+           <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600 ">
+            <Edit className="mr-2  text-blue-600 sm:text-gray-800" />
+            <p className="hidden md:block">
             Edit Gym Details
+            </p>
           </Button>
         </div>
         {gymDetails && (

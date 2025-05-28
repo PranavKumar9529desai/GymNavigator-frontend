@@ -2,108 +2,92 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Users, TrendingUp, Calendar, Target, Clock, Award, Heart } from "lucide-react"
+import { Users, TrendingUp, Calendar, Target, Clock, Award, Heart, User, Dumbbell, UserCheck } from "lucide-react"
+import { TrainerUserBarChart, Trainer } from "./charts/trainer-user-bar-chart"
 
-export function OverviewTab() {
+function UserCard ({ type , number   } : { type : "trainers" | "users" , number : number}){
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
-      {/* Stats Cards */}
-      <div className="lg:col-span-2">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card className="border shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600">Daily Visitors</p>
-                  <p className="text-3xl font-bold text-gray-900">342</p>
-                  <p className="text-sm text-gray-500">+12% from yesterday</p>
-                </div>
-                <div className="rounded-full bg-gray-100 p-3">
-                  <Users className="h-6 w-6 text-gray-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+    <Card className="w-full max-w-xs shadow-sm  h-20 flex items-center justify-center" >
+      <div className="flex items-center justify-center h-28 p-4 gap-2 ">
+        <div className="bg-blue-100 rounded-full p-2 mb-1">
+          {type === "trainers" ? (
+            <UserCheck className="text-blue-500 size-8" />
+          ) : (
+            <User className="text-blue-500 size-8" />
+          )}
+        </div>
+        <div className="">
 
-          <Card className="border shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600">Active Classes</p>
-                  <p className="text-3xl font-bold text-gray-900">28</p>
-                  <p className="text-sm text-gray-500">Running today</p>
-                </div>
-                <div className="rounded-full bg-gray-100 p-3">
-                  <Calendar className="h-6 w-6 text-gray-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600">Revenue Today</p>
-                  <p className="text-3xl font-bold text-gray-900">$4,892</p>
-                  <p className="text-sm text-gray-500">+8% from avg</p>
-                </div>
-                <div className="rounded-full bg-gray-100 p-3">
-                  <TrendingUp className="h-6 w-6 text-gray-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600">Equipment Usage</p>
-                  <p className="text-3xl font-bold text-gray-900">87%</p>
-                  <p className="text-sm text-gray-500">Peak hours</p>
-                </div>
-                <div className="rounded-full bg-gray-100 p-3">
-                  <Target className="h-6 w-6 text-gray-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <p className="capitalize text-gray-700 text-sm">{type}</p>
+        <p className="font-bold text-gray-950 text-lg">{number}</p>
         </div>
       </div>
+    </Card>
+  )
+}
 
-      {/* Quick Info */}
-      <Card className="border shadow-lg">
-        <CardHeader className="pb-4">
-          <h3 className="text-xl font-bold text-gray-900">Quick Info</h3>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Clock className="h-5 w-5 text-gray-600" />
-            <div>
-              <p className="font-medium text-gray-900">Operating Hours</p>
-              <p className="text-sm text-gray-600">5:00 AM - 11:00 PM</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Award className="h-5 w-5 text-gray-600" />
-            <div>
-              <p className="font-medium text-gray-900">Established</p>
-              <p className="text-sm text-gray-600">2015 (9 years)</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Heart className="h-5 w-5 text-gray-600" />
-            <div>
-              <p className="font-medium text-gray-900">Member Satisfaction</p>
-              <div className="flex items-center gap-2">
-                <Progress value={94} className="flex-1" />
-                <span className="text-sm font-medium text-gray-900">94%</span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+export function OverviewTab() {
+  // Dummy data for trainers and their assigned clients
+  const trainers: Trainer[] = [
+    {
+      id: 1,
+      name: "Trainer 1",
+      assignedClients: [
+        { id: 1, name: "Client A" },
+        { id: 2, name: "Client B" },
+      ],
+    },
+    {
+      id: 2,
+      name: "Trainer 2",
+      assignedClients: [
+        { id: 3, name: "Client C" },
+      ],
+    },
+    {
+      id: 3,
+      name: "Trainer 3",
+      assignedClients: [
+        { id: 4, name: "Client D" },
+        { id: 5, name: "Client E" },
+        { id: 6, name: "Client F" },
+      ],
+    },
+    {
+      id: 3,
+      name: "Trainer 3",
+      assignedClients: [
+  
+      ],
+    },
+    {
+      id: 3,
+      name: "Trainer 3",
+      assignedClients: [
+        { id: 6, name: "Client F" },
+      ],
+    },
+    {
+      id: 3,
+      name: "Trainer 3",
+      assignedClients: [
+        { id: 4, name: "Client D" },
+        { id: 5, name: "Client E" },
+      ],
+    },
+  ]
+
+  return (
+    <div className="flex gap-10">
+
+    <div className="max-w-sm flex flex-wrap gap-4 flex-shrink-0">
+      <UserCard type="trainers" number={10} />
+      <UserCard type="users" number={10} />
     </div>
+   <div className="w-full ">
+     <TrainerUserBarChart trainers={trainers}/>
+   </div>
+    </div>
+      
   )
 }

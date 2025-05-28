@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, User, Users, Star, Edit3, Dumbbell, UserCheck, Globe, MapPin, Key, Trophy, Crown } from "lucide-react"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 
 import type { GymData, FitnessPlan, Amenity, StaffMember, Equipment } from "../types/gym-types"
 
@@ -21,12 +22,12 @@ export function GymHeader({ gymData }: GymHeaderProps) {
       {/* Enhanced Header Section */}
       <div className="relative mb-8  ">
         {/* Hero Section */}
-        <div className=" p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-8">
+        <div className="">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-8">
             {/* Left side - Enhanced Logo */}
             <div className="flex justify-center lg:justify-start">
               <div className="relative group">
-                <Avatar className="h-24 w-24 border-4 border-gray-200 shadow-xl lg:h-28 lg:w-28 transition-all group-hover:shadow-2xl">
+                <Avatar className="size-28 border-4 border-gray-200 shadow-xl md:size-36 transition-all group-hover:shadow-2xl">
                   <AvatarFallback className="bg-black text-2xl font-black text-white">
                     {gymData.gym_logo}
                   </AvatarFallback>
@@ -39,10 +40,22 @@ export function GymHeader({ gymData }: GymHeaderProps) {
             <div className="flex-1 text-center lg:text-left">
               <div className="mb-2 flex flex-wrap items-center justify-center gap-2 lg:justify-start relative">
                 <div className="relative inline-block">
-                  <h1 className="text-5xl text-gray-900 lg:text-4xl font-[var(--font-productSans)-900] ">
+                  <h1 className="text-2xl md:text-5xl text-gray-900 lg:text-4xl font-[var(--font-productSans)-900] ">
                     {gymData.gym_name}
                   </h1>
-                  <Crown className="absolute -top-3 -right-5 w-6 h-6 text-yellow-400 drop-shadow-md rotate-45"/>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <Crown className="absolute -top-3 -right-5 w-6 h-6 text-yellow-400 drop-shadow-md rotate-45 cursor-pointer" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="relative -top-20 -right-40 flex items-center gap-2 bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 border border-yellow-400 shadow-lg rounded-xl font-semibold text-yellow-900 px-4 py-2">
+                        <span className="text-lg">👑</span>
+                        <span>Popular in local area!</span>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 
