@@ -1,4 +1,4 @@
-import FetchGymDetailsSA from '@/app/dashboard/owner/gymdetails/viewgymdetails/GetGymDetails';
+import FetchGymDetailsSA from '@/app/dashboard/owner/gymdetails/viewgymdetails/_actions/GetGymDetails';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { GetAttendanceQrData } from './GetAttendanceQrData';

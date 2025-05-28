@@ -8,9 +8,11 @@ import QueryClientProvider from "../providers/QueryClientProvider"; // Removed u
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 // Removed useEffect, useState
 import OfflineIndicator from "@/components/common/OfflineIndicator"; // Import the new component
-
-const siteUrl = "https://admin.gymnavigator.in";
+import localFont from "next/font/local";
+const siteUrl = "https://gymnavigator.vercel.app";
 // export const dynamic = "force-static";
+
+
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -104,7 +106,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>
+      <body
+        // className={
+          // `${oronPax.variable} ${upheaval.variable} ${productSans.variable}`
+        // }
+      >
         <Providers>
           <QueryClientProvider>
             <OfflineIndicator /> {/* Add the indicator here */}
