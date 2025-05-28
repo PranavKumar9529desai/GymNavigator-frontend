@@ -43,6 +43,10 @@ export function TrainerUserBarChart({
     clientCount: trainer.assignedClients.length,
   }))
 
+  // Calculate dynamic min-width for the chart container
+  const minBarWidth = 60; // px per bar
+  const chartMinWidth = Math.max(chartData.length * minBarWidth, 320); // fallback to 320px if few bars
+
   const averageClients =
     chartData.length > 0
       ? (chartData.reduce((sum, t) => sum + t.clientCount, 0) / chartData.length).toFixed(1)
@@ -51,31 +55,33 @@ export function TrainerUserBarChart({
   const chartConfig = {
     clientCount: {
       label: "Assigned Clients",
-      color: "hsl(var(--chart-1))",
+      color: "#2563eb", // Tailwind blue-600
     },
   } satisfies ChartConfig
 
   return (
     <Card>
-      <CardHeader>
-        {/* <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription> */}
-      </CardHeader>
+      
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData} width={200} height={250}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value}
-            />
-            <Tooltip cursor={false} />
-            <Bar dataKey="clientCount" fill="var(--color-desktop)" radius={8} />
-          </BarChart>
-        </ChartContainer>
+        <div
+          className="w-full overflow-x-auto"
+          style={{ minWidth: chartMinWidth, minHeight: 220 }}
+        >
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="name"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value}
+              />
+              <Tooltip cursor={false} />
+              <Bar dataKey="clientCount" fill="#2563eb" radius={8} />
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none text-muted-foreground">

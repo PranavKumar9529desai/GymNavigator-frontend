@@ -7,19 +7,18 @@ import { TrainerUserBarChart, Trainer } from "./charts/trainer-user-bar-chart"
 
 function UserCard ({ type , number   } : { type : "trainers" | "users" , number : number}){
   return (
-    <Card className="w-full max-w-xs shadow-sm  h-20 flex items-center justify-center" >
-      <div className="flex items-center justify-center h-28 p-4 gap-2 ">
-        <div className="bg-blue-100 rounded-full p-2 mb-1">
+    <Card className="w-full max-w-xs shadow-md h-24 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white border-blue-100 dark:from-blue-950 dark:to-gray-900 dark:border-blue-900">
+      <div className="flex items-center justify-center h-20 p-3 gap-3 w-full">
+        <div className="bg-blue-200 dark:bg-blue-900 rounded-full p-3 flex items-center justify-center shadow-md">
           {type === "trainers" ? (
-            <UserCheck className="text-blue-500 size-8" />
+            <UserCheck className="text-blue-500 size-8 sm:size-10" />
           ) : (
-            <User className="text-blue-500 size-8" />
+            <User className="text-blue-500 size-8 sm:size-10" />
           )}
         </div>
-        <div className="">
-
-        <p className="capitalize text-gray-700 text-sm">{type}</p>
-        <p className="font-bold text-gray-950 text-lg">{number}</p>
+        <div className="flex flex-col justify-center ml-2">
+          <p className="capitalize text-gray-700 dark:text-gray-200 text-xs sm:text-sm font-medium tracking-wide">{type}</p>
+          <p className="font-bold text-gray-950 dark:text-white text-xl sm:text-2xl">{number}</p>
         </div>
       </div>
     </Card>
@@ -78,16 +77,18 @@ export function OverviewTab() {
   ]
 
   return (
-    <div className="flex gap-10">
-
-    <div className="max-w-sm flex flex-wrap gap-4 flex-shrink-0">
-      <UserCard type="trainers" number={10} />
-      <UserCard type="users" number={10} />
-    </div>
-   <div className="w-full ">
-     <TrainerUserBarChart trainers={trainers}/>
-   </div>
-    </div>
-      
+    <section className="w-full rounded-xl bg-gradient-to-br from-blue-50 to-white dark:from-blue-950 dark:to-gray-900 p-4 sm:p-8 shadow-lg border border-blue-100 dark:border-blue-900">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 w-full">
+        <div className="flex flex-row lg:flex-col gap-4 w-full max-w-full lg:max-w-xs mb-2 lg:mb-0">
+          <UserCard type="trainers" number={10} />
+          <UserCard type="users" number={10} />
+        </div>
+        <div className="w-full overflow-x-auto">
+          <div className="min-w-[320px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-0">
+            <TrainerUserBarChart trainers={trainers}/>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
