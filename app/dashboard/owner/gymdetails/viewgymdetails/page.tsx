@@ -10,6 +10,8 @@ import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { EditGymSheet } from "./_components/edit-gym-sheet"
+import { GymTabs } from "./_components/gym-tabs"
+import { Separator } from "@/components/ui/separator"
 
 
 interface GymInfo {
@@ -43,7 +45,7 @@ export default function GymLayout() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-2 md:p-6">
+    <div className="min-h-screen p-2 md:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
            <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600 ">
@@ -56,66 +58,17 @@ export default function GymLayout() {
         {gymDetails && (
           <>
             <GymHeader gymData={gymDetails} />
-
-            {/* Displaying Contact and Auth Token Details */}
            
           </>
         )}
 
 
         {/* Enhanced Tabs Section */}
-        <Tabs defaultValue="" className="w-full mt-8">
-          <TabsList className="grid w-full grid-cols-4 rounded-2xl p-2 bg-transparent h-16">
-            <TabsTrigger
-              value="general"
-              className="px-4 py-3 font-semibold transition-all border-b-4  data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 "
-            >
-              <TrendingUp className="mr-2 h-4 w-4" />
-              <span>
-              Overview
-              </span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="amenities"
-              className="px-4 py-3 font-semibold transition-all border-b-4  data-[state=active]:border-blue-600 data-[state=active]:text-blue-600"
-            >
-              <Dumbbell className="mr-2 h-4 w-4" />
-              Amenities
-            </TabsTrigger>
-            <TabsTrigger
-              value="address"
-              className="px-4 py-3 font-semibold transition-all border-b-4  data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 "
-            >
-              <MapPin className="mr-2 h-4 w-4" />
-              Location
-            </TabsTrigger>
-            <TabsTrigger
-              value="fees"
-              className="px-4 py-3 font-semibold transition-all border-b-4  data-[state=active]:border-blue-600 data-[state=active]:text-blue-600"
-            >
-              <DollarSign className="mr-2 h-4 w-4" />
-              Pricing
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="mt-8">
-            <TabsContent value="general" className="mt-0">
-              <OverviewTab />
-            </TabsContent>
-
-            <TabsContent value="amenities" className="mt-0">
-              <AmenitiesTab />
-            </TabsContent>
-
-            <TabsContent value="address" className="mt-0">
-              <LocationTab />
-            </TabsContent>
-
-            <TabsContent value="fees" className="mt-0">
-              <PricingTab />
-            </TabsContent>
-          </div>
-        </Tabs>
+<Separator />
+        <div className="">
+        <GymTabs />
+        </div>
+       
       </div>
 
        <EditGymSheet

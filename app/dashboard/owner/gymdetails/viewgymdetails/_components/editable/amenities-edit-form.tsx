@@ -4,58 +4,125 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { GymData, Amenity } from "../types/gym-types";
 import { useState, useEffect } from 'react';
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
-interface AmenitiesEditFormProps {
-  data: GymData; // Pass the whole GymData for potential future needs, but focus on amenities
-  onDataChange: (data: GymData) => void;
+// Types for amenities
+interface Amenity {
+  key: string;
+  label: string;
 }
 
-export function AmenitiesEditForm({ data, onDataChange }: AmenitiesEditFormProps) {
-  // Assuming amenities is an array within GymData
-  const [amenitiesFormData, setAmenitiesFormData] = useState<Amenity[]>(data.amenities || []);
+interface AmenityCategory {
+  key: string;
+  name: string;
+  amenities: Amenity[];
+}
 
+interface AmenitiesEditFormProps {
+  categories: AmenityCategory[];
+  selectedAmenities: Record<string, string[]>; // categoryKey -> array of amenity keys
+  onChange: (selected: Record<string, string[]>) => void;
+  onSave?: () => void;
+  onCancel?: () => void;
+}
+
+export function AmenitiesEditForm({
+  categories,
+  selectedAmenities,
+  onChange,
+  onSave,
+  onCancel,
+}: AmenitiesEditFormProps) {
+  // Local state for editing
+  const [enabledCategories, setEnabledCategories] = useState<Record<string, boolean>>({});
+  const [checkedAmenities, setCheckedAmenities] = useState<Record<string, Record<string, boolean>>>({});
+
+  // Initialize state from props
   useEffect(() => {
-    setAmenitiesFormData(data.amenities || []);
-  }, [data.amenities]);
+    const catState: Record<string, boolean> = {};
+    const amenityState: Record<string, Record<string, boolean>> = {};
+    categories.forEach((cat) => {
+      const selected = selectedAmenities[cat.key] || [];
+      catState[cat.key] = selected.length > 0;
+      amenityState[cat.key] = {};
+      cat.amenities.forEach((a) => {
+        amenityState[cat.key][a.key] = selected.includes(a.key);
+      });
+    });
+    setEnabledCategories(catState);
+    setCheckedAmenities(amenityState);
+  }, [categories, selectedAmenities]);
 
-  const handleAmenityChange = (index: number, field: keyof Amenity, value: any) => {
-    const updatedAmenities = amenitiesFormData.map((amenity, i) =>
-      i === index ? { ...amenity, [field]: value } : amenity
-    );
-    setAmenitiesFormData(updatedAmenities);
-    // Pass the updated full gym data back
-    onDataChange({ ...data, amenities: updatedAmenities });
+  // Handle category switch
+  const handleCategorySwitch = (categoryKey: string) => {
+    setEnabledCategories((prev) => {
+      const newState = { ...prev, [categoryKey]: !prev[categoryKey] };
+      // If disabling, also uncheck all amenities in that category
+      if (!newState[categoryKey]) {
+        setCheckedAmenities((prevChecked) => ({
+          ...prevChecked,
+          [categoryKey]: {},
+        }));
+        // Update parent
+        onChange({
+          ...Object.fromEntries(
+            Object.entries(checkedAmenities).map(([cat, ams]) => [cat, cat === categoryKey ? [] : Object.keys(ams).filter((k) => ams[k])])
+          ),
+        });
+      }
+      return newState;
+    });
   };
 
-  // This is a simplified example. A real implementation might need adding/removing amenities.
+  // Handle amenity checkbox
+  const handleAmenityCheck = (categoryKey: string, amenityKey: string) => {
+    setCheckedAmenities((prev) => {
+      const prevCat = prev[categoryKey] || {};
+      const newCat = { ...prevCat, [amenityKey]: !prevCat[amenityKey] };
+      const newChecked = { ...prev, [categoryKey]: newCat };
+      // Update parent
+      onChange({
+        ...Object.fromEntries(
+          Object.entries(newChecked).map(([cat, ams]) => [cat, enabledCategories[cat] ? Object.keys(ams).filter((k) => ams[k]) : []])
+        ),
+      });
+      return newChecked;
+    });
+  };
 
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-gray-500">Edit existing amenities. Adding/removing not yet supported.</p>
-       {amenitiesFormData.length === 0 && <p>No amenities found.</p>}
-      {amenitiesFormData.map((amenity, index) => (
-        <div key={amenity.id} className="border p-4 rounded-md space-y-2">
-          <div className="space-y-1">
-            <Label htmlFor={`amenity-name-${index}`}>Name</Label>
-            <Input
-              id={`amenity-name-${index}`}
-              value={amenity.name}
-              onChange={(e) => handleAmenityChange(index, 'name', e.target.value)}
-              placeholder="Amenity name"
+    <div className="space-y-6">
+      {categories.map((category) => (
+        <div key={category.key} className="border rounded-md shadow-sm">
+          <div className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-t-md">
+            <span className="font-semibold">{category.name}</span>
+            <Switch
+              checked={!!enabledCategories[category.key]}
+              onCheckedChange={() => handleCategorySwitch(category.key)}
             />
           </div>
-           <div className="space-y-1">
-            <Label htmlFor={`amenity-description-${index}`}>Description</Label>
-            <Input
-              id={`amenity-description-${index}`}
-              value={amenity.description}
-              onChange={(e) => handleAmenityChange(index, 'description', e.target.value)}
-              placeholder="Amenity description"
-            />
+          <div className="p-4 space-y-2">
+            {category.amenities.map((amenity) => (
+              <div key={amenity.key} className="flex items-center gap-3">
+                <Checkbox
+                  checked={!!checkedAmenities[category.key]?.[amenity.key]}
+                  onCheckedChange={() => handleAmenityCheck(category.key, amenity.key)}
+                  disabled={!enabledCategories[category.key]}
+                />
+                <span className={enabledCategories[category.key] ? "text-gray-700" : "text-gray-400"}>
+                  {amenity.label}
+                </span>
+              </div>
+            ))}
           </div>
-          {/* Add other editable amenity fields as needed, e.g., quantity, category, available */}
         </div>
       ))}
+      <div className="flex gap-2 justify-end pt-2">
+        {onCancel && <Button variant="outline" onClick={onCancel}>Cancel</Button>}
+        {onSave && <Button onClick={onSave}>Save</Button>}
+      </div>
     </div>
   );
 } 
