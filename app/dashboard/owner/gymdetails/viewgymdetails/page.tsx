@@ -72,10 +72,7 @@ export default function GymLayout() {
           </Button>
         </div>
         {gymDetails && (
-          <>
-            <GymHeader gymData={gymDetails} />
-           
-          </>
+          <GymHeader gymData={gymDetails} />
         )}
 
 

@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
-import { EnrollmentStatus } from "../types";
+import type { EnrollmentStatus } from "../types";
 
 export const statusStyles: Record<EnrollmentStatus, { bg: string, text: string, border: string }> = {
 	active: {

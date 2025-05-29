@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Users, TrendingUp, Calendar, Target, Clock, Award, Heart, User, Dumbbell, UserCheck } from "lucide-react"
-import { TrainerUserBarChart, Trainer } from "./charts/trainer-user-bar-chart"
+import { TrainerUserBarChart, type Trainer } from "./charts/trainer-user-bar-chart"
 
 function UserCard ({ type , number   } : { type : "trainers" | "users" , number : number}){
   return (
@@ -83,7 +83,7 @@ export function OverviewTab({
   trainersData = defaultTrainersData,
 }: OverviewTabProps) {
   // Dummy data for trainers and their assigned clients
-  const trainers: Trainer[] = [
+  const _trainers: Trainer[] = [
     {
       id: 1,
       name: "Trainer 1",

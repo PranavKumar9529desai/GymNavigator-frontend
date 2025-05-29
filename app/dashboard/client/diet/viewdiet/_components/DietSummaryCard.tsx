@@ -60,7 +60,7 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 	const totalFats = dietPlan.meals.reduce((acc, meal) => acc + meal.fats, 0);
 
 	// Calculate percentages for the progress bars
-	const caloriePercentage = Math.min(
+	const _caloriePercentage = Math.min(
 		Math.round((totalCalories / dietPlan.targetCalories) * 100),
 		100,
 	);
@@ -83,7 +83,7 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 	];
 
 	// Data for calorie bar chart
-	const calorieData: CalorieDataItem[] = [
+	const _calorieData: CalorieDataItem[] = [
 		{ name: 'Current', calories: totalCalories, fill: '#4f46e5' },
 		{ name: 'Target', calories: dietPlan.targetCalories, fill: '#94a3b8' },
 	];
@@ -192,7 +192,7 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 									calorieProgress > 70 ? 'bg-blue-500' : 'bg-amber-500'
 								}`}
 								style={{ width: `${calorieProgress}%` }}
-							></div>
+							/>
 						</div>
 						
 						<div className="flex justify-between mt-1">

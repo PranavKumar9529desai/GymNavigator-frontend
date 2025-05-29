@@ -1,7 +1,6 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import withPWA from "next-pwa";
 // We will define custom runtimeCaching below
-// import runtimeCaching from "next-pwa/cache";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -107,39 +106,4 @@ export default withPWA({
   disable: process.env.NODE_ENV === "development",
   register: true, // Ensure service worker is registered
   skipWaiting: true, // Ensure new service worker activates immediately
-  runtimeCaching: [
-    // Default caching strategies from next-pwa/cache
-    ...require("next-pwa/cache"),
-    // Custom caching strategy for the diet API
-    {
-      urlPattern: /^https?:\/\/.*\/api\/diet\/today$/i, // Match the diet API endpoint
-      handler: "NetworkFirst", // Try network first, fallback to cache
-      options: {
-        cacheName: "diet-api-cache",
-        expiration: {
-          maxEntries: 10, // Cache up to 10 responses
-          maxAgeSeconds: 60 * 60 * 24 * 7, // Cache for 1 week
-        },
-        networkTimeoutSeconds: 3, // Timeout for network request before falling back to cache
-        cacheableResponse: {
-          statuses: [0, 200], // Cache successful responses and opaque responses
-         },
-       },
-     },
-     // Cache client dashboard pages (NetworkFirst to prioritize freshness)
-     {
-       urlPattern: /\/dashboard\/client\/.*/i, // Match client dashboard routes
-       handler: "NetworkFirst",
-       options: {
-         cacheName: "client-dashboard-pages",
-         expiration: {
-           maxEntries: 20, // Cache up to 20 client pages
-           maxAgeSeconds: 60 * 60 * 24 * 7, // Cache for 1 week
-         },
-         cacheableResponse: {
-           statuses: [0, 200], // Cache successful and opaque responses
-         },
-       },
-     },
-   ],
- })(withBundleAnalyzer(nextConfig));
+})(withBundleAnalyzer(nextConfig));

@@ -6,7 +6,7 @@ import type React from "react";
 import { auth } from "../(auth)/auth";
 import DashboardBottomNav from "./_components/DashboardBottomNav";
 import DashboardTopBar from "./_components/DashboardTopBar";
-import { type MenuItem } from "./_components/menuItems";
+import type { MenuItem } from "./_components/menuItems";
 import { getDashboardMenuItems } from "./_components/use-dashboard-menu";
 import Sidebar from "./_components/sidebar";
 // Import the preload function for performance improvement

@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
  * @param email Contact email
  * @param phone Phone number
  */
-export async function updateGymGeneralInfo(name: string, email: string, phone: string) {
+export async function updateGymGeneralInfo(_name: string, _email: string, _phone: string) {
   try {
     // In a real implementation, this would call your backend API
     // Example using fetch:
@@ -46,9 +46,9 @@ export async function updateGymGeneralInfo(name: string, email: string, phone: s
  * @param holidays Holiday operating hours
  */
 export async function updateGymOperatingHours(
-  weekdays: { openingTime: string; closingTime: string },
-  weekends: { openingTime: string; closingTime: string },
-  holidays: { openingTime: string; closingTime: string }
+  _weekdays: { openingTime: string; closingTime: string },
+  _weekends: { openingTime: string; closingTime: string },
+  _holidays: { openingTime: string; closingTime: string }
 ) {
   try {
     // In a real implementation, this would call your backend API
@@ -89,11 +89,11 @@ export async function updateGymOperatingHours(
  * @param country Country
  */
 export async function updateGymLocation(
-  address: string,
-  city: string,
-  state: string,
-  postalCode: string,
-  country: string
+  _address: string,
+  _city: string,
+  _state: string,
+  _postalCode: string,
+  _country: string
 ) {
   try {
     // In a real implementation, this would call your backend API

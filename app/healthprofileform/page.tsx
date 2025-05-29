@@ -88,7 +88,7 @@ export default function HealthProfileFormPage() {
           variant: "default",
         });
         setIsCompleted(true);
-        router.push(`/dashboard/`);
+        router.push('/dashboard/');
       } else {
         toast({
           title: "Something went wrong",

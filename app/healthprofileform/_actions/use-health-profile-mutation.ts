@@ -12,7 +12,7 @@ import {
 import { calculateHealthMetrics } from "../calculate-health-data/calculate-all-metrics";
 import type { HealthMetrics } from "../calculate-health-data/health-data-types";
 import {
-  HealthProfileResponse,
+  type HealthProfileResponse,
   submitHealthProfileToApi,
 } from "./submit-health-profile";
 

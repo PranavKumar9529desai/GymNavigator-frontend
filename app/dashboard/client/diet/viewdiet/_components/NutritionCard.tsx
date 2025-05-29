@@ -63,13 +63,13 @@ export const NutritionCard = ({
 						strokeLinecap="round" 
 						strokeLinejoin="round"
 					>
-						<path d="M12 2v8"></path>
-						<path d="m4.93 10.93 1.41 1.41"></path>
-						<path d="M2 18h2"></path>
-						<path d="M20 18h2"></path>
-						<path d="m19.07 10.93-1.41 1.41"></path>
-						<path d="M22 22H2"></path>
-						<path d="m8 22 4-11 4 11"></path>
+						<path d="M12 2v8" />
+						<path d="m4.93 10.93 1.41 1.41" />
+						<path d="M2 18h2" />
+						<path d="M20 18h2" />
+						<path d="m19.07 10.93-1.41 1.41" />
+						<path d="M22 22H2" />
+						<path d="m8 22 4-11 4 11" />
 					</svg>
 				</div>
 				<span className={`${classes.value} text-red-600`}>{calories}</span>
@@ -93,14 +93,14 @@ export const NutritionCard = ({
 						strokeLinecap="round" 
 						strokeLinejoin="round"
 					>
-						<path d="M7 5V3"></path>
-						<path d="M17 5V3"></path>
-						<path d="M12 5V2"></path>
-						<path d="M7 14v-3"></path>
-						<path d="M17 14v-3"></path>
-						<path d="M17 14h-1"></path>
-						<path d="M7 14H6"></path>
-						<path d="M7 14a5 5 0 0 0 5 5 5 5 0 0 0 5-5"></path>
+						<path d="M7 5V3" />
+						<path d="M17 5V3" />
+						<path d="M12 5V2" />
+						<path d="M7 14v-3" />
+						<path d="M17 14v-3" />
+						<path d="M17 14h-1" />
+						<path d="M7 14H6" />
+						<path d="M7 14a5 5 0 0 0 5 5 5 5 0 0 0 5-5" />
 					</svg>
 				</div>
 				<span className={`${classes.value} text-purple-600`}>{protein}g</span>
@@ -124,9 +124,9 @@ export const NutritionCard = ({
 						strokeLinecap="round" 
 						strokeLinejoin="round"
 					>
-						<path d="M17 12a5 5 0 0 0-5-5c-2.76 0-5 2.24-5 5a5 5 0 0 0 5 5"></path>
-						<path d="M17 12c0 2.76-2.24 5-5 5"></path>
-						<path d="M8 12h8"></path>
+						<path d="M17 12a5 5 0 0 0-5-5c-2.76 0-5 2.24-5 5a5 5 0 0 0 5 5" />
+						<path d="M17 12c0 2.76-2.24 5-5 5" />
+						<path d="M8 12h8" />
 					</svg>
 				</div>
 				<span className={`${classes.value} text-amber-600`}>{carbs}g</span>
@@ -150,8 +150,8 @@ export const NutritionCard = ({
 						strokeLinecap="round" 
 						strokeLinejoin="round"
 					>
-						<path d="M7 16a3.5 3.5 0 0 0 7 0c0-1.8-1.2-2-1.5-3.5-.3-1.6.1-2.4 1.5-3.5 0 0-3-2-4-2-1 0-4 2-4 2 1.4 1.1 1.8 1.9 1.5 3.5-.3 1.5-1.5 1.7-1.5 3.5Z"></path>
-						<path d="M5 8.5C5.82 7.3 7 6.3 8 6c1.7-.5 3-.4 4 0 1 .4 2.18 1.4 3 2.5"></path>
+						<path d="M7 16a3.5 3.5 0 0 0 7 0c0-1.8-1.2-2-1.5-3.5-.3-1.6.1-2.4 1.5-3.5 0 0-3-2-4-2-1 0-4 2-4 2 1.4 1.1 1.8 1.9 1.5 3.5-.3 1.5-1.5 1.7-1.5 3.5Z" />
+						<path d="M5 8.5C5.82 7.3 7 6.3 8 6c1.7-.5 3-.4 4 0 1 .4 2.18 1.4 3 2.5" />
 					</svg>
 				</div>
 				<span className={`${classes.value} text-blue-600`}>{fats}g</span>

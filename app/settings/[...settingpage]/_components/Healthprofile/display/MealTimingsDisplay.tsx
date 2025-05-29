@@ -32,11 +32,11 @@ export default function MealTimingsDisplay({ timings, mealTimes }: MealTimingsDi
   const formatTime = (time: string): string => {
     try {
       const [hours, minutes] = time.split(":");
-      const hoursNum = parseInt(hours, 10);
+      const hoursNum = Number.parseInt(hours, 10);
       const period = hoursNum >= 12 ? "PM" : "AM";
       const formattedHours = hoursNum > 12 ? hoursNum - 12 : hoursNum === 0 ? 12 : hoursNum;
       return `${formattedHours}:${minutes} ${period}`;
-    } catch (error) {
+    } catch (_error) {
       return time; // Return original if parsing fails
     }
   };

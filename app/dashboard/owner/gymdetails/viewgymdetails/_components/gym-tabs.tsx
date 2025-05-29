@@ -1,5 +1,5 @@
 import { TabsContent , TabsList , TabsTrigger , Tabs } from "@/components/ui/tabs"
-import { TrendingUp, Dumbbell, MapPin, DollarSign, LucideIcon } from "lucide-react"
+import { TrendingUp, Dumbbell, MapPin, DollarSign, type LucideIcon } from "lucide-react"
 import { AmenitiesTab } from "./amenities-tab"
 import { LocationTab, GymLocation } from "./location-tab"
 import { OverviewTab } from "./overview-tab"

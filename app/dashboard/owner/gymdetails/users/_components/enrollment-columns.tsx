@@ -1,9 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Enrollment, EnrollmentStatus } from "../types";
+import type { Enrollment, EnrollmentStatus } from "../types";
 import { Badge } from "@/components/ui/badge";
 import { statusIcons, statusStyles } from "./status-cards";
 

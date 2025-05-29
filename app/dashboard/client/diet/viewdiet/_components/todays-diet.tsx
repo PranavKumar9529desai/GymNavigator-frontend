@@ -218,7 +218,7 @@ export default function TodaysDiet() {
       {/* Nutrition Summary Card */}
       <div className="mb-6 sm:mb-8">
         <h2 className="text-lg font-semibold text-gray-700 mb-3 sm:mb-4 flex items-center">
-          <span className="inline-block mr-2 w-1 h-6 bg-gradient-to-b from-emerald-500 to-green-600 rounded-sm"></span>
+          <span className="inline-block mr-2 w-1 h-6 bg-gradient-to-b from-emerald-500 to-green-600 rounded-sm" />
           Nutrition Summary
           <span className="text-xs font-normal text-gray-500 ml-auto">{formattedDate}</span>
         </h2>
@@ -346,7 +346,7 @@ export default function TodaysDiet() {
       {/* Meals Section */}
       <div className="mt-8">
         <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-          <span className="inline-block mr-2 w-1 h-6 bg-gradient-to-b from-emerald-500 to-green-600 rounded-sm"></span>
+          <span className="inline-block mr-2 w-1 h-6 bg-gradient-to-b from-emerald-500 to-green-600 rounded-sm" />
           Today's Meal Plan
         </h2>
         

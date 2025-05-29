@@ -41,7 +41,7 @@ import {
 // Helper function to format time from 24h to 12h format
 const formatTime = (time: string) => {
   const [hours, minutes] = time.split(':');
-  const hour = parseInt(hours, 10);
+  const hour = Number.parseInt(hours, 10);
   const ampm = hour >= 12 ? 'PM' : 'AM';
   const formattedHour = hour % 12 || 12;
   
@@ -105,9 +105,8 @@ export default function GymSettings() {
       }));
       setGeneralInfoOpen(false);
       return Promise.resolve();
-    } else {
-      return Promise.reject(new Error(result.error));
     }
+      return Promise.reject(new Error(result.error));
   };
 
   const handleOperatingHoursSave = async (data: {
@@ -128,9 +127,8 @@ export default function GymSettings() {
       }));
       setOperatingHoursOpen(false);
       return Promise.resolve();
-    } else {
-      return Promise.reject(new Error(result.error));
     }
+      return Promise.reject(new Error(result.error));
   };
 
   const handleLocationSave = async (data: {
@@ -155,9 +153,8 @@ export default function GymSettings() {
       }));
       setLocationOpen(false);
       return Promise.resolve();
-    } else {
-      return Promise.reject(new Error(result.error));
     }
+      return Promise.reject(new Error(result.error));
   };
 
   return (

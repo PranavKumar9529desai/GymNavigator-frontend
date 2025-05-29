@@ -8,8 +8,8 @@
     "build": "bun run --bun next build",
     "start": "bun run --env-file=.env.production --bun next start",
     "format": "biome format --write .",
-    "lint": "next lint && biome lint --write --unsafe",
-    "lint:fix": "next lint --fix && biome lint --write --unsafe",
+    "lint": "biome lint --write --unsafe",
+    "lint:fix": " biome lint --write --unsafe",
     "check": "biome check --write ."
   },
   "dependencies": {

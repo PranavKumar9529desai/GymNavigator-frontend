@@ -35,9 +35,9 @@ export default async function ViewDietPage() {
       </Card>
 
       <div className="mt-6 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
         <span>Updated daily based on your fitness goals</span>
-        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
       </div>
     </div>
   );

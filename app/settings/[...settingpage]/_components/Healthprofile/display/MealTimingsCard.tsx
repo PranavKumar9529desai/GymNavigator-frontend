@@ -1,7 +1,7 @@
 import { Clock } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import MealTimingsDisplay from "./MealTimingsDisplay";
-import { UserHealthprofile } from "../_actions/get-client-healthprofie";
+import type { UserHealthprofile } from "../_actions/get-client-healthprofie";
 
 interface MealTimingsCardProps {
   data: UserHealthprofile["Dietary"];

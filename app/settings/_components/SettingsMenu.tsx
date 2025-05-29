@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MenuItem } from "../menuitems";
+import type { MenuItem } from "../menuitems";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
 

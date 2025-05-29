@@ -2,7 +2,7 @@ import { Utensils, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { UserHealthprofile, Selection } from "../_actions/get-client-healthprofie";
+import type { UserHealthprofile, Selection } from "../_actions/get-client-healthprofie";
 import MealTimingsDisplay from "./MealTimingsDisplay";
 
 interface DietaryDisplayProps {
@@ -19,7 +19,7 @@ function renderSelection(selection: Selection[] | string | undefined, otherValue
       if (Array.isArray(parsed)) {
         return parsed.map(item => item.name).join(', ') + (otherValue ? `, ${otherValue}` : '');
       }
-    } catch (e) { /* Ignore parsing error, treat as plain string */ }
+    } catch (_e) { /* Ignore parsing error, treat as plain string */ }
     return selection + (otherValue ? `, ${otherValue}` : '');
   }
   if (Array.isArray(selection)) {
@@ -38,7 +38,7 @@ function getSelectionItems(selection: Selection[] | string | undefined): {name: 
       if (Array.isArray(parsed)) {
         return parsed.filter(item => item.selected);
       }
-    } catch (e) { /* Ignore parsing error */ }
+    } catch (_e) { /* Ignore parsing error */ }
     return selection ? [{ name: selection }] : [];
   }
   if (Array.isArray(selection)) {
@@ -56,7 +56,7 @@ function getNonVegDays(days: UserHealthprofile['Dietary']['nonVegDays']): string
       if (Array.isArray(parsed)) {
         return parsed.filter(d => d.selected).map(d => d.day);
       }
-    } catch(e) { /* Ignore */ }
+    } catch(_e) { /* Ignore */ }
     return days ? [days] : [];
   }
   if (Array.isArray(days)) {

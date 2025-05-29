@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@/app/(auth)/auth';
 import SettingsMenu from './_components/SettingsMenu';
 import DashboardBottomNav from '@/app/dashboard/_components/DashboardBottomNav';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { settingsMenuItems } from './menuitems';
 
 export const metadata: Metadata = {

@@ -1,7 +1,7 @@
 'use server';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
-import { CreateGymDetailsSchemaType } from './_components/CreateGymDetails';
+import type { CreateGymDetailsSchemaType } from './_components/CreateGymDetails';
 
 interface GymResponse {
 	msg: string;

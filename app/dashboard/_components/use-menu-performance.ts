@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
  * Custom hook to measure and log menu rendering performance
  * This is useful for development and can be disabled in production
  */
-export function useMenuPerformance(label: string = 'Menu') {
+export function useMenuPerformance(label = 'Menu') {
   const [renderTime, setRenderTime] = useState<number>(0);
   const [renderCount, setRenderCount] = useState<number>(0);
 

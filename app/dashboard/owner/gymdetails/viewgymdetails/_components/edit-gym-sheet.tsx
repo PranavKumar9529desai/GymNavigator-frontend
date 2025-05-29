@@ -38,7 +38,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
     setFormData(gymData || {} as GymData);
   }, [gymData]);
 
-  const handleDataChange = (updatedData: GymData) => {
+  const _handleDataChange = (updatedData: GymData) => {
     setFormData(updatedData);
   };
 

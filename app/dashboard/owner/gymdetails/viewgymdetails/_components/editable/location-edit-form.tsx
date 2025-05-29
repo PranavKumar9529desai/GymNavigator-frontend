@@ -207,10 +207,10 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
   // Remove map update logic from updateLocation, keep reverse geocoding part
   // Function to update location state and marker
   // Added optional parameter to prevent reverse geocoding if initiated by search control
-  const updateLocation = async (lat: number, lng: number, fromSearch = false) => {
+  const updateLocation = async (lat: number, lng: number, _fromSearch = false) => {
     // The updateLocation function now only handles state update and reverse geocoding
     // The map-related logic has been removed based on the user's request to remove the map.
-    const updatedLocation: GymLocation = { ...locationFormData, lat, lng };
+    const _updatedLocation: GymLocation = { ...locationFormData, lat, lng };
     // setLocationFormData(updatedLocation); // Update state after reverse geocoding
     // onDataChange({ ...data, location: updatedLocation }); // Call onDataChange after reverse geocoding
 

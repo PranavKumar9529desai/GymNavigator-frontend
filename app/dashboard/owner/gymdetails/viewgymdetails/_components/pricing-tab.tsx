@@ -103,7 +103,7 @@ export function PricingTab({
               <div className="space-y-3">
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-black"></div>
+                    <div className="h-2 w-2 rounded-full bg-black" />
                     <span className="text-sm text-gray-700">{feature}</span>
                   </div>
                 ))}

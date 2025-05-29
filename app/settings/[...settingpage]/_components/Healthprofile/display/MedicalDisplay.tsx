@@ -2,7 +2,7 @@ import { AlertTriangle, Stethoscope } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { UserHealthprofile, Selection } from "../_actions/get-client-healthprofie";
+import type { UserHealthprofile, Selection } from "../_actions/get-client-healthprofie";
 
 interface MedicalDisplayProps {
   data: UserHealthprofile['Medical'];
@@ -17,7 +17,7 @@ function getSelectionItems(selection: Selection[] | string | undefined): {name: 
       if (Array.isArray(parsed)) {
         return parsed.filter(item => item.selected);
       }
-    } catch (e) { /* Ignore parsing error */ }
+    } catch (_e) { /* Ignore parsing error */ }
     return selection ? [{ name: selection }] : [];
   }
   if (Array.isArray(selection)) {

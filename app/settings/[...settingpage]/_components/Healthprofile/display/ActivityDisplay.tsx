@@ -1,7 +1,7 @@
 import { Activity } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UserHealthprofile } from "../_actions/get-client-healthprofie";
+import type { UserHealthprofile } from "../_actions/get-client-healthprofie";
 
 interface ActivityDisplayProps {
   data: UserHealthprofile['Activity'];

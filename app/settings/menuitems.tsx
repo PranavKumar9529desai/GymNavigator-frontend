@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Settings, UserCog, CreditCard, Heart, User, Building, Dumbbell, Bell, Shield, UserCircle, UserCheck, CalendarClock, MessageSquare } from "lucide-react";
 
 export type Role = "owner" | "client" | "trainer";

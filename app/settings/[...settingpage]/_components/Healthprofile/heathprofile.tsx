@@ -1,5 +1,5 @@
 import { ChevronRight, Pencil } from "lucide-react";
-import { gethealthprofileById, UserHealthprofile } from "./_actions/get-client-healthprofie"; // Import UserHealthprofile type
+import { gethealthprofileById, type UserHealthprofile } from "./_actions/get-client-healthprofie"; // Import UserHealthprofile type
 import Link from "next/link"; // Import Link
 import { Suspense } from "react"; // Import Suspense for cleaner loading states (optional but good practice)
 import GeneralDisplay from "./display/GeneralDisplay";
@@ -37,7 +37,7 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
     : undefined;
   // console.log("Selected Topic from prop:", selectedTopic); // For debugging
 
-  let healthData: HealthDataState = { data: null, error: null, loading: false };
+  const healthData: HealthDataState = { data: null, error: null, loading: false };
 
   // Fetch data only if a topic is selected
   if (selectedTopic && TopicsArray.includes(selectedTopic)) { // Ensure topic is valid
@@ -101,7 +101,7 @@ export default async function HealthProfile2({ selectedTopic: rawSelectedTopic }
       {/* Data Display Area - Spans appropriately based on topic selection */}
       <div className={selectedTopic ? 'col-span-1' : 'md:col-span-2'}>
         <Suspense fallback={<div className="py-4 px-2 flex justify-center items-center min-h-[100px]">
-          <div className="animate-pulse w-full h-32 bg-gray-200 rounded"></div>
+          <div className="animate-pulse w-full h-32 bg-gray-200 rounded" />
         </div>}>
           {healthData.loading && <div className="py-4 px-2 flex justify-center items-center">Loading...</div>}
           {healthData.error && <div className="py-4 px-2 text-red-600 flex items-center justify-center">

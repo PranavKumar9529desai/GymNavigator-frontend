@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactElement, useMemo, Suspense } from "react";
+import { type ReactElement, useMemo, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import { settingsMenuItems, Role, MenuItem } from "./menuitems";
+import { settingsMenuItems, type Role, type MenuItem } from "./menuitems";
 import SettingsHeader from "./SettingsHeader";
 import SettingsItem from "./_components/SettingsItem";
 import SettingsItemSkeleton from "./_components/SettingsItemSkeleton";

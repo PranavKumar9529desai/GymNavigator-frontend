@@ -101,7 +101,7 @@ export async function gethealthprofileById() {
 
   try {
     // console.log("Fetching health profile for user ID:", userId);
-    const response = await clientAxios.get(`/profile/gethealthprofile`);
+    const response = await clientAxios.get('/profile/gethealthprofile');
     const data = response.data;
     console.log("Health Profile Response:", data);
 

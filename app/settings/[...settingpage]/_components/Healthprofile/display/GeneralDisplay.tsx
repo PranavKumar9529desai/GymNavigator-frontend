@@ -2,7 +2,7 @@ import { UserCircle2, Ruler, Weight, CalendarDays } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { UserHealthprofile } from "../_actions/get-client-healthprofie";
+import type { UserHealthprofile } from "../_actions/get-client-healthprofie";
 
 interface GeneralDisplayProps {
   data: UserHealthprofile['General'];
@@ -30,7 +30,7 @@ export default function GeneralDisplay({ data }: GeneralDisplayProps) {
     return { label: "Obese", color: "bg-red-100 text-red-800" };
   };
   
-  const bmiCategory = bmi ? getBMICategory(parseFloat(bmi)) : null;
+  const bmiCategory = bmi ? getBMICategory(Number.parseFloat(bmi)) : null;
   
   return (
     <Card className="overflow-hidden border border-gray-200 shadow-sm">
