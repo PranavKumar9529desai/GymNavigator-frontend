@@ -279,8 +279,8 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
 
   return (
     <div className="space-y-4">
-       {/* Map container */}
-      <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} className="rounded-md"></div>
+       {/* Map container - Added z-0 class */}
+      <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} className="rounded-md z-0"></div>
 
       {/* Address fields - Kept but hidden/managed by search results now */}
       {/* You might want to re-add these if you still need manual input alongside map interaction */}

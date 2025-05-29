@@ -31,7 +31,7 @@ export function LocationTab({ location }: { location: GymLocation }) {
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       {/* Map on top, full width */}
-      <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] rounded-xl overflow-hidden border shadow-lg">
+      <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] rounded-xl overflow-hidden border shadow-lg z-40">
         <MapContainer
           center={[location.lat, location.lng]}
           zoom={16}
