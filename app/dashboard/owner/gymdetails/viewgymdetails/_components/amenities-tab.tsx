@@ -99,11 +99,10 @@ const AMENITY_CATEGORIES: AmenityCategory[] = [
 ]
 
 export function AmenitiesTab({
-  categories,
+  categories = AMENITY_CATEGORIES,
   selectedAmenities,
   onEdit,
 }: AmenitiesTabProps) {
-  const displayCategories = categories || AMENITY_CATEGORIES;
   // If selectedAmenities is not provided, show all amenities as selected
   const allSelected = !selectedAmenities;
 
@@ -120,7 +119,7 @@ export function AmenitiesTab({
         </Button>
       )}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {displayCategories.map((category) => (
+        {categories.map((category) => (
           <Card key={category.key} className="border shadow-lg">
             <CardHeader className="bg-gray-900 text-white flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">

@@ -25,7 +25,63 @@ function UserCard ({ type , number   } : { type : "trainers" | "users" , number 
   )
 }
 
-export function OverviewTab() {
+// Dummy data for trainers and their assigned clients (default data)
+const defaultTrainersData: Trainer[] = [
+  {
+    id: 1,
+    name: "Trainer 1",
+    assignedClients: [
+      { id: 1, name: "Client A" },
+      { id: 2, name: "Client B" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Trainer 2",
+    assignedClients: [
+      { id: 3, name: "Client C" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Trainer 3",
+    assignedClients: [
+      { id: 4, name: "Client D" },
+      { id: 5, name: "Client E" },
+      { id: 6, name: "Client F" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Trainer 3",
+    assignedClients: [
+
+    ],
+  },
+  {
+    id: 3,
+    name: "Trainer 3",
+    assignedClients: [
+      { id: 6, name: "Client F" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Trainer 3",
+    assignedClients: [
+      { id: 4, name: "Client D" },
+      { id: 5, name: "Client E" },
+    ],
+  },
+]
+
+interface OverviewTabProps {
+  trainersData?: Trainer[];
+}
+
+export function OverviewTab({
+  trainersData = defaultTrainersData,
+}: OverviewTabProps) {
   // Dummy data for trainers and their assigned clients
   const trainers: Trainer[] = [
     {
@@ -56,7 +112,7 @@ export function OverviewTab() {
       id: 3,
       name: "Trainer 3",
       assignedClients: [
-  
+
       ],
     },
     {
@@ -85,7 +141,7 @@ export function OverviewTab() {
         </div>
         <div className="w-full overflow-x-auto">
           <div className="min-w-[320px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-0">
-            <TrainerUserBarChart trainers={trainers}/>
+            <TrainerUserBarChart trainers={trainersData}/>
           </div>
         </div>
       </div>

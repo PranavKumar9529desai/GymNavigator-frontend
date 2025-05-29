@@ -13,8 +13,16 @@ export type GymLocation = {
   address: string
   city: string
   state: string
-  neighborhood?: string
 }
+
+// Define a default location value
+const defaultLocation: GymLocation = {
+  lat: 34.0522,
+  lng: -118.2437,
+  address: "123 Main St",
+  city: "Los Angeles",
+  state: "CA",
+};
 
 // Custom marker icon (fixes missing marker issue in Leaflet)
 const markerIcon = new L.Icon({
@@ -27,7 +35,9 @@ const markerIcon = new L.Icon({
 })
 
 // Accept location as prop
-export function LocationTab({ location }: { location: GymLocation }) {
+export function LocationTab({
+  location = defaultLocation,
+}: { location: GymLocation }) {
   return (
     <div className="flex flex-col gap-4 md:gap-6">
       {/* Map on top, full width */}
@@ -68,12 +78,7 @@ export function LocationTab({ location }: { location: GymLocation }) {
               <p className="font-semibold text-gray-900">City & State</p>
               <p className="text-gray-600">{location.city}, {location.state}</p>
             </div>
-            {location.neighborhood && (
-              <div>
-                <p className="font-semibold text-gray-900">Neighborhood</p>
-                <p className="text-gray-600">{location.neighborhood}</p>
-              </div>
-            )}
+          
           </div>
         </CardContent>
       </Card>
