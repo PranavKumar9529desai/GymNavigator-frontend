@@ -64,7 +64,6 @@ export default function GymLayout() {
 
 
         {/* Enhanced Tabs Section */}
-<Separator />
         <div className="">
         <GymTabs />
         </div>

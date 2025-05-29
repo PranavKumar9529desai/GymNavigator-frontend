@@ -4,6 +4,7 @@ import { AmenitiesTab } from "./amenities-tab"
 import { LocationTab, GymLocation } from "./location-tab"
 import { OverviewTab } from "./overview-tab"
 import { PricingTab } from "./pricing-tab"
+import { Separator } from "@/components/ui/separator"
 
 export const GymTabs = ()=>{
     return <>
@@ -30,7 +31,7 @@ export const GymTabs = ()=>{
               icon={DollarSign}
             />
           </TabsList>
-
+<Separator />
           <div className="mt-10">
             <TabsContent value="general" >
               <OverviewTab />
