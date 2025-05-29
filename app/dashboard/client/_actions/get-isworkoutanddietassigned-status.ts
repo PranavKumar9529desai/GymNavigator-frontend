@@ -1,6 +1,7 @@
 'use server';
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import { AxiosError } from 'axios';
 
 // Types for the response
 interface IsWorkoutAndDietAssignedResponse {
@@ -41,15 +42,33 @@ export async function getIsWorkoutAndDietAssignedStatus(): Promise<
 			},
 		};
 		// @ts-ignore
-	} catch (error: any) {
+	} catch (error: unknown) {
 		// Handle network or unexpected errors
 		console.error('Error checking workout and diet assignments:', error);
+
+		let errorMessage = 'An error occurred while fetching assignment status';
+
+		if (error instanceof AxiosError) {
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				errorMessage = error.response.data?.error || error.message;
+			} else if (error.request) {
+				// The request was made but no response was received
+				errorMessage = 'No response received from server.';
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				errorMessage = error.message;
+			}
+		} else if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+
 		return {
 			success: false,
 			error: {
 				code: 'REQUEST_FAILED',
-				message:
-					error.message || 'An error occurred while fetching assignment status',
+				message: errorMessage,
 			},
 		};
 	}

@@ -27,7 +27,7 @@ export default function NoAssignmentMessage({
 		},
 	};
 
-	const { image, title, message } = content[type];
+	const { title, message } = content[type];
 
 	return (
 		<div className="min-h-[calc(100vh-4rem)] flex flex-col md:items-center md:justify-center px-4 py-20">

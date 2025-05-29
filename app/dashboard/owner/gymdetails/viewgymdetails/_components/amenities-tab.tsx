@@ -114,7 +114,7 @@ export function AmenitiesTab({
           className="absolute right-0 top-0 z-10"
           size="sm"
           variant="outline"
-          onClick={onEdit}
+          onClick={() => onEdit({})}
         >
           Edit
         </Button>

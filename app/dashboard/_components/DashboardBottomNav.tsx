@@ -3,7 +3,6 @@
 import BottomNavigation from '@/components/common/Bottomnavigation/bottomnavigation';
 import { useSession } from 'next-auth/react';
 import { useDashboardMenu } from './use-dashboard-menu';
-import { useMenuPerformanceMetrics } from './use-menu-performance';
 
 export default function DashboardBottomNav() {
 	const { data: session } = useSession();
