@@ -48,7 +48,6 @@ export const GymTabs = ()=>{
                 address: "2847 Fitness Boulevard, Suite 100",
                 city: "Wellness City",
                 state: "California 90210",
-                neighborhood: "Downtown Fitness District"
               }} />
             </TabsContent>
 
@@ -62,7 +61,7 @@ export const GymTabs = ()=>{
 
 
 
-const  SingleTab = ( { name , label, icon } : { name : string , label: string, icon : LucideIcon})=>{
+export const  SingleTab = ( { name , label, icon } : { name : string , label: string, icon : LucideIcon})=>{
     const Icon = icon;
     return (
         <TabsTrigger

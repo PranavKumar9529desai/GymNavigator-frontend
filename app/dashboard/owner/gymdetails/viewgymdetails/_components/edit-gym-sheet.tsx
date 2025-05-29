@@ -74,17 +74,17 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 rounded-md bg-gray-100 p-1">
-                <TabsTrigger value="overview" className="data-[state=active]:bg-white rounded-sm">
-                  Overview
+                <TabsTrigger value="overview" className=" rounded-sm">
+                  <TrendingUp className="mr-2 h-4 w-4" /> Overview
                 </TabsTrigger>
-                <TabsTrigger value="amenities" className="data-[state=active]:bg-white rounded-sm">
-                  Amenities
+                <TabsTrigger value="amenities" className=" rounded-sm">
+                  <Dumbbell className="mr-2 h-4 w-4" /> Amenities
                 </TabsTrigger>
-                <TabsTrigger value="location" className="data-[state=active]:bg-white rounded-sm">
-                  Location
+                <TabsTrigger value="location" className=" rounded-sm">
+                  <MapPin className="mr-2 h-4 w-4" /> Location
                 </TabsTrigger>
-                <TabsTrigger value="pricing" className="data-[state=active]:bg-white rounded-sm">
-                  Pricing
+                <TabsTrigger value="pricing" className=" rounded-sm">
+                  <DollarSign className="mr-2 h-4 w-4" /> Pricing
                 </TabsTrigger>
               </TabsList>
 

@@ -9,6 +9,7 @@ import { PricingTab } from "./_components/pricing-tab"
 import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
+import { EditGymDrawer } from "./_components/edit-gym-drawer"
 import { EditGymSheet } from "./_components/edit-gym-sheet"
 import { GymTabs } from "./_components/gym-tabs"
 import { Separator } from "@/components/ui/separator"
@@ -27,6 +28,7 @@ interface GymInfo {
 export default function GymLayout() {
   const [gymDetails, setGymDetails] = useState<GymInfo | null>(null);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+  const [isSmallDevice, setIsSmallDevice] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +36,20 @@ export default function GymLayout() {
       setGymDetails(details);
     };
     fetchData();
+
+    const handleResize = () => {
+      setIsSmallDevice(window.innerWidth < 768); // Adjust breakpoint as needed (e.g., 768px for 'md')
+    };
+
+    // Initial check
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+
   }, []); // Empty dependency array means this effect runs once on mount
 
 
@@ -70,12 +86,21 @@ export default function GymLayout() {
        
       </div>
 
-       <EditGymSheet
-        isOpen={isEditSheetOpen}
-        onClose={() => setIsEditSheetOpen(false)}
-        gymData={gymDetails}
-        onSave={handleSave}
-      />
+      {isSmallDevice ? (
+        <EditGymDrawer
+          isOpen={isEditSheetOpen}
+          onClose={() => setIsEditSheetOpen(false)}
+          gymData={gymDetails}
+          onSave={handleSave}
+        />
+      ) : (
+        <EditGymSheet
+          isOpen={isEditSheetOpen}
+          onClose={() => setIsEditSheetOpen(false)}
+          gymData={gymDetails}
+          onSave={handleSave}
+        />
+      )}
 
     </div>
   )

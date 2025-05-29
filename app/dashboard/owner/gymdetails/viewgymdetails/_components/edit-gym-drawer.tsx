@@ -12,6 +12,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
+import { AMENITY_CATEGORIES } from './amenities-tab';
+import { SingleTab } from "./gym-tabs";
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';
@@ -65,26 +67,34 @@ export function EditGymDrawer({ isOpen, onClose, gymData, onSave }: EditGymDrawe
            <div className="px-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-2">
                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 rounded-md bg-gray-100 p-1">
-                  <TabsTrigger value="overview" className="data-[state=active]:bg-white rounded-sm">
-                    Overview
-                  </TabsTrigger>
-                  <TabsTrigger value="amenities" className="data-[state=active]:bg-white rounded-sm">
-                    Amenities
-                  </TabsTrigger>
-                  <TabsTrigger value="location" className="data-[state=active]:bg-white rounded-sm">
-                    Location
-                  </TabsTrigger>
-                  <TabsTrigger value="pricing" className="data-[state=active]:bg-white rounded-sm">
-                    Pricing
-                  </TabsTrigger>
+                  <SingleTab
+                    name="overview"
+                    label="Overview"
+                    icon={TrendingUp}
+                  />
+                  <SingleTab
+                    name="amenities"
+                    label="Amenities"
+                    icon={Dumbbell}
+                  />
+                  <SingleTab
+                    name="location"
+                    label="Location"
+                    icon={MapPin}
+                  />
+                  <SingleTab
+                    name="pricing"
+                    label="Pricing"
+                    icon={DollarSign}
+                  />
                 </TabsList>
 
-                <div className="mt-4">
+                <div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">
                   <TabsContent value="overview" className="mt-0">
                      <OverviewEditForm data={formData} onDataChange={setFormData} />
                   </TabsContent>
                   <TabsContent value="amenities" className="mt-0">
-                     <AmenitiesEditForm data={formData} onDataChange={setFormData} />
+                     <AmenitiesEditForm categories={AMENITY_CATEGORIES} selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => { /* Handle save within the form if needed */ }} onCancel={() => { /* Handle cancel within the form if needed */ }} />
                   </TabsContent>
                   <TabsContent value="location" className="mt-0">
                      <LocationEditForm data={formData} onDataChange={setFormData} />
@@ -94,9 +104,9 @@ export function EditGymDrawer({ isOpen, onClose, gymData, onSave }: EditGymDrawe
                   </TabsContent>
                 </div>
             </Tabs>
-             <div className="flex gap-3 pt-4">
+             <div className="flex gap-3 pt-4 px-4">
               <Button type="button" className="flex-1" onClick={handleSaveClick}>
-                Save Changes
+                Save Changes asdasd
               </Button>
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
