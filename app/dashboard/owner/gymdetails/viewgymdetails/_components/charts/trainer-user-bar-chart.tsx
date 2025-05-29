@@ -60,7 +60,7 @@ export function TrainerUserBarChart({
   } satisfies ChartConfig
 
   return (
-    <Card>
+    <Card className="bg-transparent">
       
       <CardContent>
         <div

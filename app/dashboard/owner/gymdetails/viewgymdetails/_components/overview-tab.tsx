@@ -77,7 +77,7 @@ export function OverviewTab() {
   ]
 
   return (
-    <section className="w-full rounded-xl bg-gradient-to-br from-blue-50 to-white dark:from-blue-950 dark:to-gray-900 p-4 sm:p-8 shadow-lg border border-blue-100 dark:border-blue-900">
+    <section className="w-full   sm:p-8">
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 w-full">
         <div className="flex flex-row lg:flex-col gap-4 w-full max-w-full lg:max-w-xs mb-2 lg:mb-0">
           <UserCard type="trainers" number={10} />

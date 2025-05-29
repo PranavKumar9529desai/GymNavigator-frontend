@@ -43,7 +43,7 @@ export default function GymLayout() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 p-2 md:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
            <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600 ">
