@@ -1,7 +1,7 @@
 import { TabsContent , TabsList , TabsTrigger , Tabs } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign, LucideIcon } from "lucide-react"
 import { AmenitiesTab } from "./amenities-tab"
-import { LocationTab } from "./location-tab"
+import { LocationTab, GymLocation } from "./location-tab"
 import { OverviewTab } from "./overview-tab"
 import { PricingTab } from "./pricing-tab"
 
@@ -41,7 +41,14 @@ export const GymTabs = ()=>{
             </TabsContent>
 
             <TabsContent value="address" >
-              <LocationTab />
+              <LocationTab location={{
+                lat: 34.0736,
+                lng: -118.4004,
+                address: "2847 Fitness Boulevard, Suite 100",
+                city: "Wellness City",
+                state: "California 90210",
+                neighborhood: "Downtown Fitness District"
+              }} />
             </TabsContent>
 
             <TabsContent value="fees" >
