@@ -56,7 +56,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
   return (
     <>
       <Sheet open={isOpen} onOpenChange={onClose} >
-        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto ">
+        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto z-50 ">
           <SheetHeader>
             <SheetTitle>Edit Gym Details</SheetTitle>
             <SheetDescription>Select a tab to edit specific gym information.</SheetDescription>
@@ -83,7 +83,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
                    <OverviewEditForm data={formData} onDataChange={setFormData} />
                 </TabsContent>
                 <TabsContent value="amenities" className="mt-0">
-                   <AmenitiesEditForm data={formData} onDataChange={setFormData} />
+                   <AmenitiesEditForm  onDataChange={setFormData} />
                 </TabsContent>
                 <TabsContent value="location" className="mt-0">
                    <LocationEditForm data={formData} onDataChange={setFormData} />
