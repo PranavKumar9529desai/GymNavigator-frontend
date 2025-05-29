@@ -2,24 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { GymData, Amenity } from "../types/gym-types";
+import type { GymData, Amenity, AmenityCategory } from "../../types/gym-types";
 import { useState, useEffect } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
 // Types for amenities
-interface Amenity {
-  key: string;
-  label: string;
-}
-
-interface AmenityCategory {
-  key: string;
-  name: string;
-  amenities: Amenity[];
-}
-
 interface AmenitiesEditFormProps {
   categories: AmenityCategory[];
   selectedAmenities: Record<string, string[]>; // categoryKey -> array of amenity keys
@@ -47,8 +36,8 @@ export function AmenitiesEditForm({
       const selected = selectedAmenities[cat.key] || [];
       catState[cat.key] = selected.length > 0;
       amenityState[cat.key] = {};
-      cat.amenities.forEach((a) => {
-        amenityState[cat.key][a.key] = selected.includes(a.key);
+      cat.amenities.forEach((amenity) => {
+        amenityState[cat.key][amenity.key] = selected.includes(amenity.key);
       });
     });
     setEnabledCategories(catState);

@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { GymData, FitnessPlan } from "../types/gym-types";
+import type { GymData, FitnessPlan } from "../../types/gym-types";
 import { useState, useEffect } from 'react';
 
 interface PricingEditFormProps {
@@ -68,7 +68,7 @@ export function PricingEditForm({ data, onDataChange }: PricingEditFormProps) {
            <div>
               <p className="font-medium text-gray-700 text-sm mb-1">Features:</p>
               <ul className="list-disc list-inside text-sm text-gray-600">
-                  {plan.features.map((feature, featureIndex) => (
+                  {plan.features.map((feature: string, featureIndex: number) => (
                       <li key={featureIndex}>{feature}</li>
                   ))}
               </ul>

@@ -50,25 +50,47 @@ export interface GymData {
   phone_number: string;
   Email: string;
   gymauthtoken: string;
+
+  // New fields
+  amenities?: Record<string, string[]>; // categoryKey -> array of amenity keys
+  fitnessPlans?: FitnessPlan[];
+}
+
+export interface GymLocation {
+  lat?: number;
+  lng?: number;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
 }
 
 export interface FitnessPlan {
-  id: string
-  name: string
-  description: string
-  duration: string
-  price: string
-  features: string[]
-  popular: boolean
+  id: number; // Assuming an ID for plans
+  name: string;
+  description: string;
+  price: string;
+  duration: string;
+  features: string[];
+  isFeatured?: boolean;
+}
+
+export interface AdditionalService {
+    name: string;
+    price: string;
+    duration: string;
+    description?: string;
 }
 
 export interface Amenity {
-  id: string
-  name: string
-  category: "equipment" | "facility" | "service"
-  description: string
-  quantity?: string
-  available: boolean
+  key: string;
+  label: string;
+}
+
+export interface AmenityCategory {
+  key: string;
+  name: string;
+  amenities: Amenity[];
 }
 
 export interface StaffMember {

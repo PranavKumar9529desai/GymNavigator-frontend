@@ -12,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
+import { AMENITY_CATEGORIES } from './amenities-tab';
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';
@@ -30,24 +31,33 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
   const [activeTab, setActiveTab] = useState("overview");
   const [formData, setFormData] = useState<GymData>(gymData || {} as GymData);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [pendingSaveData, setPendingSaveData] = useState<GymData | null>(null);
 
   // Update formData when gymData prop changes
   useEffect(() => {
     setFormData(gymData || {} as GymData);
   }, [gymData]);
 
+  const handleDataChange = (updatedData: GymData) => {
+    setFormData(updatedData);
+  };
+
   const handleSaveClick = () => {
+    setPendingSaveData(formData);
     setShowConfirm(true);
   };
 
   const handleConfirmSave = () => {
-    // formData is already updated by the individual form components
-    onSave(formData);
-    setShowConfirm(false);
+    if (pendingSaveData) {
+      onSave(pendingSaveData);
+      setPendingSaveData(null);
+      setShowConfirm(false);
+      onClose(); // Close sheet after saving
+    }
   };
 
   const handleCancel = () => {
-    // Optionally reset formData to original gymData here if needed
+    // Optionally show a confirm dialog here if formData is different from gymData
     onClose();
   };
 
@@ -83,7 +93,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
                    <OverviewEditForm data={formData} onDataChange={setFormData} />
                 </TabsContent>
                 <TabsContent value="amenities" className="mt-0">
-                   <AmenitiesEditForm  onDataChange={setFormData} />
+                   <AmenitiesEditForm categories={AMENITY_CATEGORIES} selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => { /* Handle save within the form if needed */ }} onCancel={() => { /* Handle cancel within the form if needed */ }} />
                 </TabsContent>
                 <TabsContent value="location" className="mt-0">
                    <LocationEditForm data={formData} onDataChange={setFormData} />

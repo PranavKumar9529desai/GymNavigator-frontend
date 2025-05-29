@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import type { GymData } from "../../types/gym-types";
+import type { GymData, GymLocation } from "../../types/gym-types";
 import { useState, useEffect, useRef } from 'react';
 import { useGetLocationFromCoordinates } from "../../get-location-from-coordinates";
 import { MapPin } from 'lucide-react';
@@ -22,17 +22,9 @@ interface LocationEditFormProps {
   onDataChange: (data: GymData) => void;
 }
 
-type Location = {
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  lat?: number;
-  lng?: number;
-};
-
 export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) {
-  const [locationFormData, setLocationFormData] = useState<Location>({
+  const [locationFormData, setLocationFormData] = useState<GymLocation>(
+    {
     address: data.location?.address || '',
     city: data.location?.city || '',
     state: data.location?.state || '',
@@ -216,7 +208,9 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
   // Function to update location state and marker
   // Added optional parameter to prevent reverse geocoding if initiated by search control
   const updateLocation = async (lat: number, lng: number, fromSearch = false) => {
-    const updatedLocation = { ...locationFormData, lat, lng };
+    // The updateLocation function now only handles state update and reverse geocoding
+    // The map-related logic has been removed based on the user's request to remove the map.
+    const updatedLocation: GymLocation = { ...locationFormData, lat, lng };
     // setLocationFormData(updatedLocation); // Update state after reverse geocoding
     // onDataChange({ ...data, location: updatedLocation }); // Call onDataChange after reverse geocoding
 
@@ -251,7 +245,7 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
         ) {
           const result = await getAddress(lat, lng);
           if (result) {
-            const updatedLocationWithAddress = {
+            const updatedLocationWithAddress: GymLocation = {
               ...locationFormData,
               lat, lng,
               address: result.address || '',
@@ -263,7 +257,7 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
              onDataChange({ ...data, location: updatedLocationWithAddress });
           } else if (geoError) {
             // Check if geoError is an Error object before accessing message
-            console.error('Geocoding error:', geoError instanceof Error ? geoError.message : geoError);
+            console.error('Geocoding error:', geoError instanceof Error ? geoError.message : String(geoError));
           }
         } else if (!(typeof getAddress === 'function')) {
            console.error('getAddress function is not available');
@@ -274,7 +268,7 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
   // Keep handleInputChange for manual address field updates, though fields are removed from JSX now
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    const updatedLocation = {
+    const updatedLocation: GymLocation = {
       ...locationFormData,
       [id]: value,
     };

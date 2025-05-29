@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { GymData } from "../types/gym-types";
+import type { GymData } from "../../types/gym-types";
 import { useState, useEffect } from 'react';
 
 interface OverviewEditFormProps {
@@ -20,7 +20,7 @@ export function OverviewEditForm({ data, onDataChange }: OverviewEditFormProps) 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev: GymData) => ({
       ...prev,
       [id]: value,
     }));

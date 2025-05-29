@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
+import { AmenitiesEditForm } from "./editable/amenities-edit-form"
 
 // Define strong types for amenities
 interface Amenity {
@@ -23,10 +24,10 @@ interface AmenityCategory {
 interface AmenitiesTabProps {
   categories?: AmenityCategory[];
   selectedAmenities?: Record<string, string[]>; // categoryKey -> array of amenity keys
-  onEdit?: () => void;
+  onEdit?: (updatedAmenities: Record<string, string[]>) => void; // Modified to accept updated amenities
 }
 
-const AMENITY_CATEGORIES: AmenityCategory[] = [
+export const AMENITY_CATEGORIES: AmenityCategory[] = [
   {
     key: "workout-facilities",
     name: "Workout Facilities",
