@@ -1,6 +1,6 @@
 "use client"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, User, Users, Star, Edit3, Dumbbell, UserCheck, Globe, MapPin, Key, Trophy, Crown } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
@@ -28,11 +28,11 @@ export function GymHeader({ gymData }: GymHeaderProps) {
             <div className="flex justify-center lg:justify-start">
               <div className="relative group">
                 <Avatar className="size-28 border-4 border-gray-200 shadow-xl md:size-36 transition-all group-hover:shadow-2xl">
+                  <AvatarImage src={gymData.gym_logo} alt={gymData.gym_name} />
                   <AvatarFallback className="bg-black text-2xl font-black text-white">
-                    {gymData.gym_logo}
+                    {gymData.gym_name?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-              
               </div>
             </div>
 

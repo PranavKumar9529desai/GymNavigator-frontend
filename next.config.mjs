@@ -74,7 +74,7 @@ const nextConfig = {
             // Broader CSP for React Three Fiber and 3D components
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://*.pmnd.rs https://*.githubusercontent.com https://raw.githack.com; img-src 'self' https: data:; object-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net data:; worker-src 'self' blob:; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
+              "default-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://*.pmnd.rs https://*.githubusercontent.com https://raw.githack.com https://nominatim.openstreetmap.org; img-src 'self' https: data:; object-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net data:; worker-src 'self' blob:; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
           },
           {
             // Prevent XSS attacks

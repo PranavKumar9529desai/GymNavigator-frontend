@@ -1,0 +1,44 @@
+import { useState, useCallback } from 'react';
+
+export type GeocodedAddress = {
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
+
+export function useGetLocationFromCoordinates() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getAddress = useCallback(async (lat: number, lng: number): Promise<GeocodedAddress | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
+      if (!response.ok) throw new Error('Failed to fetch address');
+      const data = await response.json();
+      const address = data.address || {};
+      return {
+        address: [address.road, address.house_number].filter(Boolean).join(' ') || '',
+        city: address.city || address.town || address.village || '',
+        state: address.state || '',
+        zipCode: address.postcode || '',
+      };
+    } catch (err: any) {
+      setError(err.message || 'Unknown error');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { getAddress, loading, error };
+}

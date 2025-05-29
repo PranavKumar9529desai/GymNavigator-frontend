@@ -55,8 +55,8 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
 
   return (
     <>
-      <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+      <Sheet open={isOpen} onOpenChange={onClose} >
+        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto ">
           <SheetHeader>
             <SheetTitle>Edit Gym Details</SheetTitle>
             <SheetDescription>Select a tab to edit specific gym information.</SheetDescription>

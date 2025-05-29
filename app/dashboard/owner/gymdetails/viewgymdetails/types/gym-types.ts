@@ -31,9 +31,8 @@ export interface GymData {
     city: string
     state: string
     zipCode: string
-    neighborhood: string
-    parking: string
-    publicTransit: string
+    lat?: number
+    lng?: number
   }
 
   // Social Media
