@@ -5,6 +5,9 @@ export type GeocodedAddress = {
   city: string;
   state: string;
   zipCode: string;
+  district?: string;
+  suburb?: string;
+  county?: string;
 };
 
 export function useGetLocationFromCoordinates() {
@@ -25,9 +28,14 @@ export function useGetLocationFromCoordinates() {
       );
       if (!response.ok) throw new Error('Failed to fetch address');
       const data = await response.json();
+      console.log("the address  from the get-location-cordiantes.ts",data);
       const address = data.address || {};
       return {
-        address: [address.road, address.house_number].filter(Boolean).join(' ') || '',
+        address: [
+          address.house_number,
+          address.building,
+          address.road || address.street || address.residential || address.hamlet
+        ].filter(Boolean).join(' ') || '',
         city: address.city || address.town || address.village || '',
         state: address.state || '',
         zipCode: address.postcode || '',

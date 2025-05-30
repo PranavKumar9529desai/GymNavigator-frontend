@@ -139,8 +139,8 @@ export function OverviewTab({
           <UserCard type="trainers" number={10} />
           <UserCard type="users" number={10} />
         </div>
-        <div className="w-full overflow-x-auto">
-          <div className="min-w-[320px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-0">
+        <div className="w-full ">
+          <div className="min-w-0 ">
             <TrainerUserBarChart trainers={trainersData}/>
           </div>
         </div>
