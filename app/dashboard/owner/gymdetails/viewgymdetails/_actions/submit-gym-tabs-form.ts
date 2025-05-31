@@ -2,7 +2,7 @@
 
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
-import type { FitnessPlan, UpdateAmenitiesRequest, UpdateAmenitiesResponse } from '../types/gym-types';
+import type { FitnessPlan, UpdateAmenitiesRequest, UpdateAmenitiesResponse, PricingFormData } from '../types/gym-types';
 
 // Overview section update
 export async function updateGymOverview(data: {
@@ -54,9 +54,7 @@ export async function updateGymLocation(data: {
 }
 
 // Pricing section update
-export async function updateGymPricing(data: {
-  plans: FitnessPlan[];
-}) {
+export async function updateGymPricing(data: PricingFormData) {
   try {
     const ownerAxios = await OwnerReqConfig();
     const response = await ownerAxios.put('/gym/update-pricing', data);

@@ -60,13 +60,23 @@ export interface GymLocation {
 }
 
 export interface FitnessPlan {
-  id: number; // Assuming an ID for plans
+  id?: number; // Optional for new plans
   name: string;
   description: string;
   price: string;
   duration: string;
   features: string[];
   isFeatured?: boolean;
+  color?: string; // For plan theming
+  icon?: string; // For plan icons
+  popular?: boolean; // Alternative to isFeatured
+  maxMembers?: number; // Capacity limit
+  benefits?: string[]; // Additional benefits separate from features
+}
+
+export interface PricingFormData {
+  plans: FitnessPlan[];
+  additionalServices: AdditionalService[];
 }
 
 export interface AdditionalService {
