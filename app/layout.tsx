@@ -1,6 +1,5 @@
 import "@/globals.css";
 import Providers from "@/providers/provider";
-import { LazyMotion, domAnimation } from "framer-motion";
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
@@ -9,6 +8,7 @@ import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 // Removed useEffect, useState
 import OfflineIndicator from "@/components/common/OfflineIndicator"; // Import the new component
 import localFont from "next/font/local";
+import ClientMotionProvider from "../providers/ClientMotionProvider";
 const siteUrl = "https://gymnavigator.vercel.app";
 // export const dynamic = "force-static";
 
@@ -114,11 +114,11 @@ export default function RootLayout({
         <Providers>
           <QueryClientProvider>
             <OfflineIndicator /> {/* Add the indicator here */}
-            <LazyMotion features={domAnimation}>
+            <ClientMotionProvider>
               {children}
               <RegisterServiceWorker />
               <Toaster {...toasterProps} />
-            </LazyMotion>
+            </ClientMotionProvider>
           </QueryClientProvider>
         </Providers>
       </body>
