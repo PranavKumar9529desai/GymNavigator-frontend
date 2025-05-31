@@ -8,7 +8,8 @@ import type { FitnessPlan } from '../types/gym-types';
 export async function updateGymOverview(data: {
   gym_name: string;
   gym_logo: string;
-  description: string;
+  Email: string;
+  phone_number: string;
 }) {
   try {
     const ownerAxios = await OwnerReqConfig();
