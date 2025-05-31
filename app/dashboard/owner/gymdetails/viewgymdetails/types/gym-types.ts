@@ -67,10 +67,11 @@ export interface FitnessPlan {
   duration: string;
   features: string[];
   isFeatured?: boolean;
-  color?: string; // For plan theming
-  icon?: string; // For plan icons
+  color?: string; // For plan theming (hex color code)
+  icon?: string; // For plan icons (icon name)
   popular?: boolean; // Alternative to isFeatured
   maxMembers?: number; // Capacity limit
+  sortOrder?: number; // For custom ordering of plans
   benefits?: string[]; // Additional benefits separate from features
 }
 

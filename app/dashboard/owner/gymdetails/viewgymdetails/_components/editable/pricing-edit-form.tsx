@@ -465,8 +465,14 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
     
     startTransition(async () => {
       try {
+        // Add sortOrder to plans based on their current array position
+        const plansWithSortOrder = plansFormData.map((plan, index) => ({
+          ...plan,
+          sortOrder: index
+        }));
+
         const pricingData: PricingFormData = {
-          plans: plansFormData,
+          plans: plansWithSortOrder,
           additionalServices: additionalServices,
         };
         
