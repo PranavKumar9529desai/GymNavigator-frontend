@@ -11,7 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
-import { AMENITY_CATEGORIES } from './amenities-tab';
+import { AMENITY_CATEGORIES } from './tabs/amenities-tab';
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';

@@ -2,17 +2,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign, Key, Mail, Phone, Edit } from "lucide-react"
 import { GymHeader } from "./_components/gym-header"
-import { OverviewTab } from "./_components/overview-tab"
-import { AmenitiesTab } from "./_components/amenities-tab"
-import { LocationTab } from "./_components/location-tab"
-import { PricingTab } from "./_components/pricing-tab"
+import { OverviewTab } from "./_components/tabs/overview-tab"
+import { AmenitiesTab } from "./_components/tabs/amenities-tab"
+import { LocationTab } from "./_components/tabs/location-tab"
+import { PricingTab } from "./_components/tabs/pricing-tab"
 import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { EditGymDrawer } from "./_components/edit-gym-drawer"
 import { EditGymSheet } from "./_components/edit-gym-sheet"
-import { GymTabs } from "./_components/gym-tabs"
+import { GymTabs } from "./_components/tabs/gym-tabs"
 import { Separator } from "@/components/ui/separator"
+import { getOverviewData, getAmenitiesData, getLocationData, getPricingData } from "./_actions/get-gym-tab-data";
 
 
 interface GymInfo {

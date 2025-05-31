@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from "react"
-import { AmenitiesEditForm } from "./editable/amenities-edit-form"
+import { AmenitiesEditForm } from "../editable/amenities-edit-form"
 
 // Define strong types for amenities
 interface Amenity {
