@@ -4,18 +4,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import type { GymData, GymLocation } from "../../types/gym-types";
-import { useState, useEffect, useRef } from 'react';
-import { useGetLocationFromCoordinates } from "../../get-location-from-coordinates";
+import { useState, useEffect, useRef, useTransition } from 'react';
+import { useGetLocationFromCoordinates } from "../../_actions/get-location-from-coordinates";
 import { MapPin } from 'lucide-react';
+import { updateGymLocation } from "../../_actions/submit-gym-tabs-form";
+import { toast } from "sonner";
 
 
 
 interface LocationEditFormProps {
   data: GymData;
   onDataChange: (data: GymData) => void;
+  onSave?: () => void;
 }
 
-export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) {
+export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFormProps) {
   const [locationFormData, setLocationFormData] = useState<GymLocation>(
     {
     address: data.location?.address || '',
@@ -25,6 +28,7 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
     lat: data.location?.lat,
     lng: data.location?.lng,
   });
+  const [isPending, startTransition] = useTransition();
 
 
   const { getAddress, loading: geoLoading, error: geoError } = useGetLocationFromCoordinates() as {  getAddress: any, loading: boolean, error: string | Error | undefined };
@@ -114,8 +118,32 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    startTransition(async () => {
+      try {
+        const locationData = {
+          address: locationFormData.address || '',
+          city: locationFormData.city || '',
+          state: locationFormData.state || '',
+          zipCode: locationFormData.zipCode || '',
+          lat: locationFormData.lat,
+          lng: locationFormData.lng
+        };
+        
+        await updateGymLocation(locationData);
+        toast.success("Location updated successfully!");
+        onSave?.();
+      } catch (error) {
+        console.error('Error updating location:', error);
+        toast.error("Failed to update location. Please try again.");
+      }
+    });
+  };
+
   return (
-    <div className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
        {/* Map container - Removed */}
       {/* <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }} className="rounded-md z-0"></div> */}
 
@@ -151,6 +179,12 @@ export function LocationEditForm({ data, onDataChange }: LocationEditFormProps) 
       )}
        {geoLoading && <div className="text-blue-600">Fetching address...</div>}
        {geoError && <div className="text-blue-600">Error fetching address: {geoError instanceof Error ? geoError.message : String(geoError)}</div>}
-    </div>
+      
+      <div className="flex gap-2 pt-4">
+        <Button type="submit" disabled={isPending} className="flex-1">
+          {isPending ? "Saving..." : "Save Location"}
+        </Button>
+      </div>
+    </form>
   );
 }  

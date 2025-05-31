@@ -3,17 +3,22 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import type { GymData, FitnessPlan } from "../../types/gym-types";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
+import { updateGymPricing } from "../../_actions/submit-gym-tabs-form";
+import { toast } from "sonner";
 
 interface PricingEditFormProps {
   data: GymData; // Pass the whole GymData for potential future needs
   onDataChange: (data: GymData) => void;
+  onSave?: () => void;
 }
 
-export function PricingEditForm({ data, onDataChange }: PricingEditFormProps) {
+export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormProps) {
   // Assuming fitnessPlans is an array within GymData
   const [plansFormData, setPlansFormData] = useState<FitnessPlan[]>(data.fitnessPlans || []);
+  const [isPending, startTransition] = useTransition();
 
    useEffect(() => {
     setPlansFormData(data.fitnessPlans || []);
@@ -28,10 +33,25 @@ export function PricingEditForm({ data, onDataChange }: PricingEditFormProps) {
     onDataChange({ ...data, fitnessPlans: updatedPlans });
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    startTransition(async () => {
+      try {
+        await updateGymPricing({ plans: plansFormData });
+        toast.success("Pricing updated successfully!");
+        onSave?.();
+      } catch (error) {
+        console.error('Error updating pricing:', error);
+        toast.error("Failed to update pricing. Please try again.");
+      }
+    });
+  };
+
    // This is a simplified example. A real implementation might need adding/removing plans and features.
 
   return (
-    <div className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <p className="text-sm text-gray-500">Edit existing pricing plans. Adding/removing not yet supported.</p>
       {plansFormData.length === 0 && <p>No pricing plans found.</p>}
       {plansFormData.map((plan, index) => (
@@ -84,6 +104,12 @@ export function PricingEditForm({ data, onDataChange }: PricingEditFormProps) {
             <p className="text-sm text-gray-500">Editing not yet supported.</p>
             {/* Add form fields for additional services if needed */}
         </div>
-    </div>
+        
+        <div className="flex gap-2 pt-4">
+          <Button type="submit" disabled={isPending} className="flex-1">
+            {isPending ? "Saving..." : "Save Pricing"}
+          </Button>
+        </div>
+    </form>
   );
 } 

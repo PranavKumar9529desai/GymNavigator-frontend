@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { ConfirmDialog } from "./confirm-dialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
@@ -30,36 +29,11 @@ interface EditGymSheetProps {
 export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [formData, setFormData] = useState<GymData>(gymData || {} as GymData);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [pendingSaveData, setPendingSaveData] = useState<GymData | null>(null);
 
   // Update formData when gymData prop changes
   useEffect(() => {
     setFormData(gymData || {} as GymData);
   }, [gymData]);
-
-  const _handleDataChange = (updatedData: GymData) => {
-    setFormData(updatedData);
-  };
-
-  const handleSaveClick = () => {
-    setPendingSaveData(formData);
-    setShowConfirm(true);
-  };
-
-  const handleConfirmSave = () => {
-    if (pendingSaveData) {
-      onSave(pendingSaveData);
-      setPendingSaveData(null);
-      setShowConfirm(false);
-      onClose(); // Close sheet after saving
-    }
-  };
-
-  const handleCancel = () => {
-    // Optionally show a confirm dialog here if formData is different from gymData
-    onClose();
-  };
 
   if (!gymData) return null; // Don't render if no gym data
 
@@ -90,39 +64,24 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
 
               <div className="mt-4">
                 <TabsContent value="overview" className="mt-0">
-                   <OverviewEditForm data={formData} onDataChange={setFormData} />
+                   <OverviewEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
                 </TabsContent>
                 <TabsContent value="amenities" className="mt-0">
-                   <AmenitiesEditForm categories={AMENITY_CATEGORIES} selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => { /* Handle save within the form if needed */ }} onCancel={() => { /* Handle cancel within the form if needed */ }} />
+                   <AmenitiesEditForm categories={AMENITY_CATEGORIES} selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => onClose()} onCancel={() => onClose()} />
                 </TabsContent>
                 <TabsContent value="location" className="mt-0">
-                   <LocationEditForm data={formData} onDataChange={setFormData} />
+                   <LocationEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-0">
-                   <PricingEditForm data={formData} onDataChange={setFormData} />
+                   <PricingEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
                 </TabsContent>
               </div>
           </Tabs>
 
-          <div className="flex gap-3 pt-4">
-            <Button type="button" className="flex-1" onClick={handleSaveClick}>
-              Save Changes
-            </Button>
-            <Button type="button" variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
-          </div>
+          {/* Removed global save/cancel buttons since each form now has its own */}
 
         </SheetContent>
       </Sheet>
-
-      <ConfirmDialog
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={handleConfirmSave}
-        title="Save Changes"
-        description="Are you sure you want to save these changes?"
-      />
     </>
   )
 }

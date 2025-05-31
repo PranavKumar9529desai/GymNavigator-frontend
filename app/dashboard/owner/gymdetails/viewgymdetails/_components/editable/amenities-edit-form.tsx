@@ -3,10 +3,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { GymData, Amenity, AmenityCategory } from "../../types/gym-types";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
+import { toast } from "sonner";
 
 // Types for amenities
 interface AmenitiesEditFormProps {
@@ -27,6 +29,7 @@ export function AmenitiesEditForm({
   // Local state for editing
   const [enabledCategories, setEnabledCategories] = useState<Record<string, boolean>>({});
   const [checkedAmenities, setCheckedAmenities] = useState<Record<string, Record<string, boolean>>>({});
+  const [isPending, startTransition] = useTransition();
 
   // Initialize state from props
   useEffect(() => {
@@ -81,8 +84,35 @@ export function AmenitiesEditForm({
     });
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    startTransition(async () => {
+      try {
+        // Collect all selected amenities into a flat array
+        const allSelectedAmenities: string[] = [];
+        Object.entries(checkedAmenities).forEach(([categoryKey, amenities]) => {
+          if (enabledCategories[categoryKey]) {
+            Object.entries(amenities).forEach(([amenityKey, isChecked]) => {
+              if (isChecked) {
+                allSelectedAmenities.push(amenityKey);
+              }
+            });
+          }
+        });
+        
+        await updateGymAmenities({ amenities: allSelectedAmenities });
+        toast.success("Amenities updated successfully!");
+        onSave?.();
+      } catch (error) {
+        console.error('Error updating amenities:', error);
+        toast.error("Failed to update amenities. Please try again.");
+      }
+    });
+  };
+
   return (
-    <div className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {categories.map((category) => (
         <div key={category.key} className="border rounded-md shadow-sm">
           <div className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-t-md">
@@ -108,10 +138,12 @@ export function AmenitiesEditForm({
           </div>
         </div>
       ))}
-      <div className="flex gap-2 justify-end pt-2">
-        {onCancel && <Button variant="outline" onClick={onCancel}>Cancel</Button>}
-        {onSave && <Button onClick={onSave}>Save</Button>}
+      <div className="flex gap-2 pt-4">
+        <Button type="submit" disabled={isPending} className="flex-1">
+          {isPending ? "Saving..." : "Save Amenities"}
+        </Button>
+        {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
       </div>
-    </div>
+    </form>
   );
 } 
