@@ -40,6 +40,7 @@ export async function updateGymLocation(data: {
   city: string;
   state: string;
   zipCode: string;
+  country?: string;
   lat?: number;
   lng?: number;
 }) {

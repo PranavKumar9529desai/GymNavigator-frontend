@@ -25,6 +25,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
     city: data.location?.city || '',
     state: data.location?.state || '',
     zipCode: data.location?.zipCode || '',
+    country: data.location?.country || '',
     lat: data.location?.lat,
     lng: data.location?.lng,
   });
@@ -40,6 +41,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
       city: data.location?.city || '',
       state: data.location?.state || '',
       zipCode: data.location?.zipCode || '',
+      country: data.location?.country || '',
       lat: data.location?.lat,
       lng: data.location?.lng,
     });
@@ -70,6 +72,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
               city: result.city ||  '',
               state: result.state || '',
               zipCode: result.zipCode || '',
+              country: result.country || '',
             };
             console.log("using the inline version")
              setLocationFormData(updatedLocationWithAddress);
@@ -128,6 +131,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
           city: locationFormData.city || '',
           state: locationFormData.state || '',
           zipCode: locationFormData.zipCode || '',
+          country: locationFormData.country || '',
           lat: locationFormData.lat,
           lng: locationFormData.lng
         };
@@ -165,6 +169,10 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
       <div className="space-y-2">
         <Label htmlFor="zipCode">Zip Code</Label>
         <Input id="zipCode" value={locationFormData.zipCode || ''} onChange={handleInputChange} placeholder="Enter zip code" />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="country">Country</Label>
+        <Input id="country" value={locationFormData.country || ''} onChange={handleInputChange} placeholder="Enter country" />
       </div>
         {/* Add "Use my current location" button */}
         <div className="w-full  flex justify-center">

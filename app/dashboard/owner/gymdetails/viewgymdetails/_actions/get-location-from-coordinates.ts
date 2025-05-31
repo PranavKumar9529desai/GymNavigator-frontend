@@ -5,6 +5,7 @@ export type GeocodedAddress = {
   city: string;
   state: string;
   zipCode: string;
+  country?: string;
   district?: string;
   suburb?: string;
   county?: string;
@@ -39,6 +40,7 @@ export function useGetLocationFromCoordinates() {
         city: address.city || address.town || address.village || '',
         state: address.state || '',
         zipCode: address.postcode || '',
+        country: address.country || '',
       };
     } catch (err: any) {
       setError(err.message || 'Unknown error');

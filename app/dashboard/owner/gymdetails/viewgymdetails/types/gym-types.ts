@@ -26,14 +26,7 @@ export interface GymData {
   }
 
   // Location
-  location?: {
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    lat?: number
-    lng?: number
-  }
+  location?: GymLocation
 
   // Social Media
   socialMedia?: {
@@ -63,6 +56,7 @@ export interface GymLocation {
   city: string;
   state: string;
   zipCode: string;
+  country?: string;
 }
 
 export interface FitnessPlan {
