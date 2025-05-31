@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Mail, Phone, User, Users, Star, Edit3, Dumbbell, UserCheck, Globe, MapPin, Key, Trophy, Crown } from "lucide-react"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 
-import type { GymData, FitnessPlan, Amenity, StaffMember, Equipment } from "../types/gym-types"
+import type { GymData } from "../types/gym-types"
 
 interface GymHeaderProps {
   gymData: GymData | null;
