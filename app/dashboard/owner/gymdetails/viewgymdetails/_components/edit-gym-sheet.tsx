@@ -11,11 +11,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
-import { AMENITY_CATEGORIES } from './tabs/amenities-tab';
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';
-import { AmenitiesEditForm } from './editable/amenities-edit-form';
+import { AmenitiesEditWrapper } from './editable/amenities-edit-wrapper';
 import { LocationEditForm } from './editable/location-edit-form';
 import { PricingEditForm } from './editable/pricing-edit-form';
 
@@ -67,7 +66,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, onSave }: EditGymSheetP
                    <OverviewEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
                 </TabsContent>
                 <TabsContent value="amenities" className="mt-0">
-                   <AmenitiesEditForm categories={AMENITY_CATEGORIES} selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => onClose()} onCancel={() => onClose()} />
+                   <AmenitiesEditWrapper selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => onClose()} onCancel={() => onClose()} />
                 </TabsContent>
                 <TabsContent value="location" className="mt-0">
                    <LocationEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />

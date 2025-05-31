@@ -76,15 +76,28 @@ export interface AdditionalService {
     description?: string;
 }
 
-export interface Amenity {
-  key: string;
-  label: string;
+// API Types for amenities communication
+export interface UpdateAmenitiesRequest {
+  amenities: string[]; // Array of amenity keys
 }
 
-export interface AmenityCategory {
-  key: string;
-  name: string;
-  amenities: Amenity[];
+export interface UpdateAmenitiesResponse {
+  msg: string;
+}
+
+// Database response types
+export interface GymAmenityFromDB {
+  id: number;
+  amenity: {
+    id: number;
+    name: string;
+    description?: string;
+    amenityType: {
+      id: number;
+      name: string;
+      description?: string;
+    };
+  };
 }
 
 export interface StaffMember {

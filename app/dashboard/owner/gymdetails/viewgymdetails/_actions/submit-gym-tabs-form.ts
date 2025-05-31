@@ -2,7 +2,7 @@
 
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
-import type { FitnessPlan } from '../types/gym-types';
+import type { FitnessPlan, UpdateAmenitiesRequest, UpdateAmenitiesResponse } from '../types/gym-types';
 
 // Overview section update
 export async function updateGymOverview(data: {
@@ -22,12 +22,10 @@ export async function updateGymOverview(data: {
 }
 
 // Amenities section update
-export async function updateGymAmenities(data: {
-  amenities: string[];
-}) {
+export async function updateGymAmenities(data: UpdateAmenitiesRequest): Promise<UpdateAmenitiesResponse> {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response = await ownerAxios.put('/gym/update-amenities', data);
+    const response: AxiosResponse<UpdateAmenitiesResponse> = await ownerAxios.put('/gym/update-amenities', data);
     return response.data;
   } catch (error) {
     console.error('Error updating gym amenities:', error);

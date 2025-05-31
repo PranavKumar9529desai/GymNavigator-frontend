@@ -2,17 +2,18 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { GymData, Amenity, AmenityCategory } from "../../types/gym-types";
+import type { GymData, UpdateAmenitiesRequest } from "../../types/gym-types";
 import { useState, useEffect, useTransition } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
 import { toast } from "sonner";
+import { PREDEFINED_AMENITY_CATEGORIES, type AmenityCategoryDefinition } from "@/lib/constants/amenities";
 
 // Types for amenities
 interface AmenitiesEditFormProps {
-  categories: AmenityCategory[];
+  categories: AmenityCategoryDefinition[];
   selectedAmenities: Record<string, string[]>; // categoryKey -> array of amenity keys
   onChange: (selected: Record<string, string[]>) => void;
   onSave?: () => void;
@@ -131,7 +132,7 @@ export function AmenitiesEditForm({
                   disabled={!enabledCategories[category.key]}
                 />
                 <span className={enabledCategories[category.key] ? "text-gray-700" : "text-gray-400"}>
-                  {amenity.label}
+                  {amenity.name}
                 </span>
               </div>
             ))}
