@@ -128,3 +128,6 @@ export interface Equipment {
   status: "working" | "maintenance" | "broken"
   lastMaintenance: string
 }
+
+// Re-export amenity types from constants
+export type { AmenityCategoryDefinition as AmenityCategory } from "@/lib/constants/amenities";

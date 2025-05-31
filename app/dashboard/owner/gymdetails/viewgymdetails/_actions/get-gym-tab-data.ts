@@ -94,7 +94,13 @@ export async function getAmenitiesData(): Promise<{
     
     const response: AxiosResponse<AmenitiesApiResponse> = await ownerAxios.get('/gym/amenities');
     
+    console.log('Amenities API response:', response.data);
+    
     if (response.data.msg === 'success') {
+      console.log('Amenities data fetched successfully:', {
+        categories: response.data.categories?.length,
+        selectedAmenities: response.data.selectedAmenities
+      });
       return {
         categories: response.data.categories,
         selectedAmenities: response.data.selectedAmenities,
@@ -118,10 +124,14 @@ export async function getLocationData(): Promise<{
     
     const response: AxiosResponse<LocationApiResponse> = await ownerAxios.get('/gym/location');
     
+    console.log('Location API response:', response.data);
+    
     if (response.data.msg === 'success' && response.data.location) {
+      console.log('Location data fetched successfully:', response.data.location);
       return { location: response.data.location };
     }
 
+    console.log('Location API returned success but no location data');
     return { error: 'Failed to fetch location data' };
   } catch (error) {
     console.error('Error fetching location data:', error);

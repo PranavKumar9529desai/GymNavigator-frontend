@@ -1,15 +1,38 @@
 import { TabsContent , TabsList , TabsTrigger , Tabs } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign, type LucideIcon } from "lucide-react"
 import { AmenitiesTab } from "./amenities-tab"
-import { LocationTab, GymLocation } from "./location-tab"
+import { LocationTab } from "./location-tab"
 import { OverviewTab } from "./overview-tab"
 import { PricingTab } from "./pricing-tab"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion";
+import type { AmenityCategory, FitnessPlan, AdditionalService, GymLocation } from "../../types/gym-types"
+import type { Trainer } from "../../_actions/get-gym-tab-data"
 
-export const GymTabs = ()=>{
-    return <>
-     <Tabs defaultValue="" className="w-full ">
+interface GymTabsProps {
+  overviewData?: { trainersData?: Trainer[] };
+  amenitiesData?: { 
+    categories?: AmenityCategory[]; 
+    selectedAmenities?: Record<string, string[]>; 
+  };
+  locationData?: { location?: GymLocation };
+  pricingData?: { 
+    pricingPlans?: FitnessPlan[]; 
+    additionalServices?: AdditionalService[]; 
+  };
+}
+
+export const GymTabs = ({ 
+  overviewData, 
+  amenitiesData, 
+  locationData, 
+  pricingData 
+}: GymTabsProps) => {
+  // Debug logging
+  console.log('GymTabs received locationData:', locationData);
+  
+  return <>
+     <Tabs defaultValue="general" className="w-full ">
           <TabsList className="flex justify-around flex-wrap sm:flex-nowrap w-full rounded-lg p-1 bg-gray-100 dark:bg-gray-800">
             <SingleTab
               name="general"
@@ -42,7 +65,7 @@ export const GymTabs = ()=>{
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <OverviewTab />
+                <OverviewTab trainersData={overviewData?.trainersData} />
               </motion.div>
             </TabsContent>
 
@@ -54,7 +77,10 @@ export const GymTabs = ()=>{
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <AmenitiesTab />
+                <AmenitiesTab 
+                  categories={amenitiesData?.categories}
+                  selectedAmenities={amenitiesData?.selectedAmenities}
+                />
               </motion.div>
             </TabsContent>
 
@@ -66,13 +92,7 @@ export const GymTabs = ()=>{
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <LocationTab location={{
-                  lat: 34.0736,
-                  lng: -118.4004,
-                  address: "2847 Fitness Boulevard, Suite 100",
-                  city: "Wellness City",
-                  state: "California 90210",
-                }} />
+                <LocationTab location={locationData?.location} />
               </motion.div>
             </TabsContent>
 
@@ -84,7 +104,10 @@ export const GymTabs = ()=>{
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <PricingTab />
+                <PricingTab 
+                  pricingPlans={pricingData?.pricingPlans}
+                  additionalServices={pricingData?.additionalServices}
+                />
               </motion.div>
             </TabsContent>
           </div>

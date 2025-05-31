@@ -2,24 +2,9 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import type { FitnessPlan, AdditionalService } from "../../types/gym-types"
 
-interface PricingPlan {
-  name: string;
-  description: string;
-  price: string;
-  duration: string;
-  features: string[];
-  isFeatured?: boolean; // To indicate if it has the black border
-}
-
-interface AdditionalService {
-  name: string;
-  price: string;
-  duration: string;
-  description?: string;
-}
-
-const defaultPricingPlans: PricingPlan[] = [
+const defaultPricingPlans: FitnessPlan[] = [
   {
     name: "Basic",
     description: "Perfect for beginners",
@@ -78,7 +63,7 @@ const defaultAdditionalServices: AdditionalService[] = [
 ];
 
 interface PricingTabProps {
-  pricingPlans?: PricingPlan[];
+  pricingPlans?: FitnessPlan[];
   additionalServices?: AdditionalService[];
 }
 
@@ -101,7 +86,7 @@ export function PricingTab({
                 <span className="text-gray-500">{plan.duration}</span>
               </div>
               <div className="space-y-3">
-                {plan.features.map((feature, featureIndex) => (
+                {plan.features.map((feature: string, featureIndex: number) => (
                   <div key={featureIndex} className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-black" />
                     <span className="text-sm text-gray-700">{feature}</span>

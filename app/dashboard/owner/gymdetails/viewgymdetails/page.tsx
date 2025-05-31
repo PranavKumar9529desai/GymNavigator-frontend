@@ -13,7 +13,8 @@ import { EditGymDrawer } from "./_components/edit-gym-drawer"
 import { EditGymSheet } from "./_components/edit-gym-sheet"
 import { GymTabs } from "./_components/tabs/gym-tabs"
 import { Separator } from "@/components/ui/separator"
-import { getOverviewData, getAmenitiesData, getLocationData, getPricingData } from "./_actions/get-gym-tab-data";
+import { getAllGymTabData, type Trainer } from "./_actions/get-gym-tab-data";
+import type { AmenityCategory, GymLocation, FitnessPlan, AdditionalService } from "./types/gym-types";
 
 
 interface GymInfo {
@@ -25,17 +26,52 @@ interface GymInfo {
   gymauthtoken: string;
 }
 
+interface GymTabData {
+  overview?: { trainersData?: Trainer[] };
+  amenities?: { 
+    categories?: AmenityCategory[]; 
+    selectedAmenities?: Record<string, string[]>; 
+  };
+  location?: { location?: GymLocation };
+  pricing?: { 
+    pricingPlans?: FitnessPlan[]; 
+    additionalServices?: AdditionalService[]; 
+  };
+  errors?: string[];
+}
+
 
 export default function GymLayout() {
   const [gymDetails, setGymDetails] = useState<GymInfo | null>(null);
+  const [gymTabData, setGymTabData] = useState<GymTabData | null>(null);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [isSmallDevice, setIsSmallDevice] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const details = await FetchGymDetailsSA();
-      setGymDetails(details);
+      setIsLoading(true);
+      try {
+        // Fetch gym details and tab data in parallel
+        const [details, tabData] = await Promise.all([
+          FetchGymDetailsSA(),
+          getAllGymTabData()
+        ]);
+        
+        setGymDetails(details);
+        setGymTabData(tabData);
+        
+        // Log any errors that occurred during data fetching
+        if (tabData.errors && tabData.errors.length > 0) {
+          console.warn('Some gym data could not be fetched:', tabData.errors);
+        }
+      } catch (error) {
+        console.error('Error fetching gym data:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
+    
     fetchData();
 
     const handleResize = () => {
@@ -77,9 +113,21 @@ export default function GymLayout() {
         )}
 
 
-        {/* Enhanced Tabs Section */}
+        {        /* Enhanced Tabs Section */}
         <div className="">
-        <GymTabs />
+          {isLoading ? (
+            <div className="flex justify-center items-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-2 text-gray-600">Loading gym data...</span>
+            </div>
+          ) : (
+            <GymTabs 
+              overviewData={gymTabData?.overview} 
+              amenitiesData={gymTabData?.amenities}
+              locationData={gymTabData?.location}
+              pricingData={gymTabData?.pricing}
+            />
+          )}
         </div>
        
       </div>

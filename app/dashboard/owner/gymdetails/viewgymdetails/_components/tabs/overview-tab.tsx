@@ -82,62 +82,16 @@ interface OverviewTabProps {
 export function OverviewTab({
   trainersData = defaultTrainersData,
 }: OverviewTabProps) {
-  // Dummy data for trainers and their assigned clients
-  const _trainers: Trainer[] = [
-    {
-      id: 1,
-      name: "Trainer 1",
-      assignedClients: [
-        { id: 1, name: "Client A" },
-        { id: 2, name: "Client B" },
-      ],
-    },
-    {
-      id: 2,
-      name: "Trainer 2",
-      assignedClients: [
-        { id: 3, name: "Client C" },
-      ],
-    },
-    {
-      id: 3,
-      name: "Trainer 3",
-      assignedClients: [
-        { id: 4, name: "Client D" },
-        { id: 5, name: "Client E" },
-        { id: 6, name: "Client F" },
-      ],
-    },
-    {
-      id: 3,
-      name: "Trainer 3",
-      assignedClients: [
-
-      ],
-    },
-    {
-      id: 3,
-      name: "Trainer 3",
-      assignedClients: [
-        { id: 6, name: "Client F" },
-      ],
-    },
-    {
-      id: 3,
-      name: "Trainer 3",
-      assignedClients: [
-        { id: 4, name: "Client D" },
-        { id: 5, name: "Client E" },
-      ],
-    },
-  ]
+  // Calculate totals from actual data
+  const totalTrainers = trainersData.length;
+  const totalUsers = trainersData.reduce((total, trainer) => total + trainer.assignedClients.length, 0);
 
   return (
     <section className="w-full   sm:p-8">
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 w-full">
         <div className="flex flex-row lg:flex-col gap-4 w-full max-w-full lg:max-w-xs mb-2 lg:mb-0">
-          <UserCard type="trainers" number={10} />
-          <UserCard type="users" number={10} />
+          <UserCard type="trainers" number={totalTrainers} />
+          <UserCard type="users" number={totalUsers} />
         </div>
         <div className="w-full ">
           <div className="min-w-0 ">

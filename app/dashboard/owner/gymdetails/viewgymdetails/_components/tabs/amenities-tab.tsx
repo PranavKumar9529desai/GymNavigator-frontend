@@ -20,6 +20,10 @@ export function AmenitiesTab({
   // If selectedAmenities is not provided, show all amenities as selected
   const allSelected = !selectedAmenities;
 
+  // Debug logging
+  console.log('AmenitiesTab - selectedAmenities:', selectedAmenities);
+  console.log('AmenitiesTab - allSelected:', allSelected);
+
   return (
     <div className="relative">
       {onEdit && (
@@ -43,7 +47,20 @@ export function AmenitiesTab({
             <CardContent className="p-6">
               <div className="space-y-3">
                 {category.amenities.map((amenity) => {
-                  const isSelected = allSelected || selectedAmenities?.[category.key]?.includes(amenity.key);
+                  // Check if this amenity is selected
+                  // Backend sends amenity keys by category key, so we check using keys
+                  const isSelected = allSelected || (selectedAmenities?.[category.key]?.includes(amenity.key) ?? false);
+                  
+                  // Debug for first few items
+                  if (category.key === "fitness-equipment" && ["cardio-machines", "free-weights"].includes(amenity.key)) {
+                    console.log(`Debug - ${category.key}.${amenity.key}:`, {
+                      allSelected,
+                      categorySelectedAmenities: selectedAmenities?.[category.key],
+                      amenityKey: amenity.key,
+                      isSelected
+                    });
+                  }
+                  
                   return (
                     <div key={amenity.key} className="flex items-center gap-3">
                       <span className={isSelected ? "text-gray-700" : "text-gray-400 line-through"}>
