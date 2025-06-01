@@ -3,87 +3,111 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import type { GymData, UpdateAmenitiesRequest } from "../../types/gym-types";
+import type { AmenityCategory } from "../../types/gym-types";
 import { useState, useEffect, useTransition } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
+import { getAmenitiesData } from "../../_actions/amenity-actions";
 import { toast } from "sonner";
-import { PREDEFINED_AMENITY_CATEGORIES, type AmenityCategoryDefinition } from "@/lib/constants/amenities";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Types for amenities
+// Simplified props interface
 interface AmenitiesEditFormProps {
-  categories: AmenityCategoryDefinition[];
-  selectedAmenities: Record<string, string[]>; // categoryKey -> array of amenity keys
-  onChange: (selected: Record<string, string[]>) => void;
   onSave?: () => void;
   onCancel?: () => void;
 }
 
 export function AmenitiesEditForm({
-  categories,
-  selectedAmenities,
-  onChange,
   onSave,
   onCancel,
 }: AmenitiesEditFormProps) {
   // Local state for editing
+  const [categories, setCategories] = useState<AmenityCategory[]>([]);
   const [enabledCategories, setEnabledCategories] = useState<Record<string, boolean>>({});
   const [checkedAmenities, setCheckedAmenities] = useState<Record<string, Record<string, boolean>>>({});
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Initialize state from props
+  // Fetch amenities data on component mount
   useEffect(() => {
-    console.log('🔍 Initializing state with:', {
-      categories: categories.map(c => c.key),
-      selectedAmenities
-    });
-
-    const catState: Record<string, boolean> = {};
-    const amenityState: Record<string, Record<string, boolean>> = {};
-    
-    categories.forEach((cat) => {
-      const selected = selectedAmenities[cat.key] || [];
-      console.log(`📂 Category ${cat.key}:`, { selected, hasAmenities: selected.length > 0 });
-      
-      catState[cat.key] = selected.length > 0;
-      amenityState[cat.key] = {};
-      
-      cat.amenities.forEach((amenity) => {
-        const isSelected = selected.includes(amenity.key);
-        amenityState[cat.key][amenity.key] = isSelected;
-        if (isSelected) {
-          console.log(`✅ Amenity ${amenity.key} is selected in category ${cat.key}`);
+    const fetchAmenitiesData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const result = await getAmenitiesData();
+        
+        if (result.error) {
+          setError(result.error);
+          return;
         }
-      });
-    });
-    
-    console.log('🎯 Final state:', { catState, amenityState });
-    setEnabledCategories(catState);
-    setCheckedAmenities(amenityState);
-  }, [categories, selectedAmenities]);
+        
+        const fetchedCategories = result.categories || [];
+        const selectedAmenities = result.selectedAmenities || {};
+        
+        console.log('🔍 Fetched amenities data:', {
+          categories: fetchedCategories.length,
+          selectedAmenities
+        });
+
+        // Initialize state from fetched data
+        const catState: Record<string, boolean> = {};
+        const amenityState: Record<string, Record<string, boolean>> = {};
+        
+        fetchedCategories.forEach((cat) => {
+          const selected = selectedAmenities[cat.key] || [];
+          console.log(`📂 Category ${cat.key}:`, { selected, hasAmenities: selected.length > 0 });
+          
+          catState[cat.key] = selected.length > 0;
+          amenityState[cat.key] = {};
+          
+          cat.amenities.forEach((amenity) => {
+            const isSelected = selected.includes(amenity.key);
+            amenityState[cat.key][amenity.key] = isSelected;
+            if (isSelected) {
+              console.log(`✅ Amenity ${amenity.key} is selected in category ${cat.key}`);
+            }
+          });
+        });
+        
+        console.log('🎯 Final state:', { catState, amenityState });
+        setCategories(fetchedCategories);
+        setEnabledCategories(catState);
+        setCheckedAmenities(amenityState);
+        
+      } catch (err) {
+        console.error('Error fetching amenities data:', err);
+        setError('Failed to load amenities data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAmenitiesData();
+  }, []); // Only run once on mount
 
   // Handle category switch
   const handleCategorySwitch = (categoryKey: string) => {
     setEnabledCategories((prev) => {
       const newState = { ...prev, [categoryKey]: !prev[categoryKey] };
-      // If disabling, also uncheck all amenities in that category
-      if (!newState[categoryKey]) {
-        setCheckedAmenities((prevChecked) => ({
-          ...prevChecked,
-          [categoryKey]: {},
-        }));
-        // Update parent
-        onChange({
-          ...Object.fromEntries(
-            Object.entries(checkedAmenities).map(([cat, ams]) => [cat, cat === categoryKey ? [] : Object.keys(ams).filter((k) => ams[k])])
-          ),
-        });
-      }
       return newState;
+    });
+    
+    // If disabling category, also uncheck all amenities in that category
+    setCheckedAmenities((prev) => {
+      const newAmenities = { ...prev };
+      if (!enabledCategories[categoryKey]) {
+        // Category is being enabled, keep current amenities
+        return newAmenities;
+      } else {
+        // Category is being disabled, clear all amenities
+        newAmenities[categoryKey] = {};
+        return newAmenities;
+      }
     });
   };
 
@@ -92,14 +116,7 @@ export function AmenitiesEditForm({
     setCheckedAmenities((prev) => {
       const prevCat = prev[categoryKey] || {};
       const newCat = { ...prevCat, [amenityKey]: !prevCat[amenityKey] };
-      const newChecked = { ...prev, [categoryKey]: newCat };
-      // Update parent
-      onChange({
-        ...Object.fromEntries(
-          Object.entries(newChecked).map(([cat, ams]) => [cat, enabledCategories[cat] ? Object.keys(ams).filter((k) => ams[k]) : []])
-        ),
-      });
-      return newChecked;
+      return { ...prev, [categoryKey]: newCat };
     });
   };
 
@@ -129,6 +146,36 @@ export function AmenitiesEditForm({
       }
     });
   };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <span className="ml-2 text-gray-600">Loading amenities...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            variant="outline"
+            className="border-red-200 text-red-600 hover:bg-red-50"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

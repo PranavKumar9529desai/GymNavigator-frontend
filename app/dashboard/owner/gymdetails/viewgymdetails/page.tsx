@@ -26,7 +26,7 @@ interface GymInfo {
   gymauthtoken: string;
 }
 
-interface GymTabData {
+export interface GymTabData {
   overview?: { trainersData?: Trainer[] };
   amenities?: { 
     categories?: AmenityCategory[]; 
@@ -137,6 +137,7 @@ export default function GymLayout() {
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
           gymData={gymDetails}
+          gymTabData={gymTabData}
           onSave={handleSave}
         />
       ) : (
@@ -144,6 +145,7 @@ export default function GymLayout() {
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
           gymData={gymDetails}
+          gymTabData={gymTabData}
           onSave={handleSave}
         />
       )}

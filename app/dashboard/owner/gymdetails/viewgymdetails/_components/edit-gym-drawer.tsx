@@ -11,11 +11,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
+import type { GymTabData } from "../page"
 import { SingleTab } from "./tabs/gym-tabs";
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';
-import { AmenitiesEditWrapper } from './editable/amenities-edit-wrapper';
+import { AmenitiesEditForm } from './editable/amenities-edit-form';
 import { LocationEditForm } from './editable/location-edit-form';
 import { PricingEditForm } from './editable/pricing-edit-form';
 
@@ -23,10 +24,11 @@ interface EditGymDrawerProps {
   isOpen: boolean
   onClose: () => void
   gymData: GymData | null;
+  gymTabData: GymTabData | null;
   onSave: (data: GymData) => void
 }
 
-export function EditGymDrawer({ isOpen, onClose, gymData, onSave }: EditGymDrawerProps) {
+export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: EditGymDrawerProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [formData, setFormData] = useState<GymData>(gymData || {} as GymData);
 
@@ -76,7 +78,10 @@ export function EditGymDrawer({ isOpen, onClose, gymData, onSave }: EditGymDrawe
                      <OverviewEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
                   </TabsContent>
                   <TabsContent value="amenities" className="mt-0">
-                     <AmenitiesEditWrapper selectedAmenities={formData.amenities || {}} onChange={(updatedAmenities) => setFormData(prev => ({ ...prev, amenities: updatedAmenities }))} onSave={() => onClose()} onCancel={() => onClose()} />
+                     <AmenitiesEditForm 
+                       onSave={() => onClose()} 
+                       onCancel={() => onClose()} 
+                     />
                   </TabsContent>
                   <TabsContent value="location" className="mt-0">
                      <LocationEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />

@@ -94,7 +94,7 @@ export async function getAmenitiesData(): Promise<{
     
     const response: AxiosResponse<AmenitiesApiResponse> = await ownerAxios.get('/gym/amenities');
     
-    console.log('Amenities API response:', response.data);
+    // console.log('Amenities API response:', response.data);
     
     if (response.data.msg === 'success') {
       console.log('Amenities data fetched successfully:', {
