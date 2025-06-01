@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { GymData, GymLocation } from "../../types/gym-types";
 import { useState, useEffect, useRef, useTransition } from 'react';
 import { useGetLocationFromCoordinates } from "../../_actions/get-location-from-coordinates";
+import { useGetCoordinatesFromLocation } from "../../_actions/get-co-ordinates-from-location";
 import { MapPin } from 'lucide-react';
 import { updateGymLocation } from "../../_actions/submit-gym-tabs-form";
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
 
 
   const { getAddress, loading: geoLoading, error: geoError } = useGetLocationFromCoordinates() as {  getAddress: any, loading: boolean, error: string | Error | undefined };
+  const { getCoordinates, loading: coordLoading, error: coordError } = useGetCoordinatesFromLocation();
 
   // Effect to update form state when initial data changes
   useEffect(() => {
@@ -88,7 +90,7 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
   };
 
   // Keep handleInputChange for manual address field updates, though fields are removed from JSX now
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     const updatedLocation: GymLocation = {
       ...locationFormData,
@@ -96,6 +98,33 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
     };
     setLocationFormData(updatedLocation);
     onDataChange({ ...data, location: updatedLocation });
+
+    // Auto-geocode when enough address info is provided
+    const hasAddressInfo = updatedLocation.address || updatedLocation.city || updatedLocation.zipCode;
+    if (hasAddressInfo && !coordLoading) {
+      try {
+        const coordinates = await getCoordinates({
+          address: updatedLocation.address,
+          city: updatedLocation.city,
+          state: updatedLocation.state,
+          zipCode: updatedLocation.zipCode,
+          country: updatedLocation.country,
+        });
+
+        if (coordinates) {
+          const locationWithCoords: GymLocation = {
+            ...updatedLocation,
+            lat: coordinates.lat,
+            lng: coordinates.lng,
+          };
+          setLocationFormData(locationWithCoords);
+          onDataChange({ ...data, location: locationWithCoords });
+        }
+      } catch (error) {
+        console.error('Error getting coordinates:', error);
+        // Continue without coordinates - let the user manually use the location button if needed
+      }
+    }
   };
 
   // Add handler for "Use my current location" button
@@ -126,14 +155,45 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
     
     startTransition(async () => {
       try {
+        let finalLocationData = { ...locationFormData };
+        
+        // If we don't have coordinates but have address info, try to geocode
+        if ((!finalLocationData.lat || !finalLocationData.lng) && 
+            (finalLocationData.address || finalLocationData.city || finalLocationData.zipCode)) {
+          console.log('Missing coordinates, attempting to geocode before submit...');
+          
+          const coordinates = await getCoordinates({
+            address: finalLocationData.address,
+            city: finalLocationData.city,
+            state: finalLocationData.state,
+            zipCode: finalLocationData.zipCode,
+            country: finalLocationData.country,
+          });
+
+          if (coordinates) {
+            finalLocationData = {
+              ...finalLocationData,
+              lat: coordinates.lat,
+              lng: coordinates.lng,
+            };
+            // Update the form state with the new coordinates
+            setLocationFormData(finalLocationData);
+            onDataChange({ ...data, location: finalLocationData });
+          } else {
+            // If geocoding fails, show an error and don't submit
+            toast.error("Could not find coordinates for the provided address. Please check the address or use 'Use my current location'.");
+            return;
+          }
+        }
+        
         const locationData = {
-          address: locationFormData.address || '',
-          city: locationFormData.city || '',
-          state: locationFormData.state || '',
-          zipCode: locationFormData.zipCode || '',
-          country: locationFormData.country || '',
-          lat: locationFormData.lat,
-          lng: locationFormData.lng
+          address: finalLocationData.address || '',
+          city: finalLocationData.city || '',
+          state: finalLocationData.state || '',
+          zipCode: finalLocationData.zipCode || '',
+          country: finalLocationData.country || '',
+          lat: finalLocationData.lat,
+          lng: finalLocationData.lng
         };
         
         await updateGymLocation(locationData);
@@ -186,7 +246,9 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
         <div className="text-sm text-gray-600">Lat: {locationFormData.lat.toFixed(6)}, Lng: {locationFormData.lng.toFixed(6)}</div>
       )}
        {geoLoading && <div className="text-blue-600">Fetching address...</div>}
-       {geoError && <div className="text-blue-600">Error fetching address: {geoError instanceof Error ? geoError.message : String(geoError)}</div>}
+       {coordLoading && <div className="text-blue-600">Finding coordinates...</div>}
+       {geoError && <div className="text-red-600">Error fetching address: {geoError instanceof Error ? geoError.message : String(geoError)}</div>}
+       {coordError && <div className="text-red-600">Error finding coordinates: {coordError}</div>}
       
       <div className="flex gap-2 pt-4">
         <Button type="submit" disabled={isPending} className="flex-1">
@@ -195,4 +257,4 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
       </div>
     </form>
   );
-}  
+}
