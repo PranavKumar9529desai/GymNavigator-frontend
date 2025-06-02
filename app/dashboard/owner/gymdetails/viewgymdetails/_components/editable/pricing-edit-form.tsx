@@ -380,6 +380,7 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
   const [additionalServices, setAdditionalServices] = useState<AdditionalService[]>([]);
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("plans");
+  const [isLoadingServices, setIsLoadingServices] = useState(true);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -391,6 +392,28 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
   useEffect(() => {
     setPlansFormData(data.fitnessPlans || []);
   }, [data.fitnessPlans]);
+
+  // Load existing additional services
+  useEffect(() => {
+    const loadAdditionalServices = async () => {
+      try {
+        setIsLoadingServices(true);
+        const { getPricingData } = await import("../../_actions/get-gym-tab-data");
+        const result = await getPricingData();
+        
+        if (result.additionalServices) {
+          setAdditionalServices(result.additionalServices);
+        }
+      } catch (error) {
+        console.error('Error loading additional services:', error);
+        toast.error('Failed to load existing additional services');
+      } finally {
+        setIsLoadingServices(false);
+      }
+    };
+
+    loadAdditionalServices();
+  }, []);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -460,9 +483,7 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
     setAdditionalServices(additionalServices.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmitPlans = async () => {
     startTransition(async () => {
       try {
         // Add sortOrder to plans based on their current array position
@@ -473,30 +494,41 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
 
         const pricingData: PricingFormData = {
           plans: plansWithSortOrder,
+        };
+        
+        await updateGymPricing(pricingData);
+        toast.success("Pricing plans updated successfully!");
+        onSave?.();
+      } catch (error) {
+        console.error('Error updating pricing plans:', error);
+        toast.error("Failed to update pricing plans. Please try again.");
+      }
+    });
+  };
+
+  const handleSubmitServices = async () => {
+    startTransition(async () => {
+      try {
+        const pricingData: PricingFormData = {
           additionalServices: additionalServices,
         };
         
         await updateGymPricing(pricingData);
-        toast.success("Pricing updated successfully!");
+        toast.success("Additional services updated successfully!");
         onSave?.();
       } catch (error) {
-        console.error('Error updating pricing:', error);
-        toast.error("Failed to update pricing. Please try again.");
+        console.error('Error updating additional services:', error);
+        toast.error("Failed to update additional services. Please try again.");
       }
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold">Pricing Management</h3>
           <p className="text-sm text-gray-500">Create and manage your gym's pricing plans and additional services</p>
-        </div>
-        <div className="flex gap-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save Changes"}
-          </Button>
         </div>
       </div>
 
@@ -517,10 +549,20 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
             <p className="text-sm text-gray-600">
               Drag and drop to reorder plans. Featured plans will be highlighted to customers.
             </p>
-            <Button type="button" onClick={addNewPlan} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Plan
-            </Button>
+            <div className="flex gap-2">
+              <Button type="button" onClick={addNewPlan} variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Plan
+              </Button>
+              <Button 
+                type="button" 
+                onClick={handleSubmitPlans} 
+                disabled={isPending}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {isPending ? "Saving..." : "Save Plans"}
+              </Button>
+            </div>
           </div>
 
           {plansFormData.length === 0 ? (
@@ -568,13 +610,31 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
             <p className="text-sm text-gray-600">
               Manage additional services like personal training, day passes, etc.
             </p>
-            <Button type="button" onClick={addAdditionalService} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Service
-            </Button>
+            <div className="flex gap-2">
+              <Button type="button" onClick={addAdditionalService} variant="outline" disabled={isLoadingServices}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Service
+              </Button>
+              <Button 
+                type="button" 
+                onClick={handleSubmitServices} 
+                disabled={isPending || isLoadingServices}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {isPending ? "Saving..." : "Save Services"}
+              </Button>
+            </div>
           </div>
 
-          {additionalServices.length === 0 ? (
+          {isLoadingServices ? (
+            <Card className="p-8 text-center">
+              <div className="space-y-3">
+                <Calendar className="h-12 w-12 mx-auto text-gray-400 animate-pulse" />
+                <h3 className="text-lg font-medium">Loading services...</h3>
+                <p className="text-gray-500">Please wait while we load your additional services</p>
+              </div>
+            </Card>
+          ) : additionalServices.length === 0 ? (
             <Card className="p-8 text-center">
               <div className="space-y-3">
                 <Calendar className="h-12 w-12 mx-auto text-gray-400" />
@@ -658,6 +718,6 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
           )}
         </TabsContent>
       </Tabs>
-    </form>
+    </div>
   );
 } 

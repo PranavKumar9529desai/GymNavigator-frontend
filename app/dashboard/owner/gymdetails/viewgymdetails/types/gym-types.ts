@@ -76,8 +76,8 @@ export interface FitnessPlan {
 }
 
 export interface PricingFormData {
-  plans: FitnessPlan[];
-  additionalServices: AdditionalService[];
+  plans?: FitnessPlan[];
+  additionalServices?: AdditionalService[];
 }
 
 export interface AdditionalService {
