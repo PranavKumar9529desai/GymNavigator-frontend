@@ -102,7 +102,7 @@ export default function GymLayout() {
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
            <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600 ">
-            <Edit className="mr-2  text-blue-600 sm:text-gray-800" />
+            <Edit className="mr-2  text-blue-600 sm:text-gray-800 hover:text-blue-600" />
             <p className="hidden md:block">
             Edit Gym Details
             </p>

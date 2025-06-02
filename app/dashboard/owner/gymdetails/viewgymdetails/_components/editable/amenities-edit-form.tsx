@@ -1,18 +1,15 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import type { AmenityCategory } from "../../types/gym-types";
-import { useState, useEffect, useTransition } from 'react';
-import { Switch } from "@/components/ui/switch";
+import React, { useEffect, useState, useTransition } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
-import { getAmenitiesData } from "../../_actions/amenity-actions";
-import { toast } from "sonner";
-import { Check, Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getAmenitiesData } from "../../_actions/amenity-actions";
+import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
+import { toast } from "sonner";
 
 // Simplified props interface
 interface AmenitiesEditFormProps {
@@ -24,17 +21,16 @@ export function AmenitiesEditForm({
   onSave,
   onCancel,
 }: AmenitiesEditFormProps) {
-  // Local state for editing
   const [categories, setCategories] = useState<AmenityCategory[]>([]);
-  const [enabledCategories, setEnabledCategories] = useState<Record<string, boolean>>({});
-  const [checkedAmenities, setCheckedAmenities] = useState<Record<string, Record<string, boolean>>>({});
-  const [isPending, startTransition] = useTransition();
+  const [selectedAmenities, setSelectedAmenities] = useState<Record<string, string[]>>({});
+  const [newlySelectedAmenities, setNewlySelectedAmenities] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  // Fetch amenities data on component mount
+  // Load amenities data
   useEffect(() => {
-    const fetchAmenitiesData = async () => {
+    const loadData = async () => {
       try {
         setIsLoading(true);
         setError(null);
@@ -46,98 +42,46 @@ export function AmenitiesEditForm({
           return;
         }
         
-        const fetchedCategories = result.categories || [];
-        const selectedAmenities = result.selectedAmenities || {};
-        
-        console.log('🔍 Fetched amenities data:', {
-          categories: fetchedCategories.length,
-          selectedAmenities
-        });
-
-        // Initialize state from fetched data
-        const catState: Record<string, boolean> = {};
-        const amenityState: Record<string, Record<string, boolean>> = {};
-        
-        fetchedCategories.forEach((cat) => {
-          const selected = selectedAmenities[cat.key] || [];
-          console.log(`📂 Category ${cat.key}:`, { selected, hasAmenities: selected.length > 0 });
-          
-          catState[cat.key] = selected.length > 0;
-          amenityState[cat.key] = {};
-          
-          cat.amenities.forEach((amenity) => {
-            const isSelected = selected.includes(amenity.key);
-            amenityState[cat.key][amenity.key] = isSelected;
-            if (isSelected) {
-              console.log(`✅ Amenity ${amenity.key} is selected in category ${cat.key}`);
-            }
-          });
-        });
-        
-        console.log('🎯 Final state:', { catState, amenityState });
-        setCategories(fetchedCategories);
-        setEnabledCategories(catState);
-        setCheckedAmenities(amenityState);
-        
+        setCategories(result.categories || []);
+        setSelectedAmenities(result.selectedAmenities || {});
       } catch (err) {
-        console.error('Error fetching amenities data:', err);
         setError('Failed to load amenities data');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAmenitiesData();
-  }, []); // Only run once on mount
+    loadData();
+  }, []);
 
-  // Handle category switch
-  const handleCategorySwitch = (categoryKey: string) => {
-    setEnabledCategories((prev) => {
-      const newState = { ...prev, [categoryKey]: !prev[categoryKey] };
-      return newState;
-    });
-    
-    // If disabling category, also uncheck all amenities in that category
-    setCheckedAmenities((prev) => {
-      const newAmenities = { ...prev };
-      if (!enabledCategories[categoryKey]) {
-        // Category is being enabled, keep current amenities
-        return newAmenities;
-      } else {
-        // Category is being disabled, clear all amenities
-        newAmenities[categoryKey] = {};
-        return newAmenities;
-      }
-    });
-  };
-
-  // Handle amenity checkbox
-  const handleAmenityCheck = (categoryKey: string, amenityKey: string) => {
-    setCheckedAmenities((prev) => {
-      const prevCat = prev[categoryKey] || {};
-      const newCat = { ...prevCat, [amenityKey]: !prevCat[amenityKey] };
-      return { ...prev, [categoryKey]: newCat };
-    });
+  // Get available (not selected) amenities for each category
+  const getAvailableAmenities = (category: AmenityCategory) => {
+    const currentlySelected = selectedAmenities[category.key] || [];
+    return category.amenities.filter(amenity => !currentlySelected.includes(amenity.key));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (newlySelectedAmenities.length === 0) {
+      toast.error("Please select at least one amenity to add");
+      return;
+    }
+    
     startTransition(async () => {
       try {
-        // Collect all selected amenities into a flat array
-        const allSelectedAmenities: string[] = [];
-        Object.entries(checkedAmenities).forEach(([categoryKey, amenities]) => {
-          if (enabledCategories[categoryKey]) {
-            Object.entries(amenities).forEach(([amenityKey, isChecked]) => {
-              if (isChecked) {
-                allSelectedAmenities.push(amenityKey);
-              }
-            });
-          }
+        // Combine existing and newly selected amenities
+        const allSelected: string[] = [];
+        
+        // Add all existing selected amenities
+        Object.values(selectedAmenities).forEach(amenityKeys => {
+          allSelected.push(...amenityKeys);
         });
         
-        await updateGymAmenities({ amenities: allSelectedAmenities });
+        // Add newly selected amenities
+        allSelected.push(...newlySelectedAmenities);
+        
+        await updateGymAmenities({ amenities: allSelected });
         toast.success("Amenities updated successfully!");
         onSave?.();
       } catch (error) {
@@ -179,162 +123,165 @@ export function AmenitiesEditForm({
 
   return (
     <div className="space-y-6">
-      {/* Summary Stats */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6"
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {Object.values(enabledCategories).filter(Boolean).length}
-            </div>
-            <div className="text-sm text-blue-700">Active Categories</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">
-              {categories.reduce((acc, cat) => acc + cat.amenities.length, 0)}
-            </div>
-            <div className="text-sm text-purple-700">Total Amenities</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {Object.entries(checkedAmenities).reduce((acc, [catKey, amenities]) => 
-                acc + (enabledCategories[catKey] ? Object.values(amenities).filter(Boolean).length : 0), 0
-              )}
-            </div>
-            <div className="text-sm text-green-700">Selected</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">
-              {categories.reduce((acc, cat) => acc + cat.amenities.length, 0) - 
-               Object.entries(checkedAmenities).reduce((acc, [catKey, amenities]) => 
-                 acc + (enabledCategories[catKey] ? Object.values(amenities).filter(Boolean).length : 0), 0
-               )}
-            </div>
-            <div className="text-sm text-orange-700">Not Selected</div>
-          </div>
+        <div className="flex items-center gap-3 mb-4">
+          <Plus className="h-6 w-6 text-blue-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Add New Amenities</h3>
         </div>
+        <p className="text-sm text-gray-600">
+          Select from available amenities below to add to your gym. Already selected amenities are hidden.
+        </p>
+        {newlySelectedAmenities.length > 0 && (
+          <div className="mt-3">
+            <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+              {newlySelectedAmenities.length} amenities selected for addition
+            </Badge>
+          </div>
+        )}
       </motion.div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-      {categories.map((category) => {
-        const isEnabled = enabledCategories[category.key];
-        const selectedCount = Object.values(checkedAmenities[category.key] || {}).filter(Boolean).length;
-        const totalCount = category.amenities.length;
+        {categories.map((category) => {
+          const availableAmenities = getAvailableAmenities(category);
+          
+          // Skip categories with no available amenities
+          if (availableAmenities.length === 0) {
+            return null;
+          }
+          
+          return (
+            <motion.div 
+              key={category.key} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border rounded-lg shadow-sm overflow-hidden"
+            >
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200 px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-gray-900">{category.name}</span>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
+                    {availableAmenities.length} available
+                  </Badge>
+                </div>
+              </div>
+              
+              <div className="p-4 space-y-3">
+                <AnimatePresence>
+                  {availableAmenities.map((amenity, amenityIndex) => {
+                    const isSelected = newlySelectedAmenities.includes(amenity.key);
+                    
+                    return (
+                      <motion.div
+                        key={amenity.key}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.2, delay: amenityIndex * 0.03 }}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 hover:shadow-md group ${
+                          isSelected
+                            ? 'bg-green-50 border border-green-200 shadow-sm hover:bg-green-100' 
+                            : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setNewlySelectedAmenities(prev => [...prev, amenity.key]);
+                            } else {
+                              setNewlySelectedAmenities(prev => prev.filter(key => key !== amenity.key));
+                            }
+                          }}
+                          className="flex-shrink-0"
+                        />
+                        
+                        <div className={`flex-shrink-0 w-2 h-2 rounded-full transition-colors ${
+                          isSelected ? 'bg-green-500' : 'bg-gray-300'
+                        }`} />
+                        
+                        <div className="flex-1 min-w-0">
+                          <span className={`block font-medium transition-colors ${
+                            isSelected ? 'text-gray-900' : 'text-gray-600'
+                          }`}>
+                            {amenity.name}
+                          </span>
+                          {amenity.description && (
+                            <span className={`block text-xs mt-1 transition-colors ${
+                              isSelected ? 'text-gray-600' : 'text-gray-500'
+                            }`}>
+                              {amenity.description}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {isSelected && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          >
+                            <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                              <Plus className="w-3 h-3 mr-1" />
+                              Add
+                            </Badge>
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          );
+        })}
         
-        return (
-          <motion.div 
-            key={category.key} 
+        {categories.every(category => getAvailableAmenities(category).length === 0) && (
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border rounded-lg shadow-sm overflow-hidden"
+            className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center"
           >
-            <div className={`flex items-center justify-between px-4 py-3 transition-colors ${
-              isEnabled 
-                ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200' 
-                : 'bg-gray-100 border-b border-gray-200'
-            }`}>
-              <div className="flex items-center gap-3">
-                <span className={`font-semibold transition-colors ${
-                  isEnabled ? 'text-gray-900' : 'text-gray-500'
-                }`}>
-                  {category.name}
-                </span>
-                {isEnabled && selectedCount > 0 && (
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
-                    {selectedCount} of {totalCount}
-                  </Badge>
-                )}
-              </div>
-              <Switch
-                checked={isEnabled}
-                onCheckedChange={() => handleCategorySwitch(category.key)}
-              />
+            <div className="text-gray-400 mb-2">
+              <Plus className="h-12 w-12 mx-auto" />
             </div>
-          <div className="p-4 space-y-3">
-            <AnimatePresence>
-              {category.amenities.map((amenity, amenityIndex) => {
-                const isChecked = !!checkedAmenities[category.key]?.[amenity.key];
-                const isEnabled = enabledCategories[category.key];
-                
-                return (
-                  <motion.div
-                    key={amenity.key}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2, delay: amenityIndex * 0.03 }}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 hover:shadow-md group cursor-pointer ${
-                      isEnabled 
-                        ? isChecked
-                          ? 'bg-green-50 border border-green-200 shadow-sm hover:bg-green-100' 
-                          : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
-                        : 'bg-gray-50 border border-gray-200 opacity-40'
-                    }`}
-                    onClick={() => isEnabled && handleAmenityCheck(category.key, amenity.key)}
-                  >
-                    <Checkbox
-                      checked={isChecked}
-                      onCheckedChange={() => handleAmenityCheck(category.key, amenity.key)}
-                      disabled={!isEnabled}
-                      className="flex-shrink-0"
-                    />
-                    
-                    <div className={`flex-shrink-0 w-2 h-2 rounded-full transition-colors ${
-                      isEnabled 
-                        ? isChecked ? 'bg-green-500' : 'bg-gray-300'
-                        : 'bg-gray-200'
-                    }`} />
-                    
-                    <div className="flex-1 min-w-0">
-                      <span className={`block font-medium transition-colors ${
-                        isEnabled 
-                          ? isChecked ? 'text-gray-900' : 'text-gray-600'
-                          : 'text-gray-400'
-                      }`}>
-                        {amenity.name}
-                      </span>
-                      {amenity.description && (
-                        <span className={`block text-xs mt-1 transition-colors ${
-                          isEnabled 
-                            ? isChecked ? 'text-gray-600' : 'text-gray-500'
-                            : 'text-gray-400'
-                        }`}>
-                          {amenity.description}
-                        </span>
-                      )}
-                    </div>
-                    
-                    {isEnabled && isChecked && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      >
-                        <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
-                          <Check className="w-3 h-3 mr-1" />
-                          Selected
-                        </Badge>
-                      </motion.div>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-        </motion.div>
-        );
-      })}
-      <div className="flex gap-2 pt-4">
-        <Button type="submit" disabled={isPending} className="flex-1">
-          {isPending ? "Saving..." : "Save Amenities"}
-        </Button>
-        {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
-      </div>
-    </form>
+            <h3 className="text-lg font-medium text-gray-600 mb-2">All amenities already selected</h3>
+            <p className="text-sm text-gray-500">
+              Your gym already has all available amenities. Great job!
+            </p>
+          </motion.div>
+        )}
+        
+        <div className="flex gap-2 pt-4">
+          <Button 
+            type="submit" 
+            disabled={isPending || newlySelectedAmenities.length === 0} 
+            className="flex-1"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Adding Amenities...
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 mr-2" />
+                Add {newlySelectedAmenities.length} Amenities
+              </>
+            )}
+          </Button>
+          {onCancel && (
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+        </div>
+      </form>
     </div>
   );
 }
