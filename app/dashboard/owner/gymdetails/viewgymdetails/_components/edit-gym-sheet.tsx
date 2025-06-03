@@ -74,10 +74,24 @@ export function EditGymSheet({ isOpen, onClose, gymData, gymTabData, onSave }: E
                    />
                 </TabsContent>
                 <TabsContent value="location" className="mt-0">
-                   <LocationEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
+                   <LocationEditForm 
+                     data={{
+                       ...formData,
+                       location: gymTabData?.location?.location
+                     }} 
+                     onDataChange={setFormData} 
+                     onSave={() => onClose()} 
+                   />
                 </TabsContent>
                 <TabsContent value="pricing" className="mt-0">
-                   <PricingEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
+                   <PricingEditForm 
+                     data={{
+                       ...formData,
+                       fitnessPlans: gymTabData?.pricing?.pricingPlans || []
+                     }} 
+                     onDataChange={setFormData}
+                     onSave={() => onClose()} 
+                   />
                 </TabsContent>
               </div>
           </Tabs>

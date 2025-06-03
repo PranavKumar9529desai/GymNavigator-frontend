@@ -30,6 +30,8 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
     lat: data.location?.lat,
     lng: data.location?.lng,
   });
+  console.log("data is in the locatio tab is",data);
+  console.log("the location data is",locationFormData)
   const [isPending, startTransition] = useTransition();
 
 

@@ -31,7 +31,7 @@ interface EditGymDrawerProps {
 export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: EditGymDrawerProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [formData, setFormData] = useState<GymData>(gymData || {} as GymData);
-
+  console.log("the gymData in edit drawer is", gymData);
    // Update formData when gymData prop changes
   useEffect(() => {
     setFormData(gymData || {} as GymData);
@@ -83,11 +83,25 @@ export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: 
                        onCancel={() => onClose()} 
                      />
                   </TabsContent>
-                  <TabsContent value="location" className="mt-0">
-                     <LocationEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
+                <TabsContent value="location" className="mt-0">
+                     <LocationEditForm 
+                       data={{
+                         ...formData,
+                         location: gymTabData?.location?.location
+                       }} 
+                       onDataChange={setFormData} 
+                       onSave={() => onClose()} 
+                     />
                   </TabsContent>
                   <TabsContent value="pricing" className="mt-0">
-                     <PricingEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
+                     <PricingEditForm 
+                       data={{
+                         ...formData,
+                         fitnessPlans: gymTabData?.pricing?.pricingPlans || []
+                       }} 
+                       onDataChange={setFormData}
+                       onSave={() => onClose()} 
+                     />
                   </TabsContent>
                 </div>
             </Tabs>

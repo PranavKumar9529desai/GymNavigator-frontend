@@ -156,7 +156,7 @@ export async function getPricingData(): Promise<{
         additionalServices: response.data.additionalServices,
       };
     }
-
+    console.log('Pricing API returned', response.data);
     return { error: 'Failed to fetch pricing data' };
   } catch (error) {
     console.error('Error fetching pricing data:', error);
@@ -216,6 +216,7 @@ export async function getAllGymTabData(): Promise<{
 
     // Process pricing data
     if (pricingResult.error) {
+      console.error('Pricing data error:', pricingResult.error);
       errors.push(`Pricing: ${pricingResult.error}`);
     } else {
       result.pricing = {
@@ -227,7 +228,7 @@ export async function getAllGymTabData(): Promise<{
     if (errors.length > 0) {
       result.errors = errors;
     }
-
+    console.log('All gym tab data fetched successfully:', result);
     return result;
   } catch (error) {
     console.error('Error fetching all gym tab data:', error);

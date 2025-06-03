@@ -48,11 +48,10 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
   useSortable,
 } from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
+import { CSS } from '@dnd-kit/utilities';
+import { GymTabData } from "../../page";
 
 interface PricingEditFormProps {
   data: GymData;
@@ -115,6 +114,11 @@ function SortablePlanCard({ plan, index, onUpdate, onRemove }: {
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [localPlan, setLocalPlan] = useState(plan);
+
+  // Update localPlan when plan prop changes
+  useEffect(() => {
+    setLocalPlan(plan);
+  }, [plan]);
 
   const updateLocalPlan = (updates: Partial<FitnessPlan>) => {
     const updatedPlan = { ...localPlan, ...updates };
@@ -381,7 +385,8 @@ export function PricingEditForm({ data, onDataChange, onSave }: PricingEditFormP
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("plans");
   const [isLoadingServices, setIsLoadingServices] = useState(true);
-
+  console.log("Initial plans data:", data);
+  console.log("Initial Plans ",data.fitnessPlans);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
