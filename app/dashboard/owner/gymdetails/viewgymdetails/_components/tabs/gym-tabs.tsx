@@ -121,11 +121,13 @@ export const  SingleTab = ( { name , label, icon } : { name : string , label: st
     const Icon = icon;
     return (
         <TabsTrigger
-            className="px-4 py-3 font-semibold transition-all border-b-4 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-transparent shadow-none"
+            className="px-4 py-3 font-semibold transition-all border-transparent data-[state=active]:text-blue-600 data-[state=active]:bg-transparent shadow-none group"
             value={name}
         >
-            <Icon className="mr-2 h-4 w-4" />
-            <span className="text-sm font-medium">{label}</span>
+            <div className="flex items-center border-b-4 border-transparent group-data-[state=active]:border-blue-600 transition-all pb-1">
+                <Icon className="mr-2 h-4 w-4" />
+                <span className="text-sm font-medium">{label}</span>
+            </div>
         </TabsTrigger>
     );
 }

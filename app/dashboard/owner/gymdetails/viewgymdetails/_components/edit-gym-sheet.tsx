@@ -48,7 +48,7 @@ export function EditGymSheet({ isOpen, onClose, gymData, gymTabData, onSave, mut
   return (
     <>
       <Sheet open={isOpen} onOpenChange={onClose} >
-        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto z-50 ">
+        <SheetContent className="w-[400px] sm:w-[580px] overflow-y-auto z-50 ">
           <SheetHeader>
             <SheetTitle>Edit Gym Details</SheetTitle>
             <SheetDescription>Select a tab to edit specific gym information.</SheetDescription>
