@@ -10,6 +10,7 @@ import { useGetCoordinatesFromLocation } from "../../_actions/get-co-ordinates-f
 import { MapPin } from 'lucide-react';
 import { updateGymLocation } from "../../_actions/submit-gym-tabs-form";
 import { toast } from "sonner";
+import type { UseMutationResult } from "@tanstack/react-query";
 
 
 
@@ -17,9 +18,10 @@ interface LocationEditFormProps {
   data: GymData;
   onDataChange: (data: GymData) => void;
   onSave?: () => void;
+  mutation?: UseMutationResult<any, Error, any>;
 }
 
-export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFormProps) {
+export function LocationEditForm({ data, onDataChange, onSave, mutation }: LocationEditFormProps) {
   const [locationFormData, setLocationFormData] = useState<GymLocation>(
     {
     address: data.location?.address || '',
@@ -155,7 +157,8 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    startTransition(async () => {
+    // Use React Query mutation if available, otherwise fall back to direct action
+    if (mutation) {
       try {
         let finalLocationData = { ...locationFormData };
         
@@ -198,14 +201,67 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
           lng: finalLocationData.lng
         };
         
-        await updateGymLocation(locationData);
+        await mutation.mutateAsync(locationData);
         toast.success("Location updated successfully!");
         onSave?.();
       } catch (error) {
         console.error('Error updating location:', error);
         toast.error("Failed to update location. Please try again.");
       }
-    });
+    } else {
+      // Fallback to original implementation
+      startTransition(async () => {
+        try {
+          let finalLocationData = { ...locationFormData };
+          
+          // If we don't have coordinates but have address info, try to geocode
+          if ((!finalLocationData.lat || !finalLocationData.lng) && 
+              (finalLocationData.address || finalLocationData.city || finalLocationData.zipCode)) {
+            console.log('Missing coordinates, attempting to geocode before submit...');
+            
+            const coordinates = await getCoordinates({
+              address: finalLocationData.address,
+              city: finalLocationData.city,
+              state: finalLocationData.state,
+              zipCode: finalLocationData.zipCode,
+              country: finalLocationData.country,
+            });
+
+            if (coordinates) {
+              finalLocationData = {
+                ...finalLocationData,
+                lat: coordinates.lat,
+                lng: coordinates.lng,
+              };
+              // Update the form state with the new coordinates
+              setLocationFormData(finalLocationData);
+              onDataChange({ ...data, location: finalLocationData });
+            } else {
+              // If geocoding fails, show an error and don't submit
+              toast.error("Could not find coordinates for the provided address. Please check the address or use 'Use my current location'.");
+              return;
+            }
+          }
+          
+          const locationData = {
+            address: finalLocationData.address || '',
+            city: finalLocationData.city || '',
+            state: finalLocationData.state || '',
+            zipCode: finalLocationData.zipCode || '',
+            country: finalLocationData.country || '',
+            lat: finalLocationData.lat,
+            lng: finalLocationData.lng
+          };
+          
+          await updateGymLocation(locationData);
+          toast.success("Location updated successfully!");
+          onSave?.();
+        } catch (error) {
+          console.error('Error updating location:', error);
+          toast.error("Failed to update location. Please try again.");
+        }
+      });
+    }
   };
 
   return (
@@ -253,8 +309,8 @@ export function LocationEditForm({ data, onDataChange, onSave }: LocationEditFor
        {coordError && <div className="text-red-600">Error finding coordinates: {coordError}</div>}
       
       <div className="flex gap-2 pt-4">
-        <Button type="submit" disabled={isPending} className="flex-1">
-          {isPending ? "Saving..." : "Save Location"}
+        <Button type="submit" disabled={mutation ? mutation.isPending : isPending} className="flex-1">
+          {(mutation ? mutation.isPending : isPending) ? "Saving..." : "Save Location"}
         </Button>
       </div>
     </form>

@@ -6,15 +6,16 @@ import { OverviewTab } from "./_components/tabs/overview-tab"
 import { AmenitiesTab } from "./_components/tabs/amenities-tab"
 import { LocationTab } from "./_components/tabs/location-tab"
 import { PricingTab } from "./_components/tabs/pricing-tab"
-import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { EditGymDrawer } from "./_components/edit-gym-drawer"
 import { EditGymSheet } from "./_components/edit-gym-sheet"
 import { GymTabs } from "./_components/tabs/gym-tabs"
 import { Separator } from "@/components/ui/separator"
-import { getAllGymTabData, type Trainer } from "./_actions/get-gym-tab-data";
+import { useGymOperations } from "./hooks/useGymData";
+import { Loader2 } from "lucide-react";
 import type { AmenityCategory, GymLocation, FitnessPlan, AdditionalService } from "./types/gym-types";
+import type { Trainer } from "./_actions/get-gym-tab-data";
 
 
 interface GymInfo {
@@ -26,56 +27,27 @@ interface GymInfo {
   gymauthtoken: string;
 }
 
-export interface GymTabData {
-  overview?: { trainersData?: Trainer[] };
-  amenities?: { 
-    categories?: AmenityCategory[]; 
-    selectedAmenities?: Record<string, string[]>; 
-  };
-  location?: { location?: GymLocation };
-  pricing?: { 
-    pricingPlans?: FitnessPlan[]; 
-    additionalServices?: AdditionalService[]; 
-  };
-  errors?: string[];
-}
-
-
 export default function GymLayout() {
-  const [gymDetails, setGymDetails] = useState<GymInfo | null>(null);
-  const [gymTabData, setGymTabData] = useState<GymTabData | null>(null);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [isSmallDevice, setIsSmallDevice] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Use React Query hooks for data management
+  const {
+    gymDetails,
+    gymTabData,
+    isLoading,
+    error,
+    isMutating,
+    updateOverview,
+    updateAmenities,
+    updateLocation,
+    updatePricing
+  } = useGymOperations();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        // Fetch gym details and tab data in parallel
-        const [details, tabData] = await Promise.all([
-          FetchGymDetailsSA(),
-          getAllGymTabData()
-        ]);
-        
-        setGymDetails(details);
-        setGymTabData(tabData);
-        
-        // Log any errors that occurred during data fetching
-        if (tabData.errors && tabData.errors.length > 0) {
-          console.warn('Some gym data could not be fetched:', tabData.errors);
-        }
-      } catch (error) {
-        console.error('Error fetching gym data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchData();
-
+  // Handle responsive design
+  useState(() => {
     const handleResize = () => {
-      setIsSmallDevice(window.innerWidth < 768); // Adjust breakpoint as needed (e.g., 768px for 'md')
+      setIsSmallDevice(window.innerWidth < 768);
     };
 
     // Initial check
@@ -86,13 +58,10 @@ export default function GymLayout() {
 
     // Cleanup event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
-
-  }, []); // Empty dependency array means this effect runs once on mount
-
-
+  });
 
   const handleSave = (data: any) => {
-    console.log("Saving data:", data); // Placeholder for save logic
+    console.log("Saving data:", data);
     setIsEditSheetOpen(false);
   };
 
@@ -101,31 +70,43 @@ export default function GymLayout() {
     <div className="min-h-screen p-2 md:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-end mb-4">
-           <Button onClick={() => setIsEditSheetOpen(true)} variant="ghost" className="hover:text-blue-600 ">
+           <Button 
+             onClick={() => setIsEditSheetOpen(true)} 
+             variant="ghost" 
+             className="hover:text-blue-600"
+             disabled={isMutating}
+           >
             <Edit className="mr-2  text-blue-600 sm:text-gray-800 hover:text-blue-600" />
             <p className="hidden md:block">
-            Edit Gym Details
+              {isMutating ? 'Saving...' : 'Edit Gym Details'}
             </p>
           </Button>
         </div>
-        {gymDetails && (
-          <GymHeader gymData={gymDetails} />
+        
+        {/* Error state */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-800">Error loading gym data: {error.message}</p>
+          </div>
+        )}
+        
+        {gymDetails.data && (
+          <GymHeader gymData={gymDetails.data} />
         )}
 
-
-        {        /* Enhanced Tabs Section */}
+        {/* Enhanced Tabs Section */}
         <div className="">
           {isLoading ? (
             <div className="flex justify-center items-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               <span className="ml-2 text-gray-600">Loading gym data...</span>
             </div>
           ) : (
             <GymTabs 
-              overviewData={gymTabData?.overview} 
-              amenitiesData={gymTabData?.amenities}
-              locationData={gymTabData?.location}
-              pricingData={gymTabData?.pricing}
+              overviewData={gymTabData.data?.overview} 
+              amenitiesData={gymTabData.data?.amenities}
+              locationData={gymTabData.data?.location}
+              pricingData={gymTabData.data?.pricing}
             />
           )}
         </div>
@@ -136,17 +117,29 @@ export default function GymLayout() {
         <EditGymDrawer
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
-          gymData={gymDetails}
-          gymTabData={gymTabData}
+          gymData={gymDetails.data}
+          gymTabData={gymTabData.data}
           onSave={handleSave}
+          mutations={{
+            updateOverview,
+            updateAmenities,
+            updateLocation,
+            updatePricing
+          }}
         />
       ) : (
         <EditGymSheet
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
-          gymData={gymDetails}
-          gymTabData={gymTabData}
+          gymData={gymDetails.data}
+          gymTabData={gymTabData.data}
           onSave={handleSave}
+          mutations={{
+            updateOverview,
+            updateAmenities,
+            updateLocation,
+            updatePricing
+          }}
         />
       )}
 

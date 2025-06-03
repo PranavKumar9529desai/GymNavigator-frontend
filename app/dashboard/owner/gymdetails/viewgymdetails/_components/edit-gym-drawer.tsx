@@ -12,6 +12,7 @@ import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
 import type { GymTabData } from "../page"
+import type { UseMutationResult } from "@tanstack/react-query"
 import { SingleTab } from "./tabs/gym-tabs";
 
 // Import edit form components
@@ -26,9 +27,15 @@ interface EditGymDrawerProps {
   gymData: GymData | null;
   gymTabData: GymTabData | null;
   onSave: (data: GymData) => void
+  mutations?: {
+    updateOverview: UseMutationResult<any, Error, any>;
+    updateAmenities: UseMutationResult<any, Error, any>;
+    updateLocation: UseMutationResult<any, Error, any>;
+    updatePricing: UseMutationResult<any, Error, any>;
+  }
 }
 
-export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: EditGymDrawerProps) {
+export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave, mutations }: EditGymDrawerProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [formData, setFormData] = useState<GymData>(gymData || {} as GymData);
   console.log("the gymData in edit drawer is", gymData);
@@ -75,12 +82,18 @@ export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: 
 
                 <div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">
                   <TabsContent value="overview" className="mt-0">
-                     <OverviewEditForm data={formData} onDataChange={setFormData} onSave={() => onClose()} />
+                     <OverviewEditForm 
+                       data={formData} 
+                       onDataChange={setFormData} 
+                       onSave={() => onClose()}
+                       mutation={mutations?.updateOverview}
+                     />
                   </TabsContent>
                   <TabsContent value="amenities" className="mt-0">
                      <AmenitiesEditForm 
                        onSave={() => onClose()} 
-                       onCancel={() => onClose()} 
+                       onCancel={() => onClose()}
+                       mutation={mutations?.updateAmenities}
                      />
                   </TabsContent>
                 <TabsContent value="location" className="mt-0">
@@ -90,7 +103,8 @@ export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: 
                          location: gymTabData?.location?.location
                        }} 
                        onDataChange={setFormData} 
-                       onSave={() => onClose()} 
+                       onSave={() => onClose()}
+                       mutation={mutations?.updateLocation}
                      />
                   </TabsContent>
                   <TabsContent value="pricing" className="mt-0">
@@ -100,7 +114,8 @@ export function EditGymDrawer({ isOpen, onClose, gymData, gymTabData, onSave }: 
                          fitnessPlans: gymTabData?.pricing?.pricingPlans || []
                        }} 
                        onDataChange={setFormData}
-                       onSave={() => onClose()} 
+                       onSave={() => onClose()}
+                       mutation={mutations?.updatePricing}
                      />
                   </TabsContent>
                 </div>

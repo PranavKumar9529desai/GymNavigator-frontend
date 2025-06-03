@@ -10,16 +10,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getAmenitiesData } from "../../_actions/amenity-actions";
 import { updateGymAmenities } from "../../_actions/submit-gym-tabs-form";
 import { toast } from "sonner";
+import type { UseMutationResult } from "@tanstack/react-query";
 
 // Simplified props interface
 interface AmenitiesEditFormProps {
   onSave?: () => void;
   onCancel?: () => void;
+  mutation?: UseMutationResult<any, Error, any>;
 }
 
 export function AmenitiesEditForm({
   onSave,
   onCancel,
+  mutation,
 }: AmenitiesEditFormProps) {
   const [categories, setCategories] = useState<AmenityCategory[]>([]);
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, string[]>>({});
@@ -68,7 +71,8 @@ export function AmenitiesEditForm({
       return;
     }
     
-    startTransition(async () => {
+    // Use React Query mutation if available, otherwise fall back to direct action
+    if (mutation) {
       try {
         // Combine existing and newly selected amenities
         const allSelected: string[] = [];
@@ -81,14 +85,37 @@ export function AmenitiesEditForm({
         // Add newly selected amenities
         allSelected.push(...newlySelectedAmenities);
         
-        await updateGymAmenities({ amenities: allSelected });
+        await mutation.mutateAsync({ amenities: allSelected });
         toast.success("Amenities updated successfully!");
         onSave?.();
       } catch (error) {
         console.error('Error updating amenities:', error);
         toast.error("Failed to update amenities. Please try again.");
       }
-    });
+    } else {
+      // Fallback to original implementation
+      startTransition(async () => {
+        try {
+          // Combine existing and newly selected amenities
+          const allSelected: string[] = [];
+          
+          // Add all existing selected amenities
+          Object.values(selectedAmenities).forEach(amenityKeys => {
+            allSelected.push(...amenityKeys);
+          });
+          
+          // Add newly selected amenities
+          allSelected.push(...newlySelectedAmenities);
+          
+          await updateGymAmenities({ amenities: allSelected });
+          toast.success("Amenities updated successfully!");
+          onSave?.();
+        } catch (error) {
+          console.error('Error updating amenities:', error);
+          toast.error("Failed to update amenities. Please try again.");
+        }
+      });
+    }
   };
 
   // Loading state
@@ -260,10 +287,10 @@ export function AmenitiesEditForm({
         <div className="flex gap-2 pt-4">
           <Button 
             type="submit" 
-            disabled={isPending || newlySelectedAmenities.length === 0} 
+            disabled={(mutation ? mutation.isPending : isPending) || newlySelectedAmenities.length === 0} 
             className="flex-1"
           >
-            {isPending ? (
+            {(mutation ? mutation.isPending : isPending) ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Adding Amenities...
