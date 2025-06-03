@@ -14,9 +14,8 @@ import { GymTabs } from "./_components/tabs/gym-tabs"
 import { Separator } from "@/components/ui/separator"
 import { useGymOperations } from "./hooks/useGymData";
 import { Loader2 } from "lucide-react";
-import type { AmenityCategory, GymLocation, FitnessPlan, AdditionalService } from "./types/gym-types";
-import type { Trainer } from "./_actions/get-gym-tab-data";
-
+import { GymTabData } from "./hooks/useGymData"
+import type { GymData } from "./types/gym-types"
 
 interface GymInfo {
   gym_name: string;
@@ -45,7 +44,7 @@ export default function GymLayout() {
   } = useGymOperations();
 
   // Handle responsive design
-  useState(() => {
+  useEffect(() => {
     const handleResize = () => {
       setIsSmallDevice(window.innerWidth < 768);
     };
@@ -58,12 +57,25 @@ export default function GymLayout() {
 
     // Cleanup event listener on component unmount
     return () => window.removeEventListener('resize', handleResize);
-  });
+  }, []);
 
   const handleSave = (data: any) => {
     console.log("Saving data:", data);
     setIsEditSheetOpen(false);
   };
+
+  // Convert GymInfo to GymData format
+  const convertedGymData: GymData | null = gymDetails.data ? {
+    gym_name: gymDetails.data.gym_name,
+    gym_logo: gymDetails.data.gym_logo,
+    address: gymDetails.data.address,
+    phone_number: gymDetails.data.phone_number,
+    Email: gymDetails.data.Email,
+    gymauthtoken: gymDetails.data.gymauthtoken,
+    // Initialize other optional fields
+    amenities: {},
+    fitnessPlans: [],
+  } : null;
 
 
   return (
@@ -91,7 +103,7 @@ export default function GymLayout() {
         )}
         
         {gymDetails.data && (
-          <GymHeader gymData={gymDetails.data} />
+          <GymHeader gymData={convertedGymData} />
         )}
 
         {/* Enhanced Tabs Section */}
@@ -117,8 +129,8 @@ export default function GymLayout() {
         <EditGymDrawer
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
-          gymData={gymDetails.data}
-          gymTabData={gymTabData.data}
+          gymData={convertedGymData}
+          gymTabData={gymTabData.data || null}
           onSave={handleSave}
           mutations={{
             updateOverview,
@@ -131,8 +143,8 @@ export default function GymLayout() {
         <EditGymSheet
           isOpen={isEditSheetOpen}
           onClose={() => setIsEditSheetOpen(false)}
-          gymData={gymDetails.data}
-          gymTabData={gymTabData.data}
+          gymData={convertedGymData}
+          gymTabData={gymTabData.data || null}
           onSave={handleSave}
           mutations={{
             updateOverview,

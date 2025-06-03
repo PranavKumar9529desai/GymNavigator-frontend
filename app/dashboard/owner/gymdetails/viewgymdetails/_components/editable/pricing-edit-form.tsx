@@ -52,7 +52,6 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GymTabData } from "../../page";
 
 interface PricingEditFormProps {
   data: GymData;
