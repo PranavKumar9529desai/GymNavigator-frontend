@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import FetchGymDetailsSA from '../_actions/GetGymDetails';
-import { getAllGymTabData, type GymTabData } from '../_actions/get-gym-tab-data';
+import { getAllGymTabData } from '../_actions/get-gym-tab-data';
+import type { Trainer } from '../_actions/get-gym-tab-data';
 import { 
   updateGymOverview, 
   updateGymAmenities, 
@@ -14,8 +14,24 @@ import type {
   UpdateAmenitiesRequest, 
   FitnessPlan, 
   AdditionalService,
-  GymLocation 
+  GymLocation,
+  AmenityCategory
 } from '../types/gym-types';
+
+// Define GymTabData type based on getAllGymTabData return type
+export type GymTabData = {
+  overview?: { trainersData?: Trainer[] };
+  amenities?: { 
+    categories?: AmenityCategory[]; 
+    selectedAmenities?: Record<string, string[]>; 
+  };
+  location?: { location?: GymLocation };
+  pricing?: { 
+    pricingPlans?: FitnessPlan[]; 
+    additionalServices?: AdditionalService[]; 
+  };
+  errors?: string[];
+};
 
 // Query Keys
 export const gymQueryKeys = {
@@ -74,10 +90,10 @@ export function useUpdateGymOverview() {
       if (context?.previousData) {
         queryClient.setQueryData(gymQueryKeys.details(), context.previousData);
       }
-      toast.error('Failed to update gym overview');
+      // Toast will be handled by the form component
     },
     onSuccess: () => {
-      toast.success('Gym overview updated successfully!');
+      // Toast will be handled by the form component
     },
     onSettled: () => {
       // Always refetch after error or success
@@ -119,10 +135,10 @@ export function useUpdateAmenities() {
       if (context?.previousData) {
         queryClient.setQueryData(gymQueryKeys.tabData(), context.previousData);
       }
-      toast.error('Failed to update amenities');
+      // Toast will be handled by the form component
     },
     onSuccess: () => {
-      toast.success('Amenities updated successfully!');
+      // Toast will be handled by the form component
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: gymQueryKeys.tabData() });
@@ -158,10 +174,10 @@ export function useUpdateLocation() {
       if (context?.previousData) {
         queryClient.setQueryData(gymQueryKeys.tabData(), context.previousData);
       }
-      toast.error('Failed to update location');
+      // Toast will be handled by the form component
     },
     onSuccess: () => {
-      toast.success('Location updated successfully!');
+      // Toast will be handled by the form component
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: gymQueryKeys.tabData() });
@@ -198,10 +214,10 @@ export function useUpdatePricing() {
       if (context?.previousData) {
         queryClient.setQueryData(gymQueryKeys.tabData(), context.previousData);
       }
-      toast.error('Failed to update pricing');
+      // Toast will be handled by the form component
     },
     onSuccess: () => {
-      toast.success('Pricing updated successfully!');
+      // Toast will be handled by the form component
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: gymQueryKeys.tabData() });

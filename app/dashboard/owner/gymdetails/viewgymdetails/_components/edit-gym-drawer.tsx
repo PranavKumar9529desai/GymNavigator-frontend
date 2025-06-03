@@ -11,7 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { TrendingUp, Dumbbell, MapPin, DollarSign } from "lucide-react"
 
 import type { GymData } from "../types/gym-types"
-import type { GymTabData } from "../page"
+import type { GymTabData } from "../hooks/useGymData"
 import type { UseMutationResult } from "@tanstack/react-query"
 import { SingleTab } from "./tabs/gym-tabs";
 
