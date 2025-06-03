@@ -600,14 +600,6 @@ export function PricingEditForm({ data, onDataChange, onSave, mutation }: Pricin
                 <Plus className="h-4 w-4 mr-2" />
                 Add Plan
               </Button>
-              <Button 
-                type="button" 
-                onClick={handleSubmitPlans} 
-                disabled={isPending}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {isPending ? "Saving..." : "Save Plans"}
-              </Button>
             </div>
           </div>
 
@@ -649,6 +641,28 @@ export function PricingEditForm({ data, onDataChange, onSave, mutation }: Pricin
               </SortableContext>
             </DndContext>
           )}
+
+          {/* Save Plans Button at Bottom */}
+          <div className="flex justify-center pt-8 border-t border-gray-200">
+            <Button 
+              type="button" 
+              onClick={handleSubmitPlans} 
+              disabled={isPending || plansFormData.length === 0}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-medium min-w-[160px] group"
+            >
+              {isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
+                  Saving Plans...
+                </>
+              ) : (
+                <>
+                  <Dumbbell className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform duration-200" />
+                  Save Plans
+                </>
+              )}
+            </Button>
+          </div>
         </TabsContent>
 
         <TabsContent value="services" className="space-y-4">
@@ -660,14 +674,6 @@ export function PricingEditForm({ data, onDataChange, onSave, mutation }: Pricin
               <Button type="button" onClick={addAdditionalService} variant="outline" disabled={isLoadingServices}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Service
-              </Button>
-              <Button 
-                type="button" 
-                onClick={handleSubmitServices} 
-                disabled={isPending || isLoadingServices}
-                className="bg-green-600 hover:bg-green-700"
-              >
-                {isPending ? "Saving..." : "Save Services"}
               </Button>
             </div>
           </div>
@@ -762,6 +768,28 @@ export function PricingEditForm({ data, onDataChange, onSave, mutation }: Pricin
               ))}
             </div>
           )}
+
+          {/* Save Services Button at Bottom */}
+          <div className="flex justify-center pt-8 border-t border-gray-200">
+            <Button 
+              type="button" 
+              onClick={handleSubmitServices} 
+              disabled={isPending || isLoadingServices}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-medium min-w-[160px] group"
+            >
+              {isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
+                  Saving Services...
+                </>
+              ) : (
+                <>
+                  <Calendar className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform duration-200" />
+                  Save Services
+                </>
+              )}
+            </Button>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
