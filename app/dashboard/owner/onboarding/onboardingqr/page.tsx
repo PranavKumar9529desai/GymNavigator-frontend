@@ -37,7 +37,7 @@ export default async function Page() {
 	};
 
 	return (
-		<div className="h-screen flex justify-center items-center w-full p-4">
+		<div className="h-screen flex justify-center sm:items-center w-full p-4">
 			<GymQRCodeOnboarding
 				qrdata={JSON.stringify(QrData)}
 				title=""

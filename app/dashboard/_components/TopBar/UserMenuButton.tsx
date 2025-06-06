@@ -22,7 +22,7 @@ const UserMenuButton: FC = () => {
 	};
 
 	const handleSignOut = () => {
-		signOut({ callbackUrl: '/login' });
+		signOut({ callbackUrl: '/signin' });
 	};
 
 	const menuItems: MenuItem[] = [
@@ -95,6 +95,7 @@ const UserMenuButton: FC = () => {
 											className="object-cover"
 										/>
 									</div>
+									{/* Todo  add the real Profile of the user */}
 									<div>
 										<h3 className="font-medium text-sm">John Doe</h3>
 										<p className="text-xs text-gray-500">

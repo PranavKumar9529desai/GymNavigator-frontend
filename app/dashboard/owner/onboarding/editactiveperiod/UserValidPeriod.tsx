@@ -143,12 +143,12 @@ export function UserValidityPeriod({
 	};
 
 	return (
-		<div className="w-full max-w-2xl mx-auto p-4 sm:p-3 e rounded-xl shadow-sm space-y- sm:space-y-8">
+		<div className="w-full max-w-3xl mx-auto p-6 sm:p-8  rounded-xl space-y-6 sm:space-y-8 ">
 			<Toaster position="top-right" />
 
 			{/* Header Section with Avatar - Made responsive */}
-			<div className="flex flex-col sm:flex-row  sm:space-x-6 pb-4 sm:pb-6 border-b border-gray-100 w-full">
-				<Avatar className="w-20 h-20 sm:w-24 sm:h-24 ring-2 ring-gray-100 mb-4 sm:mb-0 border mx-auto">
+			<div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6 pb-6 border-b border-gray-200 w-ful b">
+				<Avatar className="w-24 h-24 sm:w-28 sm:h-28 ring-2 ring-gray-100 mb-4 sm:mb-0 border mx-auto">
 					<AvatarImage
 						src={userImage ? userImage : defaultImage}
 						alt={userName}
@@ -160,7 +160,7 @@ export function UserValidityPeriod({
 							.join('')}
 					</AvatarFallback>
 				</Avatar>
-				<div className="text-center sm:text-left">
+				<div className="text-center sm:text-left flex-grow my-auto">
 					<h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
 						{userName}
 					</h2>
@@ -169,9 +169,9 @@ export function UserValidityPeriod({
 			</div>
 
 			{/* Form Section - Made mobile friendly */}
-			<div className="space-y-4 sm:space-y-6">
+			<div className="space-y-6 sm:space-y-8">
 				{/* Start Date - Modified for mobile */}
-				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
+				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-3 sm:gap-6">
 					<label
 						htmlFor="startDate"
 						className="text-sm font-medium text-gray-700"
@@ -237,7 +237,7 @@ export function UserValidityPeriod({
 				</div>
 
 				{/* End Date - Modified for mobile */}
-				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
+				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-3 sm:gap-6">
 					<label
 						htmlFor="endDate"
 						className="text-sm font-medium text-gray-700"
@@ -302,8 +302,8 @@ export function UserValidityPeriod({
 					</div>
 				</div>
 
-				{/* Shift Selection - Modified for mobile */}
-				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
+				{/* Shift Selection */}
+				<div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-3 sm:gap-6">
 					<label htmlFor="shift" className="text-sm font-medium text-gray-700">
 						Shift
 					</label>
@@ -324,8 +324,8 @@ export function UserValidityPeriod({
 				</div>
 			</div>
 
-			{/* Submit Button - Made touch-friendly */}
-			<div className="pt-4 sm:pt-6">
+			{/* Submit Button */}
+			<div className="flex justify-center sm:justify-end pt-4">
 				<Button
 					className="w-full h-12 sm:h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg sm:text-base 
                      active:scale-[0.98] transition-transform"

@@ -20,11 +20,11 @@ const GymQRCode: React.FC<GymQRCodeOnboardingProps> = ({
 	subtitle,
 }) => {
 	return (
-		<Card className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden min-h-[90vh] md:min-h-0">
+		<Card className="w-full max-w-md mx-auto  rounded-lg overflow-hidden  md:min-h-0 ">
 			<CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white text-center py-8">
 				<CardTitle className="text-3xl font-bold">{title}</CardTitle>
 				<CardDescription className="text-blue-100 mt-3 text-xl font-semibold tracking-[0.5px]">
-					Welcome to your fitness journey
+					Scan the QR code
 				</CardDescription>
 			</CardHeader>
 

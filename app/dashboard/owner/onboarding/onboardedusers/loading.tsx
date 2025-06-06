@@ -8,7 +8,7 @@ export default function loading() {
 				<Skeleton className="h-32" />
 				<Skeleton className="h-32" />
 			</div>
-			<Skeleton className="h-[400px]" />
+			<Skeleton className="h-[400px] mt-8" />
 		</div>
 	);
 }
