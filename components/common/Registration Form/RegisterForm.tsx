@@ -328,22 +328,22 @@ export default function RegisterForm() {
 												<SelectValue placeholder="Select your Role" />
 											</SelectTrigger>
 										</FormControl>
-										<SelectContent className="z-50 bg-blue-900/80 backdrop-blur-md border-blue-500/30 text-white">
+										<SelectContent className="z-50 bg-blue-950/30 backdrop-blur-md border-blue-500/30 text-white">
 											<SelectItem
 												value="owner"
-												className="hover:bg-blue-800/50"
+												className="hover:bg-blue-800/50 bg-blue-950/30"
 											>
 												Gym Owner
 											</SelectItem>
 											<SelectItem
 												value="trainer"
-												className="hover:bg-blue-800/50"
+												className="hover:bg-blue-800/50 bg-blue-950/30"
 											>
 												Trainer
 											</SelectItem>
 											<SelectItem
 												value="client"
-												className="hover:bg-blue-800/50"
+												className="hover:bg-blue-800/50 bg-blue-950/30"
 											>
 												Client
 											</SelectItem>

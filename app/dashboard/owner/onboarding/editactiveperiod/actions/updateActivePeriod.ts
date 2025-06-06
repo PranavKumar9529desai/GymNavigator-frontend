@@ -1,6 +1,7 @@
 'use server';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
+import { revalidatePath } from 'next/cache';
 
 interface UpdateUserResponseType {
 	msg: string;
@@ -38,6 +39,10 @@ export const UpdateUserActivePeriod = async ({
 				shift,
 			});
 		console.log(response.data);
+
+		// Invalidate cache for the onboardedusers page to show immediate changes
+		revalidatePath('/dashboard/owner/onboarding/onboardedusers');
+
 		return response.data;
 	} catch (error) {
 		console.error(error);

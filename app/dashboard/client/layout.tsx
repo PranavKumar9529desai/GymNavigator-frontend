@@ -22,7 +22,14 @@ export default async function RootLayout({
 
   return (
     <div className="min-h-screen">
-      <ClientLayout>{IsOnboarded ? children : <NotOnboarded />}</ClientLayout>
+      <ClientLayout>{IsOnboarded ? children :
+      <div className=" mt-10 sm:h-screen sm:mt-0 ">
+        <NotOnboarded />
+
+      </div>
+        }
+        
+        </ClientLayout>
     </div>
   );
 }
