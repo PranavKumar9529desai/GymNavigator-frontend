@@ -11,7 +11,6 @@ import { getGoogleSignupRole } from "../(common)/_actions/auth/google-role-serve
 import SigninSA from "../(common)/_actions/auth/signin-with-credentials";
 import { checkUserExists } from "..//(common)/_actions/auth/check-user-exists";
 import SigninGoogleSA from "..//(common)/_actions/auth/signin-with-google";
-import SignupWithGoogle from "..//(common)/_actions/auth/signup-with-google";
 import type { GymInfo, Rolestype } from "@/types/next-auth";
 
 // Import the relevant types from the auth client

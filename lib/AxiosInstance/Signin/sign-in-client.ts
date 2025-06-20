@@ -157,6 +157,44 @@ export const authClient = {
 	},
 
 	/**
+	 * Sign up with Google
+	 */
+	signUpWithGoogle: async (
+		email: string,
+		name: string,
+		role: Rolestype,
+	): Promise<ApiResult<SigninResponseType>> => {
+		try {
+			const axiosInstance = await SigninReqConfig();
+			const response = await axiosInstance.post('/google/signup', {
+				email,
+				name,
+				role,
+			});
+
+			const apiResponse = response.data as ApiResponse<SigninResponseType>;
+
+			if (!apiResponse.success) {
+				return {
+					success: false,
+					error: {
+						code: apiResponse.error || 'UNKNOWN_ERROR',
+						message: apiResponse.message || 'Unknown error occurred',
+					},
+				};
+			}
+
+			return {
+				success: true,
+				data: apiResponse.data,
+			};
+		} catch (error: unknown) {
+			// The error is already formatted by the axios interceptor
+			return error as ApiResult<never>;
+		}
+	},
+
+	/**
 	 * Get user information by email
 	 */
 	getUserInfo: async (email: string): Promise<ApiResult<UserInfoResponse>> => {
