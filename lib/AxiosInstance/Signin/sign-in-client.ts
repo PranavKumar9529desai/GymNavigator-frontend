@@ -167,8 +167,8 @@ export const authClient = {
 			});
 
 			const apiResponse = response.data as ApiResponse<UserInfoResponse>;
-
-			if (!apiResponse.success) {
+            console.log('API Response:', apiResponse);
+			if (!apiResponse.data?.exists) {
 				return {
 					success: false,
 					error: {
@@ -177,7 +177,7 @@ export const authClient = {
 					},
 				};
 			}
-
+           console.log("data being returned:", apiResponse.data);
 			return {
 				success: true,
 				data: apiResponse.data,

@@ -48,6 +48,7 @@ const authHandlers = {
   // Handle sign-in attempt
   async handleSignIn(email: string, password: string): Promise<User> {
     const userFromDB = await getUserByEmail(email);
+    console.log("User from DB in signin handler:", userFromDB);
 
     if (!userFromDB || !userFromDB.success) {
       throw createError("User not found", "USER_NOT_FOUND");

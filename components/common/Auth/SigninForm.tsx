@@ -52,20 +52,15 @@ export default function SignInForm() {
 				email,
 				password,
 			});
-
+            console.log('SignIn result: from SigninForm', result);
 			if (result?.error) {
 				// Parse the error JSON if it exists
+				console.log('SignIn error:', result.error);
 				toast.dismiss();
-				let errorMessage = 'Failed to sign in';
+				let errorMessage = 'Failed to sign in ,Check your credentials';
 				let errorCode = 'UNKNOWN_ERROR';
 
-				try {
-					const parsedError = JSON.parse(result.error);
-					errorMessage = parsedError.message || errorMessage;
-					errorCode = parsedError.error || errorCode;
-				} catch {
-					errorMessage = result.error;
-				}
+
 
 				setError(errorMessage);
 
