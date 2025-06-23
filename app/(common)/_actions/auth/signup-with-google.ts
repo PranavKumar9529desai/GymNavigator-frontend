@@ -1,17 +1,17 @@
 'use server';
 
 import {
-	type ApiResult,
-	type SigninResponseType,
-	authClient,
-	Rolestype,
-} from '@/lib/AxiosInstance/Signin/sign-in-client';
+	ApiResult,
+	GoogleSignupResponseType,
+	signupClient
+} from '@/lib/AxiosInstance/Signup/sign-up-client';
+import type { Rolestype } from '@/types/next-auth';
 
 export default async function SignupWithGoogle(
 	email: string,
 	name: string,
 	role: Rolestype,
-): Promise<ApiResult<SigninResponseType>> {
+): Promise<ApiResult<GoogleSignupResponseType>> {
 	console.log('Signing in with Google:', email);
-	return authClient.signUpWithGoogle(email, name, role);
+	return signupClient.signupWithGoogle(name, email, role);
 }

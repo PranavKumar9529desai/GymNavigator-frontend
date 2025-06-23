@@ -1,4 +1,5 @@
 import { SignupReqConfig } from './sign-up-axios';
+import type { Rolestype } from '@/types/next-auth';
 
 // Define the standard API response format from backend
 export interface ApiResponse<T = unknown> {
@@ -19,7 +20,6 @@ export interface ApiResult<T> {
 }
 
 // Define signup-specific types
-export type RoleType = 'owner' | 'trainer' | 'client' | 'sales';
 
 export interface SignupResponseType {
 	id: string;
@@ -31,7 +31,7 @@ export interface SignupResponseType {
 export interface GoogleSignupResponseType {
 	name: string;
 	email: string;
-	role: RoleType;
+	role: Rolestype;
 }
 
 /**
@@ -102,7 +102,7 @@ export const signupClient = {
 	signupWithGoogle: async (
 		name: string,
 		email: string,
-		role: RoleType,
+		role: Rolestype,
 	): Promise<ApiResult<GoogleSignupResponseType>> => {
 		try {
 			const axiosInstance = await SignupReqConfig();

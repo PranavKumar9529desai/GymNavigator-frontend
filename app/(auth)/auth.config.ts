@@ -12,6 +12,7 @@ import SigninSA from "../(common)/_actions/auth/signin-with-credentials";
 import { checkUserExists } from "..//(common)/_actions/auth/check-user-exists";
 import SigninGoogleSA from "..//(common)/_actions/auth/signin-with-google";
 import type { GymInfo, Rolestype } from "@/types/next-auth";
+import SignupWithGoogle from "../(common)/_actions/auth/signup-with-google";
 
 // Import the relevant types from the auth client
 import type {
@@ -19,7 +20,6 @@ import type {
   SigninResponseType,
   UserInfoResponse,
 } from "@/lib/AxiosInstance/Signin/sign-in-client";
-import type { RoleType } from "@/lib/AxiosInstance/Signup/sign-up-client";
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {
@@ -275,7 +275,7 @@ export default {
           const signupResult = await SignupWithGoogle(
             userName,
             user.email,
-            selectedRole as RoleType,
+            selectedRole as Rolestype,
           );
 
           console.log("Google signup result:", signupResult);

@@ -18,6 +18,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import SigninResponseType  from "@/app/(common)/_actions/auth/signup-with-google"
 const roles = [
   {
     title: "Gym Owner",
@@ -53,7 +54,7 @@ export default function SelectRole() {
           await SignupWithGoogle(
             session?.user?.name,
             session?.user?.email,
-            role as "owner" | "trainer" | "client",
+            role as Rolestype,
           );
 
         if (response?.data?.name && response.data?.role) {
