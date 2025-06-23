@@ -59,7 +59,7 @@ export default function BottomNavigation({
 	return (
 		<nav
 			className={cn(
-				'fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 shadow-lg pb-safe transform transition-all duration-300 ease-in-out',
+				'fixed bottom-0  z-50 left-0 right-0  bg-white border-t border-gray-200 shadow-lg pb-safe transform transition-all duration-300 ease-in-out',
 				!isVisible && 'translate-y-full opacity-0',
 				'supports-[height:100dvh]:bottom-[env(safe-area-inset-bottom)]',
 			)}
