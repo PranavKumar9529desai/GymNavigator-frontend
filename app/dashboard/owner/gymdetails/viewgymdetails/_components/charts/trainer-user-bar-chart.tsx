@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, Tooltip } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, Tooltip, YAxis } from "recharts"
 import type { ReactNode } from "react"
 
 import {
@@ -44,8 +44,8 @@ export function TrainerUserBarChart({
   }))
 
   // Calculate dynamic min-width for the chart container
-  const minBarWidth = 60; // px per bar
-  const chartMinWidth = Math.max(chartData.length * minBarWidth, 320); // fallback to 320px if few bars
+  const minBarWidth = 20 // px per bar
+  const chartMinWidth = Math.max(chartData.length * minBarWidth, 20); // fallback to 320px if few bars
 
   const averageClients =
     chartData.length > 0
@@ -68,8 +68,19 @@ export function TrainerUserBarChart({
           style={{ minWidth: chartMinWidth, minHeight: 220 }}
         >
           <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={chartData}>
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              width={chartData.length * 60} // adjust as needed
+            >
               <CartesianGrid vertical={false} />
+              <YAxis
+                tickLine={false}
+                axisLine={true}
+                tickMargin={5}
+                allowDecimals={false}
+                label={{ value: "Clients", angle: -90, position: "insideLeft" }}
+              />
               <XAxis
                 dataKey="name"
                 tickLine={false}
@@ -78,7 +89,7 @@ export function TrainerUserBarChart({
                 tickFormatter={(value) => value}
               />
               <Tooltip cursor={false} />
-              <Bar dataKey="clientCount" fill="#2563eb" radius={8} />
+              <Bar dataKey="clientCount" fill="#2563eb" barSize={40} radius={0} />
             </BarChart>
           </ChartContainer>
         </div>
