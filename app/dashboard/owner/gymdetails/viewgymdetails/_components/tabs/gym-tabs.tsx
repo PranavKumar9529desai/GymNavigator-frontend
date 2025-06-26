@@ -33,7 +33,7 @@ export const GymTabs = ({
   
   return <>
      <Tabs defaultValue="general" className="w-full ">
-          <TabsList className="flex justify-around flex-wrap sm:flex-nowrap w-full rounded-lg p-1 bg-gray-100 dark:bg-gray-800">
+          <TabsList className="flex justify-around flex-wrap sm:flex-nowrap w-full rounded-lg p-1 bg-gray-100 dark:bg-gray-800 space-y-2 sm:space-y-0">
             <SingleTab
               name="general"
               label="Overview"

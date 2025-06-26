@@ -15,7 +15,7 @@ export default async function Page() {
 		staleTime: 1000 * 60 * 5, // 5 minutes
 	});
 
-	// Dehydrate the query cache
+	// Dehydrate the qquery cache
 	const dehydratedState = dehydrate(queryClient);
 
 	return (
