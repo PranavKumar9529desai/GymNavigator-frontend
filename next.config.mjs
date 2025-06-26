@@ -52,7 +52,7 @@ const nextConfig = {
         headers: [
           {
             key: "Host",
-            value: "admin.gymnavigator.in",
+            value: "gymnavigator.in",
           },
           {
             // Prevent iframe embedding
