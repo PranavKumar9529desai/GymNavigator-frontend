@@ -1,5 +1,5 @@
 {
-  "name": "GymNavigator Admin",
+  "name": "GymNavigator",
   "short_name": "GymNav Admin",
   "description": "Admin dashboard for GymNavigator",
   "start_url": "/dashboard",

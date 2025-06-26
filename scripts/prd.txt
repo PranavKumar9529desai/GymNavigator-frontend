@@ -1,7 +1,7 @@
 
 <context>
 # Overview
-The Settings page in the GymNavigator admin app is being optimized for mobile usage and improved UI. The goal is to ensure a seamless, mobile-first experience for gym owners and trainers managing their settings, with a focus on accessibility, performance, and code quality.
+The Settings page in the GymNavigator app is being optimized for mobile usage and improved UI. The goal is to ensure a seamless, mobile-first experience for gym owners and trainers managing their settings, with a focus on accessibility, performance, and code quality.
 
 # Core Features
 - Mobile-first, responsive layout for the Settings page

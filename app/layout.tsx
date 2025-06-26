@@ -9,6 +9,7 @@ import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 import OfflineIndicator from "@/components/common/OfflineIndicator"; // Import the new component
 import localFont from "next/font/local";
 import ClientMotionProvider from "../providers/ClientMotionProvider";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 const siteUrl = "https://gymnavigator.vercel.app";
 // export const dynamic = "force-static";
 
@@ -121,6 +122,7 @@ export default function RootLayout({
             </ClientMotionProvider>
           </QueryClientProvider>
         </Providers>
+        <PWAInstallPrompt />
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Gyms | GymNavigator Admin',
+	title: 'Gyms | GymNavigator',
 	description: 'View and manage gyms in GymNavigator',
 };
 
