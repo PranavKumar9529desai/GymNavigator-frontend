@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { generateStaticParams } from "@/app/gym/[gymname]/page";
 
-const siteUrl = "https://admin.gymnavigator.in";
+const siteUrl = "https://gymnavigator.in";
 
 /**
  * Sitemap configuration for Next.js app router
