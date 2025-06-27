@@ -37,6 +37,12 @@ export default async function Layout({
     return null; // Or render a minimal loading/message state
   }
 
+  // 3 The User is not associated with any gym
+  if ( session.role && !session.gym) {
+    console.log("sesion role is this " , session.role);
+    redirect(`onboarding/${session.role}`);
+
+  }
   // 3. Role-based Path Authorization & Base Redirection
   const role = session.role; // Use validated role
 
@@ -55,7 +61,7 @@ export default async function Layout({
 
   // Get menu items efficiently using the optimized function
   const menuItems = getDashboardMenuItems(role);
-  
+
   // This is a no-op at runtime but helps with bundling optimization
   // It ensures common icons are available immediately for faster rendering
   preloadCommonIcons();
