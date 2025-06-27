@@ -1,14 +1,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Rolestype } from "@/types/next-auth";
+
 import NotOnboardedImage from './_assests/not-onboarded.png';
-export default function NotOnboarded() {
+export default function NotOnboarded( { role }  : { role  : Rolestype }) {
 	return (
 		<div className="space-y-4">
 			<div
 				className="text-center text-lg font-['latin'] font-semibold
         text-red-600"
 			>
-				<span className="px-4 py-2 text-xl">You're not onboarded yet!</span>
+				<span className="px-4 py-2 text-2xl font-semibold">You're not onboarded yet!</span>
 			</div>
 			<div className="relative w-full max-w-sm h-80  mx-auto">
 				<Image
@@ -20,10 +22,10 @@ export default function NotOnboarded() {
 			</div>
 			<div className="flex justify-center">
 				<Link
-					href="/onboarding/client"
-					className="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg px-6 py-3 shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+					href={`/onboarding/${role}`}
+					className="inline-block bg-green-600 hover:bg-green-700 text-white font-bold rounded-full px-5 py-2 shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 text-base tracking-wide drop-shadow-md border border-green-700"
 				>
-					Get Started with Onboarding
+					Onboard Now
 				</Link>
 			</div>
 		</div>
