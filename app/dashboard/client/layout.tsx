@@ -7,6 +7,7 @@ import NotOnboarded from "../_components/not-onboarded/not-onboarded";
 import { getIsWorkoutAndDietAssignedStatus } from "./_actions/get-isworkoutanddietassigned-status";
 import ClientLayout from "./_components/ClientLayout";
 import DashboardTopBar from "../_components/DashboardTopBar";
+import { Rolestype } from "@/types/next-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export default async function RootLayout({
     <div className="min-h-screen">
       <ClientLayout>{IsOnboarded ? children :
         <div className=" mt-10 sm:h-screen sm:mt-0 ">
-          <NotOnboarded />
+          <NotOnboarded role={session?.role as Rolestype} />
 
         </div>
       }
