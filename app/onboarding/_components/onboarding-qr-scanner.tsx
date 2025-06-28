@@ -1,14 +1,10 @@
 'use client';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-	Html5QrcodeScanType,
-	Html5QrcodeScanner,
-	Html5QrcodeSupportedFormats,
-} from 'html5-qrcode';
 import { CheckCircle2, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useZxing } from 'react-zxing';
 
 interface QrValueType {
 	OnboardingAction: {
@@ -23,90 +19,62 @@ export default function OnboardingQrScanner() {
 	const [isScanning, setIsScanning] = useState(true);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
-	const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
-	useEffect(() => {
-		if (typeof window !== 'undefined' && isScanning && !isProcessing) {
-			scannerRef.current = new Html5QrcodeScanner(
-				'qr-reader',
-				{
-					fps: 10,
-					qrbox: { width: 300, height: 300 },
-					aspectRatio: 1.0,
-					supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-					rememberLastUsedCamera: true,
-					showTorchButtonIfSupported: false,
-					formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
-					videoConstraints: {
-						facingMode: 'environment',
-					},
-				},
-				/* verbose= */ false,
-			);
+	const { ref } = useZxing({
+		onDecodeResult(result) {
+			try {
+				setIsScanning(false);
+				setIsProcessing(true);
 
-			scannerRef.current.render(
-				async (decodedText: string) => {
-					try {
-						setIsScanning(false);
-						setIsProcessing(true);
+				// Parse the QR code data
+				const parsedData: QrValueType = JSON.parse(result.getText());
 
-						// Parse the QR code data
-						const parsedData: QrValueType = JSON.parse(decodedText);
+				if (parsedData.OnboardingAction) {
+					const { gymname, gymid, hash } = parsedData.OnboardingAction;
+					console.log(
+						'Onboarding action data:',
+						parsedData.OnboardingAction,
+					);
 
-						if (parsedData.OnboardingAction) {
-							const { gymname, gymid, hash } = parsedData.OnboardingAction;
-							console.log(
-								'Onboarding action data:',
-								parsedData.OnboardingAction,
-							);
+					// Process successful scan
+					toast.success('QR code scanned successfully');
+					setIsSuccess(true);
 
-							// Process successful scan
-							toast.success('QR code scanned successfully');
-							setIsSuccess(true);
+					// Get the user's role from localStorage or a state management solution
+					const userRole = localStorage.getItem('userRole') || 'trainee'; // Default to 'trainee' if not found
 
-							// Clear the scanner
-							if (scannerRef.current) {
-								scannerRef.current.clear();
-							}
-
-							// Get the user's role from localStorage or a state management solution
-							const userRole = localStorage.getItem('userRole') || 'trainee'; // Default to 'trainee' if not found
-
-							// Navigate to the gym enrollment page with the scanned parameters
-							setTimeout(() => {
-								router.push(
-									`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
-								);
-							}, 1500);
-						} else {
-							throw new Error('Invalid QR code: Not an onboarding QR code');
-						}
-					} catch (error) {
-						console.error('Error processing QR code:', error);
-						toast.error('Failed to process QR code', {
-							description:
-								error instanceof Error
-									? error.message
-									: 'Unknown error occurred',
-						});
-						setIsProcessing(false);
-						setIsScanning(true);
-					}
-				},
-				(error: string) => {
-					if (!error.includes('NotFoundException')) {
-						console.error('QR scan error:', error);
-					}
-				},
-			);
-		}
-
-		return () => {
-			if (scannerRef.current) {
-				scannerRef.current.clear();
+					// Navigate to the gym enrollment page with the scanned parameters
+					setTimeout(() => {
+						router.push(
+							`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
+						);
+					}, 1500);
+				} else {
+					throw new Error('Invalid QR code: Not an onboarding QR code');
+				}
+			} catch (error) {
+				console.error('Error processing QR code:', error);
+				toast.error('Failed to process QR code', {
+					description:
+						error instanceof Error
+							? error.message
+							: 'Unknown error occurred',
+				});
+				setIsProcessing(false);
+				setIsScanning(true);
 			}
-		};
-	}, [isScanning, isProcessing, router]);
+		},
+		onError(error) {
+			if (error instanceof Error && !error.message?.includes('NotFound')) {
+				console.error('QR scan error:', error);
+			}
+		},
+		constraints: {
+			video: {
+				facingMode: 'environment'
+			}
+		}
+	});
 
 	if (isProcessing && !isSuccess) {
 		return (
@@ -165,7 +133,9 @@ export default function OnboardingQrScanner() {
 
 						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
 							<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
-							{isScanning && <div id="qr-reader" className="mx-auto" />}
+							{isScanning && (
+								<video ref={ref} style={{ width: '100%' }} />
+							)}
 						</div>
 
 						<div className="space-y-2">
