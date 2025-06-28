@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface SuccessStateProps {
 	message: string;
@@ -20,14 +20,21 @@ interface SuccessStateProps {
 
 export function SuccessState({ message, gymName }: SuccessStateProps) {
 	const router = useRouter();
+	const [countdown, setCountdown] = useState(5);
 
 	useEffect(() => {
-		const redirectTimer = setTimeout(() => {
-			router.push('/dashboard');
-		}, 5000);
+		const intervalId = setInterval(() => {
+			setCountdown((prevCount) => prevCount - 1);
+		}, 1000);
 
-		return () => clearTimeout(redirectTimer);
-	}, [router]);
+		return () => clearInterval(intervalId);
+	}, []);
+	
+	useEffect(() => {
+		if (countdown <= 0) {
+			router.push('/dashboard');
+		}
+	}, [countdown, router]);
 
 	return (
 		<div className="flex items-center justify-center min-h-[70vh] bg-inherit">
@@ -52,7 +59,7 @@ export function SuccessState({ message, gymName }: SuccessStateProps) {
 						You can now access all the features available for your role.
 					</p>
 					<p className="mt-2 text-sm text-gray-500">
-						Redirecting to dashboard in 5 seconds...
+						Redirecting to dashboard in {countdown} second{countdown !== 1 ? 's' : ''}...
 					</p>
 				</CardContent>
 				<CardFooter className="flex flex-col sm:flex-row gap-3 justify-center">

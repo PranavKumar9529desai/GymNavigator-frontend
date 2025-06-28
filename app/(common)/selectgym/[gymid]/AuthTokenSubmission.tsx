@@ -1,5 +1,5 @@
 "use client";
-import { updateSesionWithGym } from "@/app/(common)/_actions/session/updateSessionWithGym";
+import { updateSessionWithGym } from "@/app/(common)/_actions/session/updateSessionWithGym";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -144,7 +144,7 @@ export default function AuthTokenSubmission() {
           id: gym.id as string,
           gym_name: gym.name,
         };
-        await updateSesionWithGym(newGym, update);
+        await updateSessionWithGym(newGym, update);
 
         // Show success component instead of immediate redirect
         setShowSuccess(true);

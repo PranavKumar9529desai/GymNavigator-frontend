@@ -4,7 +4,7 @@ import { queryClient } from "@/lib/getQueryClient";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { updateSesionWithGym } from "../../../(common)/_actions/session/updateSessionWithGym";
+import { updateSessionWithGym } from "../../../(common)/_actions/session/updateSessionWithGym";
 import type { GymInfo } from "@/types/next-auth";
 import { attachRoleToGym } from "../_actions/attach-role-to-gym";
 import { ErrorState } from "./components/ErrorState";
@@ -43,9 +43,9 @@ export default function AttachToGymPage() {
         setMessage(result.message);
         // invalidiate this onboardedUsers query
         queryClient.invalidateQueries({ queryKey: ["onboardedUsers"] });
-        // update the session with gym and other fileds
+        // update the session with gym and other fields
         // gym  =  { id : string , gym_name : string	}
-        updateSesionWithGym(newGym, update);
+        updateSessionWithGym(newGym, update);
         setStatus("success");
       } else {
         setMessage(result.message);
@@ -61,8 +61,7 @@ export default function AttachToGymPage() {
   useEffect(() => {
     processAttachment();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  }, [processAttachment]);
+  }, []);
 
   // Display appropriate component based on status
   if (status === "loading") {
