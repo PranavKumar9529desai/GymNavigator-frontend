@@ -23,7 +23,7 @@ export default function OnboardingQrScanner() {
 	const { ref } = useZxing({
 		onDecodeResult(result) {
 			try {
-				setIsScanning(false);
+				setIsScanning(true);
 				setIsProcessing(true);
 
 				// Parse the QR code data
@@ -44,11 +44,13 @@ export default function OnboardingQrScanner() {
 					const userRole = localStorage.getItem('userRole') || 'trainee'; // Default to 'trainee' if not found
 
 					// Navigate to the gym enrollment page with the scanned parameters
-					setTimeout(() => {
+					
+					setIsProcessing(false);
+					setIsScanning(false);
 						router.push(
 							`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
 						);
-					}, 1500);
+				
 				} else {
 					throw new Error('Invalid QR code: Not an onboarding QR code');
 				}

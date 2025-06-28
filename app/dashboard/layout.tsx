@@ -11,6 +11,7 @@ import { getDashboardMenuItems } from "./_components/use-dashboard-menu";
 import Sidebar from "./_components/sidebar";
 // Import the preload function for performance improvement
 import { preloadCommonIcons } from "./_components/common-icons";
+import { IsClient } from "@/lib/is-client";
 
 export default async function Layout({
   children,
@@ -39,8 +40,9 @@ export default async function Layout({
 
   // 3 The User is not associated with any gym
   if ( session.role && !session.gym) {
-    console.log("sesion role is this " , session.role);
-    redirect(`onboarding/${session.role}`);
+    console.log("User redirected to the /onboarding" , session.role);
+
+    redirect(`/onboarding/`);
 
   }
   // 3. Role-based Path Authorization & Base Redirection
@@ -51,7 +53,7 @@ export default async function Layout({
   } else if (pathname.startsWith("/dashboard/trainer") && !IsTrainer(session)) {
     // Ensure only trainers access trainer section, specific checks (like gym) in trainer layout
     redirect("/unauthorized");
-  } else if (pathname === "/dashboard" || pathname === "/dashboard/") {
+  } else if (pathname === "/dashboard" && !IsClient(session)) {
     // Redirect from base dashboard to role-specific dashboard
     redirect(`/dashboard/${role.toLowerCase()}`);
   }
