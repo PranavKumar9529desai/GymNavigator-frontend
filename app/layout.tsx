@@ -6,14 +6,13 @@ import type { ToasterProps } from "sonner";
 import QueryClientProvider from "../providers/QueryClientProvider"; // Removed useOnlineStatus
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 // Removed useEffect, useState
-import OfflineIndicator from "@/components/common/OfflineIndicator"; // Import the new component
+import OfflineIndicator from "@/components/common/OfflineIndicator";
+import { auth } from "@/app/(auth)/auth"; // Assuming your auth config is in /auth.ts
 import localFont from "next/font/local";
 import ClientMotionProvider from "../providers/ClientMotionProvider";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 const siteUrl = "https://gymnavigator.vercel.app";
 // export const dynamic = "force-static";
-
-
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -91,12 +90,12 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Removed the inline OfflineIndicator component definition
+  const session = await auth(); // Fetch the session on the server
 
   const toasterProps: ToasterProps = {
     richColors: true,
@@ -112,7 +111,7 @@ export default function RootLayout({
           // `${oronPax.variable} ${upheaval.variable} ${productSans.variable}`
         // }
       >
-        <Providers>
+        <Providers session={session}> {/* Pass the session as a prop */}
           <QueryClientProvider>
             <OfflineIndicator /> {/* Add the indicator here */}
             <ClientMotionProvider>
