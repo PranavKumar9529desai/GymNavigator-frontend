@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run --bun next dev --turbopack",
+    "dev:mobile": "bash ./dev.sh",
     "prebuild": "node fix-axios-imports.mjs",
     "build": "bun run --bun next build",
     "start": "bun run --env-file=.env.production --bun next start",
