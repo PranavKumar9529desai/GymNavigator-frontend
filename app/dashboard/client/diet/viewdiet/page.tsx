@@ -1,24 +1,17 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-
 export const dynamic = "force-dynamic";
 
-import { queryClient } from "@/lib/queryClient";
 import { fetchTodaysDiet } from "./_actions/get-todays-diet";
 import TodaysDiet from "./_components/todays-diet";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import TitleComponent from "@/components/ui/title-component";
 
 export default async function ViewDietPage() {
-  // Prefetch the data on the server
-  await queryClient.prefetchQuery({
-    queryKey: ["todaysDiet"],
-    queryFn: fetchTodaysDiet,
-  });
+  const todaysDiet = await fetchTodaysDiet();
 
   return (
     <div className="py-6 px-0 sm:px-4 max-w-full sm:max-w-4xl mx-auto">
       <TitleComponent title="Today's Diet Plan" />
-      
+
       <Card className="shadow-sm border-0 rounded-none sm:rounded-lg bg-white/50 backdrop-blur-sm overflow-hidden">
         <CardHeader className="pb-2 pt-4 border-b border-slate-100">
           <div className="flex items-center justify-center">
@@ -28,9 +21,7 @@ export default async function ViewDietPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <TodaysDiet />
-          </HydrationBoundary>
+          <TodaysDiet todaysDiet={todaysDiet} />
         </CardContent>
       </Card>
 

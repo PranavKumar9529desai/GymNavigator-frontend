@@ -5,7 +5,6 @@ import { ArrowRight, Dumbbell, Search } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { Excercisetype } from '../actions/getSIngleMuscle';
-import { useExercises } from './hooks/useExercises';
 
 const containerVariants = {
 	hidden: { opacity: 0, y: 20 },
@@ -28,16 +27,14 @@ const itemVariants = {
 };
 
 interface SingleMusclesProps {
-	initialExercises: Excercisetype[];
+	exercises: Excercisetype[];
 	muscleName: string;
 }
 
 export const SingleMuscles = ({
-	initialExercises,
+	exercises,
 	muscleName,
 }: SingleMusclesProps) => {
-	const { data: exercises = initialExercises } = useExercises(muscleName);
-
 	const filteredExercises = exercises.filter(
 		(exercise) =>
 			exercise?.MuscleGroup?.name?.toLowerCase() === muscleName?.toLowerCase(),

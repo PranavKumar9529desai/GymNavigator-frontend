@@ -15,7 +15,7 @@ interface OnBordingUserResponse {
 }
 
 // This is a server action, use it only in Server Components
-export const getOnboardingUsersServer = async () => {
+export const getOnboardingUsersServer = async (): Promise<OnBordingUserResponse> => {
 	const ownerAxios = await OwnerReqConfig();
 	try {
 		console.log('Fetching onboarding users (server)...');
@@ -28,12 +28,12 @@ export const getOnboardingUsersServer = async () => {
 
 		if (!data.users || !Array.isArray(data.users)) {
 			console.error('Invalid users data received:', data);
-			return { users: [] };
+			return { msg: 'Invalid user data', users: [] };
 		}
 
 		return data;
 	} catch (error) {
 		console.error('Error fetching onboarding users:', error);
-		return { users: [] };
+		return { msg: 'Failed to fetch users', users: [] };
 	}
 };

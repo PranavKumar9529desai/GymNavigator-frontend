@@ -1,9 +1,7 @@
-import { queryClient } from '@/lib/getQueryClient';
 export const dynamic = 'force-dynamic';
 
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import type { Metadata } from 'next';
-import { type MuscleGroup, fetchMuscles } from './_actions/get-muscles';
+import { fetchMuscles } from './_actions/get-muscles';
 import { Allworkouts } from './_components/allworkouts';
 
 export const metadata: Metadata = {
@@ -13,27 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AllWorkoutsPage() {
-	// Get cached data if available
-	const cachedData = queryClient.getQueryData<{ muscles: MuscleGroup[] }>([
-		'muscles',
-	]);
-
-	console.log('cached data is this ', cachedData);
-	// If no cached data, prefetch it
-	if (!cachedData || !cachedData.muscles) {
-		await queryClient.prefetchQuery({
-			queryKey: ['muscles'],
-			queryFn: fetchMuscles,
-			staleTime: 1000 * 60 * 60 * 24, // 24 hours
-		});
-	}
-
-	// Get the data after prefetching (if it was needed)
-	const initialData = queryClient.getQueryData<{ muscles: MuscleGroup[] }>([
-		'muscles',
-	]);
-	console.log('fetched data is this', initialData);
-	const dehydratedState = dehydrate(queryClient);
+	const { muscles } = await fetchMuscles();
 
 	return (
 		<main className="min-h-screen">
@@ -44,9 +22,7 @@ export default async function AllWorkoutsPage() {
 						Discover exercises tailored to your fitness journey
 					</p>
 				</header>
-				<HydrationBoundary state={dehydratedState}>
-					<Allworkouts initialData={initialData?.muscles} />
-				</HydrationBoundary>
+				<Allworkouts muscles={muscles} />
 			</div>
 		</main>
 	);

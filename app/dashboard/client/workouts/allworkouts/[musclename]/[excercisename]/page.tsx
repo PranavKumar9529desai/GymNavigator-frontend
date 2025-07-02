@@ -1,8 +1,9 @@
-import { queryClient } from '@/lib/getQueryClient';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { SingleWorkout } from './_components/excercise';
-import { GetExcerciseDetails } from './actions/get-excercise-details';
+import {
+	GetExcerciseDetails,
+	type Exercise,
+} from './actions/get-excercise-details';
 
 // Proper Next.js 15 page params type
 
@@ -10,26 +11,17 @@ import { GetExcerciseDetails } from './actions/get-excercise-details';
 export default async function Page({
 	params,
 }: {
-	params: Promise<{ musclename: string; excercisename: string }>;
+	params: { musclename: string; excercisename: string };
 }) {
-	// Direct access without await
+	const { musclename, excercisename } = params;
 
-	const { musclename, excercisename } = await params;
-
-	await queryClient.prefetchQuery({
-		queryKey: ['exercise', musclename, excercisename],
-		queryFn: () => GetExcerciseDetails(musclename, excercisename),
-	});
-
-	const dehydratedState = dehydrate(queryClient);
+	const exercise = await GetExcerciseDetails(musclename, excercisename);
 
 	return (
 		<main className="min-h-screen bg-gray-50">
-			<HydrationBoundary state={dehydratedState}>
-				<Suspense fallback={<LoadingSkeleton />}>
-					<SingleWorkout />
-				</Suspense>
-			</HydrationBoundary>
+			<Suspense fallback={<LoadingSkeleton />}>
+				<SingleWorkout exercise={exercise} musclename={musclename} />
+			</Suspense>
 		</main>
 	);
 }

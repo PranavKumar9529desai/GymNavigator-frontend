@@ -2,14 +2,12 @@
 
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { queryClient } from '@/lib//getQueryClient';
 import { cn } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
 import { m } from 'framer-motion';
 import { Activity, ArrowRight, Dumbbell, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { type MuscleGroup, fetchMuscles } from '../_actions/get-muscles';
+import { type MuscleGroup } from '../_actions/get-muscles';
 
 // Simplified animations for better mobile performance
 const _fadeIn = {
@@ -49,24 +47,14 @@ const MuscleCardSkeleton = () => (
 );
 
 interface AllworkoutsProps {
-	initialData?: MuscleGroup[];
+	muscles: MuscleGroup[];
 }
 
-export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
+export const Allworkouts = ({ muscles }: AllworkoutsProps) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState('All');
 	const [filteredMuscles, setFilteredMuscles] = useState<MuscleGroup[]>([]);
 	const Router = useRouter();
-
-	const { data, isLoading, error } = useQuery({
-		queryKey: ['muscles'],
-		queryFn: fetchMuscles,
-		staleTime: 1000 * 60 * 60 * 24, // 24 hours
-		gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
-		initialData: initialData ? { muscles: initialData } : undefined,
-	});
-
-	const muscles = data?.muscles || []; // Provide a default empty array
 
 	useEffect(() => {
 		if (!muscles || muscles.length === 0) return;
@@ -135,17 +123,17 @@ export const Allworkouts = ({ initialData }: AllworkoutsProps) => {
 			</div>
 
 			{/* Error State */}
-			{error && (
+			{/* {error && (
 				<div role="alert" className="p-4 text-center text-red-500">
 					<p className="text-xl font-semibold">Error loading workouts</p>
 					<p className="text-sm">
 						{error instanceof Error ? error.message : error}
 					</p>
 				</div>
-			)}
+			)} */}
 
 			{/* Loading State */}
-			{isLoading ? (
+			{!muscles.length ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
 					{Array.from({ length: 6 }).map((_, index) => (
 						<MuscleCardSkeleton key={index as number} />

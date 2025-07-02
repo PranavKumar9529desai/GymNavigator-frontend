@@ -1,10 +1,8 @@
 export const dynamic = "force-dynamic";
-import { queryClient } from "@/lib/queryClient";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
 import UserAttendance from "./UserAttendance";
-import { TodayAttendance } from "./getTodayAttendance";
+import { TodayAttendance, type TodayAttendanceResponse } from "./getTodayAttendance";
 
 function Spinner() {
   return (
@@ -15,16 +13,11 @@ function Spinner() {
 }
 
 export default async function AttendancePage() {
-  await queryClient.prefetchQuery({
-    queryKey: ["todays-attendance"],
-    queryFn: TodayAttendance,
-  });
+	const attendanceData: TodayAttendanceResponse = await TodayAttendance();
 
-  return (
-    <Suspense fallback={<Spinner />}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <UserAttendance />
-      </HydrationBoundary>
-    </Suspense>
-  );
+	return (
+		<Suspense fallback={<Spinner />}>
+			<UserAttendance attendanceData={attendanceData} />
+		</Suspense>
+	);
 }

@@ -12,8 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchTodaysDiet } from "../_actions/get-todays-diet";
+import { type TodaysDiet } from "../_actions/get-todays-diet";
 import { DietSummaryCard } from "./DietSummaryCard";
 import { MealCard } from "./MealCard";
 
@@ -68,103 +67,11 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   return null;
 };
 
-export default function TodaysDiet() {
-  const _queryClient = useQueryClient();
+interface TodaysDietProps {
+  todaysDiet: TodaysDiet;
+}
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["todaysDiet"],
-    queryFn: fetchTodaysDiet,
-    staleTime: 1000 * 60 * 15, // 15 minutes
-    refetchOnWindowFocus: true,
-  });
-
-  // Handle loading state
-  if (isLoading) {
-    return (
-      <div className="px-3 sm:px-6 space-y-6 w-full">
-        {/* Nutrition Summary Card Skeleton */}
-        <div className="animate-pulse">
-          <div className="h-6 w-48 bg-gray-200 rounded mb-4" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            {/* Macros Pie Chart Skeleton */}
-            <div className="col-span-1 flex flex-col items-center justify-center">
-              <div className="h-[200px] w-full flex items-center justify-center">
-                <div className="h-32 w-32 rounded-full bg-gray-200" />
-              </div>
-            </div>
-            
-            {/* Macros Breakdown Skeleton */}
-            <div className="col-span-1 flex flex-col justify-center space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i}>
-                  <div className="flex justify-between mb-1">
-                    <div className="h-4 w-20 bg-gray-200 rounded" />
-                    <div className="h-4 w-10 bg-gray-200 rounded" />
-                  </div>
-                  <div className="h-2 w-full bg-gray-200 rounded-full" />
-                </div>
-              ))}
-            </div>
-            
-            {/* Calories Skeleton */}
-            <div className="col-span-1 flex justify-center items-center">
-              <div className="relative w-32 h-32">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <div className="h-7 w-16 bg-gray-200 rounded mb-2" />
-                    <div className="h-4 w-24 bg-gray-200 rounded" />
-                  </div>
-                </div>
-                <div className="h-full w-full rounded-full border-8 border-gray-200" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Meals Skeleton */}
-        <div className="mt-8 animate-pulse">
-          <div className="h-6 w-32 bg-gray-200 rounded mb-4" />
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="border border-gray-100 rounded-lg overflow-hidden">
-                <div className="p-4 bg-white">
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 bg-gray-200 rounded-full" />
-                      <div className="h-5 w-28 bg-gray-200 rounded" />
-                    </div>
-                    <div className="h-5 w-16 bg-gray-200 rounded" />
-                  </div>
-                  <div className="h-20 bg-gray-100 rounded" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Handle error state
-  if (isError) {
-    return (
-      <div className="px-3 sm:px-4">
-        <div className="bg-red-50 border border-red-100 rounded-lg p-4 sm:p-6 text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-red-800 mb-2">Failed to Load Diet Plan</h3>
-          <p className="text-sm text-red-600 mb-4">We couldn't retrieve your nutrition information at this time.</p>
-          <button
-            type="button"
-            onClick={() => refetch()}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md transition-colors inline-flex items-center gap-2"
-          >
-            <span>Try Again</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+export default function TodaysDiet({ todaysDiet: data }: TodaysDietProps) {
   // If no diet plan or no meals
   if (!data?.dietPlan || data.dietPlan.meals.length === 0) {
     return (

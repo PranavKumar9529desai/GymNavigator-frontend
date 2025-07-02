@@ -31,4 +31,4 @@ const TodayAttendance = async (): Promise<TodayAttendanceResponse> => {
 	}
 };
 
-export { TodayAttendance, type AttendanceUser };
+export { TodayAttendance, type AttendanceUser, type TodayAttendanceResponse };

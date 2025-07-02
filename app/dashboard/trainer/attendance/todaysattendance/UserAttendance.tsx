@@ -12,11 +12,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, UserX, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { type AttendanceUser, TodayAttendance } from './getTodayAttendance';
+import { type TodayAttendanceResponse } from './getTodayAttendance';
 
 const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
 	return shift === 'MORNING' ? 'Morning' : 'Evening';
@@ -28,6 +27,10 @@ interface FormattedUser {
 	shift: 'Morning' | 'Evening';
 	todaysAttendance: boolean;
 	attendanceTime: string | null;
+}
+
+interface UserAttendanceProps {
+	attendanceData: TodayAttendanceResponse;
 }
 
 const columns: ColumnDef<FormattedUser>[] = [
@@ -108,13 +111,7 @@ const columns: ColumnDef<FormattedUser>[] = [
 	},
 ];
 
-export default function UserAttendance() {
-	const { data: attendanceData } = useQuery({
-		queryKey: ['todays-attendance'],
-		queryFn: TodayAttendance,
-		refetchOnMount : true
-	});
-
+export default function UserAttendance({ attendanceData }: UserAttendanceProps) {
 	const formattedUsers: FormattedUser[] =
 		attendanceData?.users?.map((user) => ({
 			id: user.id,
