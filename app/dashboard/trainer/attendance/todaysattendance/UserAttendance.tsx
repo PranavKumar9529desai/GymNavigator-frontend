@@ -112,6 +112,7 @@ export default function UserAttendance() {
 	const { data: attendanceData } = useQuery({
 		queryKey: ['todays-attendance'],
 		queryFn: TodayAttendance,
+		refetchOnMount : true
 	});
 
 	const formattedUsers: FormattedUser[] =

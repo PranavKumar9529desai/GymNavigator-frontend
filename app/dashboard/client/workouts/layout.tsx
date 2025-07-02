@@ -1,6 +1,6 @@
 import type React from 'react';
+import NoAssignmentMessage from '../_components/NoAssignmentMessage';
 import { checkIsWorkoutAssigned } from './_actions/isworkout-assigned';
-import { WorkoutNotAssigned } from './myworkouts/_component/workout-not-assigned';
 
 export default async function WorkoutsLayout({
 	children,
@@ -10,7 +10,7 @@ export default async function WorkoutsLayout({
 	const { isAssigned } = await checkIsWorkoutAssigned();
 
 	if (!isAssigned) {
-		return <WorkoutNotAssigned />;
+		return <NoAssignmentMessage type="workout" />;
 	}
 
 	return <div className="container mx-auto px-4">{children}</div>;

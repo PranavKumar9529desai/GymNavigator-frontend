@@ -18,7 +18,6 @@ export default async function AttendancePage() {
   await queryClient.prefetchQuery({
     queryKey: ["todays-attendance"],
     queryFn: TodayAttendance,
-    staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
   });
 
   return (
