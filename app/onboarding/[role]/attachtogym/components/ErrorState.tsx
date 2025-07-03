@@ -16,7 +16,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { AlertCircle, ArrowLeft, InfoIcon, RefreshCw } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { attachRoleToGym } from '../../_actions/attach-role-to-gym';
 
@@ -36,6 +36,7 @@ export function ErrorState({
 	onRetry,
 }: ErrorStateProps) {
 	const router = useRouter();
+	const pathname = usePathname();
 	const [isRetrying, setIsRetrying] = useState(false);
 
 	// Helper function to determine what kind of error we're dealing with
@@ -110,10 +111,12 @@ export function ErrorState({
 		setIsRetrying(true);
 
 		try {
+			const role = pathname.split("/")[2]; // Extract role from pathname
 			const result = await attachRoleToGym({
 				gymname: gymName,
 				gymid: gymId,
 				hash,
+				role,
 			});
 
 			if (result.success) {

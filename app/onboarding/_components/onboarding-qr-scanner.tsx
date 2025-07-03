@@ -19,11 +19,18 @@ export default function OnboardingQrScanner() {
 	const [isScanning, setIsScanning] = useState(true);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [hasProcessed, setHasProcessed] = useState(false);
 
 	const { ref } = useZxing({
 		onDecodeResult(result) {
+			// Prevent multiple scans
+			if (hasProcessed || isProcessing) {
+				return;
+			}
+
 			try {
-				setIsScanning(true);
+				setHasProcessed(true);
+				setIsScanning(false);
 				setIsProcessing(true);
 
 				// Parse the QR code data
@@ -41,15 +48,14 @@ export default function OnboardingQrScanner() {
 					setIsSuccess(true);
 
 					// Get the user's role from localStorage or a state management solution
-					const userRole = localStorage.getItem('userRole') || 'trainee'; // Default to 'trainee' if not found
+					const userRole = localStorage.getItem('userRole') || 'client'; // Default to 'trainee' if not found
 
 					// Navigate to the gym enrollment page with the scanned parameters
-					
-					setIsProcessing(false);
-					setIsScanning(false);
+					setTimeout(() => {
 						router.push(
 							`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
 						);
+					}, 1000); // Small delay to show success state
 				
 				} else {
 					throw new Error('Invalid QR code: Not an onboarding QR code');
@@ -64,6 +70,7 @@ export default function OnboardingQrScanner() {
 				});
 				setIsProcessing(false);
 				setIsScanning(true);
+				setHasProcessed(false);
 			}
 		},
 		onError(error) {
@@ -123,7 +130,7 @@ export default function OnboardingQrScanner() {
 		);
 	}
 
-	if (isScanning && !isProcessing) {
+	if (isScanning && !isProcessing && !hasProcessed) {
 		return (
 			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
 				<div className="w-full max-w-sm mx-auto">
@@ -135,9 +142,7 @@ export default function OnboardingQrScanner() {
 
 						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
 							<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
-							{isScanning && (
-								<video ref={ref} style={{ width: '100%' }} />
-							)}
+							<video ref={ref} style={{ width: '100%' }} />
 						</div>
 
 						<div className="space-y-2">

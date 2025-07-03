@@ -6,6 +6,7 @@ interface AttachRoleToGymParams {
 	gymname: string;
 	gymid: string;
 	hash: string;
+	role?: string;
 }
 
 interface AttachRoleToGymResponse {
@@ -14,19 +15,32 @@ interface AttachRoleToGymResponse {
 }
 
 /**
- * Server action to attach a user to a gym based on QR code data
+ * Server action to attach a user/trainer to a gym based on QR code data
  */
 export async function attachRoleToGym({
 	gymname,
 	gymid,
 	hash,
+	role,
 }: AttachRoleToGymParams): Promise<AttachRoleToGymResponse> {
 	try {
-		// Initialize client axios
-		const clientAxios = await ClientReqConfig();
+		let axiosInstance;
+		let endpoint: string;
+
+		// Determine which axios instance and endpoint to use based on role
+		if (role === 'trainer') {
+			// Import trainer axios configuration
+			const { TrainerReqConfig } = await import('@/lib/AxiosInstance/trainerAxios');
+			axiosInstance = await TrainerReqConfig();
+			endpoint = '/attachtogym';
+		} else {
+			// Default to client configuration for 'client' role or when no role is specified
+			axiosInstance = await ClientReqConfig();
+			endpoint = '/gym/attachtogym';
+		}
 
 		// Make request to the attach to gym endpoint
-		const response = await clientAxios.post('/gym/attachtogym', {
+		const response = await axiosInstance.post(endpoint, {
 			gymname,
 			gymid,
 			hash,

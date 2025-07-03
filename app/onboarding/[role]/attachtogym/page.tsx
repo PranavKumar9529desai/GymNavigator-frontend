@@ -38,12 +38,12 @@ export default function AttachToGymPage() {
     }
 
     try {
-      const result = await attachRoleToGym({ gymname, gymid, hash });
+      const role = pathname.split("/")[2]; // Extract role from pathname
+      const result = await attachRoleToGym({ gymname, gymid, hash, role });
 
       if (result.success) {
         queryClient.invalidateQueries({ queryKey: ["onboardedUsers"] });
         await updateSessionWithGym(newGym, update);
-        const role = pathname.split("/")[2];
         router.push(`/dashboard/`);
       } else {
         setMessage(result.message);
