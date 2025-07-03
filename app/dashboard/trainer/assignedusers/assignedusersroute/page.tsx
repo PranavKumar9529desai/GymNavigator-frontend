@@ -1,5 +1,3 @@
-import { queryClient } from "@/lib/queryClient";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
 import { getUsersAssignedToTrainer } from "./_actiions/GetuserassignedTotrainers";
@@ -14,18 +12,12 @@ function Spinner() {
 }
 
 export default async function AssignedUsersPage() {
-  await queryClient.prefetchQuery({
-    queryKey: ["assigned-users"],
-    queryFn: getUsersAssignedToTrainer,
-    staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
-  });
+  const assignedUsers = await getUsersAssignedToTrainer();
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Suspense fallback={<Spinner />}>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <AssignedUserToTrainer />
-        </HydrationBoundary>
+        <AssignedUserToTrainer assignedUsers={assignedUsers} />
       </Suspense>
     </div>
   );

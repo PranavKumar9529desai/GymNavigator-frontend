@@ -5,7 +5,6 @@ import { StatusCard } from "@/components/common/StatusCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
@@ -18,7 +17,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { AssignedUser } from "../_actiions/GetuserassignedTotrainers";
-import { getUsersAssignedToTrainer } from "../_actiions/GetuserassignedTotrainers";
 
 const columns: ColumnDef<AssignedUser>[] = [
   {
@@ -121,25 +119,27 @@ const columns: ColumnDef<AssignedUser>[] = [
   },
 ];
 
-export default function AssignedUserToTrainer() {
-  const router = useRouter();
-  const { data: users = [] } = useQuery({
-    queryKey: ["assigned-users"],
-    queryFn: getUsersAssignedToTrainer,
-  });
+interface AssignedUserToTrainerProps {
+  assignedUsers: AssignedUser[];
+}
 
+export default function AssignedUserToTrainer({
+  assignedUsers,
+}: AssignedUserToTrainerProps) {
+  const router = useRouter();
+  const [filteredUsers, setFilteredUsers] = useState(assignedUsers);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<AssignedUser[]>(users);
 
   // Calculate stats
-  const totalUsers = users.length;
-  const activeUsers = users.filter(
+  const totalUsers = assignedUsers.length;
+  const activeUsers = assignedUsers.filter(
     (u) => u.membershipStatus === "active",
   ).length;
-  const usersWithWorkoutPlan = users.filter(
+  const usersWithWorkoutPlan = assignedUsers.filter(
     (u) => u.hasActiveWorkoutPlan,
   ).length;
-  const usersWithDietPlan = users.filter((u) => u.hasActiveDietPlan).length;
+  const usersWithDietPlan = assignedUsers.filter((u) => u.hasActiveDietPlan)
+    .length;
 
   const statusCards = [
     {
@@ -169,11 +169,15 @@ export default function AssignedUserToTrainer() {
   ] as const;
 
   useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    const lowercasedTerm = searchTerm.toLowerCase();
+    const filtered = assignedUsers.filter(
+      (user) =>
+        user.name.toLowerCase().includes(lowercasedTerm) ||
+        user.activeWorkoutPlanName?.toLowerCase().includes(lowercasedTerm) ||
+        user.dietPlanName?.toLowerCase().includes(lowercasedTerm),
     );
     setFilteredUsers(filtered);
-  }, [searchTerm, users]);
+  }, [searchTerm, assignedUsers]);
 
   return (
     <div className="container mx-auto p-6 space-y-8">

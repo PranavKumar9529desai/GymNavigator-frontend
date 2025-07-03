@@ -8,7 +8,7 @@ export default async function GroceryListPage() {
 
   return (
     <div className="container py-8">
-      <GrocerySelector groceryLists={groceryLists} />
+      <GrocerySelector savedListsData={groceryLists} />
     </div>
   );
 }

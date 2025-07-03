@@ -5,10 +5,10 @@ import Loading from './loading';
 export default async function Page({
 	params,
 }: {
-	params: { musclename: string };
+	params: Promise<{ musclename: string }>		// Proper Next.js 15 page params type;
 }) {
 	// Decode the URL parameter and remove any potential encoding artifacts
-	const { musclename } = params;
+	const { musclename } = await params;
 	const muscleName = musclename
 		.split(' ')
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

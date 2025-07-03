@@ -48,14 +48,30 @@ export default async function Layout({
   // 3. Role-based Path Authorization & Base Redirection
   const role = session.role; // Use validated role
 
-  if (pathname.startsWith("/dashboard/owner") && !IsOwner(session)) {
-    redirect("/unauthorized");
-  } else if (pathname.startsWith("/dashboard/trainer") && !IsTrainer(session)) {
-    // Ensure only trainers access trainer section, specific checks (like gym) in trainer layout
-    redirect("/unauthorized");
-  } else if (pathname === "/dashboard" && !IsClient(session)) {
-    // Redirect from base dashboard to role-specific dashboard
-    redirect(`/dashboard/${role.toLowerCase()}`);
+  switch (role) {
+    case "owner":
+      if (pathname.startsWith("/dashboard/owner") && !IsOwner(session)) {
+        redirect("/unauthorized");
+      } else if (pathname === "/dashboard") {
+        redirect("/dashboard/owner/gymdetails/viewgymdetails");
+      }
+      break;
+
+    case "trainer":
+      if (pathname.startsWith("/dashboard/trainer") && !IsTrainer(session)) {
+        redirect("/unauthorized");
+      }
+      break;
+
+    case "client":
+      if (pathname.startsWith("/dashboard/client") && !IsClient(session)) {
+        redirect("/unauthorized");
+      }
+      break;
+
+    default:
+      // Handle other roles or default cases if necessary
+      break;
   }
   // Note: Client role access is implicitly allowed if not owner/trainer path
 

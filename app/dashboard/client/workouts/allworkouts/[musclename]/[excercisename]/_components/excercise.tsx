@@ -10,18 +10,27 @@ import {
 	GetExcerciseDetails,
 } from '../actions/get-excercise-details';
 
-export const SingleWorkout = () => {
-	const { excercisename = '', musclename = '' } = useParams<{
+export const SingleWorkout = ({ 
+	exercise: initialExercise, 
+	musclename: initialMusclename 
+}: { 
+	exercise?: Exercise; 
+	musclename?: string; 
+} = {}) => {
+	const params = useParams<{
 		excercisename: string;
 		musclename: string;
 	}>();
+	
+	const { excercisename = '', musclename = initialMusclename || params.musclename || '' } = params;
 
 	const [isLiked, setIsLiked] = useState(false);
 
 	const { data: exercise, error } = useQuery<Exercise, Error>({
 		queryKey: ['exercise', musclename, excercisename],
 		queryFn: () => GetExcerciseDetails(musclename, excercisename),
-		enabled: !!musclename && !!excercisename,
+		enabled: !!musclename && !!excercisename && !initialExercise,
+		initialData: initialExercise,
 	});
 
 	if (error) {

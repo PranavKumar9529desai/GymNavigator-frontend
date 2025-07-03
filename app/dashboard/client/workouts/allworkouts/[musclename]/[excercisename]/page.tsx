@@ -11,9 +11,9 @@ import {
 export default async function Page({
 	params,
 }: {
-	params: { musclename: string; excercisename: string };
+	params: Promise<{ musclename: string; excercisename: string }>;
 }) {
-	const { musclename, excercisename } = params;
+	const { musclename, excercisename } = await params;
 
 	const exercise = await GetExcerciseDetails(musclename, excercisename);
 

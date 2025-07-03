@@ -28,7 +28,7 @@ export async function markAttendance(): Promise<AttendanceResponse> {
 		const truncatedUtcDate = new Date(clientUTC);
 
 		const clientAxios = await ClientReqConfig();
-		const response = await clientAxios.post('/attendance/smark-attendance', {
+		const response = await clientAxios.post('/attendance/mark-attendance', {
 			clientDate: truncatedUtcDate.toISOString(),
 		});
 

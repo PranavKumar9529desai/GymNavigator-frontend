@@ -1,9 +1,5 @@
-import type React from 'react';
+import type { ReactNode } from 'react';
 
-export default function layout({ children }: { children: React.ReactNode }) {
-	return (
-		<>
-			<div className="">{children}</div>
-		</>
-	);
+export default function Layout({ children }: { children: ReactNode }) {
+	return <div>{children}</div>;
 }

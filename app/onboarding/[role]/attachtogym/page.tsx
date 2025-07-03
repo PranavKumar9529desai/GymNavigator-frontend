@@ -2,16 +2,18 @@
 
 import { queryClient } from "@/lib/getQueryClient";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { updateSessionWithGym } from "../../../(common)/_actions/session/updateSessionWithGym";
 import type { GymInfo } from "@/types/next-auth";
 import { attachRoleToGym } from "../_actions/attach-role-to-gym";
 import { ErrorState } from "./components/ErrorState";
 import { LoadingState } from "./components/LoadingState";
-import { SuccessState } from "./components/SuccessState";
+
 export default function AttachToGymPage() {
   const { data: session, update } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const searchParams = useSearchParams();
   const gymname = searchParams.get("gymname");
@@ -22,12 +24,11 @@ export default function AttachToGymPage() {
     gym_name: gymname as string,
   };
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading",
-  );
+  const [status, setStatus] = useState<"loading" | "error">("loading");
   const [message, setMessage] = useState("");
 
   const processAttachment = async () => {
+    setStatus("loading");
     if (!gymname || !gymid || !hash) {
       setMessage(
         "Missing required gym information. Please scan a valid QR code.",
@@ -40,13 +41,10 @@ export default function AttachToGymPage() {
       const result = await attachRoleToGym({ gymname, gymid, hash });
 
       if (result.success) {
-        setMessage(result.message);
-        // invalidiate this onboardedUsers query
         queryClient.invalidateQueries({ queryKey: ["onboardedUsers"] });
-        // update the session with gym and other fields
-        // gym  =  { id : string , gym_name : string	}
-        updateSessionWithGym(newGym, update);
-        setStatus("success");
+        await updateSessionWithGym(newGym, update);
+        const role = pathname.split("/")[2];
+        router.push(`/dashboard/`);
       } else {
         setMessage(result.message);
         setStatus("error");
@@ -75,16 +73,9 @@ export default function AttachToGymPage() {
         gymName={gymname}
         gymId={gymid}
         hash={hash}
-        onRetry={() => {
-          setStatus("success");
-          setMessage("Successfully attached to gym on retry.");
-        }}
+        onRetry={processAttachment}
       />
     );
-  }
-
-  if (status === "success") {
-    return <SuccessState message={message} gymName={gymname || "your gym"} />;
   }
 
   return null;

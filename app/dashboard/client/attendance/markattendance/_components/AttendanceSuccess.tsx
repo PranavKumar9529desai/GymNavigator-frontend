@@ -21,7 +21,7 @@ export default function AttendanceSuccess() {
 	// }, [router]);
 
 	return (
-		<div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b from-green-50 to-white dark:from-green-900/20 dark:to-gray-900 p-4 sm:p-6">
+		<div className="mt-10 sm:mt-4 h-screen w-full sm:flex items-center justify-center bg-gradient-to-b from-green-50 to-white dark:from-green-900/20 dark:to-gray-900 p-4 sm:p-6">
 			<div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
 				<div className="text-center">
 					<div className="mb-8">
