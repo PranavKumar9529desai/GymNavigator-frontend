@@ -3,9 +3,8 @@ import Providers from "@/providers/provider";
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
-import QueryClientProvider from "../providers/QueryClientProvider"; // Removed useOnlineStatus
+import { OnlineStatusProvider } from "@/providers/OnlineStatusProvider";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
-// Removed useEffect, useState
 import OfflineIndicator from "@/components/common/OfflineIndicator";
 import { auth } from "@/app/(auth)/auth"; // Assuming your auth config is in /auth.ts
 import localFont from "next/font/local";
@@ -112,14 +111,14 @@ export default async function RootLayout({
         // }
       >
         <Providers session={session}> {/* Pass the session as a prop */}
-          <QueryClientProvider>
+          <OnlineStatusProvider>
             <OfflineIndicator /> {/* Add the indicator here */}
             <ClientMotionProvider>
               {children}
               <RegisterServiceWorker />
               <Toaster {...toasterProps} />
             </ClientMotionProvider>
-          </QueryClientProvider>
+          </OnlineStatusProvider>
         </Providers>
         <PWAInstallPrompt />
       </body>

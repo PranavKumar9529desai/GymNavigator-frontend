@@ -1,6 +1,6 @@
 'use client';
 
-import { useOnlineStatus } from '@/providers/QueryClientProvider';
+import { useOnlineStatus } from '@/providers/OnlineStatusProvider';
 import { useEffect, useState } from 'react';
 
 export default function OfflineIndicator() {

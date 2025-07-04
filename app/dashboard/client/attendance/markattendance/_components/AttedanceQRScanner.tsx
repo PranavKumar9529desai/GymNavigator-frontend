@@ -1,16 +1,9 @@
 'use client';
-import { Skeleton } from '@/components/ui/skeleton';
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import {
-	Html5QrcodeScanType,
-	Html5QrcodeScanner,
-	Html5QrcodeSupportedFormats,
-} from 'html5-qrcode';
 import { CheckCircle2, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import { useZxing } from 'react-zxing';
 import { toast } from 'sonner';
-import { checkUserAttendance } from '../_actions/check-attedance';
 import { markAttendance } from '../_actions/mark-attendance';
 
 interface QrValueType {
@@ -23,141 +16,127 @@ interface QrValueType {
 
 export default function AttendanceQRScanner() {
 	const router = useRouter();
-	const queryClient = new QueryClient();
 	const [isScanning, setIsScanning] = useState(true);
-	const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+	const [isProcessing, setIsProcessing] = useState(false);
+	const [hasProcessed, setHasProcessed] = useState(false);
+	const [isSuccess, setIsSuccess] = useState(false);
 
-	// Prefetch attendance status
-	const { data: attendanceStatus, isLoading: isCheckingAttendance } = useQuery({
-		queryKey: ['attendance-status'],
-		queryFn: async () => {
-			const result = await checkUserAttendance();
-			if (!result.success) {
-				throw new Error(result.error || 'Failed to check attendance');
+	const { ref } = useZxing({
+		onDecodeResult: async (result) => {
+			// Prevent multiple scans
+			if (hasProcessed || isProcessing) {
+				return;
 			}
-			return result.data;
+
+			try {
+				setHasProcessed(true);
+				setIsScanning(false);
+				setIsProcessing(true);
+
+				const parsedData: QrValueType = JSON.parse(result.getText());
+				const now = new Date();
+				const currentUTC = Date.UTC(
+					now.getUTCFullYear(),
+					now.getUTCMonth(),
+					now.getUTCDate(),
+					now.getUTCHours(),
+				);
+
+				const scannedTime = new Date(parsedData.AttendanceAction.timestamp);
+				const scannedUTC = Date.UTC(
+					scannedTime.getUTCFullYear(),
+					scannedTime.getUTCMonth(),
+					scannedTime.getUTCDate(),
+					scannedTime.getUTCHours(),
+				);
+
+				const toleranceInHours = 1;
+				const timeDiff =
+					Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
+
+				if (timeDiff <= toleranceInHours) {
+					toast.loading('Marking attendance...');
+					
+					// Call the server action directly
+					const result = await markAttendance();
+					
+					if (result.success) {
+						toast.dismiss();
+						toast.success('Attendance marked successfully!');
+						setIsSuccess(true);
+						
+						// Redirect after a short delay to show success state
+						setTimeout(() => {
+							router.push('/dashboard/client/attendance/markattendance');
+						}, 2000);
+					} else {
+						throw new Error(result.error || 'Failed to mark attendance');
+					}
+				} else {
+					throw new Error('QR code has expired');
+				}
+			} catch (error) {
+				console.error('Error processing QR code:', error);
+				toast.error('Failed to process QR code', {
+					description:
+						error instanceof Error
+							? error.message
+							: 'Unknown error occurred',
+				});
+				setIsProcessing(false);
+				setIsScanning(true);
+				setHasProcessed(false);
+			}
 		},
+		onError(error) {
+			if (error instanceof Error && !error.message?.includes('NotFound')) {
+				console.error('QR scan error:', error);
+			}
+		},
+		constraints: {
+			video: {
+				facingMode: 'environment'
+			}
+		}
 	});
 
-	// If attendance is already marked, redirect to success page
-	useEffect(() => {
-		if (attendanceStatus?.isMarked) {
-			router.replace('/dashboard/client/attendance/success');
-		}
-	}, [attendanceStatus, router]);
-
-	const markAttendanceMutation = useMutation({
-		mutationFn: async () => {
-			return await markAttendance();
-		},
-		onSuccess: (_response) => {
-			toast.dismiss();
-			toast.success('Attendance marked successfully!');
-			queryClient.invalidateQueries({ queryKey: ['attendanceDays'] });
-			router.refresh();
-		},
-		onError: (error) => {
-			toast.dismiss();
-			console.error('Error marking attendance:', error);
-			toast.error('Failed to mark attendance', {
-				description:
-					error instanceof Error ? error.message : 'Unknown error occurred',
-			});
-			router.push('/dashboard/client/attendance/failure');
-		},
-	});
-
-	useEffect(() => {
-		if (typeof window !== 'undefined' && isScanning && !isCheckingAttendance) {
-			scannerRef.current = new Html5QrcodeScanner(
-				'qr-reader',
-				{
-					fps: 10,
-					qrbox: { width: 300, height: 300 },
-					aspectRatio: 1.0,
-					supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-					rememberLastUsedCamera: true,
-					showTorchButtonIfSupported: false,
-					formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
-					videoConstraints: {
-						facingMode: 'environment',
-					},
-				},
-				/* verbose= */ false,
-			);
-
-			scannerRef.current.render(
-				async (decodedText: string) => {
-					try {
-						setIsScanning(false);
-						const parsedData: QrValueType = JSON.parse(decodedText);
-						const now = new Date();
-						const currentUTC = Date.UTC(
-							now.getUTCFullYear(),
-							now.getUTCMonth(),
-							now.getUTCDate(),
-							now.getUTCHours(),
-						);
-
-						const scannedTime = new Date(parsedData.AttendanceAction.timestamp);
-						const scannedUTC = Date.UTC(
-							scannedTime.getUTCFullYear(),
-							scannedTime.getUTCMonth(),
-							scannedTime.getUTCDate(),
-							scannedTime.getUTCHours(),
-						);
-
-						const toleranceInHours = 1;
-						const timeDiff =
-							Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
-
-						if (timeDiff <= toleranceInHours) {
-							toast.loading('Marking attendance...');
-							await markAttendanceMutation.mutateAsync();
-							if (scannerRef.current) {
-								scannerRef.current.clear();
-							}
-						} else {
-							throw new Error('QR code has expired');
-						}
-					} catch (error) {
-						console.error('Error processing QR code:', error);
-						toast.error('Failed to process QR code', {
-							description:
-								error instanceof Error
-									? error.message
-									: 'Unknown error occurred',
-						});
-						setIsScanning(true);
-					}
-				},
-				(error: string) => {
-					if (!error.includes('NotFoundException')) {
-						console.error('QR scan error:', error);
-					}
-				},
-			);
-		}
-
-		return () => {
-			if (scannerRef.current) {
-				scannerRef.current.clear();
-			}
-		};
-	}, [isScanning, markAttendanceMutation, isCheckingAttendance]);
-
-	if (isCheckingAttendance) {
+	if (isProcessing) {
 		return (
 			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
 				<div className="w-full max-w-sm mx-auto">
 					<div className="space-y-4">
 						<div className="flex items-center justify-center space-x-2 mb-4">
-							<Skeleton className="w-6 h-6 rounded" />
-							<Skeleton className="h-6 w-32" />
+							<QrCode className="w-6 h-6 text-primary" />
+							<h2 className="text-xl font-semibold">Processing QR Code</h2>
 						</div>
 						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-							<div className="aspect-square w-full max-w-xs mx-auto">
-								<Skeleton className="h-full w-full" />
+							<div className="flex flex-col items-center justify-center p-8 space-y-4">
+								<div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+								<p className="text-sm text-muted-foreground">
+									Marking your attendance...
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (isSuccess) {
+		return (
+			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
+				<div className="w-full max-w-sm mx-auto">
+					<div className="space-y-4">
+						<div className="flex items-center justify-center space-x-2 mb-4">
+							<CheckCircle2 className="w-6 h-6 text-green-500" />
+							<h2 className="text-xl font-semibold">Attendance Marked!</h2>
+						</div>
+						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+							<div className="flex flex-col items-center justify-center p-8 space-y-4">
+								<p className="text-base font-medium">
+									Your attendance has been successfully recorded.
+								</p>
 							</div>
 						</div>
 					</div>
@@ -176,26 +155,26 @@ export default function AttendanceQRScanner() {
 					</div>
 
 					<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-						{isScanning && !markAttendanceMutation.isPending && (
-							<div id="qr-reader" className="mx-auto" />
-						)}
-
-						{markAttendanceMutation.isPending && (
-							<div className="flex flex-col items-center justify-center p-8 space-y-4">
-								<div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-								<p className="text-sm text-muted-foreground">
-									Processing your attendance...
-								</p>
-							</div>
-						)}
-
-						{!isScanning && markAttendanceMutation.isSuccess && (
-							<div className="flex items-center justify-center space-x-2 p-8">
-								<CheckCircle2 className="w-8 h-8 text-green-500" />
-								<p className="text-base font-medium">Attendance Marked!</p>
-							</div>
+						{isScanning && !isProcessing && !hasProcessed && (
+							<>
+								<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
+								<video ref={ref} style={{ width: '100%' }} />
+							</>
 						)}
 					</div>
+
+					{isScanning && !isProcessing && !hasProcessed && (
+						<div className="space-y-2">
+							<p className="text-sm text-center text-muted-foreground">
+								Scan the QR code displayed at your gym to mark your attendance.
+							</p>
+							<ul className="text-xs text-muted-foreground space-y-1 list-disc pl-5">
+								<li>Make sure the QR code is within the scanning area</li>
+								<li>Ensure good lighting for better scanning</li>
+								<li>Hold your device steady while scanning</li>
+							</ul>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
