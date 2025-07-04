@@ -45,6 +45,7 @@ import type {
 import { useState, useEffect, useTransition } from 'react';
 import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
+import type { UseMutationResult } from '@tanstack/react-query';
 
 import {
 	DndContext,

@@ -1,3 +1,4 @@
+"use client"
 import { TabsContent, TabsList, TabsTrigger, Tabs } from '@/components/ui/tabs';
 import {
 	TrendingUp,
@@ -11,7 +12,7 @@ import { LocationTab } from './location-tab';
 import { OverviewTab } from './overview-tab';
 import { PricingTab } from './pricing-tab';
 import { Separator } from '@/components/ui/separator';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import type {
 	AmenityCategory,
 	FitnessPlan,
@@ -54,7 +55,7 @@ export const GymTabs = ({
 				<Separator className="hidden md:block" />
 				<div className="mt-20">
 					<TabsContent value="general">
-						<motion.div
+						<m.div
 							key="general"
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -62,11 +63,11 @@ export const GymTabs = ({
 							transition={{ duration: 0.3 }}
 						>
 							<OverviewTab trainersData={overviewData?.trainersData} />
-						</motion.div>
+						</m.div>
 					</TabsContent>
 
 					<TabsContent value="amenities">
-						<motion.div
+						<m.div
 							key="amenities"
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -77,11 +78,11 @@ export const GymTabs = ({
 								categories={amenitiesData?.categories}
 								selectedAmenities={amenitiesData?.selectedAmenities}
 							/>
-						</motion.div>
+						</m.div>
 					</TabsContent>
 
 					<TabsContent value="address">
-						<motion.div
+						<m.div
 							key="address"
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -89,11 +90,11 @@ export const GymTabs = ({
 							transition={{ duration: 0.3 }}
 						>
 							<LocationTab location={locationData?.location} />
-						</motion.div>
+						</m.div>
 					</TabsContent>
 
 					<TabsContent value="fees">
-						<motion.div
+						<m.div
 							key="fees"
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -104,7 +105,7 @@ export const GymTabs = ({
 								pricingPlans={pricingData?.pricingPlans}
 								additionalServices={pricingData?.additionalServices}
 							/>
-						</motion.div>
+						</m.div>
 					</TabsContent>
 				</div>
 			</Tabs>

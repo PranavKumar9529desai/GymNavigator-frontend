@@ -11,19 +11,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getAmenitiesData } from '../../_actions/amenity-actions';
 import { updateGymAmenities } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
-import type { UseMutationResult } from '@tanstack/react-query';
 
 // Simplified props interface
 interface AmenitiesEditFormProps {
 	onSave?: () => void;
 	onCancel?: () => void;
-	mutation?: UseMutationResult<any, Error, any>;
 }
 
 export function AmenitiesEditForm({
 	onSave,
 	onCancel,
-	mutation,
 }: AmenitiesEditFormProps) {
 	const [categories, setCategories] = useState<AmenityCategory[]>([]);
 	const [selectedAmenities, setSelectedAmenities] = useState<

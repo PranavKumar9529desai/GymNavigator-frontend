@@ -1,6 +1,5 @@
 'use client';
 
-import { queryClient } from '@/lib/getQueryClient';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -42,7 +41,6 @@ export default function AttachToGymPage() {
 			const result = await attachRoleToGym({ gymname, gymid, hash, role });
 
 			if (result.success) {
-				queryClient.invalidateQueries({ queryKey: ['onboardedUsers'] });
 				await updateSessionWithGym(newGym, update);
 				router.push('/dashboard/');
 			} else {

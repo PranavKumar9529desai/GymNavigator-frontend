@@ -4,13 +4,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import type { GymData, GymLocation } from '../../types/gym-types';
-import { useState, useEffect, useRef, useTransition } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { useGetLocationFromCoordinates } from '../../_actions/get-location-from-coordinates';
 import { useGetCoordinatesFromLocation } from '../../_actions/get-co-ordinates-from-location';
 import { MapPin } from 'lucide-react';
 import { updateGymLocation } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
-
 
 interface LocationEditFormProps {
 	data: GymData;
@@ -22,7 +21,6 @@ export function LocationEditForm({
 	data,
 	onDataChange,
 	onSave,
-	mutation,
 }: LocationEditFormProps) {
 	const [locationFormData, setLocationFormData] = useState<GymLocation>({
 		address: data.location?.address || '',
@@ -176,8 +174,7 @@ export function LocationEditForm({
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// Use React Query mutation if available, otherwise fall back to direct action
-		if (mutation) {
+		startTransition(async () => {
 			try {
 				let finalLocationData = { ...locationFormData };
 
@@ -228,75 +225,14 @@ export function LocationEditForm({
 					lng: finalLocationData.lng,
 				};
 
-				await mutation.mutateAsync(locationData);
+				await updateGymLocation(locationData);
 				toast.success('Location updated successfully!');
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating location:', error);
 				toast.error('Failed to update location. Please try again.');
 			}
-		} else {
-			// Fallback to original implementation
-			startTransition(async () => {
-				try {
-					let finalLocationData = { ...locationFormData };
-
-					// If we don't have coordinates but have address info, try to geocode
-					if (
-						(!finalLocationData.lat || !finalLocationData.lng) &&
-						(finalLocationData.address ||
-							finalLocationData.city ||
-							finalLocationData.zipCode)
-					) {
-						console.log(
-							'Missing coordinates, attempting to geocode before submit...',
-						);
-
-						const coordinates = await getCoordinates({
-							address: finalLocationData.address,
-							city: finalLocationData.city,
-							state: finalLocationData.state,
-							zipCode: finalLocationData.zipCode,
-							country: finalLocationData.country,
-						});
-
-						if (coordinates) {
-							finalLocationData = {
-								...finalLocationData,
-								lat: coordinates.lat,
-								lng: coordinates.lng,
-							};
-							// Update the form state with the new coordinates
-							setLocationFormData(finalLocationData);
-							onDataChange({ ...data, location: finalLocationData });
-						} else {
-							// If geocoding fails, show an error and don't submit
-							toast.error(
-								"Could not find coordinates for the provided address. Please check the address or use 'Use my current location'.",
-							);
-							return;
-						}
-					}
-
-					const locationData = {
-						address: finalLocationData.address || '',
-						city: finalLocationData.city || '',
-						state: finalLocationData.state || '',
-						zipCode: finalLocationData.zipCode || '',
-						country: finalLocationData.country || '',
-						lat: finalLocationData.lat,
-						lng: finalLocationData.lng,
-					};
-
-					await updateGymLocation(locationData);
-					toast.success('Location updated successfully!');
-					onSave?.();
-				} catch (error) {
-					console.error('Error updating location:', error);
-					toast.error('Failed to update location. Please try again.');
-				}
-			});
-		}
+		});
 	};
 
 	return (
@@ -388,12 +324,10 @@ export function LocationEditForm({
 			<div className="flex gap-2 pt-4">
 				<Button
 					type="submit"
-					disabled={mutation ? mutation.isPending : isPending}
+					disabled={isPending}
 					className="flex-1"
 				>
-					{(mutation ? mutation.isPending : isPending)
-						? 'Saving...'
-						: 'Save Location'}
+					{isPending ? 'Saving...' : 'Save Location'}
 				</Button>
 			</div>
 		</form>

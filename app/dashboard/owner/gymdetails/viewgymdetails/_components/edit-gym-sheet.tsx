@@ -18,7 +18,6 @@ import { TrendingUp, Dumbbell, MapPin, DollarSign } from 'lucide-react';
 
 import type { GymData } from '../types/gym-types';
 import type { GymTabData } from '../hooks/useGymData';
-import type { UseMutationResult } from '@tanstack/react-query';
 
 // Import edit form components
 import { OverviewEditForm } from './editable/overview-edit-form';
@@ -32,16 +31,6 @@ interface EditGymSheetProps {
 	gymData: GymData | null;
 	gymTabData: GymTabData | null;
 	onSave: (data: GymData) => void;
-	mutations?: {
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateOverview: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateAmenities: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateLocation: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updatePricing: UseMutationResult<any, Error, any>;
-	};
 }
 
 export function EditGymSheet({
@@ -50,7 +39,6 @@ export function EditGymSheet({
 	gymData,
 	gymTabData,
 	onSave: _onSave,
-	mutations,
 }: EditGymSheetProps) {
 	const [activeTab, setActiveTab] = useState('overview');
 	const [formData, setFormData] = useState<GymData>(gymData || ({} as GymData));
@@ -99,14 +87,12 @@ export function EditGymSheet({
 									data={formData}
 									onDataChange={setFormData}
 									onSave={() => onClose()}
-									mutation={mutations?.updateOverview}
 								/>
 							</TabsContent>
 							<TabsContent value="amenities" className="mt-0">
 								<AmenitiesEditForm
 									onSave={() => onClose()}
 									onCancel={() => onClose()}
-									mutation={mutations?.updateAmenities}
 								/>
 							</TabsContent>
 							<TabsContent value="location" className="mt-0">
@@ -117,7 +103,6 @@ export function EditGymSheet({
 									}}
 									onDataChange={setFormData}
 									onSave={() => onClose()}
-									mutation={mutations?.updateLocation}
 								/>
 							</TabsContent>
 							<TabsContent value="pricing" className="mt-0">
@@ -128,7 +113,6 @@ export function EditGymSheet({
 									}}
 									onDataChange={setFormData}
 									onSave={() => onClose()}
-									mutation={mutations?.updatePricing}
 								/>
 							</TabsContent>
 						</div>

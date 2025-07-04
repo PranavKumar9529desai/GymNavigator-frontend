@@ -1,5 +1,4 @@
 'use client';
-import { invalidateQueries, queryClient } from '@/lib/queryClient';
 // @ts-nocheck
 import { toast } from '@/hooks/use-toast';
 import { type RefObject, useEffect, useRef, useState } from 'react';
@@ -141,15 +140,6 @@ export default function WorkoutResults({
 
 			if (result.success) {
 				const wasUpdate = result.previousPlan !== null;
-
-				// Invalidate relevant queries if specified in the response
-				if (result.invalidateQueries && result.invalidateQueries.length > 0) {
-					invalidateQueries(result.invalidateQueries);
-				} else {
-					// Fallback to invalidating common queries
-					queryClient.invalidateQueries({ queryKey: ['assignable-users'] });
-					queryClient.invalidateQueries({ queryKey: ['workout-plans'] });
-				}
 
 				// Force a small delay to ensure UI updates before showing toast
 				setTimeout(() => {

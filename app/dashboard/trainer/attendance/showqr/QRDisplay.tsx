@@ -1,23 +1,20 @@
 'use client';
 
 import GymQRCode from '@/app/dashboard/owner/attendance/showqr/QrCode';
-import { useQuery } from '@tanstack/react-query';
-import { GetAttendanceQrData } from './GetAttendanceQrData';
 
-export default function QRDisplay() {
-	const { data: gymData } = useQuery({
-		queryKey: ['attendance-qr'],
-		queryFn: GetAttendanceQrData,
-	});
+interface QRDisplayProps {
+	initialData: { gymname: string; gymid: number } | null;
+}
 
-	if (!gymData) {
+export default function QRDisplay({ initialData }: QRDisplayProps) {
+	if (!initialData) {
 		return <div>Unable to load gym data</div>;
 	}
 
 	const qrValue = JSON.stringify({
 		AttendanceAction: {
-			gymname: gymData.gymname,
-			gymid: gymData.gymid,
+			gymname: initialData.gymname,
+			gymid: initialData.gymid,
 			timestamp: new Date().setMinutes(0, 0, 0),
 		},
 	});

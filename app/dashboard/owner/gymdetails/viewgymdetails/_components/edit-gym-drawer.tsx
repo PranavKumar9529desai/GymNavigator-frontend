@@ -18,7 +18,6 @@ import { TrendingUp, Dumbbell, MapPin, DollarSign } from 'lucide-react';
 
 import type { GymData } from '../types/gym-types';
 import type { GymTabData } from '../hooks/useGymData';
-import type { UseMutationResult } from '@tanstack/react-query';
 import { SingleTab } from './tabs/gym-tabs';
 
 // Import edit form components
@@ -33,16 +32,6 @@ interface EditGymDrawerProps {
 	gymData: GymData | null;
 	gymTabData: GymTabData | null;
 	onSave: (data: GymData) => void;
-	mutations?: {
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateOverview: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateAmenities: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updateLocation: UseMutationResult<any, Error, any>;
-		// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-		updatePricing: UseMutationResult<any, Error, any>;
-	};
 }
 
 export function EditGymDrawer({
@@ -51,7 +40,6 @@ export function EditGymDrawer({
 	gymData,
 	gymTabData,
 	onSave: _onSave,
-	mutations,
 }: EditGymDrawerProps) {
 	const [activeTab, setActiveTab] = useState('overview');
 	const [formData, setFormData] = useState<GymData>(gymData || ({} as GymData));
@@ -87,44 +75,39 @@ export function EditGymDrawer({
 								<SingleTab name="pricing" label="Pricing" icon={DollarSign} />
 							</TabsList>
 
-							<div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">
-								<TabsContent value="overview" className="mt-0">
-									<OverviewEditForm
-										data={formData}
-										onDataChange={setFormData}
-										onSave={() => onClose()}
-										mutation={mutations?.updateOverview}
-									/>
-								</TabsContent>
-								<TabsContent value="amenities" className="mt-0">
-									<AmenitiesEditForm
-										onSave={() => onClose()}
-										onCancel={() => onClose()}
-										mutation={mutations?.updateAmenities}
-									/>
-								</TabsContent>
-								<TabsContent value="location" className="mt-0">
-									<LocationEditForm
-										data={{
-											...formData,
-											location: gymTabData?.location?.location,
-										}}
-										onDataChange={setFormData}
-										onSave={() => onClose()}
-										mutation={mutations?.updateLocation}
-									/>
-								</TabsContent>
-								<TabsContent value="pricing" className="mt-0">
-									<PricingEditForm
-										data={{
-											...formData,
-											fitnessPlans: gymTabData?.pricing?.pricingPlans || [],
-										}}
-										onDataChange={setFormData}
-										onSave={() => onClose()}
-										mutation={mutations?.updatePricing}
-									/>
-								</TabsContent>
+							<div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">							<TabsContent value="overview" className="mt-0">
+								<OverviewEditForm
+									data={formData}
+									onDataChange={setFormData}
+									onSave={() => onClose()}
+								/>
+							</TabsContent>
+							<TabsContent value="amenities" className="mt-0">
+								<AmenitiesEditForm
+									onSave={() => onClose()}
+									onCancel={() => onClose()}
+								/>
+							</TabsContent>
+							<TabsContent value="location" className="mt-0">
+								<LocationEditForm
+									data={{
+										...formData,
+										location: gymTabData?.location?.location,
+									}}
+									onDataChange={setFormData}
+									onSave={() => onClose()}
+								/>
+							</TabsContent>
+							<TabsContent value="pricing" className="mt-0">
+								<PricingEditForm
+									data={{
+										...formData,
+										fitnessPlans: gymTabData?.pricing?.pricingPlans || [],
+									}}
+									onDataChange={setFormData}
+									onSave={() => onClose()}
+								/>
+							</TabsContent>
 							</div>
 						</Tabs>
 						{/* Removed global save/cancel buttons since each form now has its own */}

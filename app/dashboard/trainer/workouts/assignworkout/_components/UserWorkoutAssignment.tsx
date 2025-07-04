@@ -1,12 +1,10 @@
 'use client';
-import { queryClient } from '@/lib/queryClient';
 import { DataCard } from '@/components/Table/UserCard';
 import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Dumbbell, Search, UserCheck, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -98,18 +96,42 @@ const columns: ColumnDef<AssignableUser>[] = [
 	},
 ];
 
-export default function UserWorkoutAssignment() {
+interface UserWorkoutAssignmentProps {
+	initialUsers?: AssignableUser[];
+	initialWorkoutPlans?: WorkoutPlan[];
+}
+
+export default function UserWorkoutAssignment({ 
+	initialUsers = [], 
+	initialWorkoutPlans = [] 
+}: UserWorkoutAssignmentProps) {
 	const router = useRouter();
 
-	const { data: users = [] } = useQuery({
-		queryKey: ['assignable-users'],
-		queryFn: getAssignableUsers,
-	});
+	const [users, setUsers] = useState<AssignableUser[]>(initialUsers);
+	const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlan[]>(initialWorkoutPlans);
+	const [isLoading, setIsLoading] = useState(!initialUsers.length);
 
-	const { data: workoutPlans = [] } = useQuery({
-		queryKey: ['workout-plans'],
-		queryFn: getWorkoutPlans,
-	});
+	useEffect(() => {
+		// Only fetch data if initial data wasn't provided
+		if (initialUsers.length === 0 || initialWorkoutPlans.length === 0) {
+			const fetchData = async () => {
+				try {
+					const [usersData, plansData] = await Promise.all([
+						getAssignableUsers(),
+						getWorkoutPlans(),
+					]);
+					setUsers(usersData);
+					setWorkoutPlans(plansData);
+				} catch (error) {
+					console.error('Error fetching data:', error);
+				} finally {
+					setIsLoading(false);
+				}
+			};
+
+			fetchData();
+		}
+	}, [initialUsers.length, initialWorkoutPlans.length]);
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filteredUsers, setFilteredUsers] = useState<AssignableUser[]>(users);
@@ -161,9 +183,13 @@ export default function UserWorkoutAssignment() {
 
 		const response = { success: true }; // Mock response for demonstration
 		if (response.success) {
-			// Invalidate all relevant caches to ensure fresh data
-			queryClient.invalidateQueries({ queryKey: ['assignable-users'] });
-			queryClient.invalidateQueries({ queryKey: ['workout-plans'] });
+			// Refresh data after successful assignment
+			const [usersData, plansData] = await Promise.all([
+				getAssignableUsers(),
+				getWorkoutPlans(),
+			]);
+			setUsers(usersData);
+			setWorkoutPlans(plansData);
 
 			// ...existing success handling...
 		}

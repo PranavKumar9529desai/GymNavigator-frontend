@@ -1,5 +1,3 @@
-import { queryClient } from '@/lib/queryClient';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 import { getAssignableUsers } from './_actions/get-assignable-users';
@@ -15,25 +13,19 @@ function Spinner() {
 }
 
 export default async function AssignWorkoutPage() {
-	await Promise.all([
-		queryClient.prefetchQuery({
-			queryKey: ['assignable-users'],
-			queryFn: getAssignableUsers,
-			staleTime: 1000 * 60 * 5, // 5 minutes
-		}),
-		queryClient.prefetchQuery({
-			queryKey: ['workout-plans'],
-			queryFn: getWorkoutPlans,
-			staleTime: 1000 * 60 * 5, // 5 minutes
-		}),
+	// Fetch data server-side
+	const [users, workoutPlans] = await Promise.all([
+		getAssignableUsers(),
+		getWorkoutPlans(),
 	]);
 
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<Suspense fallback={<Spinner />}>
-				<HydrationBoundary state={dehydrate(queryClient)}>
-					<UserWorkoutAssignment />
-				</HydrationBoundary>
+				<UserWorkoutAssignment 
+					initialUsers={users}
+					initialWorkoutPlans={workoutPlans}
+				/>
 			</Suspense>
 		</div>
 	);

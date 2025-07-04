@@ -1,6 +1,3 @@
-import GymQRCode from '@/app/dashboard/owner/attendance/showqr/QrCode';
-import { queryClient } from '@/lib/queryClient';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 import { GetAttendanceQrData } from './GetAttendanceQrData';
@@ -15,18 +12,13 @@ function Spinner() {
 }
 
 export default async function ShowQRPage() {
-	await queryClient.prefetchQuery({
-		queryKey: ['attendance-qr'],
-		queryFn: GetAttendanceQrData,
-		staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
-	});
+	// Fetch data server-side
+	const qrData = await GetAttendanceQrData();
 
 	return (
 		<div className="min-h-screen flex flex-col items-center justify-center p-4">
 			<Suspense fallback={<Spinner />}>
-				<HydrationBoundary state={dehydrate(queryClient)}>
-					<QRDisplay />
-				</HydrationBoundary>
+				<QRDisplay initialData={qrData} />
 			</Suspense>
 		</div>
 	);

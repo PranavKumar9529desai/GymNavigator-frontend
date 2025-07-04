@@ -1,7 +1,6 @@
 'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { queryClient } from '../../../../../../../lib/getQueryClient';
 
 export async function assignWorkoutPlanToUser(
 	userId: string,
@@ -19,9 +18,7 @@ export async function assignWorkoutPlanToUser(
 			response.data.msg === 'Workout plan updated successfully' ||
 			response.data.msg === 'Workout plan assigned successfully'
 		) {
-			console.log('it is triggered');
-			queryClient.refetchQueries({ queryKey: ['assignable-users'] });
-			queryClient.refetchQueries({ queryKey: ['workout-plans'] });
+			console.log('Workout plan assignment successful');
 			return {
 				success: true,
 				message: response.data.msg,

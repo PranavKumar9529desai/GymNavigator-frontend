@@ -9,21 +9,17 @@ import { updateGymOverview } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
 import { ImageIcon, Building2, Phone, Mail } from 'lucide-react';
 import Image from 'next/image';
-import type { UseMutationResult } from '@tanstack/react-query';
 
 interface OverviewEditFormProps {
 	data: GymData;
 	onDataChange: (data: GymData) => void;
 	onSave?: () => void;
-	// biome-ignore lint/suspicious/noExplicitAny: Mutation types are complex generics
-	mutation?: UseMutationResult<any, Error, any>;
 }
 
 export function OverviewEditForm({
 	data,
 	onDataChange,
 	onSave,
-	mutation,
 }: OverviewEditFormProps) {
 	const [formData, setFormData] = useState<GymData>(data);
 	const [isPending, startTransition] = useTransition();
@@ -104,8 +100,7 @@ export function OverviewEditForm({
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// Use React Query mutation if available, otherwise fall back to direct action
-		if (mutation) {
+		startTransition(async () => {
 			try {
 				const overviewData = {
 					gym_name: formData.gym_name || '',
@@ -114,33 +109,14 @@ export function OverviewEditForm({
 					phone_number: formData.phone_number || '',
 				};
 
-				await mutation.mutateAsync(overviewData);
+				await updateGymOverview(overviewData);
 				toast.success('Overview updated successfully!');
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating overview:', error);
 				toast.error('Failed to update overview. Please try again.');
 			}
-		} else {
-			// Fallback to original implementation
-			startTransition(async () => {
-				try {
-					const overviewData = {
-						gym_name: formData.gym_name || '',
-						gym_logo: formData.gym_logo || '',
-						Email: formData.Email || '',
-						phone_number: formData.phone_number || '',
-					};
-
-					await updateGymOverview(overviewData);
-					toast.success('Overview updated successfully!');
-					onSave?.();
-				} catch (error) {
-					console.error('Error updating overview:', error);
-					toast.error('Failed to update overview. Please try again.');
-				}
-			});
-		}
+		});
 	};
 
 	return (
@@ -227,12 +203,10 @@ export function OverviewEditForm({
 			<div className="flex gap-2 pt-4">
 				<Button
 					type="submit"
-					disabled={
-						(mutation ? mutation.isPending : isPending) || isUploadingImage
-					}
+					disabled={isPending || isUploadingImage}
 					className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
 				>
-					{(mutation ? mutation.isPending : isPending)
+					{isPending
 						? 'Saving...'
 						: isUploadingImage
 							? 'Uploading Image...'

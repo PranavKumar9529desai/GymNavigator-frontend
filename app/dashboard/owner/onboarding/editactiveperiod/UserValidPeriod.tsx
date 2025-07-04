@@ -23,7 +23,6 @@ import { useState, useTransition } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { validateUserValidity } from './actions/typecheck';
-import { queryClient } from '@/lib/getQueryClient';
 
 interface UserValidityPeriodProps {
 	userId: string;
@@ -123,7 +122,6 @@ export function UserValidityPeriod({
 				if (updateResult.user) {
 					console.log('before toast');
 
-					queryClient.resetQueries({ queryKey: ['onboardedUsers'] });
 					toast.success(`Validity period updated for ${userName}`, {
 						duration: 3000,
 						position: 'top-center',

@@ -10,8 +10,7 @@ import { auth } from '@/app/(auth)/auth'; // Assuming your auth config is in /au
 import localFont from 'next/font/local';
 import ClientMotionProvider from '../providers/ClientMotionProvider';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
-const siteUrl = 'https://gymnavigator.vercel.app';
-// export const dynamic = "force-static";
+const siteUrl = 'https://gymnavigator.in';
 
 export const viewport: Viewport = {
 	width: 'device-width',

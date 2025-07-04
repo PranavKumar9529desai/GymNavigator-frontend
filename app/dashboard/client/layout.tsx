@@ -1,6 +1,4 @@
 import { auth } from '@/app/(auth)/auth';
-import { queryClient } from '@/lib/queryClient';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import Link from 'next/link';
 import type React from 'react';
 import NotOnboarded from '../_components/not-onboarded/not-onboarded';
