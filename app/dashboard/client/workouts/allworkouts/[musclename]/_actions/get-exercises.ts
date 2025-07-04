@@ -1,5 +1,7 @@
+'use server';
+
+import type { Excercisetype } from '../actions/getSIngleMuscle';
 import axios from 'axios';
-import type { Excercisetype } from '../../actions/getSIngleMuscle';
 
 // Define interface for the API response exercise structure
 interface ExerciseApiResponse {
@@ -15,31 +17,24 @@ interface ExerciseApiResponse {
 	muscle_image?: string;
 }
 
-async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
+export async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
 	try {
 		const response = await axios.get(
 			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/${muscleName}`,
 		);
 
-		// Log the raw response for debugging
-		console.log(`Client-side API response for ${muscleName}:`, response.data);
-
-		// Check basic response structure
 		if (!response.data || !response.data.success) {
 			console.error('API returned error response:', response.data);
 			return [];
 		}
 
-		// Check for nested data structure
 		if (!response.data.data || !response.data.data.exercises) {
 			console.error('Missing exercises in API response:', response.data);
 			return [];
 		}
 
 		const exercises = response.data.data.exercises;
-		console.log(`Found ${exercises.length} exercises for ${muscleName}`);
 
-		// Transform data with robust error handling
 		return exercises.map((exercise: ExerciseApiResponse) => ({
 			name: exercise.name || 'Unknown Exercise',
 			img: exercise.image_url || '',
@@ -57,5 +52,3 @@ async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
 		return [];
 	}
 }
-
-export default fetchExercises;

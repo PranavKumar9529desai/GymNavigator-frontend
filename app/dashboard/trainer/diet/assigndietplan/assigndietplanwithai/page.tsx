@@ -6,7 +6,6 @@ import React from 'react';
 import { Suspense } from 'react';
 import { getUserById } from './_actions/get-user-by-id';
 import { DietHistoryProvider } from './_components/diet-history/diet-history-provider';
-import { QueryProvider } from './_components/query-provider';
 import { TabsWrapper } from './_components/tabs/tabs-wrapper';
 import UserProfileCard from './_components/user-profile/user-profile-card';
 

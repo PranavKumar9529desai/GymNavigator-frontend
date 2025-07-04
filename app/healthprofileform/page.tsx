@@ -3,8 +3,8 @@
 import { useToast } from '@/hooks/use-toast';
 import { gymTheme } from '@/styles/theme';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
-import { submitHealthProfile } from './_actions/use-health-profile-mutation';
+import { useMemo, useState, useTransition } from 'react';
+import { submitHealthProfileAction } from './_actions/submit-health-profile-action';
 import { useHealthProfileStore } from './_store/health-profile-store';
 import type { HealthMetrics } from './calculate-health-data/health-data-types';
 
@@ -23,7 +23,6 @@ import ReligiousPreferencesForm from './_components/religious-preferences-form';
 import SuccessForm from './_components/success-form';
 import TargetWeightForm from './_components/target-weight-form';
 import WeightForm from './_components/weight-form';
-import { auth } from '../(auth)/auth';
 
 // Progress indicator component
 const ProgressIndicator = ({
@@ -54,9 +53,13 @@ const ProgressIndicator = ({
 };
 
 export default function HealthProfileFormPage() {
-	const { currentStep, resetForm, dietaryPreference, ...formState } =
-		useHealthProfileStore();
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const {
+		currentStep,
+		resetForm,
+		dietaryPreference,
+		...formState
+	} = useHealthProfileStore();
+	const [isSubmitting, startTransition] = useTransition();
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [healthMetrics, setHealthMetrics] = useState<HealthMetrics | null>(
 		null,
@@ -68,46 +71,45 @@ export default function HealthProfileFormPage() {
 	const isNonVegetarian = dietaryPreference === 'non-vegetarian';
 
 	const handleFormSubmit = async () => {
-		setIsSubmitting(true);
-		try {
-			// Retrieve current state directly from the store
-			const currentState = useHealthProfileStore.getState();
-			// Use the current state as-is without forcing default meal timings
-			const result = await submitHealthProfile({
-				...currentState,
-				dietaryPreference,
-			});
-
-			if (result.success) {
-				if (result.data) {
-					setHealthMetrics(result.data.healthMetrics);
-				}
-				toast({
-					title: 'Success!',
-					description: 'Your health profile has been saved.',
-					variant: 'default',
+		startTransition(async () => {
+			try {
+				// Retrieve current state directly from the store
+				const currentState = useHealthProfileStore.getState();
+				// Use the current state as-is without forcing default meal timings
+				const result = await submitHealthProfileAction({
+					...currentState,
+					dietaryPreference,
 				});
-				setIsCompleted(true);
-				router.push('/dashboard/');
-			} else {
+
+				if (result.success) {
+					if (result.data) {
+						setHealthMetrics(result.data.healthMetrics);
+					}
+					toast({
+						title: 'Success!',
+						description: 'Your health profile has been saved.',
+						variant: 'default',
+					});
+					setIsCompleted(true);
+					router.push('/dashboard/');
+				} else {
+					toast({
+						title: 'Something went wrong',
+						description:
+							result.error ||
+							'Failed to save your health profile. Please try again.',
+						variant: 'destructive',
+					});
+				}
+			} catch (error) {
 				toast({
-					title: 'Something went wrong',
-					description:
-						result.error ||
-						'Failed to save your health profile. Please try again.',
+					title: 'Error',
+					description: 'An unexpected error occurred. Please try again.',
 					variant: 'destructive',
 				});
+				console.error('Error submitting health profile:', error);
 			}
-		} catch (error) {
-			toast({
-				title: 'Error',
-				description: 'An unexpected error occurred. Please try again.',
-				variant: 'destructive',
-			});
-			console.error('Error submitting health profile:', error);
-		} finally {
-			setIsSubmitting(false);
-		}
+		});
 	};
 
 	const handleNextStep = async (): Promise<void> => {

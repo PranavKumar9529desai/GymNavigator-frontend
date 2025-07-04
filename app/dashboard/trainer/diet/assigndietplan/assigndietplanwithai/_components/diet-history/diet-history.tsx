@@ -31,8 +31,10 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
 		isError,
 		error,
 		refetch,
-		isFetching,
 	} = useDietHistoryQuery(userId);
+	
+	// Track refetching state manually since the hook doesn't provide isFetching
+	const [isFetching, setIsFetching] = useState(false);
 
 	const filteredHistory = React.useMemo(() => {
 		if (!searchQuery.trim()) return history;
@@ -64,7 +66,16 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
 							<span className="font-medium">Note:</span> Using locally saved
 							diets
 						</p>
-						<Button variant="outline" size="sm" onClick={() => refetch()}>
+						<Button 
+							variant="outline" 
+							size="sm" 
+							onClick={() => {
+								setIsFetching(true);
+								refetch();
+								// Reset isFetching after a short delay to simulate the fetch completion
+								setTimeout(() => setIsFetching(false), 1000);
+							}}
+						>
 							<RefreshCw className="h-3 w-3 mr-1" /> Sync with server
 						</Button>
 					</div>
@@ -84,7 +95,14 @@ export function DietHistory({ onSelectDiet, userId }: DietHistoryProps) {
 								? error.message
 								: 'Error loading diet history'}
 						</p>
-						<Button variant="outline" onClick={() => refetch()}>
+						<Button 
+							variant="outline" 
+							onClick={() => {
+								setIsFetching(true);
+								refetch();
+								setTimeout(() => setIsFetching(false), 1000);
+							}}
+						>
 							<RefreshCw className="h-4 w-4 mr-2" /> Try Again
 						</Button>
 					</div>

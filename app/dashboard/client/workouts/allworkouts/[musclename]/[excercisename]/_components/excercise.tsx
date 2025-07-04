@@ -1,42 +1,20 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { BookMarked, Heart, Share2, Target } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import {
-	type Exercise,
-	GetExcerciseDetails,
-} from '../actions/get-excercise-details';
+import type { Exercise } from '../actions/get-excercise-details';
 
 export const SingleWorkout = ({
-	exercise: initialExercise,
-	musclename: initialMusclename,
+	exercise,
+	musclename,
 }: {
-	exercise?: Exercise;
-	musclename?: string;
-} = {}) => {
-	const params = useParams<{
-		excercisename: string;
-		musclename: string;
-	}>();
-
-	const {
-		excercisename = '',
-		musclename = initialMusclename || params.musclename || '',
-	} = params;
-
+	exercise: Exercise;
+	musclename: string;
+}) => {
 	const [isLiked, setIsLiked] = useState(false);
 
-	const { data: exercise, error } = useQuery<Exercise, Error>({
-		queryKey: ['exercise', musclename, excercisename],
-		queryFn: () => GetExcerciseDetails(musclename, excercisename),
-		enabled: !!musclename && !!excercisename && !initialExercise,
-		initialData: initialExercise,
-	});
-
-	if (error) {
+	if (!exercise) {
 		return (
 			<div className="flex items-center justify-center min-h-[60vh] bg-red-50 mx-4 rounded-2xl animate-fade-in">
 				<div className="text-center space-y-4 p-8">
@@ -55,10 +33,6 @@ export const SingleWorkout = ({
 				</div>
 			</div>
 		);
-	}
-
-	if (!exercise) {
-		return null;
 	}
 
 	const videoId = exercise.video_url?.split('/').pop() || '';

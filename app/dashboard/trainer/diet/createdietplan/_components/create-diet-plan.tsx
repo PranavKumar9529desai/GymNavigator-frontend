@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -40,7 +39,6 @@ const DEFAULT_MEAL: MealInterface = {
 
 export default function CreateDietPlan() {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [currentStep, setCurrentStep] = useState(() => {
@@ -110,6 +108,8 @@ export default function CreateDietPlan() {
 				return;
 			}
 
+			setIsSubmitting(true);
+
 			// Prepare data for submission
 			const dietPlanData = {
 				name: dietPlan.name,
@@ -139,27 +139,6 @@ export default function CreateDietPlan() {
 				})),
 			};
 
-			// Optimistically update UI
-			const optimisticId = Date.now();
-
-			// Add optimistic data to the cache with proper typing
-			queryClient.setQueryData(
-				['dietPlans'],
-				(old: Array<{ id: number }> | undefined) => {
-					const optimisticDietPlan = {
-						id: optimisticId,
-						...dietPlanData,
-						isOptimistic: true,
-						createdAt: new Date().toISOString(),
-						updatedAt: new Date().toISOString(),
-					};
-
-					return old ? [...old, optimisticDietPlan] : [optimisticDietPlan];
-				},
-			);
-
-			setIsSubmitting(true);
-
 			// Call the server action
 			const result = await createDietPlan(dietPlanData);
 
@@ -169,9 +148,6 @@ export default function CreateDietPlan() {
 				localStorage.removeItem('dietPlanStep');
 				localStorage.removeItem('dietPlanData');
 				localStorage.removeItem('currentMealData');
-
-				// Invalidate and refetch relevant queries
-				queryClient.invalidateQueries({ queryKey: ['dietPlans'] });
 
 				toast.success(result.message);
 				router.push('/dashboard/trainer/diet/assigndietplan');

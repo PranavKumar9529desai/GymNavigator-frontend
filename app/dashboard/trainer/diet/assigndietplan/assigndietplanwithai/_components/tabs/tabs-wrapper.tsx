@@ -1,7 +1,7 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import type { DietPlan } from '../../../_actions /GetallDiets';
 import type { UserData } from '../../_actions/get-user-by-id';
@@ -10,7 +10,6 @@ import type { TabType } from '../../_store/diet-view-store';
 import { DietForm } from '../diet-form/diet-form';
 import { DietFormSkeleton } from '../diet-form/diet-form-skeleton';
 import { DietHistory } from '../diet-history/diet-history';
-import { DIET_PLANS_QUERY_KEY } from '../diet-history/use-diet-history';
 import DietResults from '../diet-result/diet-results';
 import DietSkeleton from '../diet-result/diet-skeleton';
 
@@ -23,7 +22,7 @@ export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
 	const { activeTab, setActiveTab, activeDiet, setActiveDiet } =
 		useDietViewStore();
 	const [isGenerating, setIsGenerating] = useState(false);
-	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	// Handler to be passed to DietForm to set the generating state
 	const handleGenerateStateChange = (generating: boolean) => {
@@ -37,13 +36,13 @@ export function TabsWrapper({ userId, userData }: TabsWrapperProps) {
 	}) => {
 		// This function is called when a diet is successfully generated
 		// We can prefetch the diet history data here to ensure it's up to date
-		queryClient.invalidateQueries({ queryKey: [DIET_PLANS_QUERY_KEY, userId] });
+		router.refresh();
 	};
 
 	// Handler for when a diet is saved
 	const handleDietSaved = () => {
 		// Invalidate the diet history query to refresh the data
-		queryClient.invalidateQueries({ queryKey: [DIET_PLANS_QUERY_KEY] });
+		router.refresh();
 		// Switch to history tab after diet is saved
 		setActiveTab('history');
 	};

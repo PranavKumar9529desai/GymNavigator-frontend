@@ -1,6 +1,5 @@
 'use client';
 
-import { DataCard } from '@/components/Table/UserCard';
 import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { UserMobileCard } from './_components/UserMobileCard';
 import { useToast } from '@/hooks/use-toast';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowUpDown,
@@ -21,10 +20,10 @@ import {
 	Users,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
-import { updateActivePeriod } from './actions/mutations';
+import React, { useTransition } from 'react';
+import { updateActivePeriod } from './actions/actions';
 
-interface UserType {
+export interface UserType {
 	id: number;
 	name: string;
 	startDate: Date | null;
@@ -48,13 +47,16 @@ const calculateStatus = (
 	if (!startDate || !endDate) {
 		return 'pending';
 	}
-	// Active status logic - other statuses will be added later
-	return 'active';
+	const now = new Date();
+	if (now >= new Date(startDate) && now <= new Date(endDate)) {
+		return 'active';
+	}
+	return 'inactive';
 };
 
 const formatDate = (date: Date | null): string => {
 	if (!date) return 'N/A';
-	return date.toLocaleDateString('en-GB', {
+	return new Date(date).toLocaleDateString('en-GB', {
 		day: '2-digit',
 		month: '2-digit',
 		year: 'numeric',
@@ -62,110 +64,40 @@ const formatDate = (date: Date | null): string => {
 };
 
 export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
-	console.log('OnboardedUsers received initialUsers:', initialUsers);
+	const router = useRouter();
+	const { toast } = useToast();
+	const [isPending, startTransition] = useTransition();
 
-	const users = initialUsers.map((user) => ({
+	const users: UserType[] = initialUsers.map((user) => ({
 		...user,
 		status: calculateStatus(user.startDate, user.endDate),
 	}));
 
-	const router = useRouter();
-	const { toast } = useToast();
-	const queryClient = useQueryClient();
+	const handleUpdateActivePeriod = (userId: number) => {
+		startTransition(async () => {
+			const result = await updateActivePeriod({
+				userId,
+				startDate: new Date().toISOString(),
+				endDate: new Date(
+					new Date().setFullYear(new Date().getFullYear() + 1),
+				).toISOString(),
+			});
 
-	const _updateActivePeriodMutation = useMutation({
-		mutationFn: updateActivePeriod,
-		onMutate: async ({ userId, startDate, endDate }) => {
-			// Cancel any outgoing refetches
-			await queryClient.cancelQueries({ queryKey: ['onboardedUsers'] });
-
-			// Snapshot the previous value
-			const previousUsers = queryClient.getQueryData(['onboardedUsers']);
-
-			// Optimistically update to the new value
-			queryClient.setQueryData(
-				['onboardedUsers'],
-				(old: UserType[] | undefined) => {
-					if (!old) return [];
-					return old.map((user) => {
-						if (user.id === userId) {
-							return {
-								...user,
-								startDate: startDate ? new Date(startDate) : null,
-								endDate: endDate ? new Date(endDate) : null,
-								status: calculateStatus(
-									startDate ? new Date(startDate) : null,
-									endDate ? new Date(endDate) : null,
-								),
-							};
-						}
-						return user;
-					});
-				},
-			);
-
-			// Return a context object with the snapshotted value
-			return { previousUsers };
-		},
-		onError: (_err, _variables, context) => {
-			// If the mutation fails, use the context returned from onMutate to roll back
-			if (context?.previousUsers) {
-				queryClient.setQueryData(['onboardedUsers'], context.previousUsers);
+			if (result.success) {
+				toast({
+					title: 'User Activated',
+					description: 'The user has been successfully activated for one year.',
+				});
+				router.refresh();
+			} else {
+				toast({
+					variant: 'destructive',
+					title: 'Activation Failed',
+					description: result.error || 'An unexpected error occurred.',
+				});
 			}
-			toast({
-				title: 'Error',
-				description: 'Failed to update active period. Please try again.',
-				variant: 'destructive',
-			});
-		},
-		onSuccess: () => {
-			toast({
-				title: 'Success',
-				description: 'Active period updated successfully.',
-			});
-		},
-		onSettled: () => {
-			// Always refetch after error or success to ensure we're up to date
-			queryClient.invalidateQueries({ queryKey: ['onboardedUsers'] });
-		},
-	});
-
-	const handleRowClick = (user: UserType) => {
-		const params = new URLSearchParams({
-			userid: user.id.toString(),
-			username: user.name,
-			startdate: user.startDate?.toISOString() || '',
-			enddate: user.endDate?.toISOString() || '',
 		});
-		router.push(
-			`/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`,
-		);
 	};
-
-	const totalUsers = users.length;
-	const activeUsers = users.filter((u) => u.status === 'active').length;
-	const pendingUsers = users.filter((u) => u.status === 'pending').length;
-
-	const statusCards = [
-		{
-			title: 'Total Users',
-			value: totalUsers,
-			icon: Users,
-			gradient: 'blue',
-		},
-		{
-			title: 'Active Users',
-			value: activeUsers,
-			icon: UserCheck,
-			gradient: 'green',
-		},
-		{
-			title: 'Pending Users',
-			value: pendingUsers,
-			icon: User,
-			gradient: 'yellow',
-		},
-	] as const;
 
 	const columns: ColumnDef<UserType>[] = [
 		{
@@ -183,56 +115,36 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 		{
 			accessorKey: 'startDate',
 			header: 'Start Date',
-			cell: ({ row }) => {
-				const date = row.getValue('startDate') as Date | null;
-				return <div>{formatDate(date)}</div>;
-			},
+			cell: ({ row }) => formatDate(row.original.startDate),
 		},
 		{
 			accessorKey: 'endDate',
 			header: 'End Date',
-			cell: ({ row }) => {
-				const date = row.getValue('endDate') as Date | null;
-				return <div>{formatDate(date)}</div>;
-			},
+			cell: ({ row }) => formatDate(row.original.endDate),
 		},
 		{
 			accessorKey: 'status',
 			header: 'Status',
-			cell: ({ row }) => {
-				const status = row.getValue('status') as string;
-				return (
-					<div
-						className={`
-            w-fit rounded-full px-4 py-1 text-xs font-semibold text-center
-            ${
-							status === 'active'
-								? 'bg-green-100 text-green-800'
-								: status === 'pending'
-									? 'bg-yellow-100 text-yellow-800'
-									: 'bg-red-100 text-red-800'
-						}
-          `}
-					>
-						{status.charAt(0).toUpperCase() + status.slice(1)}
-					</div>
-				);
-			},
 		},
 		{
 			id: 'actions',
 			cell: ({ row }) => {
+				const user = row.original;
+
 				return (
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" className="h-8 w-8 p-0">
+							<Button variant="ghost" className="h-8 w-8 p-0" disabled={isPending}>
 								<span className="sr-only">Open menu</span>
 								<MoreVertical className="h-4 w-4" />
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start" side="right">
-							<DropdownMenuItem onClick={() => handleRowClick(row.original)}>
-								Edit Active Period
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem
+								onClick={() => handleUpdateActivePeriod(user.id)}
+								disabled={isPending || user.status === 'active'}
+							>
+								Activate for 1 year
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -241,87 +153,44 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 		},
 	];
 
-	if (users.length === 0) {
-		return (
-			<div className="container mx-auto p-6 space-y-8">
-				<div className="text-center py-12">
-					<Users className="mx-auto h-12 w-12 text-gray-400" />
-					<h2 className="mt-4 text-lg font-semibold text-gray-900">
-						No Users Found
-					</h2>
-					<p className="mt-2 text-sm text-gray-600">
-						There are no onboarded users to display at the moment.
-					</p>
-				</div>
-			</div>
-		);
-	}
+	const activeUsers = users.filter((user) => user.status === 'active').length;
+	const pendingUsers = users.filter((user) => user.status === 'pending').length;
 
 	return (
-		<div className="container mx-auto p-6 space-y-8 ">
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-				{statusCards.map((card) => (
-					<StatusCard key={card.title} {...card} />
-				))}
-			</div>
-
-			<div className="hidden md:block">
-				<DataTable data={users} columns={columns} filterColumn="name" />
-			</div>
-
-			{/* Mobile UI with added actions */}
-			<div className="md:hidden space-y-4">
-				<DataCard
-					data={users}
-					renderCard={(user) => (
-						<div className="p-4 space-y-3">
-							<div className="flex justify-between items-start">
-								<h3 className="font-medium">{user.name}</h3>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button variant="ghost" className="h-8 w-8 p-0">
-											<MoreVertical className="h-4 w-4" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="end">
-										<DropdownMenuItem
-											className="cursor-pointer"
-											onClick={() => handleRowClick(user)}
-										>
-											Edit Active Period
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</div>
-
-							<div className="space-y-1">
-								<p className="text-sm text-gray-500">
-									Start: {user.startDate ? formatDate(user.startDate) : 'N/A'}
-								</p>
-								<p className="text-sm text-gray-500">
-									End: {user.endDate ? formatDate(user.endDate) : 'N/A'}
-								</p>
-							</div>
-
-							<div className="flex justify-between items-center">
-								<div
-									className={`
-                    rounded-full px-2 py-1 text-xs font-semibold 
-                    ${
-											user.status === 'active'
-												? 'bg-green-100 text-green-800'
-												: user.status === 'pending'
-													? 'bg-yellow-100 text-yellow-800'
-													: 'bg-red-100 text-red-800'
-										}
-                  `}
-								>
-									{user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-								</div>
-							</div>
-						</div>
-					)}
+		<div className="p-4">
+			<h1 className="text-2xl font-bold mb-4">Onboarded Users</h1>
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+				<StatusCard
+					title="Total Users"
+					value={users.length}
+					icon={Users}
+					gradient="blue"
 				/>
+				<StatusCard
+					title="Active Users"
+					value={activeUsers}
+					icon={UserCheck}
+					gradient="green"
+				/>
+				<StatusCard
+					title="Pending Activation"
+					value={pendingUsers}
+					icon={User}
+					gradient="yellow"
+				/>
+			</div>
+			<div className="hidden md:block">
+				<DataTable columns={columns} data={users} />
+			</div>
+			<div className="md:hidden space-y-4">
+				{users.map((user) => (
+					<UserMobileCard 
+						key={user.id}
+						user={user}
+						isPending={isPending}
+						onActivate={handleUpdateActivePeriod}
+					/>
+				))}
 			</div>
 		</div>
 	);

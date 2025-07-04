@@ -125,7 +125,6 @@ export default function DietResults({
 			const transformedDietPlan = transformDietPlanForCreation(dietPlan);
 			console.log('Sending diet plan to backend:', transformedDietPlan);
 
-			// Use the backend-only mutation to save the diet plan
 			const result = await saveDietPlan(transformedDietPlan);
 
 			console.log('Save result from backend:', result);

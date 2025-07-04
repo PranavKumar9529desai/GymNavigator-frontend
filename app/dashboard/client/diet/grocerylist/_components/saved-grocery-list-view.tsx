@@ -4,11 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
-import { useTransition } from 'react';
-import type { SavedGroceryList } from '../_actions/fetch-saved-grocery-lists';
+import {
+	ChevronDown,
+	Copy,
+	Loader2,
+	ShoppingCart,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { updateGroceryItem } from '../_actions/update-grocery-item';
+import type { SavedGroceryList } from '../_types/grocery-list-types';
 
 interface SavedGroceryListViewProps {
 	groceryList: SavedGroceryList;
@@ -17,13 +22,14 @@ interface SavedGroceryListViewProps {
 export function SavedGroceryListView({
 	groceryList,
 }: SavedGroceryListViewProps) {
+	const router = useRouter();
 	const [expandedCategories, setExpandedCategories] = useState<Set<number>>(
 		new Set(
 			groceryList.categories.map((cat) => cat.id), // Default all expanded
 		),
 	);
 	const [updatingItemId, setUpdatingItemId] = useState<number | null>(null);
-	const [isPending, startTransition] = useTransition();
+	const [_isPending, startTransition] = useTransition();
 	const { toast } = useToast();
 
 	const toggleCategory = (categoryId: number) => {
@@ -40,7 +46,7 @@ export function SavedGroceryListView({
 
 	const _copyToClipboard = () => {
 		const text = groceryList.categories
-			.map((category) => {
+			.map(category => {
 				return `== ${category.name} ==\n${category.items
 					.map(
 						(item) =>
@@ -58,32 +64,37 @@ export function SavedGroceryListView({
 		});
 	};
 
-	// Update grocery item using server action
-	const toggleItemPurchased = async (itemId: number, currentStatus: boolean) => {
+	const handleToggleItem = (itemId: number, currentStatus: boolean) => {
+		setUpdatingItemId(itemId);
 		startTransition(async () => {
 			try {
-				setUpdatingItemId(itemId);
-				
 				const result = await updateGroceryItem({
 					itemId,
 					isPurchased: !currentStatus,
 				});
 
-				if (!result.success) {
-					throw new Error(result.error || 'Failed to update item status');
+				if (result.success) {
+					toast({
+						title: currentStatus
+							? 'Item unmarked'
+							: 'Item marked as purchased',
+						duration: 2000,
+					});
+					router.refresh();
+				} else {
+					toast({
+						variant: 'destructive',
+						title: 'Update failed',
+						description: result.error || 'An unexpected error occurred',
+						duration: 3000,
+					});
 				}
-
-				toast({
-					title: currentStatus
-						? 'Item unmarked'
-						: 'Item marked as purchased',
-					duration: 2000,
-				});
 			} catch (error) {
 				toast({
 					variant: 'destructive',
 					title: 'Update failed',
-					description: (error as Error).message || 'An unexpected error occurred',
+					description:
+						(error as Error).message || 'An unexpected error occurred',
 					duration: 3000,
 				});
 				console.error(error);
@@ -91,57 +102,6 @@ export function SavedGroceryListView({
 				setUpdatingItemId(null);
 			}
 		});
-	};
-					});
-				},
-			);
-
-			// Update the current groceryList prop to reflect the change
-			const updatedCategories = groceryList.categories.map((category) => ({
-				...category,
-				items: category.items.map((item) =>
-					item.id === itemId ? { ...item, isPurchased: !currentStatus } : item,
-				),
-			}));
-
-			groceryList.categories = updatedCategories;
-
-			return { previousGroceryLists };
-		},
-		onSuccess: (_data, variables) => {
-			toast({
-				title: variables.currentStatus
-					? 'Item unmarked'
-					: 'Item marked as purchased',
-				duration: 2000,
-			});
-		},
-		onError: (error, _variables, context) => {
-			// Revert to the previous state if mutation fails
-			if (context?.previousGroceryLists) {
-				queryClient.setQueryData(
-					['groceryLists'],
-					context.previousGroceryLists,
-				);
-			}
-
-			toast({
-				variant: 'destructive',
-				title: 'Update failed',
-				description: (error as Error).message || 'An unexpected error occurred',
-				duration: 3000,
-			});
-			console.error(error);
-		},
-		onSettled: () => {
-			setUpdatingItemId(null);
-			// Refresh the data
-			queryClient.invalidateQueries({ queryKey: ['groceryLists'] });
-		},
-	});
-
-	const handleToggleItem = (itemId: number, currentStatus: boolean) => {
-		toggleItemPurchased({ itemId, currentStatus });
 	};
 
 	// Calculate statistics
@@ -157,18 +117,19 @@ export function SavedGroceryListView({
 	return (
 		<div className="space-y-5 px-1">
 			<div className="flex items-center justify-between mb-4">
-				{/* <div className="flex items-center gap-3">
-          <ShoppingCart className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-semibold">{groceryList.name}</h2>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="hover:bg-primary/10 transition-colors"
-          onClick={copyToClipboard}
-        >
-          Copy
-        </Button> */}
+				<div className="flex items-center gap-3">
+					<ShoppingCart className="w-5 h-5 text-primary" />
+					<h2 className="text-xl font-semibold">{groceryList.name}</h2>
+				</div>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="hover:bg-primary/10 transition-colors"
+					onClick={_copyToClipboard}
+				>
+					<Copy className="w-4 h-4 mr-2" />
+					Copy
+				</Button>
 			</div>
 
 			<div className="space-y-4">
@@ -177,82 +138,55 @@ export function SavedGroceryListView({
 						<div
 							className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer"
 							onClick={() => toggleCategory(category.id)}
-							onKeyUp={() => toggleCategory(category.id)}
+							onKeyDown={(e) =>
+								e.key === 'Enter' && toggleCategory(category.id)
+							}
+							role="button"
+							tabIndex={0}
+							aria-expanded={expandedCategories.has(category.id)}
 						>
-							<div className="flex items-center gap-2">
-								<ShoppingCart className="w-4 h-4 text-primary/70" />
-								<span className="font-medium">{category.name}</span>
-								<span className="ml-1 text-xs text-muted-foreground">
-									({category.items.length})
-								</span>
-							</div>
-							{expandedCategories.has(category.id) ? (
-								<ChevronUp className="w-4 h-4 text-muted-foreground" />
-							) : (
-								<ChevronDown className="w-4 h-4 text-muted-foreground" />
-							)}
+							<h3 className="font-semibold text-md">{category.name}</h3>
+							<ChevronDown
+								className={`w-5 h-5 transition-transform ${
+									expandedCategories.has(category.id) ? 'rotate-180' : ''
+								}`}
+							/>
 						</div>
 
 						{expandedCategories.has(category.id) && (
-							<div className="pt-2 px-1">
-								<ul className="space-y-2">
-									{category.items.map((item) => {
-										const isUpdatingThisItem = updatingItemId === item.id;
-
-										return (
-											<li
-												key={item.id}
-												className={cn(
-													'flex items-center justify-between p-2 rounded-md transition-all duration-200',
-													item.isPurchased ? 'bg-muted/40' : 'bg-background',
-													isUpdatingThisItem && 'opacity-70',
-												)}
+							<ul className="mt-2 space-y-2 pl-4 border-l-2 border-primary/20">
+								{category.items.map((item) => (
+									<li
+										key={item.id}
+										className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50"
+									>
+										<div className="flex items-center gap-3">
+											<Checkbox
+												id={`item-${item.id}`}
+												checked={item.isPurchased}
+												onCheckedChange={() =>
+													handleToggleItem(item.id, item.isPurchased)
+												}
+												disabled={updatingItemId === item.id}
+											/>
+											<label
+												htmlFor={`item-${item.id}`}
+												className={`text-sm ${
+													item.isPurchased ? 'line-through text-muted-foreground' : ''
+												}`}
 											>
-												<div className="flex items-center gap-2">
-													<Checkbox
-														checked={item.isPurchased}
-														onCheckedChange={() =>
-															handleToggleItem(item.id, item.isPurchased)
-														}
-														id={`item-${item.id}`}
-														disabled={isUpdating && isUpdatingThisItem}
-														className={cn(
-															'h-4 w-4 rounded-sm border-primary/50',
-															item.isPurchased && 'bg-primary border-primary',
-														)}
-													/>
-													<label
-														htmlFor={`item-${item.id}`}
-														className={cn(
-															'flex flex-col cursor-pointer',
-															item.isPurchased &&
-																'line-through text-muted-foreground',
-														)}
-													>
-														<span className="text-sm font-medium">
-															{item.name}
-														</span>
-														{item.notes && (
-															<span className="text-xs text-muted-foreground">
-																{item.notes}
-															</span>
-														)}
-													</label>
-												</div>
-												<span
-													className={cn(
-														'text-xs font-medium px-2 py-1 rounded-md bg-primary/5',
-														item.isPurchased &&
-															'bg-muted text-muted-foreground',
-													)}
-												>
+												{item.name} -{' '}
+												<span className="text-xs text-muted-foreground">
 													{item.quantity} {item.unit}
 												</span>
-											</li>
-										);
-									})}
-								</ul>
-							</div>
+											</label>
+										</div>
+										{updatingItemId === item.id && (
+											<Loader2 className="w-4 h-4 animate-spin" />
+										)}
+									</li>
+								))}
+							</ul>
 						)}
 					</div>
 				))}
@@ -272,7 +206,9 @@ export function SavedGroceryListView({
 						{purchasedItems} of {totalItems} items
 					</span>
 					<span className="font-bold text-primary">
-						{Math.round((purchasedItems / totalItems) * 100)}%
+						{totalItems > 0
+							? `${Math.round((purchasedItems / totalItems) * 100)}%`
+							: '0%'}
 					</span>
 				</div>
 			</div>

@@ -1,9 +1,7 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import OnboardedUsers from '../OnbordedUsers';
 import type { OnBordingUser } from '../actions/GetOnBoardingUser';
-import { getOnboardingUsersServer } from '../actions/GetOnBoardingUser';
 import Loading from '../loading';
 
 interface OnboardedUsersClientProps {
@@ -16,23 +14,11 @@ interface OnboardedUsersClientProps {
 export default function OnboardedUsersClient({
 	initialData,
 }: OnboardedUsersClientProps) {
-	// Use the query with initialData from the server
-	const { data, isError, error, isLoading } = useQuery({
-		queryKey: ['onboardedUsers'],
-		queryFn: getOnboardingUsersServer,
-		initialData,
-		staleTime: 1000 * 60 * 5, // 5 minutes
-		gcTime: 1000 * 60 * 5, // 5 minutes
-	});
-
-	// Handle loading state
-	if (isLoading) {
+	if (!initialData) {
 		return <Loading />;
 	}
 
-	// Handle error state
-	if (isError) {
-		console.error('Error fetching onboarding users:', error);
+	if (!initialData.users) {
 		return (
 			<div className="text-center p-6">
 				<p className="text-red-500">An error occurred while fetching data.</p>
@@ -41,9 +27,8 @@ export default function OnboardedUsersClient({
 		);
 	}
 
-	// Transform the data
 	const transformedUsers =
-		data?.users?.map((user: OnBordingUser) => ({
+		initialData.users?.map((user: OnBordingUser) => ({
 			id: user.id,
 			name: user.name,
 			startDate: user.startDate ? new Date(user.startDate) : null,
