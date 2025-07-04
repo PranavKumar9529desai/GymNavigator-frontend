@@ -254,8 +254,12 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 				{/* Progress Circle */}
 				<div className="relative w-24 h-24 sm:w-32 sm:h-32 transform hover:scale-105 transition-transform">
 					{/* Progress circle with gradient */}
-					{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-					<svg className="w-full h-full transform -rotate-90">
+					<svg 
+						className="w-full h-full transform -rotate-90" 
+						aria-label={`Monthly attendance progress: ${progress}% of workout days completed`}
+						viewBox="0 0 100 100"
+					>
+						<title>Monthly Attendance Progress</title>
 						<defs>
 							<linearGradient
 								id="progress-gradient"
@@ -268,25 +272,31 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 								<stop offset="100%" stopColor="#22c55e" />
 							</linearGradient>
 						</defs>
+						{/* Background circle */}
 						<circle
-							cx="50%"
-							cy="50%"
-							r="45%"
+							cx="50"
+							cy="50"
+							r="40"
 							fill="none"
 							stroke="currentColor"
 							strokeWidth="8"
 							className="text-gray-200 dark:text-gray-800"
 						/>
+						{/* Progress circle */}
 						<circle
-							cx="50%"
-							cy="50%"
-							r="45%"
+							cx="50"
+							cy="50"
+							r="40"
 							fill="none"
 							stroke="url(#progress-gradient)"
 							strokeWidth="8"
 							strokeLinecap="round"
-							strokeDasharray={`${progress * 2.827}, 282.743`}
+							strokeDasharray={`${(progress / 100) * 251.2} 251.2`}
+							strokeDashoffset="0"
 							className="transition-all duration-1000 ease-in-out"
+							style={{
+								transformOrigin: '50% 50%'
+							}}
 						/>
 					</svg>
 					<div className="absolute inset-0 flex items-center justify-center">
