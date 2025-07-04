@@ -17,7 +17,11 @@ interface UpdateActivePeriodResponse {
 	};
 }
 
-export const updateActivePeriod = async (data: UpdateActivePeriodData) => {
+type UpdateActivePeriodResult = 
+	| { success: true; data: UpdateActivePeriodResponse }
+	| { success: false; error: string };
+
+export const updateActivePeriod = async (data: UpdateActivePeriodData): Promise<UpdateActivePeriodResult> => {
 	const ownerAxios = await OwnerReqConfig();
 	try {
 		const response: AxiosResponse<UpdateActivePeriodResponse> =
@@ -26,9 +30,12 @@ export const updateActivePeriod = async (data: UpdateActivePeriodData) => {
 				endDate: data.endDate,
 			});
 
-		return response.data;
-	} catch (error) {
+		return { success: true, data: response.data };
+	} catch (error: unknown) {
 		console.error('Error updating active period:', error);
-		throw error;
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'An unexpected error occurred'
+		};
 	}
 };

@@ -9,7 +9,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UserMobileCard } from './_components/UserMobileCard';
+import { UserMobileCard } from './UserMobileCard';
 import { useToast } from '@/hooks/use-toast';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useTransition } from 'react';
-import { updateActivePeriod } from './actions/actions';
+import { updateActivePeriod } from '../_actions/mutations';
 
 export interface UserType {
 	id: number;
@@ -75,25 +75,33 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 
 	const handleUpdateActivePeriod = (userId: number) => {
 		startTransition(async () => {
-			const result = await updateActivePeriod({
-				userId,
-				startDate: new Date().toISOString(),
-				endDate: new Date(
-					new Date().setFullYear(new Date().getFullYear() + 1),
-				).toISOString(),
-			});
-
-			if (result.success) {
-				toast({
-					title: 'User Activated',
-					description: 'The user has been successfully activated for one year.',
+			try {
+				const result = await updateActivePeriod({
+					userId,
+					startDate: new Date().toISOString(),
+					endDate: new Date(
+						new Date().setFullYear(new Date().getFullYear() + 1),
+					).toISOString(),
 				});
-				router.refresh();
-			} else {
+
+				if (result.success) {
+					toast({
+						title: 'User Activated',
+						description: 'The user has been successfully activated for one year.',
+					});
+					router.refresh();
+				} else {
+					toast({
+						variant: 'destructive',
+						title: 'Activation Failed',
+						description: result.error,
+					});
+				}
+			} catch (error: unknown) {
 				toast({
 					variant: 'destructive',
 					title: 'Activation Failed',
-					description: result.error || 'An unexpected error occurred.',
+					description: error instanceof Error ? error.message : 'An unexpected error occurred',
 				});
 			}
 		});

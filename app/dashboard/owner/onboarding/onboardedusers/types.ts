@@ -7,37 +7,9 @@ import type {
 } from '@tanstack/react-table';
 import type { LucideIcon } from 'lucide-react';
 
-export type EnrollmentStatus = 'active' | 'pending' | 'inactive';
+export type EnrollmentStatus = 'active' | 'pending';
 
-export interface Enrollment {
-	id: string;
-	userId?: string;
-	userName?: string;
-	planName?: string;
-	startDate: Date;
-	endDate: Date;
-	status: EnrollmentStatus;
-	amount?: number;
-}
 
-export interface EnrollmentTableProps {
-	enrollments: Enrollment[];
-	setEnrollments: (enrollments: Enrollment[]) => void;
-}
-
-export interface StatsCardProps {
-	title: string;
-	value: string | number;
-	Icon: LucideIcon;
-	gradient: string;
-}
-
-export interface TableProps {
-	table: Table<Enrollment>;
-	row: Row<Enrollment>;
-}
-
-export type EnrollmentColumn = ColumnDef<Enrollment>;
 
 export interface TableState {
 	sorting: SortingState;

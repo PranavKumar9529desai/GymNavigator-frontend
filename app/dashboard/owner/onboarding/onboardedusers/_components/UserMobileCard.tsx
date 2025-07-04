@@ -1,6 +1,11 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/// Define status variants with proper typing that matches UserType['status']
+const statusVariant: Record<UserType['status'], string> = {
+	active: 'secondary', // or 'default' if you want a different color
+	pending: 'outline',
+	inactive: 'destructive',
+};nents/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -16,7 +21,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreVertical } from 'lucide-react';
-import type { UserType } from '../OnbordedUsers';
+import type { UserType } from './OnboardedUsers';
 
 interface UserMobileCardProps {
 	user: UserType;
@@ -38,11 +43,12 @@ export function UserMobileCard({
 	isPending,
 	onActivate,
 }: UserMobileCardProps) {
-	const statusVariant = {
+	// Define status variants with proper typing that matches UserType['status']
+	const statusVariant: Record<UserType['status'], string> = {
 		active: 'secondary', // or 'default' if you want a different color
 		pending: 'outline',
 		inactive: 'destructive',
-	} as const;
+	};
 
 	return (
 		<Card>
