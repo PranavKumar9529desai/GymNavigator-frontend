@@ -5,12 +5,16 @@ LOCAL_IP=$(ip addr | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut
 
 # Output the IP for reference and create QR code for easy mobile access
 echo "Starting Next.js development server on IP: $LOCAL_IP"
-echo "Access your PWA via: http://$LOCAL_IP:3000"
+#  ╰───────────────────────────────────────────────────────────────────────────────────────────╯
+# The local-ssl-proxy is now running in the background. You can now start your Next.js
+# development server, and then access your site at https://$LOCAL_IP:8443.
+
+echo "Access your PWA via: http://$LOCAL_IP:8443"
 
 # Generate QR code if qrencode is installed
 if command -v qrencode &> /dev/null; then
     echo "Scan this QR code with your mobile device to access the app:"
-    qrencode -t UTF8 "http://$LOCAL_IP:3000"
+    qrencode -t UTF8 "https://$LOCAL_IP:8443"
 else
     echo "Tip: Install qrencode (sudo apt install qrencode) to generate a QR code for easier mobile access"
 fi

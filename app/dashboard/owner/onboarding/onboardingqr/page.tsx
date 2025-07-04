@@ -1,4 +1,4 @@
-import GymQRCodeOnboarding from '@/components/gym-owner/QrCode';
+import GymQRCode from '@/components/gym-owner/QrCode';
 import { Button } from '@/components/ui/button';
 import FetchGymDetailsSA from '../../(common)/GetGymDetails';
 import { OnBoadingQrData } from './GetOnBordingQrData';
@@ -37,10 +37,10 @@ export default async function Page() {
 	};
 
 	return (
-		<div className="h-screen flex justify-center sm:items-center w-full p-4">
-			<GymQRCodeOnboarding
+		<div className="h-screen flex justify-center sm:items-center w-full p-2 sm:p-4">
+			<GymQRCode
 				qrdata={JSON.stringify(QrData)}
-				title=""
+				title="Onboarding QR Code"
 				subtitle="Please scan the QR code to complete your onboarding process"
 			/>
 		</div>

@@ -98,6 +98,8 @@ const nextConfig = {
 
 		return config;
 	},
+
+	
 };
 
 export default withPWA({

@@ -2,9 +2,8 @@ import FetchGymDetailsSA from '@/app/dashboard/owner/gymdetails/viewgymdetails/_
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { GetAttendanceQrData } from './GetAttendanceQrData';
-import GymQRCode from './QrCode';
+import GymQRCode from '@/components/gym-owner/QrCode';
 
-export const dynamic = 'force-dynamic';
 
 export default async function AttendanceComponent() {
 	// First check if gym exists

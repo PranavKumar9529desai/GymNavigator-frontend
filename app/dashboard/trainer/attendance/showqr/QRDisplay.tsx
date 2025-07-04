@@ -1,6 +1,6 @@
 'use client';
 
-import GymQRCode from '@/app/dashboard/owner/attendance/showqr/QrCode';
+import GymQRCode from '@/components/gym-owner/QrCode';
 
 interface QRDisplayProps {
 	initialData: { gymname: string; gymid: number } | null;
