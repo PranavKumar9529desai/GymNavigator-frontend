@@ -1,22 +1,22 @@
-import type React from "react";
-import { auth } from "../../(auth)/auth";
+import type React from 'react';
+import { auth } from '../../(auth)/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import NotOnboardedImage from '../_components/not-onboarded/_assests/not-onboarded.png';
 
 export default async function layout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const session = await auth();
-  const IsMemberOfGym = !!session?.gym;
+	const session = await auth();
+	const IsMemberOfGym = !!session?.gym;
 
-  return <>{IsMemberOfGym ? children : <NotMemberOfGym />}</>;
+	return <>{IsMemberOfGym ? children : <NotMemberOfGym />}</>;
 }
 const NotMemberOfGym = () => {
-  return (
-    <div className="flex flex-col items-center justify-center h-[80vh] space-y-4">
+	return (
+		<div className="flex flex-col items-center justify-center h-[80vh] space-y-4">
 			<div className="relative w-full max-w-sm h-80  mx-auto">
 				<Image
 					src={NotOnboardedImage}
@@ -37,5 +37,5 @@ const NotMemberOfGym = () => {
 				</Link>
 			</div>
 		</div>
-  );
+	);
 };

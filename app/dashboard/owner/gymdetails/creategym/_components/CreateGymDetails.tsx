@@ -40,7 +40,9 @@ export default function CreateGymDetails() {
 	const [Loading, setLoading] = useState<boolean>(false);
 	const [logoPreview, setLogoPreview] = useState<string | null>(null);
 	const [showReviewDialog, setShowReviewDialog] = useState(false);
-	const [reviewData, setReviewData] = useState<z.infer<typeof CreateGymDetailsSchema> | null>(null);
+	const [reviewData, setReviewData] = useState<z.infer<
+		typeof CreateGymDetailsSchema
+	> | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 
@@ -72,7 +74,9 @@ export default function CreateGymDetails() {
 		setShowReviewDialog(true);
 	};
 
-	const handleConfirmCreateGym = async (data: z.infer<typeof CreateGymDetailsSchema>) => {
+	const handleConfirmCreateGym = async (
+		data: z.infer<typeof CreateGymDetailsSchema>,
+	) => {
 		setShowReviewDialog(false);
 		setLoading(true);
 		setSubmitError(null);
@@ -125,9 +129,11 @@ export default function CreateGymDetails() {
 	}
 
 	return (
-		<Card className="w-full max-w-2xl mx-auto" >
+		<Card className="w-full max-w-2xl mx-auto">
 			<CardHeader>
-				<CardTitle className="text-2xl font-bold text-center">Create New Gym</CardTitle>
+				<CardTitle className="text-2xl font-bold text-center">
+					Create New Gym
+				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -143,7 +149,9 @@ export default function CreateGymDetails() {
 							/>
 						</div>
 						{form.formState.errors.gym_name && (
-							<p className="text-red-500 text-sm">{form.formState.errors.gym_name.message}</p>
+							<p className="text-red-500 text-sm">
+								{form.formState.errors.gym_name.message}
+							</p>
 						)}
 					</div>
 
@@ -174,7 +182,9 @@ export default function CreateGymDetails() {
 							</div>
 						</div>
 						{form.formState.errors.gym_logo && (
-							<p className="text-red-500 text-sm">{form.formState.errors.gym_logo.message}</p>
+							<p className="text-red-500 text-sm">
+								{form.formState.errors.gym_logo.message}
+							</p>
 						)}
 					</div>
 
@@ -208,7 +218,9 @@ export default function CreateGymDetails() {
 								/>
 							</div>
 							{form.formState.errors.phone_number && (
-								<p className="text-red-500 text-sm">{form.formState.errors.phone_number.message}</p>
+								<p className="text-red-500 text-sm">
+									{form.formState.errors.phone_number.message}
+								</p>
 							)}
 						</div>
 						<div className="space-y-2">
@@ -224,7 +236,9 @@ export default function CreateGymDetails() {
 								/>
 							</div>
 							{form.formState.errors.Email && (
-								<p className="text-red-500 text-sm">{form.formState.errors.Email.message}</p>
+								<p className="text-red-500 text-sm">
+									{form.formState.errors.Email.message}
+								</p>
 							)}
 						</div>
 					</div>
@@ -237,7 +251,9 @@ export default function CreateGymDetails() {
 					</Button>
 				</form>
 				{submitSuccess && (
-					<div className="mt-4 text-center text-green-500">Gym created successfully! Redirecting...</div>
+					<div className="mt-4 text-center text-green-500">
+						Gym created successfully! Redirecting...
+					</div>
 				)}
 				{submitError && (
 					<div className="mt-4 text-center text-red-500">{submitError}</div>

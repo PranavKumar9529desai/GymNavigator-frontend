@@ -7,7 +7,7 @@ import { m } from 'framer-motion';
 import { Activity, ArrowRight, Dumbbell, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { type MuscleGroup } from '../_actions/get-muscles';
+import type { MuscleGroup } from '../_actions/get-muscles';
 
 // Simplified animations for better mobile performance
 const _fadeIn = {

@@ -14,18 +14,12 @@ interface GymResponse {
 	};
 }
 
-interface formData {
-	gym_name: string;
-	gym_logo: File | null;
-	address: string;
-	phone_number: string;
-	Email: string;
-}
-
-export default async function PostGymDetails(formData: CreateGymDetailsSchemaType, image: string) {
+export default async function PostGymDetails(
+	formData: CreateGymDetailsSchemaType,
+	image: string,
+) {
 	console.log('received the request from the postgymdetails ', image, formData);
 	try {
-     
 		// const formData: formData = JSON.parse(formData);
 		const ownerAxios = await OwnerReqConfig();
 		const payload = {

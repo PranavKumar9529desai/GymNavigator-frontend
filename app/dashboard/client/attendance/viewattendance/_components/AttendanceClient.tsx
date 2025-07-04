@@ -1,14 +1,16 @@
-"use client";
+'use client';
 import type { AttendanceData } from '../_actions/get-attendance';
 import CalendarSkeleton from './CalendarSkeleton';
 import MonthAttendance from './MonthAttendance';
 
 interface AttendanceClientProps {
-  attendanceData: AttendanceData;
+	attendanceData: AttendanceData;
 }
 
-export default function AttendanceClient({ attendanceData }: AttendanceClientProps) {
-  if (!attendanceData) return <CalendarSkeleton />;
+export default function AttendanceClient({
+	attendanceData,
+}: AttendanceClientProps) {
+	if (!attendanceData) return <CalendarSkeleton />;
 
-  return <MonthAttendance initialData={attendanceData.attendanceDays ?? []} />;
+	return <MonthAttendance initialData={attendanceData.attendanceDays ?? []} />;
 }

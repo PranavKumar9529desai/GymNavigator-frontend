@@ -5,8 +5,7 @@ import type { MetadataRoute } from 'next';
  * Controls search engine crawling behavior
  */
 export default function robots(): MetadataRoute.Robots {
-	const baseUrl =
-		process.env.NEXT_PUBLIC_BASE_URL || 'https://gymnavigator.in';
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://gymnavigator.in';
 
 	return {
 		rules: [

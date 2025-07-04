@@ -51,20 +51,19 @@ export default function AttendanceQRScanner() {
 				);
 
 				const toleranceInHours = 1;
-				const timeDiff =
-					Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
+				const timeDiff = Math.abs(currentUTC - scannedUTC) / (1000 * 60 * 60);
 
 				if (timeDiff <= toleranceInHours) {
 					toast.loading('Marking attendance...');
-					
+
 					// Call the server action directly
 					const result = await markAttendance();
-					
+
 					if (result.success) {
 						toast.dismiss();
 						toast.success('Attendance marked successfully!');
 						setIsSuccess(true);
-						
+
 						// Redirect after a short delay to show success state
 						setTimeout(() => {
 							router.push('/dashboard/client/attendance/markattendance');
@@ -79,9 +78,7 @@ export default function AttendanceQRScanner() {
 				console.error('Error processing QR code:', error);
 				toast.error('Failed to process QR code', {
 					description:
-						error instanceof Error
-							? error.message
-							: 'Unknown error occurred',
+						error instanceof Error ? error.message : 'Unknown error occurred',
 				});
 				setIsProcessing(false);
 				setIsScanning(true);
@@ -95,9 +92,9 @@ export default function AttendanceQRScanner() {
 		},
 		constraints: {
 			video: {
-				facingMode: 'environment'
-			}
-		}
+				facingMode: 'environment',
+			},
+		},
 	});
 
 	if (isProcessing) {
@@ -158,7 +155,12 @@ export default function AttendanceQRScanner() {
 						{isScanning && !isProcessing && !hasProcessed && (
 							<>
 								<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
-								<video ref={ref} style={{ width: '100%' }} />
+								{/* biome-ignore lint/a11y/useMediaCaption: Video is for QR scanning, no audio content */}
+								<video
+									ref={ref}
+									style={{ width: '100%' }}
+									aria-label="QR Code Scanner Camera Feed"
+								/>
 							</>
 						)}
 					</div>

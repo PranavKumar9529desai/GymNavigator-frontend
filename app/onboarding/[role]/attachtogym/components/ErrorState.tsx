@@ -111,7 +111,7 @@ export function ErrorState({
 		setIsRetrying(true);
 
 		try {
-			const role = pathname.split("/")[2]; // Extract role from pathname
+			const role = pathname.split('/')[2]; // Extract role from pathname
 			const result = await attachRoleToGym({
 				gymname: gymName,
 				gymid: gymId,

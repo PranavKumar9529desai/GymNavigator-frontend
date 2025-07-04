@@ -7,7 +7,7 @@ export default function ViewDietLoading() {
 			<div className="mb-6">
 				<Skeleton className="h-8 w-64 mx-auto" />
 			</div>
-			
+
 			<Card className="shadow-sm border-0 bg-white/50 backdrop-blur-sm">
 				<CardHeader className="pb-2 pt-4">
 					<div className="flex items-center justify-center">
@@ -22,7 +22,7 @@ export default function ViewDietLoading() {
 								<Skeleton className="h-5 w-32" />
 								<Skeleton className="h-4 w-24" />
 							</div>
-							
+
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 								{/* Chart skeleton */}
 								<div>
@@ -33,7 +33,7 @@ export default function ViewDietLoading() {
 										</div>
 									</div>
 								</div>
-								
+
 								{/* Calorie & nutrition skeleton */}
 								<div className="flex flex-col justify-between">
 									<div className="mb-4">
@@ -44,13 +44,14 @@ export default function ViewDietLoading() {
 											<Skeleton className="h-3 w-10" />
 										</div>
 									</div>
-									
+
 									<div>
 										<Skeleton className="h-4 w-28 mb-3" />
 										<div className="bg-gray-50 p-3 rounded-lg">
 											<div className="grid grid-cols-4 gap-2">
 												{[...Array(4)].map((_, i) => (
 													<div
+														// biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array with fixed length
 														key={`nutrition-skeleton-${i}`}
 														className="flex flex-col items-center"
 													>
@@ -72,6 +73,7 @@ export default function ViewDietLoading() {
 							<div className="space-y-4">
 								{[...Array(4)].map((_, i) => (
 									<div
+										// biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array with fixed length
 										key={`meal-skeleton-${i}`}
 										className="mb-4 rounded-lg shadow-sm border border-gray-100 overflow-hidden"
 									>
@@ -89,6 +91,7 @@ export default function ViewDietLoading() {
 											<div className="grid grid-cols-4 gap-2">
 												{[...Array(4)].map((_, j) => (
 													<div
+														// biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton array with fixed length
 														key={`meal-nutrition-skeleton-${i}-${j}`}
 														className="flex flex-col items-center"
 													>
@@ -113,4 +116,3 @@ export default function ViewDietLoading() {
 		</div>
 	);
 }
-

@@ -29,7 +29,7 @@ export function SuccessState({ message, gymName }: SuccessStateProps) {
 
 		return () => clearInterval(intervalId);
 	}, []);
-	
+
 	useEffect(() => {
 		if (countdown <= 0) {
 			router.push('/dashboard');
@@ -59,7 +59,8 @@ export function SuccessState({ message, gymName }: SuccessStateProps) {
 						You can now access all the features available for your role.
 					</p>
 					<p className="mt-2 text-sm text-gray-500">
-						Redirecting to dashboard in {countdown} second{countdown !== 1 ? 's' : ''}...
+						Redirecting to dashboard in {countdown} second
+						{countdown !== 1 ? 's' : ''}...
 					</p>
 				</CardContent>
 				<CardFooter className="flex flex-col sm:flex-row gap-3 justify-center">

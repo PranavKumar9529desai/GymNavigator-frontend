@@ -56,7 +56,9 @@ export default function AttendanceSuccess() {
 
 					<div className="space-y-3 px-4 sm:px-0">
 						<Button
-							onClick={() => router.replace('/dashboard/client/attendance/viewattendance')}
+							onClick={() =>
+								router.replace('/dashboard/client/attendance/viewattendance')
+							}
 							className="w-full h-12 text-base bg-green-500 hover:bg-green-600 text-white"
 						>
 							View Monthly Progress

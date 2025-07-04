@@ -15,25 +15,25 @@ interface OnBordingUserResponse {
 }
 
 // This is a server action, use it only in Server Components
-export const getOnboardingUsersServer = async (): Promise<OnBordingUserResponse> => {
-	const ownerAxios = await OwnerReqConfig();
-	try {
-		console.log('Fetching onboarding users (server)...');
-		const response: AxiosResponse<OnBordingUserResponse> = await ownerAxios.get(
-			'/onboarding/onbordingusers',
-		);
+export const getOnboardingUsersServer =
+	async (): Promise<OnBordingUserResponse> => {
+		const ownerAxios = await OwnerReqConfig();
+		try {
+			console.log('Fetching onboarding users (server)...');
+			const response: AxiosResponse<OnBordingUserResponse> =
+				await ownerAxios.get('/onboarding/onbordingusers');
 
-		const data = response.data;
-		console.log('Onboarding users response (server):', data);
+			const data = response.data;
+			console.log('Onboarding users response (server):', data);
 
-		if (!data.users || !Array.isArray(data.users)) {
-			console.error('Invalid users data received:', data);
-			return { msg: 'Invalid user data', users: [] };
+			if (!data.users || !Array.isArray(data.users)) {
+				console.error('Invalid users data received:', data);
+				return { msg: 'Invalid user data', users: [] };
+			}
+
+			return data;
+		} catch (error) {
+			console.error('Error fetching onboarding users:', error);
+			return { msg: 'Failed to fetch users', users: [] };
 		}
-
-		return data;
-	} catch (error) {
-		console.error('Error fetching onboarding users:', error);
-		return { msg: 'Failed to fetch users', users: [] };
-	}
-};
+	};

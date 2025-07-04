@@ -42,7 +42,7 @@ export const UpdateUserActivePeriod = async ({
 
 		// Invalidate cache for the onboardedusers page to show immediate changes
 		revalidatePath('/dashboard/owner/onboarding/onboardedusers');
-		console.log("onboarding user cached is reseted");
+		console.log('onboarding user cached is reseted');
 		revalidatePath('/dashboard/owner/onboarding/onboardedusers');
 
 		return response.data;

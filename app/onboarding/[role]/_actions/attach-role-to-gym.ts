@@ -30,7 +30,9 @@ export async function attachRoleToGym({
 		// Determine which axios instance and endpoint to use based on role
 		if (role === 'trainer') {
 			// Import trainer axios configuration
-			const { TrainerReqConfig } = await import('@/lib/AxiosInstance/trainerAxios');
+			const { TrainerReqConfig } = await import(
+				'@/lib/AxiosInstance/trainerAxios'
+			);
 			axiosInstance = await TrainerReqConfig();
 			endpoint = '/attachtogym';
 		} else {

@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { type CompleteUserInfo } from '../_actions/get-user-assigned-by-id';
+import type { CompleteUserInfo } from '../_actions/get-user-assigned-by-id';
 
 interface UserProfileComponentProps {
 	user: {
@@ -18,7 +18,9 @@ interface UserProfileComponentProps {
 	};
 }
 
-export function UserProfileComponent({ user: data }: UserProfileComponentProps) {
+export function UserProfileComponent({
+	user: data,
+}: UserProfileComponentProps) {
 	const router = useRouter();
 
 	if (!data?.success || !data.data) {
@@ -115,7 +117,9 @@ export function UserProfileComponent({ user: data }: UserProfileComponentProps) 
 				<div className="space-y-6 p-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div>
-							<h3 className="text-lg font-semibold text-gray-800">Medical Conditions</h3>
+							<h3 className="text-lg font-semibold text-gray-800">
+								Medical Conditions
+							</h3>
 							<ul className="mt-2 space-y-1 list-disc list-inside">
 								{user.HealthProfile.medicalConditions
 									.filter((condition) => condition.selected)
@@ -145,12 +149,20 @@ export function UserProfileComponent({ user: data }: UserProfileComponentProps) 
 			{/* Dietary Preferences */}
 			{user.HealthProfile && (
 				<div className="space-y-6 p-4">
-					<h2 className="text-xl font-semibold text-gray-900">Dietary Preferences</h2>
+					<h2 className="text-xl font-semibold text-gray-900">
+						Dietary Preferences
+					</h2>
 					<Separator className="bg-blue-100" />
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<p><span className="font-semibold">Preference:</span> {user.HealthProfile.dietaryPreference}</p>
+						<p>
+							<span className="font-semibold">Preference:</span>{' '}
+							{user.HealthProfile.dietaryPreference}
+						</p>
 						{user.HealthProfile.dietaryRestrictions && (
-							<p><span className="font-semibold">Restrictions:</span> {user.HealthProfile.dietaryRestrictions.join(', ')}</p>
+							<p>
+								<span className="font-semibold">Restrictions:</span>{' '}
+								{user.HealthProfile.dietaryRestrictions.join(', ')}
+							</p>
 						)}
 					</div>
 				</div>
@@ -160,22 +172,34 @@ export function UserProfileComponent({ user: data }: UserProfileComponentProps) 
 			<div className="space-y-6 p-4">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
-						<h3 className="text-lg font-semibold text-gray-800">Active Workout Plan</h3>
+						<h3 className="text-lg font-semibold text-gray-800">
+							Active Workout Plan
+						</h3>
 						{user.activeWorkoutPlan ? (
 							<div className="mt-2 p-4 bg-green-50 border border-green-100 rounded-lg">
-								<p className="font-bold text-green-800">{user.activeWorkoutPlan.name}</p>
-								<p className="text-sm text-gray-600">{user.activeWorkoutPlan.description}</p>
+								<p className="font-bold text-green-800">
+									{user.activeWorkoutPlan.name}
+								</p>
+								<p className="text-sm text-gray-600">
+									{user.activeWorkoutPlan.description}
+								</p>
 							</div>
 						) : (
 							<p className="text-gray-500 mt-2">No active workout plan.</p>
 						)}
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold text-gray-800">Active Diet Plan</h3>
+						<h3 className="text-lg font-semibold text-gray-800">
+							Active Diet Plan
+						</h3>
 						{user.DietPlan ? (
 							<div className="mt-2 p-4 bg-purple-50 border border-purple-100 rounded-lg">
-								<p className="font-bold text-purple-800">{user.DietPlan.name}</p>
-								<p className="text-sm text-gray-600">{user.DietPlan.description}</p>
+								<p className="font-bold text-purple-800">
+									{user.DietPlan.name}
+								</p>
+								<p className="text-sm text-gray-600">
+									{user.DietPlan.description}
+								</p>
 							</div>
 						) : (
 							<p className="text-gray-500 mt-2">No active diet plan.</p>

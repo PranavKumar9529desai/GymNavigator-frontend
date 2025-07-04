@@ -18,7 +18,7 @@ import {
 	SlidersHorizontal,
 	CheckCircle2,
 	Clock,
-	XCircle
+	XCircle,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -53,17 +53,20 @@ import type {
 import { columns } from './_components/enrollment-columns';
 import { statusStyles, statusIcons } from './_components/status-cards';
 
-
 export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-	const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+	const [columnVisibility, setColumnVisibility] = useState<
+		Record<string, boolean>
+	>({
 		// Hide less important columns on mobile by default
 		endDate: false,
 		actions: false,
 	});
 	const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
-	const [viewMode, setViewMode] = useState<'table' | 'card'>(typeof window !== 'undefined' && window.innerWidth < 768 ? 'card' : 'table');
+	const [viewMode, setViewMode] = useState<'table' | 'card'>(
+		typeof window !== 'undefined' && window.innerWidth < 768 ? 'card' : 'table',
+	);
 
 	// Effect to update viewMode on window resize
 	useEffect(() => {
@@ -110,7 +113,9 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 					<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 					<Input
 						placeholder="Search users..."
-						value={(table.getColumn('userName')?.getFilterValue() as string) ?? ''}
+						value={
+							(table.getColumn('userName')?.getFilterValue() as string) ?? ''
+						}
 						onChange={(event) =>
 							table.getColumn('userName')?.setFilterValue(event.target.value)
 						}
@@ -137,7 +142,11 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 					<Separator orientation="vertical" className="h-6" />
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant="outline" size="sm" className="text-xs md:text-sm">
+							<Button
+								variant="outline"
+								size="sm"
+								className="text-xs md:text-sm"
+							>
 								<SlidersHorizontal className="mr-2 h-3.5 w-3.5" />
 								View
 							</Button>
@@ -177,9 +186,9 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 												{header.isPlaceholder
 													? null
 													: flexRender(
-														header.column.columnDef.header,
-														header.getContext(),
-													)}
+															header.column.columnDef.header,
+															header.getContext(),
+														)}
 											</TableHead>
 										);
 									})}
@@ -238,10 +247,20 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 									<CardContent className="p-5">
 										<div className="flex items-start justify-between">
 											<div className="space-y-1.5">
-												<h3 className="font-medium text-sm md:text-base">{enrollment.userName}</h3>
+												<h3 className="font-medium text-sm md:text-base">
+													{enrollment.userName}
+												</h3>
 												<div className="flex flex-col text-xs text-muted-foreground space-y-1">
-													<span>Start: {new Date(enrollment.startDate).toLocaleDateString()}</span>
-													<span>End: {new Date(enrollment.endDate).toLocaleDateString()}</span>
+													<span>
+														Start:{' '}
+														{new Date(
+															enrollment.startDate,
+														).toLocaleDateString()}
+													</span>
+													<span>
+														End:{' '}
+														{new Date(enrollment.endDate).toLocaleDateString()}
+													</span>
 												</div>
 											</div>
 											<div className="flex items-center gap-2">
@@ -257,7 +276,9 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 												</Badge>
 												<Checkbox
 													checked={row.getIsSelected()}
-													onCheckedChange={(value) => row.toggleSelected(!!value)}
+													onCheckedChange={(value) =>
+														row.toggleSelected(!!value)
+													}
 													aria-label="Select enrollment"
 													className="translate-y-[2px]"
 												/>
@@ -269,21 +290,35 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 											</Button>
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>
-													<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+													<Button
+														variant="ghost"
+														size="sm"
+														className="h-8 w-8 p-0"
+													>
 														<MoreHorizontal className="h-4 w-4" />
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end" className="w-[160px]">
-													<DropdownMenuLabel className="text-xs">Actions</DropdownMenuLabel>
+													<DropdownMenuLabel className="text-xs">
+														Actions
+													</DropdownMenuLabel>
 													<DropdownMenuItem
-														onClick={() => navigator.clipboard.writeText(enrollment.id.toString())}
+														onClick={() =>
+															navigator.clipboard.writeText(
+																enrollment.id.toString(),
+															)
+														}
 														className="text-xs"
 													>
 														Copy user ID
 													</DropdownMenuItem>
 													<DropdownMenuSeparator />
-													<DropdownMenuItem className="text-xs">View user details</DropdownMenuItem>
-													<DropdownMenuItem className="text-xs">Update enrollment</DropdownMenuItem>
+													<DropdownMenuItem className="text-xs">
+														View user details
+													</DropdownMenuItem>
+													<DropdownMenuItem className="text-xs">
+														Update enrollment
+													</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
 										</div>
@@ -332,4 +367,3 @@ export function EnrollmentTable({ enrollments }: EnrollmentTableProps) {
 		</div>
 	);
 }
-

@@ -119,11 +119,11 @@ export function UserValidityPeriod({
 					endDate,
 					shift,
 				});
-				
+
 				if (updateResult.user) {
 					console.log('before toast');
-					
-					queryClient.resetQueries( { queryKey : ['onboardedUsers']});
+
+					queryClient.resetQueries({ queryKey: ['onboardedUsers'] });
 					toast.success(`Validity period updated for ${userName}`, {
 						duration: 3000,
 						position: 'top-center',

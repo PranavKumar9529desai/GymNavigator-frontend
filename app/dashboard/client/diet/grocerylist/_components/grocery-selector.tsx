@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { GroceryListResponse } from "@/lib/AI/prompts/grocery-list-prompts";
-import { cn } from "@/lib/utils";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { CalendarIcon, Clock, RefreshCcw, ShoppingCart } from "lucide-react";
-import { useState } from "react";
-import { useTransition } from "react";
-import { type SavedGroceryList } from "../_actions/fetch-saved-grocery-lists";
-import { getWeeklyDietPlan } from "../_actions/get-weekly-dietplan";
-import { GroceryListView } from "./grocery-list-view";
-import { SavedGroceryListView } from "./saved-grocery-list-view";
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { GroceryListResponse } from '@/lib/AI/prompts/grocery-list-prompts';
+import { cn } from '@/lib/utils';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { CalendarIcon, Clock, RefreshCcw, ShoppingCart } from 'lucide-react';
+import { useState } from 'react';
+import { useTransition } from 'react';
+import type { SavedGroceryList } from '../_actions/fetch-saved-grocery-lists';
+import { getWeeklyDietPlan } from '../_actions/get-weekly-dietplan';
+import { GroceryListView } from './grocery-list-view';
+import { SavedGroceryListView } from './saved-grocery-list-view';
 
 interface GrocerySelectorProps {
 	savedListsData: SavedGroceryList[];
 }
 
 export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
-	const [timeFrame, setTimeFrame] = useState<"weekly" | "monthly">("weekly");
+	const [timeFrame, setTimeFrame] = useState<'weekly' | 'monthly'>('weekly');
 	const [_isPending, _startTransition] = useTransition();
-	const [activeTab, setActiveTab] = useState<"weekly" | "monthly">("weekly");
-	const [viewMode, setViewMode] = useState<"saved" | "generating">("saved");
+	const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
+	const [viewMode, setViewMode] = useState<'saved' | 'generating'>('saved');
 	const queryClient = useQueryClient();
 
 	// Process the saved lists data
@@ -31,7 +31,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 		? {
 				weekly:
 					savedListsData
-						.filter((list) => list.timeFrame === "weekly")
+						.filter((list) => list.timeFrame === 'weekly')
 						.sort(
 							(a, b) =>
 								new Date(b.createdAt).getTime() -
@@ -39,7 +39,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 						)[0] || null,
 				monthly:
 					savedListsData
-						.filter((list) => list.timeFrame === "monthly")
+						.filter((list) => list.timeFrame === 'monthly')
 						.sort(
 							(a, b) =>
 								new Date(b.createdAt).getTime() -
@@ -47,14 +47,14 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 						)[0] || null,
 				others: savedListsData.filter((list, _index, arr) => {
 					const sortedWeeklies = [...arr]
-						.filter((l) => l.timeFrame === "weekly")
+						.filter((l) => l.timeFrame === 'weekly')
 						.sort(
 							(a, b) =>
 								new Date(b.createdAt).getTime() -
 								new Date(a.createdAt).getTime(),
 						);
 					const sortedMonthlies = [...arr]
-						.filter((l) => l.timeFrame === "monthly")
+						.filter((l) => l.timeFrame === 'monthly')
 						.sort(
 							(a, b) =>
 								new Date(b.createdAt).getTime() -
@@ -63,14 +63,14 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 
 					return (
 						!(
-							list.timeFrame === "weekly" && list.id === sortedWeeklies[0]?.id
+							list.timeFrame === 'weekly' && list.id === sortedWeeklies[0]?.id
 						) &&
 						!(
-							list.timeFrame === "monthly" && list.id === sortedMonthlies[0]?.id
+							list.timeFrame === 'monthly' && list.id === sortedMonthlies[0]?.id
 						)
 					);
 				}),
-		  }
+			}
 		: { weekly: null, monthly: null, others: [] };
 
 	// Use mutation for generating a new grocery list
@@ -80,35 +80,35 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 		error,
 		isPending: isGenerating,
 	} = useMutation({
-		mutationFn: async (selectedTimeFrame: "weekly" | "monthly") => {
+		mutationFn: async (selectedTimeFrame: 'weekly' | 'monthly') => {
 			const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
 			if (!result.success || !result.groceryList) {
-				throw new Error(result.error || "Failed to load grocery list");
+				throw new Error(result.error || 'Failed to load grocery list');
 			}
 			return result.groceryList;
 		},
 		onSuccess: () => {
 			// After successful generation, refetch the saved lists
-			queryClient.invalidateQueries({ queryKey: ["groceryLists"] });
+			queryClient.invalidateQueries({ queryKey: ['groceryLists'] });
 		},
 	});
 
-	const fetchGroceryList = (selectedTimeFrame: "weekly" | "monthly") => {
-		setViewMode("generating");
+	const fetchGroceryList = (selectedTimeFrame: 'weekly' | 'monthly') => {
+		setViewMode('generating');
 		setTimeFrame(selectedTimeFrame);
 		generateGroceryList(selectedTimeFrame);
 	};
 
 	const handleTabChange = (value: string) => {
-		const newTimeFrame = value as "weekly" | "monthly";
+		const newTimeFrame = value as 'weekly' | 'monthly';
 		setActiveTab(newTimeFrame);
 
 		// If we have a saved list for this timeframe, show it
 		if (savedLists[newTimeFrame]) {
-			setViewMode("saved");
+			setViewMode('saved');
 		} else {
 			// If no saved list exists, we might want to generate one
-			setViewMode("generating");
+			setViewMode('generating');
 		}
 	};
 
@@ -132,7 +132,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 				</div>
 
 				<div className="mt-4">
-					{viewMode === "generating" ? (
+					{viewMode === 'generating' ? (
 						<>
 							{isGenerating ? (
 								<div className="flex flex-col items-center justify-center p-6">
@@ -168,7 +168,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 									<Button
 										onClick={() => fetchGroceryList(activeTab)}
 										className={cn(
-											isGenerating && "opacity-50 cursor-not-allowed",
+											isGenerating && 'opacity-50 cursor-not-allowed',
 										)}
 										disabled={isGenerating}
 									>
@@ -178,7 +178,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 										<Button
 											variant="outline"
 											className="ml-2"
-											onClick={() => setViewMode("saved")}
+											onClick={() => setViewMode('saved')}
 										>
 											View Saved
 										</Button>
@@ -195,9 +195,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 											<div className="flex items-center gap-2">
 												<ShoppingCart className="w-4 h-4 text-primary" />
 												<h3 className="text-lg font-medium">
-													{activeTab === "weekly"
-														? "Weekly"
-														: "Monthly"}{" "}
+													{activeTab === 'weekly' ? 'Weekly' : 'Monthly'}{' '}
 													Grocery List
 												</h3>
 											</div>
@@ -205,7 +203,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 												<Clock className="w-3 h-3 mr-1" />
 												{format(
 													new Date(savedLists[activeTab]?.createdAt),
-													"MMM d, yyyy",
+													'MMM d, yyyy',
 												)}
 											</div>
 										</div>
@@ -215,7 +213,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 												size="sm"
 												className="text-xs p-2 h-8"
 												onClick={() => {
-													setViewMode("generating");
+													setViewMode('generating');
 												}}
 											>
 												<RefreshCcw className="w-3 h-3 mr-1" />
@@ -223,7 +221,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 											</Button>
 										</div>
 									</div>
-									{/* @ts-ignore */}
+									{/* biome-ignore lint/style/noNonNullAssertion: activeTab is guaranteed to exist here */}
 									<SavedGroceryListView groceryList={savedLists[activeTab]!} />
 								</div>
 							) : (
@@ -234,7 +232,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 									<Button
 										onClick={() => fetchGroceryList(activeTab)}
 										className={cn(
-											isGenerating && "opacity-50 cursor-not-allowed",
+											isGenerating && 'opacity-50 cursor-not-allowed',
 										)}
 										disabled={isGenerating}
 									>

@@ -16,7 +16,7 @@ interface GymQRCodeOnboardingProps {
 
 const GymQRCode: React.FC<GymQRCodeOnboardingProps> = ({
 	qrdata,
-	title,
+	title: _title,
 	subtitle,
 }) => {
 	return (

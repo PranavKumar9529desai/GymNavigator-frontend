@@ -51,18 +51,20 @@ export const NutritionCard = ({
 			{/* Calories */}
 			<div className="flex flex-col items-center">
 				<div className={`bg-red-50 rounded-full ${classes.padding} mb-1`}>
-					<svg 
-						className={`${classes.icon} text-red-600`} 
-						xmlns="http://www.w3.org/2000/svg" 
-						width="24" 
-						height="24" 
-						viewBox="0 0 24 24" 
-						fill="none" 
-						stroke="currentColor" 
-						strokeWidth="2" 
-						strokeLinecap="round" 
+					<svg
+						className={`${classes.icon} text-red-600`}
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
 						strokeLinejoin="round"
+						aria-label="Calories icon"
 					>
+						<title>Calories icon</title>
 						<path d="M12 2v8" />
 						<path d="m4.93 10.93 1.41 1.41" />
 						<path d="M2 18h2" />
@@ -81,18 +83,20 @@ export const NutritionCard = ({
 			{/* Protein */}
 			<div className="flex flex-col items-center">
 				<div className={`bg-purple-50 rounded-full ${classes.padding} mb-1`}>
-					<svg 
+					<svg
 						className={`${classes.icon} text-purple-600`}
-						xmlns="http://www.w3.org/2000/svg" 
-						width="24" 
-						height="24" 
-						viewBox="0 0 24 24" 
-						fill="none" 
-						stroke="currentColor" 
-						strokeWidth="2" 
-						strokeLinecap="round" 
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
 						strokeLinejoin="round"
+						aria-label="Protein icon"
 					>
+						<title>Protein icon</title>
 						<path d="M7 5V3" />
 						<path d="M17 5V3" />
 						<path d="M12 5V2" />
@@ -112,18 +116,20 @@ export const NutritionCard = ({
 			{/* Carbs */}
 			<div className="flex flex-col items-center">
 				<div className={`bg-amber-50 rounded-full ${classes.padding} mb-1`}>
-					<svg 
+					<svg
 						className={`${classes.icon} text-amber-600`}
-						xmlns="http://www.w3.org/2000/svg" 
-						width="24" 
-						height="24" 
-						viewBox="0 0 24 24" 
-						fill="none" 
-						stroke="currentColor" 
-						strokeWidth="2" 
-						strokeLinecap="round" 
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
 						strokeLinejoin="round"
+						aria-label="Carbohydrates icon"
 					>
+						<title>Carbohydrates icon</title>
 						<path d="M17 12a5 5 0 0 0-5-5c-2.76 0-5 2.24-5 5a5 5 0 0 0 5 5" />
 						<path d="M17 12c0 2.76-2.24 5-5 5" />
 						<path d="M8 12h8" />
@@ -138,18 +144,20 @@ export const NutritionCard = ({
 			{/* Fats */}
 			<div className="flex flex-col items-center">
 				<div className={`bg-blue-50 rounded-full ${classes.padding} mb-1`}>
-					<svg 
+					<svg
 						className={`${classes.icon} text-blue-600`}
-						xmlns="http://www.w3.org/2000/svg" 
-						width="24" 
-						height="24" 
-						viewBox="0 0 24 24" 
-						fill="none" 
-						stroke="currentColor" 
-						strokeWidth="2" 
-						strokeLinecap="round" 
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
 						strokeLinejoin="round"
+						aria-label="Fats icon"
 					>
+						<title>Fats icon</title>
 						<path d="M7 16a3.5 3.5 0 0 0 7 0c0-1.8-1.2-2-1.5-3.5-.3-1.6.1-2.4 1.5-3.5 0 0-3-2-4-2-1 0-4 2-4 2 1.4 1.1 1.8 1.9 1.5 3.5-.3 1.5-1.5 1.7-1.5 3.5Z" />
 						<path d="M5 8.5C5.82 7.3 7 6.3 8 6c1.7-.5 3-.4 4 0 1 .4 2.18 1.4 3 2.5" />
 					</svg>

@@ -156,8 +156,6 @@ export const authClient = {
 		}
 	},
 
-	
-
 	/**
 	 * Get user information by email
 	 */
@@ -169,7 +167,7 @@ export const authClient = {
 			});
 
 			const apiResponse = response.data as ApiResponse<UserInfoResponse>;
-            console.log('API Response:', apiResponse);
+			console.log('API Response:', apiResponse);
 			if (!apiResponse.data?.exists) {
 				return {
 					success: false,
@@ -179,7 +177,7 @@ export const authClient = {
 					},
 				};
 			}
-           console.log("data being returned:", apiResponse.data);
+			console.log('data being returned:', apiResponse.data);
 			return {
 				success: true,
 				data: apiResponse.data,

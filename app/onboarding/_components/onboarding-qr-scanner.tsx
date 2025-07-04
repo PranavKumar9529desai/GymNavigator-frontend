@@ -38,10 +38,7 @@ export default function OnboardingQrScanner() {
 
 				if (parsedData.OnboardingAction) {
 					const { gymname, gymid, hash } = parsedData.OnboardingAction;
-					console.log(
-						'Onboarding action data:',
-						parsedData.OnboardingAction,
-					);
+					console.log('Onboarding action data:', parsedData.OnboardingAction);
 
 					// Process successful scan
 					toast.success('QR code scanned successfully');
@@ -56,7 +53,6 @@ export default function OnboardingQrScanner() {
 							`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
 						);
 					}, 1000); // Small delay to show success state
-				
 				} else {
 					throw new Error('Invalid QR code: Not an onboarding QR code');
 				}
@@ -64,9 +60,7 @@ export default function OnboardingQrScanner() {
 				console.error('Error processing QR code:', error);
 				toast.error('Failed to process QR code', {
 					description:
-						error instanceof Error
-							? error.message
-							: 'Unknown error occurred',
+						error instanceof Error ? error.message : 'Unknown error occurred',
 				});
 				setIsProcessing(false);
 				setIsScanning(true);
@@ -80,9 +74,9 @@ export default function OnboardingQrScanner() {
 		},
 		constraints: {
 			video: {
-				facingMode: 'environment'
-			}
-		}
+				facingMode: 'environment',
+			},
+		},
 	});
 
 	if (isProcessing && !isSuccess) {

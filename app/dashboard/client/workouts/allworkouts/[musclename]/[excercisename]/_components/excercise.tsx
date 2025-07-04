@@ -10,19 +10,22 @@ import {
 	GetExcerciseDetails,
 } from '../actions/get-excercise-details';
 
-export const SingleWorkout = ({ 
-	exercise: initialExercise, 
-	musclename: initialMusclename 
-}: { 
-	exercise?: Exercise; 
-	musclename?: string; 
+export const SingleWorkout = ({
+	exercise: initialExercise,
+	musclename: initialMusclename,
+}: {
+	exercise?: Exercise;
+	musclename?: string;
 } = {}) => {
 	const params = useParams<{
 		excercisename: string;
 		musclename: string;
 	}>();
-	
-	const { excercisename = '', musclename = initialMusclename || params.musclename || '' } = params;
+
+	const {
+		excercisename = '',
+		musclename = initialMusclename || params.musclename || '',
+	} = params;
 
 	const [isLiked, setIsLiked] = useState(false);
 

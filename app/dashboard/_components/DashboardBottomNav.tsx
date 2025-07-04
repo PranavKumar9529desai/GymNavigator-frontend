@@ -6,10 +6,10 @@ import { useDashboardMenu } from './use-dashboard-menu';
 
 export default function DashboardBottomNav() {
 	const { data: session } = useSession();
-	
+
 	// Use our optimized hook to get menu items - efficient and memoized
 	const menuItems = useDashboardMenu(session?.role || 'client');
-	
+
 	// // Temporarily disable performance metrics to avoid excessive renders
 	// useMenuPerformanceMetrics('BottomNav');
 

@@ -16,7 +16,7 @@ const SaveGroceryListParamsSchema = z.object({
 
 export type SaveGroceryListResult = {
 	success: boolean;
-	// @ts-ignore
+	// biome-ignore lint/suspicious/noExplicitAny: Type definition will be added later
 	savedList?: any;
 	error?: string;
 };

@@ -18,7 +18,10 @@ export function TableUI<TData>({ table, columns }: TableUIProps<TData>) {
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id} className="p-2 md:p-4 text-xs md:text-sm">
+									<TableHead
+										key={header.id}
+										className="p-2 md:p-4 text-xs md:text-sm"
+									>
 										{header.isPlaceholder
 											? null
 											: flexRender(
@@ -38,7 +41,10 @@ export function TableUI<TData>({ table, columns }: TableUIProps<TData>) {
 									data-state={row.getIsSelected() && 'selected'}
 								>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="p-2 md:p-4 text-xs md:text-sm">
+										<TableCell
+											key={cell.id}
+											className="p-2 md:p-4 text-xs md:text-sm"
+										>
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext(),

@@ -1,1 +1,1 @@
-declare module 'leaflet-search'; 
+declare module 'leaflet-search';

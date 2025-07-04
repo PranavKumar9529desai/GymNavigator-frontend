@@ -1,9 +1,9 @@
 'use server';
 
 import {
-	ApiResult,
-	GoogleSignupResponseType,
-	signupClient
+	type ApiResult,
+	type GoogleSignupResponseType,
+	signupClient,
 } from '@/lib/AxiosInstance/Signup/sign-up-client';
 import type { Rolestype } from '@/types/next-auth';
 

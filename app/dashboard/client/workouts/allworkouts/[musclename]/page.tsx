@@ -5,7 +5,7 @@ import Loading from './loading';
 export default async function Page({
 	params,
 }: {
-	params: Promise<{ musclename: string }>		// Proper Next.js 15 page params type;
+	params: Promise<{ musclename: string }>; // Proper Next.js 15 page params type;
 }) {
 	// Decode the URL parameter and remove any potential encoding artifacts
 	const { musclename } = await params;

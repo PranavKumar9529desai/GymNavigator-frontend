@@ -19,7 +19,9 @@ interface EnrollmentResponse {
 	error?: string;
 }
 
-export async function getEnrollmentStatus(role?: string): Promise<GetEnrollmentStatusType> {
+export async function getEnrollmentStatus(
+	role?: string,
+): Promise<GetEnrollmentStatusType> {
 	'use server';
 
 	try {
@@ -29,12 +31,16 @@ export async function getEnrollmentStatus(role?: string): Promise<GetEnrollmentS
 		// Determine which axios instance and endpoint to use based on role
 		if (role === 'trainer') {
 			// Import trainer axios configuration
-			const { TrainerReqConfig } = await import('@/lib/AxiosInstance/trainerAxios');
+			const { TrainerReqConfig } = await import(
+				'@/lib/AxiosInstance/trainerAxios'
+			);
 			axiosInstance = await TrainerReqConfig();
 			endpoint = '/enrollmentstatus';
 		} else {
 			// Default to client configuration for 'client' role or when no role is specified
-			const { ClientReqConfig } = await import('@/lib/AxiosInstance/clientAxios');
+			const { ClientReqConfig } = await import(
+				'@/lib/AxiosInstance/clientAxios'
+			);
 			axiosInstance = await ClientReqConfig();
 			endpoint = '/gym/enrollmentstatus';
 		}

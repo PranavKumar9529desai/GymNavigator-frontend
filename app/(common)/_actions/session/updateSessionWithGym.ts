@@ -1,6 +1,6 @@
 'use client';
 
-import type { GymInfo } from "@/types/next-auth";
+import type { GymInfo } from '@/types/next-auth';
 
 // Correctly named function
 export async function updateSessionWithGym(
@@ -9,12 +9,9 @@ export async function updateSessionWithGym(
 ) {
 	try {
 		// Update the session using the passed update function
-		const updateSession = await update({ gym: gym });
+		const _updateSession = await update({ gym: gym });
 		// we will do a backend call pass down the role
-		console.log(
-			'Session updated with gym:',
-			gym,
-		);
+		console.log('Session updated with gym:', gym);
 		return { success: true };
 	} catch (error) {
 		console.error('Error updating session:', error);
