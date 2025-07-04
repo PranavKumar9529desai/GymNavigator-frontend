@@ -75,8 +75,7 @@ export function AmenitiesEditForm({
 			return;
 		}
 
-		// Use React Query mutation if available, otherwise fall back to direct action
-		if (mutation) {
+		startTransition(async () => {
 			try {
 				// Combine existing and newly selected amenities
 				const allSelected: string[] = [];
@@ -89,37 +88,14 @@ export function AmenitiesEditForm({
 				// Add newly selected amenities
 				allSelected.push(...newlySelectedAmenities);
 
-				await mutation.mutateAsync({ amenities: allSelected });
+				await updateGymAmenities({ amenities: allSelected });
 				toast.success('Amenities updated successfully!');
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating amenities:', error);
 				toast.error('Failed to update amenities. Please try again.');
 			}
-		} else {
-			// Fallback to original implementation
-			startTransition(async () => {
-				try {
-					// Combine existing and newly selected amenities
-					const allSelected: string[] = [];
-
-					// Add all existing selected amenities
-					Object.values(selectedAmenities).forEach((amenityKeys) => {
-						allSelected.push(...amenityKeys);
-					});
-
-					// Add newly selected amenities
-					allSelected.push(...newlySelectedAmenities);
-
-					await updateGymAmenities({ amenities: allSelected });
-					toast.success('Amenities updated successfully!');
-					onSave?.();
-				} catch (error) {
-					console.error('Error updating amenities:', error);
-					toast.error('Failed to update amenities. Please try again.');
-				}
-			});
-		}
+		});
 	};
 
 	// Loading state
@@ -330,12 +306,12 @@ export function AmenitiesEditForm({
 					<Button
 						type="submit"
 						disabled={
-							(mutation ? mutation.isPending : isPending) ||
+							isPending ||
 							newlySelectedAmenities.length === 0
 						}
 						className="flex-1"
 					>
-						{(mutation ? mutation.isPending : isPending) ? (
+						{isPending ? (
 							<>
 								<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 								Adding Amenities...

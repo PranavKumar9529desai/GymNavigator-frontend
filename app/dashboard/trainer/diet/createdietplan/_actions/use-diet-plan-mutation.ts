@@ -1,8 +1,7 @@
-'use client';
+'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { revalidatePath } from 'next/cache';
 
 interface DietPlanResponse {
 	id: number;
@@ -62,74 +61,62 @@ export interface Food {
 	calories: number;
 }
 
-export function useDietPlanMutation() {
-	const queryClient = useQueryClient();
+export async function createDietPlan(dietPlan: DietPlanInput) {
+	try {
+		const trainerAxios = await TrainerReqConfig();
 
-	const createDietPlanMutation = useMutation({
-		mutationFn: async (dietPlan: DietPlanInput) => {
-			const trainerAxios = await TrainerReqConfig();
+		// Add order to meals if not present
+		const mealsWithOrder = dietPlan.meals.map((meal, index: number) => ({
+			...meal,
+			order: meal.order || index + 1,
+		}));
 
-			// Add order to meals if not present
-			const mealsWithOrder = dietPlan.meals.map((meal, index: number) => ({
-				...meal,
-				order: meal.order || index + 1,
-			}));
+		const response = await trainerAxios.post('/diet/createdietplan', {
+			...dietPlan,
+			meals: mealsWithOrder,
+		});
 
-			const response = await trainerAxios.post('/diet/createdietplan', {
-				...dietPlan,
-				meals: mealsWithOrder,
-			});
+		if (response.status !== 201) {
+			throw new Error(response.data.msg || 'Failed to create diet plan');
+		}
 
-			if (response.status !== 201) {
-				throw new Error(response.data.msg || 'Failed to create diet plan');
-			}
+		revalidatePath('/dashboard/trainer/diet');
+		return { success: true, data: response.data.data as DietPlanResponse };
+	} catch (error) {
+		console.error('Error creating diet plan:', error);
+		return {
+			success: false,
+			error:
+				error instanceof Error ? error.message : 'Failed to create diet plan',
+		};
+	}
+}
 
-			return response.data.data as DietPlanResponse;
-		},
-		onSuccess: () => {
-			// Invalidate relevant queries
-			queryClient.invalidateQueries({ queryKey: ['dietPlans'] });
-			toast.success('Diet plan created successfully');
-		},
-		onError: (error: Error) => {
-			console.error('Error creating diet plan:', error);
-			toast.error(error.message || 'Failed to create diet plan');
-		},
-	});
+export async function updateDietPlan(dietPlan: DietPlanUpdateInput) {
+	try {
+		const trainerAxios = await TrainerReqConfig();
+		const response = await trainerAxios.put('/diet/updatedietplan', dietPlan);
 
-	const updateDietPlanMutation = useMutation({
-		mutationFn: async (dietPlan: DietPlanUpdateInput) => {
-			const trainerAxios = await TrainerReqConfig();
-			const response = await trainerAxios.put('/diet/updatedietplan', dietPlan);
+		if (response.status !== 200) {
+			throw new Error(response.data.msg || 'Failed to update diet plan');
+		}
 
-			if (response.status !== 200) {
-				throw new Error(response.data.msg || 'Failed to update diet plan');
-			}
-
-			return response.data.data as DietPlanResponse;
-		},
-		onSuccess: (_, variables) => {
-			// Update the diet plan in the cache
-			queryClient.invalidateQueries({ queryKey: ['dietPlans'] });
-			queryClient.invalidateQueries({ queryKey: ['dietPlan', variables.id] });
-			toast.success('Diet plan updated successfully');
-		},
-		onError: (error: Error) => {
-			console.error('Error updating diet plan:', error);
-			toast.error(error.message || 'Failed to update diet plan');
-		},
-	});
-
-	return {
-		createDietPlanMutation,
-		updateDietPlanMutation,
-	};
+		revalidatePath('/dashboard/trainer/diet');
+		revalidatePath(`/dashboard/trainer/diet/edit/${dietPlan.id}`);
+		return { success: true, data: response.data.data as DietPlanResponse };
+	} catch (error) {
+		console.error('Error updating diet plan:', error);
+		return {
+			success: false,
+			error:
+				error instanceof Error ? error.message : 'Failed to update diet plan',
+		};
+	}
 }
 
 // Add proper types to parameters
 export const calculateTotalCalories = (meals: Meal[]): number => {
-	return meals.reduce((total, meal: Meal, index: number) => {
-		console.log('meal', meal, index);
+	return meals.reduce((total, meal: Meal) => {
 		// ...existing code...
 		return total;
 	}, 0);

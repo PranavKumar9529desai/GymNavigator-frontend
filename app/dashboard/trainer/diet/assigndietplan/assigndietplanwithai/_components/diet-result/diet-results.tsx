@@ -2,24 +2,19 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { assignDietPlan } from '@/app/dashboard/trainer/diet/createdietplan/_actions/assign-diet-plan';
 import {
-	CheckCircle,
-	Clock,
-	Save,
-	Trash2,
-	UserCheck,
-	Utensils,
-} from 'lucide-react';
+	saveDietPlan,
+	type DietPlanInput,
+} from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/save-diet-plan';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { attachDietPlanToUser } from '../../../_actions /AttachDietPlanToUser';
-import type { DietPlan } from '../../../_actions /GetallDiets';
-import type { DietPlanInput } from '../../_actions/save-diet-plan';
-import { useSaveToBackendMutation } from '../diet-history/use-diet-history';
+import { Save, Share2, Trash2, Utensils } from 'lucide-react';
 
 // Extend the meal type to include optional ingredients
 interface MealWithIngredients {
-	id: number;
+	id?: number;
 	name: string;
 	timeOfDay: string;
 	calories: number;
@@ -38,8 +33,15 @@ interface MealWithIngredients {
 	}>;
 }
 
-// Extend DietPlan to ensure it has the right meal type
-interface ExtendedDietPlan extends Omit<DietPlan, 'meals'> {
+// This represents a diet plan that may not have been saved to the DB yet
+interface ExtendedDietPlan {
+	id?: number; // Optional because it doesn't exist until saved
+	name: string;
+	description?: string | null;
+	targetCalories: number;
+	proteinRatio: number;
+	carbsRatio: number;
+	fatsRatio: number;
 	meals: MealWithIngredients[];
 }
 
@@ -74,14 +76,16 @@ export default function DietResults({
 	userId,
 	userName,
 }: DietResultsProps) {
+	const [isSaving, setIsSaving] = useState(false);
 	const [saveMessage, setSaveMessage] = useState('');
 	const [saveSuccess, setSaveSuccess] = useState(false);
 	const [isAssigning, setIsAssigning] = useState(false);
 	const [assignMessage, setAssignMessage] = useState('');
 	const [assignSuccess, setAssignSuccess] = useState(false);
-
-	// Use the new backend-only mutation hook
-	const saveToBackendMutation = useSaveToBackendMutation();
+	const [dietPlanId, setDietPlanId] = useState<number | undefined>(
+		dietPlan.id,
+	);
+	const router = useRouter();
 
 	// Transform diet plan to the format expected by saveDietPlan
 	const transformDietPlanForCreation = (
@@ -112,6 +116,7 @@ export default function DietResults({
 	};
 
 	const handleSave = async () => {
+		setIsSaving(true);
 		setSaveMessage('');
 		setSaveSuccess(false);
 
@@ -121,30 +126,20 @@ export default function DietResults({
 			console.log('Sending diet plan to backend:', transformedDietPlan);
 
 			// Use the backend-only mutation to save the diet plan
-			const result = await saveToBackendMutation.mutateAsync({
-				dietPlan: transformedDietPlan,
-			});
+			const result = await saveDietPlan(transformedDietPlan);
 
 			console.log('Save result from backend:', result);
 
-			if (result.success) {
+			if (result.success && result.dietPlanId) {
 				setSaveSuccess(true);
 				setSaveMessage('Diet plan created successfully!');
 				toast.success('Diet plan created successfully!');
-
-				// Update the local diet plan with the ID from the backend
-				if (result.dietPlanId) {
-					console.log('Diet plan ID from backend:', result.dietPlanId);
-					dietPlan.id = result.dietPlanId;
-				} else {
-					console.warn('No diet plan ID returned from backend');
-				}
+				setDietPlanId(result.dietPlanId);
+				router.refresh();
 
 				// Call the onSuccess callback if provided
 				if (onSuccess) {
-					setTimeout(() => {
-						onSuccess();
-					}, 1500);
+					onSuccess();
 				}
 			} else {
 				console.error('Failed to save diet plan:', result);
@@ -157,12 +152,14 @@ export default function DietResults({
 			setSaveSuccess(false);
 			setSaveMessage('An unexpected error occurred while saving');
 			toast.error('An unexpected error occurred while saving the diet plan');
+		} finally {
+			setIsSaving(false);
 		}
 	};
 
 	const handleAssignDietPlan = async () => {
-		if (!dietPlan.id) {
-			console.log('dietplan id is , userid is ', dietPlan.id, userId);
+		if (!dietPlanId) {
+			console.log('dietplan id is , userid is ', dietPlanId, userId);
 			setAssignMessage('Please save the diet plan first before assigning');
 			setAssignSuccess(false);
 			toast.error('Please save the diet plan first before assigning');
@@ -174,8 +171,11 @@ export default function DietResults({
 		setAssignSuccess(false);
 
 		try {
-			console.log('dietplan id is , userid is', dietPlan.id, userId);
-			const result = await attachDietPlanToUser(userId, dietPlan.id.toString());
+			console.log('dietplan id is , userid is', dietPlanId, userId);
+			const result = await assignDietPlan({
+				userId: Number(userId),
+				dietPlanId: dietPlanId,
+			});
 
 			if (result.success) {
 				setAssignSuccess(true);
@@ -187,11 +187,12 @@ export default function DietResults({
 					`Diet plan successfully assigned to ${userName || clientName}!`,
 					{},
 				);
+				router.refresh();
 			} else {
 				setAssignSuccess(false);
-				setAssignMessage(result.message || 'Failed to assign diet plan');
+				setAssignMessage(result.error || 'Failed to assign diet plan');
 				// Show error toast notification
-				toast.error(result.message || 'Failed to assign diet ');
+				toast.error(result.error || 'Failed to assign diet ');
 			}
 		} catch (error) {
 			console.error('Error assigning diet plan:', error);
@@ -211,42 +212,32 @@ export default function DietResults({
 			{/* Header with save/discard buttons */}
 			<div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
 				<div>
-					<h2 className="text-2xl font-bold">{dietPlan.name}</h2>
-					<p className="text-muted-foreground">{dietPlan.description}</p>
+					<h2 className="text-2xl font-bold tracking-tight">
+						Generated Diet Plan for{' '}
+						<span className="text-indigo-500">{clientName}</span>
+					</h2>
+					<p className="text-gray-500 dark:text-gray-400">
+						Review, save, and assign the diet plan to your client.
+					</p>
 				</div>
 
 				<div className="flex gap-2">
 					<Button
 						variant="outline"
-						className="gap-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/30 dark:text-red-400 dark:hover:bg-red-950/50 dark:hover:text-red-300"
-						onClick={() => onSuccess()}
-					>
-						<Trash2 className="h-4 w-4" />
-						<span>Discard</span>
-					</Button>
-
-					<Button
-						variant="default"
-						className="gap-1 bg-gradient-to-br from-green-600/90 via-emerald-600/80 to-green-700/90 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
+						className="gap-1 border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800/50 dark:text-gray-400 dark:hover:bg-gray-900/50 dark:hover:text-gray-300"
 						onClick={handleSave}
-						disabled={saveToBackendMutation.isPending || saveSuccess}
+						disabled={isSaving || dietPlanId !== undefined}
 					>
-						{saveToBackendMutation.isPending ? (
-							<>
-								<Clock className="h-4 w-4 animate-spin" />
-								<span>Saving...</span>
-							</>
-						) : saveSuccess ? (
-							<>
-								<CheckCircle className="h-4 w-4" />
-								<span>Saved</span>
-							</>
-						) : (
-							<>
-								<Save className="h-4 w-4" />
-								<span>Save Diet Plan</span>
-							</>
-						)}
+						<Save className="h-4 w-4" />
+						{isSaving ? 'Saving...' : 'Save Diet Plan'}
+					</Button>
+					<Button
+						className="gap-1 bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 hover:from-indigo-600 hover:to-blue-600 text-white"
+						onClick={handleAssignDietPlan}
+						disabled={isAssigning || dietPlanId === undefined}
+					>
+						<Share2 className="h-4 w-4" />
+						{isAssigning ? 'Assigning...' : 'Assign to Client'}
 					</Button>
 				</div>
 			</div>
@@ -269,92 +260,63 @@ export default function DietResults({
 					<CardTitle className="text-xl">Diet Plan Summary</CardTitle>
 				</CardHeader>
 				<CardContent className="pt-4">
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-						<div className="p-3 bg-green-50/50 dark:bg-green-900/20 rounded-md border border-green-100/50 dark:border-green-800/30 text-center">
-							<div className="text-sm text-muted-foreground mb-1">
-								Daily Calories
-							</div>
-							<div className="text-xl font-semibold text-green-700 dark:text-green-300">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+						<div>
+							<p className="text-sm text-gray-500">Target Calories</p>
+							<p className="text-lg font-semibold">
 								{dietPlan.targetCalories} kcal
-							</div>
+							</p>
 						</div>
-
-						<div className="p-3 bg-green-50/50 dark:bg-green-900/20 rounded-md border border-green-100/50 dark:border-green-800/30 text-center">
-							<div className="text-sm text-muted-foreground mb-1">Protein</div>
-							<div className="text-xl font-semibold text-green-700 dark:text-green-300">
-								{Math.round(dietPlan.proteinRatio * 100)}%
-							</div>
+						<div>
+							<p className="text-sm text-gray-500">Protein</p>
+							<p className="text-lg font-semibold">{dietPlan.proteinRatio}%</p>
 						</div>
-
-						<div className="p-3 bg-green-50/50 dark:bg-green-900/20 rounded-md border border-green-100/50 dark:border-green-800/30 text-center">
-							<div className="text-sm text-muted-foreground mb-1">
-								Meals per Day
-							</div>
-							<div className="text-xl font-semibold text-green-700 dark:text-green-300">
-								{dietPlan.meals.length}
-							</div>
+						<div>
+							<p className="text-sm text-gray-500">Carbs</p>
+							<p className="text-lg font-semibold">{dietPlan.carbsRatio}%</p>
 						</div>
-					</div>
-
-					<div className="space-y-6">
-						<h3 className="font-medium text-lg flex items-center gap-2 text-green-800 dark:text-green-300">
-							<Utensils className="h-5 w-5" />
-							<span>Daily Meal Plan</span>
-						</h3>
-
-						<div className="space-y-4">
-							{dietPlan.meals.map((meal) => (
-								<Card
-									key={meal.id}
-									className="overflow-hidden border border-green-100/50 dark:border-green-800/30"
-								>
-									<CardHeader className="py-3 px-4 bg-green-50/70 dark:bg-green-900/30">
-										<div className="flex justify-between items-center">
-											<CardTitle className="text-base font-medium">
-												{meal.name}
-											</CardTitle>
-											<span className="text-xs text-muted-foreground">
-												{meal.timeOfDay}
-											</span>
-										</div>
-									</CardHeader>
-									<CardContent className="p-4">
-										<div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-											<div className="text-sm">
-												<span className="text-muted-foreground">Calories:</span>{' '}
-												<span className="font-medium">
-													{meal.calories} kcal
-												</span>
-											</div>
-											<div className="text-sm">
-												<span className="text-muted-foreground">Protein:</span>{' '}
-												<span className="font-medium">{meal.protein}g</span>
-											</div>
-											<div className="text-sm">
-												<span className="text-muted-foreground">Carbs:</span>{' '}
-												<span className="font-medium">{meal.carbs}g</span>
-											</div>
-											<div className="text-sm">
-												<span className="text-muted-foreground">Fats:</span>{' '}
-												<span className="font-medium">{meal.fats}g</span>
-											</div>
-										</div>
-
-										{meal.instructions && (
-											<div className="mt-2 text-sm">
-												<div className="text-muted-foreground font-medium mb-1">
-													Instructions:
-												</div>
-												<p className="text-sm">{meal.instructions}</p>
-											</div>
-										)}
-									</CardContent>
-								</Card>
-							))}
+						<div>
+							<p className="text-sm text-gray-500">Fats</p>
+							<p className="text-lg font-semibold">{dietPlan.fatsRatio}%</p>
 						</div>
 					</div>
 				</CardContent>
 			</Card>
+
+			{/* Meals */}
+			<div className="space-y-6">
+				{dietPlan.meals.map((meal) => (
+					<Card
+						key={meal.id}
+						className="bg-white/70 dark:bg-gray-950/70 border border-blue-100/50 dark:border-blue-800/30"
+					>
+						<CardHeader className="bg-gradient-to-br from-blue-50/50 via-sky-50/30 to-blue-50/50 dark:from-blue-950/50 dark:via-sky-950/30 dark:to-blue-950/50 border-b border-blue-100/50 dark:border-blue-800/30">
+							<div className="flex items-center gap-3">
+								<Utensils className="h-5 w-5" />
+								<div>
+									<CardTitle className="text-base font-medium">
+										{meal.name}
+									</CardTitle>
+									<p className="text-sm text-gray-500">{meal.timeOfDay}</p>
+								</div>
+							</div>
+						</CardHeader>
+						<CardContent className="p-4">
+							<div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-3">
+								<span>{meal.calories} kcal</span>
+								<span>Protein: {meal.protein}g</span>
+								<span>Carbs: {meal.carbs}g</span>
+								<span>Fats: {meal.fats}g</span>
+							</div>
+							{meal.instructions && (
+								<p className="text-sm text-gray-600 dark:text-gray-400">
+									{meal.instructions}
+								</p>
+							)}
+						</CardContent>
+					</Card>
+				))}
+			</div>
 
 			{/* Bottom action buttons (mobile friendly duplication) */}
 			<div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
@@ -364,55 +326,23 @@ export default function DietResults({
 					onClick={() => onSuccess()}
 				>
 					<Trash2 className="h-4 w-4" />
-					<span>Discard</span>
+					Discard
 				</Button>
-
 				<Button
-					variant="default"
-					className="gap-1 bg-gradient-to-br from-green-600/90 via-emerald-600/80 to-green-700/90 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
+					className="gap-1"
 					onClick={handleSave}
-					disabled={saveToBackendMutation.isPending || saveSuccess}
+					disabled={isSaving || dietPlanId !== undefined}
 				>
-					{saveToBackendMutation.isPending ? (
-						<>
-							<Clock className="h-4 w-4 animate-spin" />
-							<span>Saving...</span>
-						</>
-					) : saveSuccess ? (
-						<>
-							<CheckCircle className="h-4 w-4" />
-							<span>Saved</span>
-						</>
-					) : (
-						<>
-							<Save className="h-4 w-4" />
-							<span>Save Diet Plan</span>
-						</>
-					)}
+					<Save className="h-4 w-4" />
+					{isSaving ? 'Saving...' : 'Save Diet Plan'}
 				</Button>
-
 				<Button
-					variant="default"
-					className="gap-1 bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 hover:from-indigo-600 hover:to-blue-600 text-white shadow-md mt-2 sm:mt-0"
+					className="gap-1 bg-gradient-to-br from-indigo-600/90 via-blue-600/80 to-indigo-700/90 hover:from-indigo-600 hover:to-blue-600 text-white"
 					onClick={handleAssignDietPlan}
-					disabled={isAssigning || assignSuccess || !dietPlan.id}
+					disabled={isAssigning || dietPlanId === undefined}
 				>
-					{isAssigning ? (
-						<>
-							<Clock className="h-4 w-4 animate-spin" />
-							<span>Assigning...</span>
-						</>
-					) : assignSuccess ? (
-						<>
-							<CheckCircle className="h-4 w-4" />
-							<span>Assigned</span>
-						</>
-					) : (
-						<>
-							<UserCheck className="h-4 w-4" />
-							<span>Assign to {userName || clientName}</span>
-						</>
-					)}
+					<Share2 className="h-4 w-4" />
+					{isAssigning ? 'Assigning...' : 'Assign to Client'}
 				</Button>
 			</div>
 

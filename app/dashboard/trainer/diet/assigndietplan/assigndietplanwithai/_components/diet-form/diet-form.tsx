@@ -1,18 +1,16 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Sparkles } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { DietPlan } from '../../../_actions /GetallDiets';
-import { generateAIDiet } from '../../_actions/generate-ai-diet';
-import type { UserData } from '../../_actions/get-user-by-id';
-import { useDietViewStore } from '../../_store/diet-view-store';
-import { dietGenerationSchema } from '../../types/dietGenerationSchema';
-import type { DietGenerationParams } from '../../types/dietGenerationSchema';
-import { useSaveToLocalStorageMutation } from '../diet-history/use-diet-history';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import type { DietPlan } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/get-customdiets';
+import { generateAIDiet } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/generate-ai-diet';
+import { useDietViewStore } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_store/diet-view-store';
 
 const DIET_PREFERENCES = [
 	'Vegetarian',
@@ -32,6 +30,21 @@ const MEDICAL_CONDITIONS = [
 	'None',
 ];
 
+const dietGenerationSchema = z.object({
+	dietPreference: z.string().min(1, 'Diet preference is required'),
+	medicalConditions: z.array(z.string()),
+	location: z.string().min(1, 'Location is required'),
+	country: z.string().min(1, 'Country is required'),
+	targetCalories: z.number().min(100, 'Target calories must be at least 100'),
+	specialInstructions: z.string().optional(),
+});
+
+type DietGenerationParams = z.infer<typeof dietGenerationSchema>;
+
+interface UserData {
+	name: string;
+}
+
 interface DietFormProps {
 	userId: string;
 	userData?: UserData | null;
@@ -48,15 +61,10 @@ export function DietForm({
 	const [isLoading, setIsLoading] = useState(false);
 	const [clientName, setClientName] = useState(userData?.name || 'Client');
 
-	const { setActiveDiet, setActiveTab } = useDietViewStore();
+	const { setActiveDiet, setActiveTab, saveDietToLocalStorage } =
+		useDietViewStore();
 
-	const saveToLocalStorage = useSaveToLocalStorageMutation();
-
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<DietGenerationParams>({
+	const { register, handleSubmit, formState } = useForm<DietGenerationParams>({
 		resolver: zodResolver(dietGenerationSchema),
 		defaultValues: {
 			medicalConditions: [],
@@ -90,11 +98,13 @@ export function DietForm({
 			};
 
 			// Save the diet to localStorage
-			await saveToLocalStorage.mutateAsync({
-				clientName: clientName,
-				dietPlan: result,
+			saveDietToLocalStorage(
+				{
+					clientName: clientName,
+					dietPlan: result,
+				},
 				userId,
-			});
+			);
 
 			// Update the store and automatically switch to the diet tab
 			setActiveDiet(dietData);
@@ -160,9 +170,9 @@ export function DietForm({
 									</option>
 								))}
 							</select>
-							{errors.dietPreference && (
+							{formState.errors.dietPreference && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.dietPreference.message}
+									{formState.errors.dietPreference.message}
 								</p>
 							)}
 						</div>
@@ -195,9 +205,9 @@ export function DietForm({
 									})}
 								</div>
 							</fieldset>
-							{errors.medicalConditions && (
+							{formState.errors.medicalConditions && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.medicalConditions.message}
+									{formState.errors.medicalConditions.message}
 								</p>
 							)}
 						</div>
@@ -218,9 +228,9 @@ export function DietForm({
 								placeholder="Enter city/region"
 								required
 							/>
-							{errors.location && (
+							{formState.errors.location && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.location.message}
+									{formState.errors.location.message}
 								</p>
 							)}
 						</div>
@@ -241,9 +251,9 @@ export function DietForm({
 								placeholder="Enter country"
 								required
 							/>
-							{errors.country && (
+							{formState.errors.country && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.country.message}
+									{formState.errors.country.message}
 								</p>
 							)}
 						</div>
@@ -264,9 +274,9 @@ export function DietForm({
 								placeholder="Enter target calories"
 								required
 							/>
-							{errors.targetCalories && (
+							{formState.errors.targetCalories && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.targetCalories.message}
+									{formState.errors.targetCalories.message}
 								</p>
 							)}
 						</div>
@@ -286,9 +296,9 @@ export function DietForm({
 								placeholder="Enter any special instructions or preferences"
 								rows={3}
 							/>
-							{errors.specialInstructions && (
+							{formState.errors.specialInstructions && (
 								<p className="text-red-500 text-sm mt-1">
-									{errors.specialInstructions.message}
+									{formState.errors.specialInstructions.message}
 								</p>
 							)}
 						</div>
@@ -301,12 +311,12 @@ export function DietForm({
 							{isLoading ? (
 								<>
 									<Loader2 className="h-4 w-4 mr-2 animate-spin" />
-									Generating...
+									Generating Diet...
 								</>
 							) : (
 								<>
 									<Sparkles className="h-4 w-4 mr-2" />
-									Generate Diet Plan
+									Generate with AI
 								</>
 							)}
 						</Button>

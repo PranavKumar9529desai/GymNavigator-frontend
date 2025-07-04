@@ -1,97 +1,35 @@
-'use client';
+'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import { toast } from 'sonner';
+import { revalidatePath } from 'next/cache';
 
 export interface AssignDietPlanInput {
 	userId: number;
 	dietPlanId: number;
 }
 
-// Define interface for user data structure
-interface UserData {
-	dietPlanId?: number;
-	[key: string]: unknown; // For other properties in the user data
-}
+export async function assignDietPlan({ userId, dietPlanId }: AssignDietPlanInput) {
+	try {
+		const trainerAxios = await TrainerReqConfig();
 
-export function useAssignDietPlan() {
-	const queryClient = useQueryClient();
+		const response = await trainerAxios.post('/diet/assigndiettouser', {
+			userId,
+			dietPlanId,
+		});
 
-	return useMutation({
-		mutationFn: async ({ userId, dietPlanId }: AssignDietPlanInput) => {
-			const trainerAxios = await TrainerReqConfig();
+		if (response.status !== 200) {
+			throw new Error(response.data.msg || 'Failed to assign diet plan');
+		}
 
-			const response = await trainerAxios.post('/diet/assigndiettouser', {
-				userId,
-				dietPlanId,
-			});
+		// Revalidate paths that show diet plan assignments
+		revalidatePath('/dashboard/trainer/clients');
+		revalidatePath(`/dashboard/trainer/clients/${userId}`);
 
-			if (response.status !== 200) {
-				throw new Error(response.data.msg || 'Failed to assign diet plan');
-			}
-
-			return response.data.data;
-		},
-		onMutate: async (newAssignment) => {
-			// Cancel outgoing refetches to avoid overwriting optimistic update
-			await queryClient.cancelQueries({
-				queryKey: ['user', newAssignment.userId],
-			});
-			await queryClient.cancelQueries({
-				queryKey: ['userDietPlan', newAssignment.userId],
-			});
-
-			// Get current data
-			const previousUserData = queryClient.getQueryData([
-				'user',
-				newAssignment.userId,
-			]);
-
-			// Optimistically update the cache
-			queryClient.setQueryData(
-				['user', newAssignment.userId],
-				(old: UserData | undefined) => {
-					if (!old) return old;
-					return {
-						...old,
-						dietPlanId: newAssignment.dietPlanId,
-						isOptimisticUpdate: true,
-					};
-				},
-			);
-
-			// Return context with previous values
-			return { previousUserData };
-		},
-		onSuccess: (_, variables) => {
-			// Update queries that may be affected
-			queryClient.invalidateQueries({
-				queryKey: ['user', variables.userId],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['userDietPlan', variables.userId],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['userAssignments'],
-			});
-
-			toast.success('Diet plan assigned successfully');
-		},
-		onError: (error, variables, context) => {
-			// Rollback optimistic update on error
-			if (context?.previousUserData) {
-				queryClient.setQueryData(
-					['user', variables.userId],
-					context.previousUserData,
-				);
-			}
-
-			const axiosError = error as AxiosError<{ msg: string }>;
-			toast.error(
-				axiosError.response?.data?.msg || 'Failed to assign diet plan',
-			);
-		},
-	});
+		return { success: true, data: response.data.data };
+	} catch (error) {
+		const errorMessage =
+			error instanceof Error ? error.message : 'An unknown error occurred';
+		console.error('Error assigning diet plan:', errorMessage);
+		return { success: false, error: errorMessage };
+	}
 }

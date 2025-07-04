@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { useTransition } from 'react';
@@ -24,8 +23,8 @@ export function SavedGroceryListView({
 		),
 	);
 	const [updatingItemId, setUpdatingItemId] = useState<number | null>(null);
+	const [isPending, startTransition] = useTransition();
 	const { toast } = useToast();
-	const queryClient = useQueryClient();
 
 	const toggleCategory = (categoryId: number) => {
 		const newExpandedCategories = new Set(expandedCategories);
@@ -59,56 +58,40 @@ export function SavedGroceryListView({
 		});
 	};
 
-	// Use React Query mutation for updating grocery items
-	const { mutate: toggleItemPurchased, isPending: isUpdating } = useMutation({
-		mutationFn: async ({
-			itemId,
-			currentStatus,
-		}: {
-			itemId: number;
-			currentStatus: boolean;
-		}) => {
-			const result = await updateGroceryItem({
-				itemId,
-				isPurchased: !currentStatus,
-			});
+	// Update grocery item using server action
+	const toggleItemPurchased = async (itemId: number, currentStatus: boolean) => {
+		startTransition(async () => {
+			try {
+				setUpdatingItemId(itemId);
+				
+				const result = await updateGroceryItem({
+					itemId,
+					isPurchased: !currentStatus,
+				});
 
-			if (!result.success) {
-				throw new Error(result.error || 'Failed to update item status');
+				if (!result.success) {
+					throw new Error(result.error || 'Failed to update item status');
+				}
+
+				toast({
+					title: currentStatus
+						? 'Item unmarked'
+						: 'Item marked as purchased',
+					duration: 2000,
+				});
+			} catch (error) {
+				toast({
+					variant: 'destructive',
+					title: 'Update failed',
+					description: (error as Error).message || 'An unexpected error occurred',
+					duration: 3000,
+				});
+				console.error(error);
+			} finally {
+				setUpdatingItemId(null);
 			}
-
-			return { itemId, isPurchased: !currentStatus };
-		},
-		onMutate: async ({ itemId, currentStatus }) => {
-			setUpdatingItemId(itemId);
-
-			// Cancel any outgoing refetches
-			await queryClient.cancelQueries({ queryKey: ['groceryLists'] });
-
-			// Snapshot the previous value
-			const previousGroceryLists = queryClient.getQueryData(['groceryLists']);
-
-			// Optimistically update the UI
-			queryClient.setQueryData(
-				['groceryLists'],
-				(old: SavedGroceryList[] | undefined) => {
-					if (!old) return old;
-
-					return old.map((list) => {
-						if (list.id === groceryList.id) {
-							return {
-								...list,
-								categories: list.categories.map((category) => ({
-									...category,
-									items: category.items.map((item) =>
-										item.id === itemId
-											? { ...item, isPurchased: !currentStatus }
-											: item,
-									),
-								})),
-							};
-						}
-						return list;
+		});
+	};
 					});
 				},
 			);

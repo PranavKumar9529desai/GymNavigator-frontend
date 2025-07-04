@@ -5,7 +5,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { GroceryListResponse } from '@/lib/AI/prompts/grocery-list-prompts';
 import { cn } from '@/lib/utils';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { CalendarIcon, Clock, RefreshCcw, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
@@ -21,10 +20,12 @@ interface GrocerySelectorProps {
 
 export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 	const [timeFrame, setTimeFrame] = useState<'weekly' | 'monthly'>('weekly');
-	const [_isPending, _startTransition] = useTransition();
+	const [isPending, startTransition] = useTransition();
 	const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
 	const [viewMode, setViewMode] = useState<'saved' | 'generating'>('saved');
-	const queryClient = useQueryClient();
+	const [groceryList, setGroceryList] = useState<GroceryListResponse | null>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [isGenerating, setIsGenerating] = useState(false);
 
 	// Process the saved lists data
 	const savedLists = savedListsData
@@ -73,25 +74,26 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 			}
 		: { weekly: null, monthly: null, others: [] };
 
-	// Use mutation for generating a new grocery list
-	const {
-		mutate: generateGroceryList,
-		data: groceryList,
-		error,
-		isPending: isGenerating,
-	} = useMutation({
-		mutationFn: async (selectedTimeFrame: 'weekly' | 'monthly') => {
-			const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
-			if (!result.success || !result.groceryList) {
-				throw new Error(result.error || 'Failed to load grocery list');
+	// Use server action for generating a new grocery list
+	const generateGroceryList = async (selectedTimeFrame: 'weekly' | 'monthly') => {
+		startTransition(async () => {
+			try {
+				setIsGenerating(true);
+				setError(null);
+				const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
+				
+				if (!result.success || !result.groceryList) {
+					throw new Error(result.error || 'Failed to load grocery list');
+				}
+				
+				setGroceryList(result.groceryList);
+			} catch (err) {
+				setError(err instanceof Error ? err.message : 'Failed to generate grocery list');
+			} finally {
+				setIsGenerating(false);
 			}
-			return result.groceryList;
-		},
-		onSuccess: () => {
-			// After successful generation, refetch the saved lists
-			queryClient.invalidateQueries({ queryKey: ['groceryLists'] });
-		},
-	});
+		});
+	};
 
 	const fetchGroceryList = (selectedTimeFrame: 'weekly' | 'monthly') => {
 		setViewMode('generating');
@@ -144,7 +146,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 							) : error ? (
 								<div className="p-4 text-center rounded-lg bg-destructive/10">
 									<p className="text-destructive text-sm">
-										{(error as Error).message}
+										{error}
 									</p>
 									<Button
 										variant="outline"

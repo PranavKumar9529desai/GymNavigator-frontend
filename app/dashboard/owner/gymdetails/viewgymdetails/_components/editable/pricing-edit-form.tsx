@@ -45,7 +45,6 @@ import type {
 import { useState, useEffect, useTransition } from 'react';
 import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
-import type { UseMutationResult } from '@tanstack/react-query';
 
 import {
 	DndContext,
@@ -424,7 +423,6 @@ export function PricingEditForm({
 	data,
 	onDataChange,
 	onSave,
-	mutation,
 }: PricingEditFormProps) {
 	const [plansFormData, setPlansFormData] = useState<FitnessPlan[]>(
 		data.fitnessPlans || [],
@@ -547,8 +545,7 @@ export function PricingEditForm({
 	};
 
 	const handleSubmitPlans = async () => {
-		// Use React Query mutation if available, otherwise fall back to direct action
-		if (mutation) {
+		startTransition(async () => {
 			try {
 				// Add sortOrder to plans based on their current array position
 				const plansWithSortOrder = plansFormData.map((plan, index) => ({
@@ -560,72 +557,33 @@ export function PricingEditForm({
 					plans: plansWithSortOrder,
 				};
 
-				await mutation.mutateAsync(pricingData);
+				await updateGymPricing(pricingData);
 				toast.success('Pricing plans updated successfully!');
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating pricing plans:', error);
 				toast.error('Failed to update pricing plans. Please try again.');
 			}
-		} else {
-			// Fallback to original implementation
-			startTransition(async () => {
-				try {
-					// Add sortOrder to plans based on their current array position
-					const plansWithSortOrder = plansFormData.map((plan, index) => ({
-						...plan,
-						sortOrder: index,
-					}));
-
-					const pricingData: PricingFormData = {
-						plans: plansWithSortOrder,
-					};
-
-					await updateGymPricing(pricingData);
-					toast.success('Pricing plans updated successfully!');
-					onSave?.();
-				} catch (error) {
-					console.error('Error updating pricing plans:', error);
-					toast.error('Failed to update pricing plans. Please try again.');
-				}
-			});
-		}
+		});
 	};
 
 	const handleSubmitServices = async () => {
-		// Use React Query mutation if available, otherwise fall back to direct action
-		if (mutation) {
+		startTransition(async () => {
 			try {
 				const pricingData: PricingFormData = {
 					additionalServices: additionalServices,
 				};
 
-				await mutation.mutateAsync(pricingData);
+				await updateGymPricing(pricingData);
 				toast.success('Additional services updated successfully!');
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating additional services:', error);
-				toast.error('Failed to update additional services. Please try again.');
+				toast.error(
+					'Failed to update additional services. Please try again.',
+				);
 			}
-		} else {
-			// Fallback to original implementation
-			startTransition(async () => {
-				try {
-					const pricingData: PricingFormData = {
-						additionalServices: additionalServices,
-					};
-
-					await updateGymPricing(pricingData);
-					toast.success('Additional services updated successfully!');
-					onSave?.();
-				} catch (error) {
-					console.error('Error updating additional services:', error);
-					toast.error(
-						'Failed to update additional services. Please try again.',
-					);
-				}
-			});
-		}
+		});
 	};
 
 	return (
