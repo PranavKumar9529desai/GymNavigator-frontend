@@ -1,10 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight, Dumbbell, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { fetchAttendanceData } from '../_actions/get-attendance';
 import CalendarSkeleton from './CalendarSkeleton';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -24,31 +22,15 @@ const MONTHS = [
 ];
 
 interface MonthAttendanceProps {
-	initialData?: Date[];
+	attendanceDays: Date[];
 }
 
-export default function MonthAttendance({ initialData }: MonthAttendanceProps) {
+export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps) {
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [progress, setProgress] = useState(0);
 
-	const { data: attendanceData, isLoading } = useQuery({
-		queryKey: ['attendanceDays'],
-		queryFn: fetchAttendanceData,
-		staleTime: 24 * 60 * 60 * 1000, // 24 hours
-		gcTime: 24 * 60 * 60 * 1000, // 24 hours
-		initialData: initialData ? { attendanceDays: initialData } : undefined,
-	});
-
-	if (isLoading) {
-		return (
-			<>
-				<CalendarSkeleton />
-			</>
-		);
-	}
-
-	// Explicitly type and initialize gymAttendanceDays as an array
-	const gymAttendanceDays: Date[] = attendanceData?.attendanceDays || [];
+	// Use the attendanceDays prop directly - no loading state needed
+	const gymAttendanceDays: Date[] = attendanceDays || [];
 
 	useEffect(() => {
 		// Progress calculation logic

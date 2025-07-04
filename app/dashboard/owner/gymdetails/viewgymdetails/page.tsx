@@ -1,29 +1,8 @@
-'use client';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-	TrendingUp,
-	Dumbbell,
-	MapPin,
-	DollarSign,
-	Key,
-	Mail,
-	Phone,
-	Edit,
-} from 'lucide-react';
 import { GymHeader } from './_components/gym-header';
-import { OverviewTab } from './_components/tabs/overview-tab';
-import { AmenitiesTab } from './_components/tabs/amenities-tab';
-import { LocationTab } from './_components/tabs/location-tab';
-import { PricingTab } from './_components/tabs/pricing-tab';
-import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
-import { EditGymDrawer } from './_components/edit-gym-drawer';
-import { EditGymSheet } from './_components/edit-gym-sheet';
 import { GymTabs } from './_components/tabs/gym-tabs';
-import { Separator } from '@/components/ui/separator';
-import { useGymOperations } from './hooks/useGymData';
-import { Loader2 } from 'lucide-react';
-import { GymTabData } from './hooks/useGymData';
+import { ViewGymDetailsClient } from './_components/view-gym-details-client';
+import FetchGymDetailsSA from './_actions/GetGymDetails';
+import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import type { GymData } from './types/gym-types';
 
 interface GymInfo {
@@ -35,134 +14,64 @@ interface GymInfo {
 	gymauthtoken: string;
 }
 
-export default function GymLayout() {
-	const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
-	const [isSmallDevice, setIsSmallDevice] = useState(false);
-
-	// Use React Query hooks for data management
-	const {
-		gymDetails,
-		gymTabData,
-		isLoading,
-		error,
-		isMutating,
-		updateOverview,
-		updateAmenities,
-		updateLocation,
-		updatePricing,
-	} = useGymOperations();
-
-	// Handle responsive design
-	useEffect(() => {
-		const handleResize = () => {
-			setIsSmallDevice(window.innerWidth < 768);
-		};
-
-		// Initial check
-		handleResize();
-
-		// Add event listener
-		window.addEventListener('resize', handleResize);
-
-		// Cleanup event listener on component unmount
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
-
-	const handleSave = (data: any) => {
-		console.log('Saving data:', data);
-		setIsEditSheetOpen(false);
-	};
+export default async function GymLayout() {
+	// Server-side data fetching
+	const [gymDetails, gymTabData] = await Promise.all([
+		FetchGymDetailsSA(),
+		getAllGymTabData(),
+	]);
 
 	// Convert GymInfo to GymData format
-	const convertedGymData: GymData | null = gymDetails.data
+	const convertedGymData: GymData | null = gymDetails
 		? {
-				gym_name: gymDetails.data.gym_name,
-				gym_logo: gymDetails.data.gym_logo,
-				address: gymDetails.data.address,
-				phone_number: gymDetails.data.phone_number,
-				Email: gymDetails.data.Email,
-				gymauthtoken: gymDetails.data.gymauthtoken,
+				gym_name: gymDetails.gym_name,
+				gym_logo: gymDetails.gym_logo,
+				address: gymDetails.address,
+				phone_number: gymDetails.phone_number,
+				Email: gymDetails.Email,
+				gymauthtoken: gymDetails.gymauthtoken,
 				// Initialize other optional fields
 				amenities: {},
 				fitnessPlans: [],
 			}
 		: null;
 
+	// Handle error states
+	if (!gymDetails && !gymTabData) {
+		return (
+			<div className="min-h-screen p-2 md:p-6">
+				<div className="mx-auto max-w-6xl">
+					<div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+						<p className="text-red-800">
+							Error loading gym data. Please try again later.
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="min-h-screen p-2 md:p-6">
 			<div className="mx-auto max-w-6xl">
-				<div className="flex justify-end mb-4">
-					<Button
-						onClick={() => setIsEditSheetOpen(true)}
-						variant="ghost"
-						className="hover:text-blue-600"
-						disabled={isMutating}
-					>
-						<Edit className="mr-2  text-blue-600 sm:text-gray-800 hover:text-blue-600" />
-						<p className="hidden md:block">
-							{isMutating ? 'Saving...' : 'Edit Gym Details'}
-						</p>
-					</Button>
-				</div>
+				{/* Pass data to client component for edit functionality */}
+				<ViewGymDetailsClient 
+					gymData={convertedGymData}
+					gymTabData={gymTabData}
+				/>
 
-				{/* Error state */}
-				{error && (
-					<div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-						<p className="text-red-800">
-							Error loading gym data: {error.message}
-						</p>
-					</div>
-				)}
-
-				{gymDetails.data && <GymHeader gymData={convertedGymData} />}
+				{gymDetails && <GymHeader gymData={convertedGymData} />}
 
 				{/* Enhanced Tabs Section */}
 				<div className="">
-					{isLoading ? (
-						<div className="flex justify-center items-center py-8">
-							<Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-							<span className="ml-2 text-gray-600">Loading gym data...</span>
-						</div>
-					) : (
-						<GymTabs
-							overviewData={gymTabData.data?.overview}
-							amenitiesData={gymTabData.data?.amenities}
-							locationData={gymTabData.data?.location}
-							pricingData={gymTabData.data?.pricing}
-						/>
-					)}
+					<GymTabs
+						overviewData={gymTabData?.overview}
+						amenitiesData={gymTabData?.amenities}
+						locationData={gymTabData?.location}
+						pricingData={gymTabData?.pricing}
+					/>
 				</div>
 			</div>
-
-			{isSmallDevice ? (
-				<EditGymDrawer
-					isOpen={isEditSheetOpen}
-					onClose={() => setIsEditSheetOpen(false)}
-					gymData={convertedGymData}
-					gymTabData={gymTabData.data || null}
-					onSave={handleSave}
-					mutations={{
-						updateOverview,
-						updateAmenities,
-						updateLocation,
-						updatePricing,
-					}}
-				/>
-			) : (
-				<EditGymSheet
-					isOpen={isEditSheetOpen}
-					onClose={() => setIsEditSheetOpen(false)}
-					gymData={convertedGymData}
-					gymTabData={gymTabData.data || null}
-					onSave={handleSave}
-					mutations={{
-						updateOverview,
-						updateAmenities,
-						updateLocation,
-						updatePricing,
-					}}
-				/>
-			)}
 		</div>
 	);
 }

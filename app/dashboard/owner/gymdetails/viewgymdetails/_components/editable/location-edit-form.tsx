@@ -10,13 +10,12 @@ import { useGetCoordinatesFromLocation } from '../../_actions/get-co-ordinates-f
 import { MapPin } from 'lucide-react';
 import { updateGymLocation } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
-import type { UseMutationResult } from '@tanstack/react-query';
+
 
 interface LocationEditFormProps {
 	data: GymData;
 	onDataChange: (data: GymData) => void;
 	onSave?: () => void;
-	mutation?: UseMutationResult<any, Error, any>;
 }
 
 export function LocationEditForm({

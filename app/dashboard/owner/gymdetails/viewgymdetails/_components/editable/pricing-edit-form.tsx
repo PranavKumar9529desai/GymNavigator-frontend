@@ -45,7 +45,7 @@ import type {
 import { useState, useEffect, useTransition } from 'react';
 import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
 import { toast } from 'sonner';
-import type { UseMutationResult } from '@tanstack/react-query';
+
 import {
 	DndContext,
 	closestCenter,
@@ -68,7 +68,6 @@ interface PricingEditFormProps {
 	data: GymData;
 	onDataChange: (data: GymData) => void;
 	onSave?: () => void;
-	mutation?: UseMutationResult<any, Error, any>;
 }
 
 // Predefined plan colors
