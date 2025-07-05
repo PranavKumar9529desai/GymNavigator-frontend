@@ -10,11 +10,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserMobileCard } from './UserMobileCard';
+import { UserActions } from './UserActions';
 import { useToast } from '@/hooks/use-toast';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowUpDown,
-	MoreVertical,
 	Search,
 	User,
 	UserCheck,
@@ -172,30 +172,11 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 				const user = row.original;
 
 				return (
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" className="h-8 w-8 p-0" disabled={isPending}>
-								<span className="sr-only">Open menu</span>
-								<MoreVertical className="h-4 w-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem
-								onClick={() => {
-									const params = new URLSearchParams({
-										userid: user.id.toString(),
-										username: user.name,
-										startdate: user.startDate ? user.startDate.toISOString() : '',
-										enddate: user.endDate ? user.endDate.toISOString() : '',
-									});
-									router.push(`/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`);
-								}}
-								disabled={isPending || user.status === 'active'}
-							>
-								Edit Active Period
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<UserActions 
+						user={user}
+						isPending={isPending}
+						onActivate={handleUpdateActivePeriod}
+					/>
 				);
 			},
 		},

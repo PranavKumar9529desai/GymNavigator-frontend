@@ -1,7 +1,6 @@
 'use client';
 
 import { Badge } from "@/components/ui/badge";
-
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -11,15 +10,9 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MoreVertical } from 'lucide-react';
 import { statusBadgeVariants, statusColorClasses, statusLabels } from '@/lib/constants/status-variants';
 import type { UserType } from './OnboardedUsers';
+import { UserActions } from './UserActions';
 
 interface UserMobileCardProps {
 	user: UserType;
@@ -48,22 +41,12 @@ export function UserMobileCard({
 			<CardHeader>
 				<div className="flex justify-between items-start">
 					<CardTitle className="text-lg">{user.name}</CardTitle>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" className="h-8 w-8 p-0" disabled={isPending}>
-								<span className="sr-only">Open menu</span>
-								<MoreVertical className="h-4 w-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem
-								onClick={() => onActivate(user.id)}
-								disabled={isPending || user.status === 'active'}
-							>
-								Activate for 1 year
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<UserActions
+						user={user}
+						isPending={isPending}
+						onActivate={onActivate}
+						triggerVariant="ghost"
+					/>
 				</div>
 				<Badge 
 					variant={statusBadgeVariants[user.status]} 
