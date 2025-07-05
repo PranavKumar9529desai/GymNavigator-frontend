@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CalendarClock, MoreVertical, User } from 'lucide-react';
+import { CalendarClock, MoreHorizontal, MoreVertical, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { UserType } from './OnboardedUsers';
 import { Separator } from '@/components/ui/separator';
@@ -23,6 +23,7 @@ import { Separator } from '@/components/ui/separator';
 interface UserActionsProps {
   user: UserType;
   isPending: boolean;
+  type ? : 'vertical' | 'horizontal';
   onActivate: (userId: number) => void;
   triggerVariant?: 'ghost' | 'outline' | 'secondary';
   align?: 'start' | 'end';
@@ -30,6 +31,7 @@ interface UserActionsProps {
 
 export function UserActions({ 
   user, 
+  type ,
   isPending, 
   onActivate, 
   triggerVariant = 'ghost',
@@ -59,7 +61,11 @@ export function UserActions({
           disabled={isPending}
         >
           <span className="sr-only">Open menu</span>
-          <MoreVertical className="h-4 w-4" />
+          {
+            type === "vertical" ?
+            <MoreVertical className="h-4 w-4" />
+            : <MoreHorizontal className="h-4 w-4" />
+          }
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 

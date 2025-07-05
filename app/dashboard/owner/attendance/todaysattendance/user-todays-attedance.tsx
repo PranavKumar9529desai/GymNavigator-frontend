@@ -12,8 +12,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import {
+	attendanceBadgeVariants,
+	attendanceColorClasses,
+	attendanceLabels,
+	getAttendanceStatus,
+	AttendanceType,
+} from '@/lib/constants/attendance-variants';
+import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, UserCheck, UserX, Users } from 'lucide-react';
+import { ArrowUpDown, Clock, UserCheck, UserX, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface AttendanceUser {
@@ -95,11 +104,18 @@ const columns: ColumnDef<AttendanceUser>[] = [
 		header: 'Attendance',
 		cell: ({ row }) => {
 			const attendance = row.getValue('todaysAttendance') as boolean;
+			const time = row.getValue('attendanceTime') as string | null;
+			const status = getAttendanceStatus(attendance, time);
+			const colorClasses = attendanceColorClasses[status];
+			
 			return (
-				<div
-					className={`font-medium ${attendance ? 'text-green-600' : 'text-red-600'}`}
-				>
-					{attendance ? 'Present' : 'Absent'}
+				<div className="flex items-center">
+					<Badge 
+						variant={attendanceBadgeVariants[status]} 
+						className={cn("font-medium", colorClasses ? `${colorClasses.bg} ${colorClasses.text}` : "")}
+					>
+						{attendanceLabels[status]}
+					</Badge>
 				</div>
 			);
 		},
@@ -197,19 +213,36 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 			<div className="md:hidden">
 				<DataCard
 					data={filteredUsers}
-					renderCard={(user) => (
-						<div className="p-4 space-y-1">
-							<h3 className="font-medium">{user.name}</h3>
-							<p className="text-sm text-gray-500">Shift: {user.shift}</p>
-							<p
-								className={`text-sm font-medium ${
-									user.todaysAttendance ? 'text-green-600' : 'text-red-600'
-								}`}
-							>
-								Status: {user.todaysAttendance ? 'Present' : 'Absent'}
-							</p>
-						</div>
-					)}
+					renderCard={(user) => {
+						const status = getAttendanceStatus(user.todaysAttendance, user.attendanceTime);
+						const colorClasses = attendanceColorClasses[status];
+						
+						return (
+							<div className="p-4 space-y-2">
+								<h3 className="font-medium">{user.name}</h3>
+								<div className="flex justify-between items-center">
+									<p className="text-sm text-gray-500">Shift: {user.shift}</p>
+									<Badge 
+										variant={attendanceBadgeVariants[status]} 
+										className={cn("font-medium", colorClasses ? `${colorClasses.bg} ${colorClasses.text}` : "")}
+									>
+										{attendanceLabels[status]}
+									</Badge>
+								</div>
+								{user.attendanceTime && (
+									<div className="flex items-center text-sm text-gray-500">
+										<Clock className="mr-1 h-3 w-3" />
+										{new Date(user.attendanceTime).toLocaleTimeString('en-IN', {
+											hour: '2-digit',
+											minute: '2-digit',
+											hour12: true,
+											timeZone: 'Asia/Kolkata',
+										}).toUpperCase()}
+									</div>
+								)}
+							</div>
+						);
+					}}
 				/>
 			</div>
 		</div>

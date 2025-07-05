@@ -175,6 +175,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 					<UserActions 
 						user={user}
 						isPending={isPending}
+						type='horizontal'
 						onActivate={handleUpdateActivePeriod}
 					/>
 				);

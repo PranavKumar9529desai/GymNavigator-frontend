@@ -1,5 +1,5 @@
 import React from 'react';
-import UserAttendance from './UserAttendance';
+import UserAttendance from './user-todays-attedance';
 import { TodayAttendance } from './getTodayAttendance';
 export const dynamic = 'force-dynamic';
 export default async function Page() {
