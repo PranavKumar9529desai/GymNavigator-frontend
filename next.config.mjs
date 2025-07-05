@@ -1,3 +1,6 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 import bundleAnalyzer from '@next/bundle-analyzer';
 import withPWA from 'next-pwa';
 // We will define custom runtimeCaching below

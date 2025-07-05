@@ -1,6 +1,7 @@
 'use server';
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import type { AxiosError } from 'axios';
 
 interface AttendanceResponse {
 	success: boolean;
@@ -36,12 +37,31 @@ export async function markAttendance(): Promise<AttendanceResponse> {
 			success: true,
 			data: response.data.data,
 		};
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Error marking attendance:', error);
+		
+		// Handle Axios errors specifically
+		if (error && typeof error === 'object' && 'isAxiosError' in error) {
+			const axiosError = error as AxiosError<{
+				message?: string;
+				details?: string;
+			}>;
+			
+			const statusCode = axiosError.response?.status;
+			const errorMessage = axiosError.response?.data?.message || axiosError.message || 'Server error';
+			const errorDetails = axiosError.response?.data?.details;
+			
+			return {
+				success: false,
+				error: statusCode ? `Server error (${statusCode}): ${errorMessage}` : errorMessage,
+				details: errorDetails || 'Please try again later',
+			};
+		}
+		
+		// Handle other types of errors
 		return {
 			success: false,
-			error:
-				error instanceof Error ? error.message : 'Failed to mark attendance',
+			error: error instanceof Error ? error.message : 'Failed to mark attendance',
 		};
 	}
 }

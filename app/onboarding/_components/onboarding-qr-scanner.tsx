@@ -1,10 +1,11 @@
 'use client';
-import { Skeleton } from '@/components/ui/skeleton';
-import { CheckCircle2, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { toast } from 'sonner';
-import { useZxing } from 'react-zxing';
+import QrScanner from 'qr-scanner';
+import { ProcessingState } from './qr-scanner-states/ProcessingState';
+import { SuccessState } from './qr-scanner-states/SuccessState';
+import { ScanningState } from './qr-scanner-states/ScanningState';
 
 interface QrValueType {
 	OnboardingAction: {
@@ -14,146 +15,162 @@ interface QrValueType {
 	};
 }
 
+// Configuration for QR Scanner - Adjust DEFAULT_ZOOM to test different zoom levels
+export const QR_SCANNER_CONFIG = {
+	DEFAULT_ZOOM: 2.5, // Adjust this: 1.0 = no zoom, 1.5 = 1.5x zoom, 2.0 = 2x zoom, etc.
+	PREFERRED_CAMERA: 'environment' as const,
+	MAX_SCANS_PER_SECOND: 25,
+};
+
 export default function OnboardingQrScanner() {
 	const router = useRouter();
 	const [isScanning, setIsScanning] = useState(true);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [hasProcessed, setHasProcessed] = useState(false);
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const qrScannerRef = useRef<QrScanner | null>(null);
 
-	const { ref } = useZxing({
-		onDecodeResult(result) {
-			// Prevent multiple scans
-			if (hasProcessed || isProcessing) {
-				return;
-			}
+	useEffect(() => {
+		if (!videoRef.current || qrScannerRef.current) return;
 
-			try {
-				setHasProcessed(true);
-				setIsScanning(false);
-				setIsProcessing(true);
-
-				// Parse the QR code data
-				const parsedData: QrValueType = JSON.parse(result.getText());
-
-				if (parsedData.OnboardingAction) {
-					const { gymname, gymid, hash } = parsedData.OnboardingAction;
-					console.log('Onboarding action data:', parsedData.OnboardingAction);
-
-					// Process successful scan
-					toast.success('QR code scanned successfully');
-					setIsSuccess(true);
-
-					// Get the user's role from localStorage or a state management solution
-					const userRole = localStorage.getItem('userRole') || 'client'; // Default to 'trainee' if not found
-
-					// Navigate to the gym enrollment page with the scanned parameters
-					setTimeout(() => {
-						router.push(
-							`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
-						);
-					}, 1000); // Small delay to show success state
-				} else {
-					throw new Error('Invalid QR code: Not an onboarding QR code');
+		// Helper function to apply zoom after scanner starts
+		const applyDefaultZoom = async (scanner: QrScanner) => {
+			if (QR_SCANNER_CONFIG.DEFAULT_ZOOM !== 1.0) {
+				try {
+					// Wait a bit for the scanner to fully initialize
+					await new Promise(resolve => setTimeout(resolve, 1000));
+					
+					// Get the video stream and apply zoom
+					const video = videoRef.current;
+					if (video && video.srcObject) {
+						const stream = video.srcObject as MediaStream;
+						const track = stream.getVideoTracks()[0];
+						
+						if (track && 'getCapabilities' in track) {
+							const capabilities = (track as any).getCapabilities();
+							if (capabilities && 'zoom' in capabilities) {
+								const constraints = {
+									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }]
+								};
+								await (track as any).applyConstraints(constraints);
+								console.log(`Applied zoom level: ${QR_SCANNER_CONFIG.DEFAULT_ZOOM}`);
+							}
+						}
+					}
+				} catch (error) {
+					console.log('Zoom not supported on this device:', error);
 				}
-			} catch (error) {
-				console.error('Error processing QR code:', error);
-				toast.error('Failed to process QR code', {
-					description:
-						error instanceof Error ? error.message : 'Unknown error occurred',
-				});
-				setIsProcessing(false);
-				setIsScanning(true);
-				setHasProcessed(false);
 			}
-		},
-		onError(error) {
-			if (error instanceof Error && !error.message?.includes('NotFound')) {
-				console.error('QR scan error:', error);
-			}
-		},
-		constraints: {
-			video: {
-				facingMode: 'environment',
+		};
+
+		// Initialize QR Scanner
+		const qrScanner = new QrScanner(
+			videoRef.current,
+			(result) => {
+				// Prevent multiple scans
+				if (hasProcessed || isProcessing) {
+					return;
+				}
+
+				try {
+					setHasProcessed(true);
+					setIsScanning(false);
+					setIsProcessing(true);
+
+					// Parse the QR code data
+					const parsedData: QrValueType = JSON.parse(result.data);
+
+					if (parsedData.OnboardingAction) {
+						const { gymname, gymid, hash } = parsedData.OnboardingAction;
+						console.log('Onboarding action data:', parsedData.OnboardingAction);
+
+						// Process successful scan
+						toast.success('QR code scanned successfully');
+						setIsSuccess(true);
+
+						// Get the user's role from localStorage
+						const userRole = localStorage.getItem('userRole') || 'client';
+
+						// Navigate to the gym enrollment page
+						setTimeout(() => {
+							router.push(
+								`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
+							);
+						}, 1000);
+					} else {
+						throw new Error('Invalid QR code: Not an onboarding QR code');
+					}
+				} catch (error) {
+					console.error('Error processing QR code:', error);
+					toast.error('Failed to process QR code', {
+						description:
+							error instanceof Error ? error.message : 'Unknown error occurred',
+					});
+					setIsProcessing(false);
+					setIsScanning(true);
+					setHasProcessed(false);
+				}
 			},
-		},
-	});
+			{
+				returnDetailedScanResult: true,
+				highlightScanRegion: true,
+				highlightCodeOutline: true,
+				preferredCamera: QR_SCANNER_CONFIG.PREFERRED_CAMERA,
+				maxScansPerSecond: QR_SCANNER_CONFIG.MAX_SCANS_PER_SECOND,
+				onDecodeError: (error: unknown) => {
+					if (error instanceof Error && !error.message?.includes('NotFound')) {
+						console.error('QR scan error:', error);
+					}
+				},
+			}
+		);
+
+		qrScannerRef.current = qrScanner;
+
+		// Start scanning
+		qrScanner.start()
+			.then(() => {
+				console.log('QR Scanner started successfully');
+				// Apply default zoom after scanner starts
+				applyDefaultZoom(qrScanner);
+			})
+			.catch((error: unknown) => {
+				console.error('Failed to start QR scanner:', error);
+				toast.error('Failed to start camera', {
+					description: 'Please check camera permissions and try again',
+				});
+			});
+
+		// Cleanup function
+		return () => {
+			if (qrScannerRef.current) {
+				qrScannerRef.current.destroy();
+				qrScannerRef.current = null;
+			}
+		};
+	}, [hasProcessed, isProcessing, router]);
+
+	// Cleanup on unmount
+	useEffect(() => {
+		return () => {
+			if (qrScannerRef.current) {
+				qrScannerRef.current.destroy();
+				qrScannerRef.current = null;
+			}
+		};
+	}, []);
 
 	if (isProcessing && !isSuccess) {
-		return (
-			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
-				<div className="w-full max-w-sm mx-auto">
-					<div className="space-y-4">
-						<div className="flex items-center justify-center space-x-2 mb-4">
-							<QrCode className="w-6 h-6 text-primary" />
-							<h2 className="text-xl font-semibold">Processing QR Code</h2>
-						</div>
-						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-							<div className="flex flex-col items-center justify-center p-8 space-y-4">
-								<div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-								<p className="text-sm text-muted-foreground">
-									Processing your onboarding request...
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
+		return <ProcessingState />;
 	}
 
 	if (isSuccess) {
-		return (
-			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
-				<div className="w-full max-w-sm mx-auto">
-					<div className="space-y-4">
-						<div className="flex items-center justify-center space-x-2 mb-4">
-							<CheckCircle2 className="w-6 h-6 text-green-500" />
-							<h2 className="text-xl font-semibold">Onboarding QR Scanned!</h2>
-						</div>
-						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-							<div className="flex flex-col items-center justify-center p-8 space-y-4">
-								<p className="text-base font-medium">
-									Redirecting to enrollment...
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
+		return <SuccessState />;
 	}
 
 	if (isScanning && !isProcessing && !hasProcessed) {
-		return (
-			<div className="flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
-				<div className="w-full max-w-sm mx-auto">
-					<div className="space-y-4">
-						<div className="flex items-center justify-center space-x-2 mb-4">
-							<QrCode className="w-6 h-6 text-primary" />
-							<h2 className="text-xl font-semibold">Scan Gym QR Code</h2>
-						</div>
-
-						<div className="relative rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-							<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
-							<video ref={ref} style={{ width: '100%' }} />
-						</div>
-
-						<div className="space-y-2">
-							<p className="text-sm text-center text-muted-foreground">
-								Scan the QR code provided by your gym to start the onboarding
-								process.
-							</p>
-							<ul className="text-xs text-muted-foreground space-y-1 list-disc pl-5">
-								<li>Make sure the QR code is within the scanning area</li>
-								<li>Ensure good lighting for better scanning</li>
-								<li>Hold your device steady while scanning</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
+		return <ScanningState videoRef={videoRef} zoomLevel={QR_SCANNER_CONFIG.DEFAULT_ZOOM} />;
 	}
 
 	// If none of the other states match, this is the default state

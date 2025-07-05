@@ -56,10 +56,10 @@ export default function RegisterForm() {
 		console.log('form is submitted values', values);
 		const { email, password, name, role } = values;
 
-		// Store the loading toast ID so we can dismiss it later
-		const _loadingToastId = toast.loading('Processing registration...');
-
 		startTransition(async () => {
+			// Create a dismissible loading toast
+			const loadingToast = toast.loading('Processing registration...');
+			
 			try {
 				// Check if the user already exists using the updated getUserByEmail function
 				const userExistsResponse = await getUserByEmail(email);
@@ -68,10 +68,10 @@ export default function RegisterForm() {
 					// User exists, show error
 					settype('fail');
 					seterror('Email is already registered');
+					toast.dismiss();
 					toast.error('Registration failed', {
 						description: 'Email is already registered',
 					});
-					toast.dismiss();
 					return;
 				}
 
@@ -89,62 +89,45 @@ export default function RegisterForm() {
 					settype('fail');
 					try {
 						const errorData = JSON.parse(signInResult.error);
-						switch (errorData.error) {
-							case 'USER_NOT_FOUND':
-								seterror('Registration failed: Account not found');
-								toast.error('Registration error', {
-									description: 'Account not found',
-								});
-								break;
-							case 'INVALID_PASSWORD':
-								seterror('Registration failed: Password error');
-								toast.error('Registration error', {
-									description: 'Password error',
-								});
-								break;
-							case 'SERVER_ERROR':
-								seterror('Registration failed: Please try again later');
-								toast.error('Server error', {
-									description: 'Please try again later',
-								});
-								break;
-							default:
-								seterror(errorData.message || 'Registration failed');
-								toast.error('Registration failed', {
-									description: errorData.message || 'Please try again',
-								});
-						}
+						const errorMessage = errorData.message || 'Registration failed. Please try again.';
+						seterror(errorMessage);
+						toast.dismiss();
+						toast.error('Registration failed', {
+							description: errorMessage,
+						});
 					} catch {
 						seterror('Registration failed');
+						toast.dismiss();
 						toast.error('Registration failed', {
 							description: 'Please try again',
 						});
 					}
 				} else {
+					settype('success');
 					seterror('Account created successfully');
+					toast.dismiss();
 					toast.success('Welcome to GymNavigator!', {
 						description: 'Your account has been created successfully',
 					});
 					router.refresh();
+					
+					// Redirect to dashboard on success - moved here from finally block
+					router.push('/dashboard');
 				}
 			} catch (error) {
 				settype('fail');
 				seterror('An unexpected error occurred');
+				toast.dismiss();
 				toast.error('Registration error', {
 					description: 'An unexpected error occurred',
 				});
 				console.error('Registration error:', error);
-			} finally {
-				// Always dismiss the loading toast when the operation completes
-				router.push('/dashboard');
-				toast.dismiss();
 			}
 		});
 	}
 
 	async function handleGoogleSubmit() {
 		const selectedRole = form.getValues('role');
-		console.log('role from the form', selectedRole);
 
 		if (!selectedRole) {
 			toast.error('Role selection required', {
@@ -160,29 +143,40 @@ export default function RegisterForm() {
 		// Store the role in a server-side cookie
 		await storeGoogleSignupRole(selectedRole);
 
-		// Store the loading toast ID
-
 		startTransition(async () => {
+			const loadingToast = toast.loading('Connecting to Google...');
+			
 			try {
 				// Pass the role as a state parameter to Google auth
-				const result = await signIn('google', {
+				await signIn('google', {
 					redirect: true,
 					callbackUrl: '/dashboard',
 				});
-				console.log('result from the google signin', result?.status);
+				// Note: We don't need to dismiss the toast here as the page will redirect
 			} catch (error) {
+				toast.dismiss();
 				toast.error('Google sign-in failed', {
 					description: 'Could not connect to Google. Please try again.',
 				});
 				console.error('Google sign-in error:', error);
-			} finally {
-				toast.dismiss();
 			}
 		});
 	}
 
 	return (
 		<div className="w-full max-w-md mx-auto p-8 rounded-xl shadow-xl">
+			<div className='h-8 sm:mb-4 mb-2'>
+
+			{error && type ? (
+				<FormError
+				FormErrorProps={{
+					message: error,
+					type: type as 'success' | 'fail',
+				}}
+				/>
+			) : null}
+			</div>
+
 			<div className="space-y-8">
 				<Form {...form}>
 					<form
@@ -247,7 +241,7 @@ export default function RegisterForm() {
 												type="email"
 												disabled={ispending}
 												className="bg-blue-950/30 border-blue-500/30 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 focus:ring-opacity-50 focus-visible:ring-blue-500/20 focus-visible:ring-offset-blue-900/20"
-												autoComplete="email"
+												autoComplete="username email"
 												id="email"
 												name="email"
 											/>
@@ -289,6 +283,10 @@ export default function RegisterForm() {
 													type="button"
 													className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 hover:text-blue-300 transition-colors"
 													onClick={() => setShowPassword(!showPassword)}
+													onKeyDown={(e) => e.key === 'Enter' && setShowPassword(!showPassword)}
+													role="button"
+													tabIndex={0}
+													aria-label={showPassword ? "Hide password" : "Show password"}
 												>
 													{showPassword ? (
 														<EyeOff className="h-4 w-4" />
@@ -298,6 +296,10 @@ export default function RegisterForm() {
 												</button>
 											</div>
 										</FormControl>
+										<div className="text-xs text-gray-400 mt-1 hidden sm:block">
+											Password must contain: 6+ characters, uppercase & lowercase letters, 
+											a number, and a special character
+										</div>
 										<FormMessage className="text-xs" />
 									</FormItem>
 								)}
@@ -371,14 +373,7 @@ export default function RegisterForm() {
 					</form>
 				</Form>
 
-				{error && type ? (
-					<FormError
-						FormErrorProps={{
-							message: error,
-							type: type as 'success' | 'fail',
-						}}
-					/>
-				) : null}
+				
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t border-blue-500/30" />

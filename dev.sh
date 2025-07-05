@@ -24,4 +24,4 @@ fi
 #bun run next dev -H $LOCAL_IP -p 3000
 
 # If you want to use HTTPS (uncomment the line below)
-# bun run next dev -H $LOCAL_IP -p 3000 --experimental-https
+echo "desai" | sudo -S /home/pranav/.bun/bin/bun run next dev -H $LOCAL_IP -p 3000 --experimental-https
