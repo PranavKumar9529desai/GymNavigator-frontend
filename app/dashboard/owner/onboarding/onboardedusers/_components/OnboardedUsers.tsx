@@ -15,13 +15,23 @@ import type { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowUpDown,
 	MoreVertical,
+	Search,
 	User,
 	UserCheck,
 	Users,
 } from 'lucide-react';
-import { redirect, useRouter } from 'next/navigation';
-import React, { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { statusColorClasses, statusLabels } from '@/lib/constants/status-variants';
+import React, { useEffect, useState, useTransition } from 'react';
 import { updateActivePeriod } from '../_actions/mutations';
+import { Input } from '@/components/ui/input';
+import { 
+	Select, 
+	SelectContent, 
+	SelectItem, 
+	SelectTrigger, 
+	SelectValue 
+} from '@/components/ui/select';
 
 export interface UserType {
 	id: number;
@@ -67,11 +77,20 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 	const router = useRouter();
 	const { toast } = useToast();
 	const [isPending, startTransition] = useTransition();
+	const [nameFilter, setNameFilter] = useState('');
+	const [statusFilter, setStatusFilter] = useState<UserType['status'] | 'all'>('all');
 
 	const users: UserType[] = initialUsers.map((user) => ({
 		...user,
 		status: calculateStatus(user.startDate, user.endDate),
 	}));
+
+	// Apply filters to users
+	const filteredUsers = users.filter((user) => {
+		const nameMatch = user.name.toLowerCase().includes(nameFilter.toLowerCase());
+		const statusMatch = statusFilter === 'all' || user.status === statusFilter;
+		return nameMatch && statusMatch;
+	});
 
 	const handleUpdateActivePeriod = (userId: number) => {
 		startTransition(async () => {
@@ -133,6 +152,19 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 		{
 			accessorKey: 'status',
 			header: 'Status',
+			cell: ({ row }) => {
+				const status = row.original.status;
+				const { bg, text } = statusColorClasses[status] || { bg: 'bg-gray-100', text: 'text-gray-800' };
+				const label = statusLabels[status] || status;
+				return (
+					<span
+						className={`px-2 py-1 rounded text-xs font-semibold ${bg} ${text}`}
+						aria-label={label}
+					>
+						{label}
+					</span>
+				);
+			},
 		},
 		{
 			id: 'actions',
@@ -150,7 +182,13 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 						<DropdownMenuContent align="end">
 							<DropdownMenuItem
 								onClick={() => {
-									redirect('/dashboard/owner/onboarding/editactiveperiod');
+									const params = new URLSearchParams({
+										userid: user.id.toString(),
+										username: user.name,
+										startdate: user.startDate ? user.startDate.toISOString() : '',
+										enddate: user.endDate ? user.endDate.toISOString() : '',
+									});
+									router.push(`/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`);
 								}}
 								disabled={isPending || user.status === 'active'}
 							>
@@ -188,11 +226,35 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 					gradient="yellow"
 				/>
 			</div>
+			<div className="mb-4">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+					<Input
+						placeholder="Search by name..."
+						value={nameFilter}
+						onChange={(e) => setNameFilter(e.target.value)}
+						icon={Search}
+					/>
+					<Select
+						value={statusFilter}
+						onValueChange={(value) => setStatusFilter(value as UserType['status'] | 'all')}
+					>
+						<SelectTrigger>
+							<SelectValue placeholder="Filter by status" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="all">All</SelectItem>
+							<SelectItem value="active">Active</SelectItem>
+							<SelectItem value="pending">Pending</SelectItem>
+							<SelectItem value="inactive">Inactive</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+			</div>
 			<div className="hidden md:block">
-				<DataTable columns={columns} data={users} />
+				<DataTable columns={columns} data={filteredUsers} />
 			</div>
 			<div className="md:hidden space-y-4">
-				{users.map((user) => (
+				{filteredUsers.map((user) => (
 					<UserMobileCard 
 						key={user.id}
 						user={user}

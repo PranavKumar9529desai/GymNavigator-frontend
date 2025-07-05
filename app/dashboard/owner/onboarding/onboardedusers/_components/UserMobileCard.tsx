@@ -10,6 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreVertical } from 'lucide-react';
+import { statusBadgeVariants, statusColorClasses, statusLabels } from '@/lib/constants/status-variants';
 import type { UserType } from './OnboardedUsers';
 
 interface UserMobileCardProps {
@@ -39,12 +41,7 @@ export function UserMobileCard({
 	isPending,
 	onActivate,
 }: UserMobileCardProps) {
-	// Define status variants with proper typing that matches badge variant options
-	const statusVariant: Record<UserType['status'], "secondary" | "outline" | "destructive" | "default" | null | undefined> = {
-		active: 'secondary', // or 'default' if you want a different color
-		pending: 'outline',
-		inactive: 'destructive',
-	};
+	// Use shared status variants from constants
 
 	return (
 		<Card>
@@ -68,8 +65,15 @@ export function UserMobileCard({
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
-				<Badge variant={statusVariant[user.status]} className="capitalize w-fit">
-					{user.status}
+				<Badge 
+					variant={statusBadgeVariants[user.status]} 
+					className={cn(
+						"capitalize w-fit", 
+						statusColorClasses[user.status].bg, 
+						statusColorClasses[user.status].text
+					)}
+				>
+					{statusLabels[user.status] || user.status}
 				</Badge>
 			</CardHeader>
 			<CardContent>
