@@ -19,7 +19,7 @@ import {
 	UserCheck,
 	Users,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import React, { useTransition } from 'react';
 import { updateActivePeriod } from '../_actions/mutations';
 
@@ -149,10 +149,12 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
 							<DropdownMenuItem
-								onClick={() => handleUpdateActivePeriod(user.id)}
+								onClick={() => {
+									redirect('/dashboard/owner/onboarding/editactiveperiod');
+								}}
 								disabled={isPending || user.status === 'active'}
 							>
-								Activate for 1 year
+								Edit Active Period
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -166,7 +168,6 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 
 	return (
 		<div className="p-4">
-			<h1 className="text-2xl font-bold mb-4">Onboarded Users</h1>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 				<StatusCard
 					title="Total Users"

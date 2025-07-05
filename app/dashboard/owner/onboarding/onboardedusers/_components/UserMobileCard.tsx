@@ -1,11 +1,7 @@
 'use client';
 
-import { Badge } from '@/// Define status variants with proper typing that matches UserType['status']
-const statusVariant: Record<UserType['status'], string> = {
-	active: 'secondary', // or 'default' if you want a different color
-	pending: 'outline',
-	inactive: 'destructive',
-};nents/ui/badge';
+import { Badge } from "@/components/ui/badge";
+
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -43,8 +39,8 @@ export function UserMobileCard({
 	isPending,
 	onActivate,
 }: UserMobileCardProps) {
-	// Define status variants with proper typing that matches UserType['status']
-	const statusVariant: Record<UserType['status'], string> = {
+	// Define status variants with proper typing that matches badge variant options
+	const statusVariant: Record<UserType['status'], "secondary" | "outline" | "destructive" | "default" | null | undefined> = {
 		active: 'secondary', // or 'default' if you want a different color
 		pending: 'outline',
 		inactive: 'destructive',
