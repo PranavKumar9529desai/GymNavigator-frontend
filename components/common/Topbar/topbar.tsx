@@ -44,7 +44,7 @@ export default function TopBar({ menuItems, basePath = '' }: TopBarProps) {
 	};
 
 	return (
-		<div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+		<div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm ">
 			<div className="overflow-x-auto scrollbar-hide">
 				<div className="flex px-2 py-2 space-x-1 whitespace-nowrap">
 					{activeMenuItem.subItems.map((subItem) => {

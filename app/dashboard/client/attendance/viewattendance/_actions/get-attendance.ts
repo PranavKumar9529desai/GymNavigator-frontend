@@ -15,8 +15,16 @@ export interface AttendanceData {
 export const fetchAttendanceData = async (): Promise<AttendanceData> => {
 	try {
 		const clientAxios = await ClientReqConfig();
+		
+		// Add a cache key to improve caching behavior
 		const response = await clientAxios.post<AttendanceDaysResponse>(
 			'/attendance/monthlyattendance',
+			{},
+			{
+				headers: {
+					'Cache-Control': 'max-age=300' // 5 minute cache
+				}
+			}
 		);
 
 		if (!response.data.success || !response.data.data) {

@@ -5,5 +5,9 @@ export default function AttendanceLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <div className="container mx-auto px-4">{children}</div>;
+	return (
+		<div className="container mx-auto px-4 will-change-transform">
+			{children}
+		</div>
+	);
 }

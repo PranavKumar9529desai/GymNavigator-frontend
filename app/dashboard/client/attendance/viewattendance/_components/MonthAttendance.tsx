@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Dumbbell, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { cn } from '@/lib/utils';
 import CalendarSkeleton from './CalendarSkeleton';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -32,7 +33,20 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	// Use the attendanceDays prop directly - no loading state needed
 	const gymAttendanceDays: Date[] = attendanceDays || [];
 
-	useEffect(() => {
+	// Create a map of gym days for faster lookups
+	const gymDaysMap = useMemo(() => {
+		const map = new Map<string, boolean>();
+		gymAttendanceDays.forEach(date => {
+			map.set(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`, true);
+		});
+		return map;
+	}, [gymAttendanceDays]);
+
+	// Memoize today's date to avoid recreation on every render
+	const today = useMemo(() => new Date(), []);
+
+	// Progress calculation - memoized to avoid recalculation on each render
+	useMemo(() => {
 		// Progress calculation logic
 		const year = currentDate.getFullYear();
 		const month = currentDate.getMonth();
@@ -62,40 +76,33 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 				? Math.round((attendedDays / availableWorkoutDays) * 100)
 				: 0;
 
-		// Only update progress if it has changed
-		if (calculatedProgress !== progress) {
-			setProgress(calculatedProgress);
-		}
-	}, [currentDate, gymAttendanceDays, progress]);
+		setProgress(calculatedProgress);
+	}, [currentDate, gymAttendanceDays]);
 
-	const isToday = (date: Date) => {
-		const today = new Date();
+	// Optimized helper functions with memoization
+	const isToday = useCallback((date: Date) => {
 		return (
 			date.getDate() === today.getDate() &&
 			date.getMonth() === today.getMonth() &&
 			date.getFullYear() === today.getFullYear()
 		);
-	};
+	}, [today]);
 
-	const isGymDay = (date: Date) => {
-		return gymAttendanceDays.some(
-			(gymDate) =>
-				gymDate.getDate() === date.getDate() &&
-				gymDate.getMonth() === date.getMonth() &&
-				gymDate.getFullYear() === date.getFullYear(),
-		);
-	};
+	const isGymDay = useCallback((date: Date) => {
+		const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+		return gymDaysMap.has(key);
+	}, [gymDaysMap]);
 
-	const isMissedDay = (date: Date) => {
-		const today = new Date();
+	const isMissedDay = useCallback((date: Date) => {
 		return (
-			date < today && !isGymDay(date) && date.getDay() !== 0 && date <= today
+			date < today && !isGymDay(date) && date.getDay() !== 0
 		);
-	};
+	}, [today, isGymDay]);
 
-	const getDaysInMonth = (date: Date) => {
-		const year = date.getFullYear();
-		const month = date.getMonth();
+	// Memoize days in month calculation to prevent recalculation on every render
+	const daysInMonth = useMemo(() => {
+		const year = currentDate.getFullYear();
+		const month = currentDate.getMonth();
 		const firstDay = new Date(year, month, 1).getDay();
 		const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -107,7 +114,7 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 			days.push(new Date(year, month, i));
 		}
 		return days;
-	};
+	}, [currentDate]);
 
 	const addMonths = (date: Date, months: number) => {
 		const newDate = new Date(date);
@@ -115,69 +122,106 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 		return newDate;
 	};
 
-	const getDayClasses = (date: Date) => {
+	// Memoize day class calculation for better performance
+	const getDayClasses = useCallback((date: Date) => {
 		const isSunday = date.getDay() === 0;
 		const isGymAttendance = isGymDay(date);
+		const isTodayDate = isToday(date);
+		const isMissed = isMissedDay(date);
 
-		return `
-      flex flex-col items-center justify-center
-      w-12 h-12 md:w-14 md:h-14 rounded-xl
-      text-center relative
-      transition-all duration-300 ease-in-out
-      backdrop-blur-sm
-      hover:scale-105 hover:shadow-lg
-      cursor-default
-      ${
-				isGymAttendance
-					? 'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-lg shadow-green-200/50 dark:shadow-green-900/50'
-					: ''
+		return cn(
+			"flex flex-col items-center justify-center",
+			"w-12 h-12 md:w-14 md:h-14 rounded-xl",
+			"text-center relative",
+			"transition-transform",
+			"hover:scale-105",
+			"cursor-default",
+			{
+				"bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md shadow-green-200/50 dark:shadow-green-900/50": isGymAttendance,
+				"bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shadow-blue-200/50 dark:shadow-blue-900/50": isTodayDate && !isGymAttendance,
+				"bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/50 dark:to-red-800/50": isMissed,
+				"bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800/50 dark:to-gray-700/50 text-gray-400 dark:text-gray-600": isSunday
 			}
-      ${
-				isToday(date) && !isGymAttendance
-					? 'bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg shadow-blue-200/50 dark:shadow-blue-900/50'
-					: ''
-			}
-      ${
-				isMissedDay(date)
-					? 'bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/50 dark:to-red-800/50'
-					: ''
-			}
-      ${
-				isSunday
-					? 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800/50 dark:to-gray-700/50 text-gray-400 dark:text-gray-600'
-					: ''
-			}
-    `;
-	};
+		);
+	}, [isGymDay, isToday, isMissedDay]);
 
-	const renderDay = (date: Date | null) => {
+	// Memoize day rendering
+	const renderDay = useCallback((date: Date | null) => {
 		if (!date) return <div className="w-12 h-12 md:w-14 md:h-14" />;
 
+		const showGymIcon = isGymDay(date) && date.getDay() !== 0;
+		const showMissedIcon = isMissedDay(date);
+
 		return (
-			<div key={date.toString()} className={getDayClasses(date)}>
+			<div className={getDayClasses(date)}>
 				<span className="text-base md:text-lg font-semibold">
 					{date.getDate()}
 				</span>
-				{isGymDay(date) && date.getDay() !== 0 && (
-					<Dumbbell className="w-4 h-4 md:w-5 md:h-5 animate-pulse" />
+				{showGymIcon && (
+					<Dumbbell className="w-4 h-4 md:w-5 md:h-5" />
 				)}
-				{isMissedDay(date) && (
+				{showMissedIcon && (
 					<X className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
 				)}
 			</div>
 		);
-	};
+	}, [getDayClasses, isGymDay, isMissedDay]);
+
+
+	// Memoize navigation handler functions
+	const handlePrevMonth = useCallback(() => {
+		setCurrentDate(prev => {
+			const newDate = new Date(prev);
+			newDate.setMonth(newDate.getMonth() - 1);
+			return newDate;
+		});
+	}, []);
+
+	const handleNextMonth = useCallback(() => {
+		setCurrentDate(prev => {
+			const newDate = new Date(prev);
+			newDate.setMonth(newDate.getMonth() + 1);
+			return newDate;
+		});
+	}, []);
+
+	// Memoize calendar headers
+	const calendarHeaders = useMemo(() => {
+		return DAYS.map((day) => (
+			<div
+				key={day}
+				className="text-center font-semibold text-sm sm:text-base text-gray-600 dark:text-gray-400"
+			>
+				{day}
+			</div>
+		));
+	}, []);
+
+	// Memoize calendar days rendering
+	const calendarDays = useMemo(() => {
+		return daysInMonth.map((date, index) => {
+			// Skip animations for better performance
+			return (
+				<div
+					className="inline-flex justify-center"
+					key={date ? date.toString() : `empty-${index}`}
+				>
+					{renderDay(date)}
+				</div>
+			);
+		});
+	}, [daysInMonth, renderDay]);
 
 	return (
-		<div className="w-full max-w-4xl mx-auto space-y-6">
+		<div className="w-full max-w-4xl mx-auto space-y-6 will-change-transform">
 			{/* Header Section */}
 			<div className="flex flex-col items-center space-y-4">
 				<div className="w-full flex items-center justify-between px-4 sm:justify-center sm:space-x-8">
 					<Button
 						variant="outline"
 						size="icon"
-						className="rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300"
-						onClick={() => setCurrentDate(addMonths(currentDate, -1))}
+						className="rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/80"
+						onClick={handlePrevMonth}
 					>
 						<ChevronLeft className="h-5 w-5" />
 					</Button>
@@ -189,8 +233,8 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 					<Button
 						variant="outline"
 						size="icon"
-						className="rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-300"
-						onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+						className="rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/80"
+						onClick={handleNextMonth}
 					>
 						<ChevronRight className="h-5 w-5" />
 					</Button>
@@ -200,62 +244,48 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 			{/* Calendar Grid */}
 			<div className="px-2 sm:px-4">
 				<div className="grid grid-cols-7 gap-2 sm:gap-4 mb-4">
-					{DAYS.map((day) => (
-						<div
-							key={day}
-							className="text-center font-semibold text-sm sm:text-base text-gray-600 dark:text-gray-400"
-						>
-							{day}
-						</div>
-					))}
+					{calendarHeaders}
 				</div>
 				<div className="grid grid-cols-7 gap-3 sm:gap-3">
-					{getDaysInMonth(currentDate).map((date, index) => (
-						<div
-							className="inline-flex justify-center animate-fadeIn"
-							key={index as number}
-							style={{ animationDelay: `${index * 20}ms` }}
-						>
-							{renderDay(date)}
-						</div>
-					))}
+					{calendarDays}
 				</div>
 			</div>
 
 			{/* Legend and Progress */}
-			<div className="mt-8 flex flex-col space-y-6 sm:flex-row sm:space-y-0 justify-between items-center p-4 rounded-xl bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm">
+			<div className="mt-8 flex flex-col space-y-6 sm:flex-row sm:space-y-0 justify-between items-center p-4 rounded-xl bg-gray-50/50 dark:bg-gray-800/50">
+				{/* Legend items */}
 				<div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-6">
-					<div className="flex items-center space-x-3 transition-transform hover:scale-105">
-						<div className="w-5 h-5 rounded-lg bg-gradient-to-br from-green-400 to-green-500 shadow-lg shadow-green-200/50 dark:shadow-green-900/50" />
+					<div className="flex items-center space-x-3">
+						<div className="w-5 h-5 rounded-lg bg-gradient-to-br from-green-400 to-green-500 shadow-md shadow-green-200/50 dark:shadow-green-900/50" />
 						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 							Gym Day
 						</span>
 					</div>
-					<div className="flex items-center space-x-3 transition-transform hover:scale-105">
-						<div className="w-5 h-5 rounded-md bg-blue-500 shadow-lg shadow-blue-200 dark:shadow-blue-900" />
+					<div className="flex items-center space-x-3">
+						<div className="w-5 h-5 rounded-md bg-blue-500 shadow-md shadow-blue-200 dark:shadow-blue-900" />
 						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 							Today
 						</span>
 					</div>
-					<div className="flex items-center space-x-3 transition-transform hover:scale-105">
-						<div className="w-5 h-5 rounded-md bg-red-100 dark:bg-red-900/50 shadow-lg shadow-red-200 dark:shadow-red-900" />
+					<div className="flex items-center space-x-3">
+						<div className="w-5 h-5 rounded-md bg-red-100 dark:bg-red-900/50 shadow-md shadow-red-200 dark:shadow-red-900" />
 						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 							Missed
 						</span>
 					</div>
-					<div className="flex items-center space-x-3 transition-transform hover:scale-105">
-						<div className="w-5 h-5 rounded-md bg-gray-100 dark:bg-gray-800/50 shadow-lg shadow-gray-200 dark:shadow-gray-900" />
+					<div className="flex items-center space-x-3">
+						<div className="w-5 h-5 rounded-md bg-gray-100 dark:bg-gray-800/50 shadow-md shadow-gray-200 dark:shadow-gray-900" />
 						<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 							Off Day
 						</span>
 					</div>
 				</div>
 
-				{/* Progress Circle */}
-				<div className="relative w-24 h-24 sm:w-32 sm:h-32 transform hover:scale-105 transition-transform">
+				{/* Progress Circle - Static version with no animations */}
+				<div className="relative w-24 h-24 sm:w-32 sm:h-32">
 					{/* Progress circle with gradient */}
-					<svg 
-						className="w-full h-full transform -rotate-90" 
+					<svg
+						className="w-full h-full transform -rotate-90"
 						aria-label={`Monthly attendance progress: ${progress}% of workout days completed`}
 						viewBox="0 0 100 100"
 					>
@@ -282,7 +312,7 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 							strokeWidth="8"
 							className="text-gray-200 dark:text-gray-800"
 						/>
-						{/* Progress circle */}
+						{/* Progress circle - static, no transitions */}
 						<circle
 							cx="50"
 							cy="50"
@@ -293,10 +323,6 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 							strokeLinecap="round"
 							strokeDasharray={`${(progress / 100) * 251.2} 251.2`}
 							strokeDashoffset="0"
-							className="transition-all duration-1000 ease-in-out"
-							style={{
-								transformOrigin: '50% 50%'
-							}}
 						/>
 					</svg>
 					<div className="absolute inset-0 flex items-center justify-center">
@@ -308,4 +334,5 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 			</div>
 		</div>
 	);
+
 }

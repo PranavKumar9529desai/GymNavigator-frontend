@@ -209,12 +209,15 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 			</div>
 			<div className="mb-4">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-					<Input
-						placeholder="Search by name..."
-						value={nameFilter}
-						onChange={(e) => setNameFilter(e.target.value)}
-						icon={Search}
-					/>
+					<div className="relative">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-label="Search" />
+						<Input
+							placeholder="Search by name..."
+							value={nameFilter}
+							onChange={(e) => setNameFilter(e.target.value)}
+							className="pl-10"
+						/>
+					</div>
 					<Select
 						value={statusFilter}
 						onValueChange={(value) => setStatusFilter(value as UserType['status'] | 'all')}
