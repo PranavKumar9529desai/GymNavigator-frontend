@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -23,22 +23,22 @@ import { Separator } from '@/components/ui/separator';
 interface UserActionsProps {
   user: UserType;
   isPending: boolean;
-  type ? : 'vertical' | 'horizontal';
+  type?: 'vertical' | 'horizontal';
   onActivate: (userId: number) => void;
   triggerVariant?: 'ghost' | 'outline' | 'secondary';
   align?: 'start' | 'end';
 }
 
-export function UserActions({ 
-  user, 
-  type ,
-  isPending, 
-  onActivate, 
+export function UserActions({
+  user,
+  type,
+  isPending,
+  onActivate,
   triggerVariant = 'ghost',
   align = 'end'
 }: UserActionsProps) {
   const router = useRouter();
-  
+
   const handleEditActivePeriod = () => {
     const params = new URLSearchParams({
       userid: user.id.toString(),
@@ -48,28 +48,28 @@ export function UserActions({
     });
     router.push(`/dashboard/owner/onboarding/editactiveperiod?${params.toString()}`);
   };
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant={triggerVariant} 
+        <Button
+          variant={triggerVariant}
           className={cn(
             "h-8 w-8 p-0 hover:bg-gray-100 hover:text-gray-900 transition-colors",
             isPending && "opacity-50 cursor-not-allowed"
-          )} 
+          )}
           disabled={isPending}
         >
           <span className="sr-only">Open menu</span>
           {
             type === "vertical" ?
-            <MoreVertical className="h-4 w-4" />
-            : <MoreHorizontal className="h-4 w-4" />
+              <MoreVertical className="h-4 w-4" />
+              : <MoreHorizontal className="h-4 w-4" />
           }
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align={align} 
+      <DropdownMenuContent
+        align={align}
         className="w-56 bg-white text-gray-800 shadow-md rounded-md border border-gray-100 z-20 animate-in fade-in-50 zoom-in-95 duration-100"
       >
         <DropdownMenuLabel className="text-xs font-medium">
@@ -77,8 +77,8 @@ export function UserActions({
             <span className="text-gray-700">User Actions</span>
             <span className={cn(
               "text-[10px] mt-1 font-semibold uppercase tracking-wider",
-              user.status === 'active' ? "text-green-600" : 
-              user.status === 'pending' ? "text-amber-600" : "text-red-600"
+              user.status === 'active' ? "text-green-600" :
+                user.status === 'pending' ? "text-amber-600" : "text-red-600"
             )}>
               {user.status.toUpperCase()}
             </span>
@@ -90,7 +90,9 @@ export function UserActions({
               <div>
                 <DropdownMenuItem
                   className="flex items-center gap-2 hover:bg-gray-50 py-2.5 my-1 focus:bg-gray-50 cursor-pointer"
-                  onClick={() => console.log(`View profile for user: ${user.name} (ID: ${user.id})`)}
+                  onClick={() => {
+                    router.push(`/dashboard/owner/gymuser/${user.id}`);
+                  }}
                 >
                   <User className="h-4 w-4 text-gray-500" />
                   <span>View Profile</span>
@@ -121,10 +123,10 @@ export function UserActions({
               </div>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-gray-900 text-white text-xs">
-              {user.status === 'active' 
-                ? "Cannot edit active period for active users" 
-                : isPending 
-                  ? "Action in progress" 
+              {user.status === 'active'
+                ? "Cannot edit active period for active users"
+                : isPending
+                  ? "Action in progress"
                   : "Edit user's membership period"}
             </TooltipContent>
           </Tooltip>
