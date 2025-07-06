@@ -15,16 +15,36 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 
 interface AttendanceTabProps {
   weeklyAttendance: Array<{ day: string; attended: number }>
+  recentVisits?: Array<{
+    date: string;
+    time: string;
+    duration: string;
+    type: string;
+  }>
+  stats?: {
+    monthlyVisits: number;
+    streak: number;
+    totalWorkoutTime: number;
+  }
 }
 
-export function AttendanceTab({ weeklyAttendance }: AttendanceTabProps) {
-  const recentVisits = [
-    { date: "Today", time: "6:30 AM", duration: "1h 30m", type: "Strength Training" },
-    { date: "Yesterday", time: "7:00 AM", duration: "1h 15m", type: "Cardio" },
-    { date: "2 days ago", time: "6:45 AM", duration: "1h 45m", type: "Full Body" },
-    { date: "3 days ago", time: "7:15 AM", duration: "1h 20m", type: "Upper Body" },
-    { date: "4 days ago", time: "6:30 AM", duration: "1h 10m", type: "Cardio" },
+export function AttendanceTab({ weeklyAttendance, recentVisits, stats }: AttendanceTabProps) {
+  const defaultRecentVisits = [
+    { date: "No recent visits", time: "", duration: "", type: "" },
   ]
+
+  const visitsToShow = recentVisits && recentVisits.length > 0 ? recentVisits : defaultRecentVisits
+  
+  // Calculate this week's visits
+  const thisWeekVisits = weeklyAttendance.reduce((sum, day) => sum + day.attended, 0)
+  
+  // Format workout time
+  const formatWorkoutTime = (minutes: number) => {
+    if (minutes >= 60) {
+      return `${Math.floor(minutes / 60)}h ${minutes % 60}m`
+    }
+    return `${minutes}m`
+  }
 
   return (
     <div className="space-y-6">
@@ -65,22 +85,28 @@ export function AttendanceTab({ weeklyAttendance }: AttendanceTabProps) {
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">This Week</span>
-              <span className="text-2xl font-bold">4/7</span>
+              <span className="text-2xl font-bold">{thisWeekVisits}/7</span>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">This Month</span>
-              <span className="text-2xl font-bold">24/30</span>
+              <span className="text-2xl font-bold">
+                {stats?.monthlyVisits ? stats.monthlyVisits : "-"}
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Streak</span>
-              <span className="text-2xl font-bold">7 days</span>
+              <span className="text-sm font-medium">Current Streak</span>
+              <span className="text-2xl font-bold">
+                {stats?.streak ? `${stats.streak} days` : "-"}
+              </span>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Best Month</span>
-              <span className="text-2xl font-bold">28 visits</span>
+              <span className="text-sm font-medium">Total Workout Time</span>
+              <span className="text-2xl font-bold">
+                {stats?.totalWorkoutTime ? formatWorkoutTime(stats.totalWorkoutTime) : "-"}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -93,19 +119,21 @@ export function AttendanceTab({ weeklyAttendance }: AttendanceTabProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {recentVisits.map((visit, index) => (
+            {visitsToShow.map((visit, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center space-x-3">
                   <CalendarDays className="h-4 w-4 text-muted-foreground" />
                   <div>
                     <p className="font-medium">{visit.date}</p>
-                    <p className="text-sm text-muted-foreground">{visit.time}</p>
+                    {visit.time && <p className="text-sm text-muted-foreground">{visit.time}</p>}
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">{visit.duration}</p>
-                  <p className="text-sm text-muted-foreground">{visit.type}</p>
-                </div>
+                {visit.duration && visit.type && (
+                  <div className="text-right">
+                    <p className="font-medium">{visit.duration}</p>
+                    <p className="text-sm text-muted-foreground">{visit.type}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
