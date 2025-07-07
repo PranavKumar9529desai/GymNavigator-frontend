@@ -17,6 +17,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { AssignedUser } from '../_actiions/GetuserassignedTotrainers';
+import { AssignedUserToTrainersAction } from '../[id]/_components/assigned-users-to-trainer-action';
 
 const columns: ColumnDef<AssignedUser>[] = [
 	{
@@ -117,6 +118,19 @@ const columns: ColumnDef<AssignedUser>[] = [
 			);
 		},
 	},
+	{
+		id: 'actions',
+		cell: ({ row }) => {
+			const user = row.original;
+
+			return (
+				<AssignedUserToTrainersAction 	 
+					user={user}
+					type='horizontal'
+				/>
+			);
+		},
+	},
 ];
 
 interface AssignedUserToTrainerProps {
@@ -213,73 +227,126 @@ export default function AssignedUserToTrainer({
 				<DataCard
 					data={filteredUsers}
 					renderCard={(user) => (
-						<div
-							className="p-4 space-y-3 bg-white rounded-lg border cursor-pointer hover:border-primary transition-colors"
-							onClick={() =>
-								user.id &&
-								router.push(
-									`/dashboard/trainer/assignedusers/assignedusersroute/${user.id}`,
-								)
-							}
-							onKeyUp={() =>
-								user.id &&
-								router.push(
-									`/dashboard/trainer/assignedusers/assignedusersroute/${user.id}`,
-								)
-							}
-						>
-							<div className="flex items-center justify-between">
-								<h3 className="font-medium text-lg">{user.name}</h3>
-								<Badge
-									className={`${
-										user.membershipStatus === 'active'
-											? 'bg-green-100 text-green-800'
-											: 'bg-red-100 text-red-800'
-									}`}
-								>
-									{user.membershipStatus}
-								</Badge>
+						<div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+							{/* Header Section */}
+							<div className="p-4 border-b border-gray-100">
+								<div className="flex items-center justify-between">
+									<div className="flex-1">
+										<h3 
+											className="font-semibold text-lg text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+											onClick={() =>
+												user.id &&
+												router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+											}
+											onKeyDown={(e) => {
+												if (e.key === 'Enter' || e.key === ' ') {
+													e.preventDefault()
+													user.id &&
+													router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+												}
+											}}
+											tabIndex={0}
+											role="button"
+										>
+											{user.name}
+										</h3>
+										<p className="text-sm text-gray-500 mt-1">{user.email}</p>
+									</div>
+									<div className="flex items-center gap-2">
+										<Badge
+											className={`${
+												user.membershipStatus === 'active'
+													? 'bg-green-100 text-green-800 border-green-200'
+													: 'bg-red-100 text-red-800 border-red-200'
+											} border`}
+										>
+											{user.membershipStatus}
+										</Badge>
+										<AssignedUserToTrainersAction 
+											user={user}
+											type='vertical'
+											triggerVariant='ghost'
+										/>
+									</div>
+								</div>
 							</div>
 
-							<div className="space-y-3">
+							{/* Content Section */}
+							<div className="p-4 space-y-4">
 								{/* Workout Plan Section */}
-								<div className="p-3 bg-gray-50 rounded-lg">
-									<p className="text-sm font-medium text-gray-600 mb-2">
-										Workout Plan
-									</p>
-									{user.hasActiveWorkoutPlan ? (
-										<Badge className="bg-green-100 text-green-800">
-											<Dumbbell className="w-3 h-3 mr-1" />
-											{user.activeWorkoutPlanName}
-										</Badge>
-									) : (
-										<Badge
-											variant="secondary"
-											className="bg-gray-100 text-gray-600"
-										>
-											No Active Plan
+								<div className="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+									<div className="flex items-center gap-2">
+										<div className="p-1.5 bg-green-100 rounded-full">
+											<Dumbbell className="w-4 h-4 text-green-600" />
+										</div>
+										<div>
+											<p className="text-xs font-medium text-green-700 uppercase tracking-wide">
+												Workout Plan
+											</p>
+											{user.hasActiveWorkoutPlan ? (
+												<p className="text-sm font-semibold text-green-800">
+													{user.activeWorkoutPlanName}
+												</p>
+											) : (
+												<p className="text-sm text-green-600">
+													No Active Plan
+												</p>
+											)}
+										</div>
+									</div>
+									{user.hasActiveWorkoutPlan && (
+										<Badge className="bg-green-200 text-green-800 border-green-300">
+											Active
 										</Badge>
 									)}
 								</div>
 
 								{/* Diet Plan Section */}
-								<div className="p-3 bg-gray-50 rounded-lg">
-									<p className="text-sm font-medium text-gray-600 mb-2">
-										Diet Plan
-									</p>
-									{user.hasActiveDietPlan ? (
-										<Badge className="bg-blue-100 text-blue-800">
-											<UtensilsCrossed className="w-3 h-3 mr-1" />
-											{user.dietPlanName}
-										</Badge>
-									) : (
-										<Badge
-											variant="secondary"
-											className="bg-gray-100 text-gray-600"
-										>
-											No Diet Plan
+								<div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-100">
+									<div className="flex items-center gap-2">
+										<div className="p-1.5 bg-blue-100 rounded-full">
+											<UtensilsCrossed className="w-4 h-4 text-blue-600" />
+										</div>
+										<div>
+											<p className="text-xs font-medium text-blue-700 uppercase tracking-wide">
+												Diet Plan
+											</p>
+											{user.hasActiveDietPlan ? (
+												<p className="text-sm font-semibold text-blue-800">
+													{user.dietPlanName}
+												</p>
+											) : (
+												<p className="text-sm text-blue-600">
+													No Diet Plan
+												</p>
+											)}
+										</div>
+									</div>
+									{user.hasActiveDietPlan && (
+										<Badge className="bg-blue-200 text-blue-800 border-blue-300">
+											Active
 										</Badge>
 									)}
+								</div>
+
+								{/* Quick Actions */}
+								<div className="flex gap-2 pt-2">
+									<button
+										onClick={() =>
+											user.id &&
+											router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+										}
+										onKeyDown={(e) => {
+											if (e.key === 'Enter' || e.key === ' ') {
+												e.preventDefault()
+												user.id &&
+												router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+											}
+										}}
+										className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
+									>
+										View Profile
+									</button>
 								</div>
 							</div>
 						</div>

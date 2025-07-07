@@ -60,7 +60,7 @@ const Topbar: FC<TopbarProps> = ({
 		<>
 			{/* Part 1: Scrolls away (Logo, Name, Buttons) */}
 			<div
-				className="h-12 md:h-16 flex items-center justify-between px-4 border-b border-blue-100 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 pt-2
+				className="min-h-16 md:h-16 flex items-center justify-between px-4 border-b border-blue-100 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 py-2
         sm:hidden
       "
 			>

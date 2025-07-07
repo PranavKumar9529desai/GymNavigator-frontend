@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, UserX, Heart, Users } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, UserX, Heart, Users, ArrowLeft } from "lucide-react"
 import { UserHeader } from "./user-header"
 import { OverviewTab } from "./overview-tab"
 import { HealthTab } from "./health-tab"
@@ -56,11 +58,33 @@ function ErrorState({ error }: { error?: string }) {
 
 export function UserProfileClient({ profileData, userId }: UserProfileClientProps) {
   const [activeTab, setActiveTab] = useState("overview")
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.push('/dashboard/trainer/assignedusers')
+  }
 
   // If there's an error and no data at all
   if (profileData.error && !profileData.userData) {
     return (
       <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+        {/* Back Button */}
+        <div className="flex items-center mb-4">
+          <Button
+            variant="ghost"
+            onClick={handleBack}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                handleBack()
+              }
+            }}
+            className="p-2 hover:bg-gray-100 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span className="sr-only">Go back to assigned users</span>
+          </Button>
+        </div>
         <ErrorState error={profileData.error} />
       </div>
     );
@@ -68,6 +92,24 @@ export function UserProfileClient({ profileData, userId }: UserProfileClientProp
 
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+      {/* Back Button */}
+      <div className="flex items-center mb-4">
+        <Button
+          variant="ghost"
+          onClick={handleBack}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleBack()
+            }
+          }}
+          className="p-2 hover:bg-gray-100 transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Go back to assigned users</span>
+        </Button>
+      </div>
+
       {/* Header Section */}
       <UserHeader 
         userData={profileData.userData!} 
