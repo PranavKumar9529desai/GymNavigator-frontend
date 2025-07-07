@@ -9,7 +9,7 @@ import { OverviewTab } from "./overview-tab"
 import { HealthTab } from "./health-tab"
 import { AttendanceTab } from "./attendance-tab"
 import { TrainerTab } from "./trainer-tab"
-import type { UserProfileResponse } from "../../[role]/"
+import type { UserProfileResponse } from "../[id]/_action/get-user-profile-for-client"
 
 interface UserProfileClientProps {
   profileData: UserProfileResponse;
