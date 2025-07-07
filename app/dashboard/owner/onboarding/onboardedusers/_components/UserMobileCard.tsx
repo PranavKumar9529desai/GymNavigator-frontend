@@ -16,7 +16,7 @@ import {
 	statusLabels,
 } from "@/lib/constants/status-variants";
 import type { UserType } from "./OnboardedUsers";
-import { UserActions } from "./UserActions";
+import { UserActions } from "./user-onboarding-actions";
 
 interface UserMobileCardProps {
 	user: UserType;

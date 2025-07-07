@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserMobileCard } from './UserMobileCard';
-import { UserActions } from './UserActions';
+import { UserActions } from './user-onboarding-actions';
 import { useToast } from '@/hooks/use-toast';
 import type { ColumnDef } from '@tanstack/react-table';
 import {

@@ -33,7 +33,7 @@ export default function Sidebar({ menuItems }: SidebarProps) {
 			}
 		} else if (item.link) {
 			setActivePage(item.label);
-			router.push(`/${item.link}`);
+			router.push(item.link);
 		}
 	};
 

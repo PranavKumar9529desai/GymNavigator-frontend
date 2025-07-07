@@ -25,7 +25,7 @@ interface RoleProps {
 export default async function OnboardingPage({ params }: RoleProps) {
 	const { role } = await params;
 	const enrollmentStatus = await getEnrollmentStatus(role);
-
+    console.log('Enrollment Status:', enrollmentStatus);
 	// If user is already enrolled in a gym, show enrolled status
 	if (enrollmentStatus.isEnrolled) {
 		return (
