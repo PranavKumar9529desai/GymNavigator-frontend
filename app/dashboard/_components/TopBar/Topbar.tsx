@@ -11,12 +11,24 @@ import NotificationButton from './NotificationButton';
 import QRCodeButton from './QRCodeButton';
 import SubrouteNav from './SubrouteNav';
 import UserMenuButton from './UserMenuButton';
+import type { Rolestype, GymInfo } from '@/types/next-auth';
+
+interface UserSession {
+	user: {
+		name: string;
+		email: string;
+		id: string;
+	};
+	role: Rolestype;
+	gym?: GymInfo;
+}
 
 interface TopbarProps {
 	gymName?: string;
-	userRole?: string;
+	userRole?: Rolestype;
 	menuItems: MenuItem[];
 	status: 'loading' | 'unauthenticated' | 'authenticated';
+	sessionData?: UserSession;
 }
 
 const Topbar: FC<TopbarProps> = ({
@@ -24,6 +36,7 @@ const Topbar: FC<TopbarProps> = ({
 	userRole,
 	menuItems,
 	status,
+	sessionData,
 }) => {
 	const pathname = usePathname();
 	// Removed Intersection Observer state and ref
@@ -77,7 +90,7 @@ const Topbar: FC<TopbarProps> = ({
 					</div>
 					<div>
 						<h1 className="font-bold text-lg tracking-tight text-blue-900">
-							{gymName}
+							{sessionData?.gym?.gym_name || gymName}
 						</h1>
 						{userRole ? (
 							<div className="flex items-center">
@@ -92,7 +105,7 @@ const Topbar: FC<TopbarProps> = ({
 				<div className="flex items-center space-x-2">
 					<NotificationButton />
 					<QRCodeButton userRole={userRole} />
-					<UserMenuButton />
+					<UserMenuButton userRole={userRole} sessionData={sessionData} />
 				</div>
 			</div>
 

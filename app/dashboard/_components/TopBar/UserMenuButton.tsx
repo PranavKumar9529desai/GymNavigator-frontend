@@ -6,6 +6,8 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { type FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Rolestype, GymInfo } from '@/types/next-auth';
+import UserAvatarImage from "../../_assests/user-avtar.jpg"
 interface MenuItem {
 	label: string;
 	icon: React.ReactNode;
@@ -13,7 +15,22 @@ interface MenuItem {
 	description?: string;
 }
 
-const UserMenuButton: FC = () => {
+interface UserSession {
+	user: {
+		name: string;
+		email: string;
+		id: string;
+	};
+	role: Rolestype;
+	gym?: GymInfo;
+}
+
+interface UserMenuButtonProps {
+	userRole?: Rolestype;
+	sessionData?: UserSession;
+}
+
+const UserMenuButton = ({ userRole: _userRole, sessionData }: UserMenuButtonProps) => {
 	const [showMenu, setShowMenu] = useState(false);
 	const Router = useRouter();
 
@@ -30,9 +47,10 @@ const UserMenuButton: FC = () => {
 			label: 'Profile',
 			description: 'View and edit your details',
 			icon: <User className="h-4 w-4" />,
-			onClick: () => console.log('Profile clicked'),
+			onClick: () => Router.push(`/profile/${_userRole}`),
 		},
 		{
+
 			label: 'Settings',
 			description: 'App preferences and configuration',
 			icon: <Settings className="h-4 w-4" />,
@@ -55,11 +73,11 @@ const UserMenuButton: FC = () => {
 			>
 				<div className="relative h-full w-full">
 					<Image
-						src="/apple-touch-icon.png"
+						src={UserAvatarImage} // Use the imported user avatar image
 						alt="User avatar"
 						fill
 						sizes="32px"
-						className="object-cover"
+						className="object-cover rounded-full"
 					/>
 				</div>
 			</button>
@@ -95,12 +113,26 @@ const UserMenuButton: FC = () => {
 											className="object-cover"
 										/>
 									</div>
-									{/* Todo  add the real Profile of the user */}
-									<div>
-										<h3 className="font-medium text-sm">John Doe</h3>
-										<p className="text-xs text-gray-500">
-											john.doe@example.com
-										</p>
+									<div className="flex-1">
+										<h3 className="font-medium text-sm">
+											{sessionData?.user?.name || 'Guest User'}
+										</h3>
+										{/* <p className="text-xs text-gray-500">
+											{sessionData?.user?.email || 'No email available'}
+										</p> */}
+										{/* {sessionData?.gym && (
+											<p className="text-xs text-blue-600 font-medium mt-0.5">
+												{sessionData.gym.gym_name}
+											</p>
+										)} */}
+										{sessionData?.role && (
+											<div className="flex items-center ">
+												<span className="h-1.5 w-1.5 rounded-full bg-green-500 mr-1" />
+												<span className="text-xs text-gray-600 capitalize">
+													{sessionData.role}
+												</span>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>
