@@ -43,7 +43,7 @@ export function PricingPlans({ pricingPlans }: PricingPlansProps) {
               
               <div>
                 <span className="text-3xl font-bold text-slate-800">₹{plan.price}</span>
-                <span className="text-slate-600">/{plan.duration}</span>
+                <span className="text-slate-600">{plan.duration}</span>
               </div>
               
               {plan.description && (
