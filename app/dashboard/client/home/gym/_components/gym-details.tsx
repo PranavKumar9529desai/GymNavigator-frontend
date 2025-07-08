@@ -75,7 +75,7 @@ export function GymDetails({ data }: GymDetailsProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
-      <div className="max-w-4xl mx-auto space-y-6 p-2 sm:p-4">
+      <div className="max-w-4xl mx-auto space-y-12 p-4 sm:p-6 pt-16">
         {/* Gym Header */}
         <div className="space-y-4">
           <div className="flex items-start gap-4">
@@ -346,57 +346,55 @@ export function GymDetails({ data }: GymDetailsProps) {
 
       {/* Pricing Plans */}
       {gym.pricingPlans.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
               <DollarSign className="h-3 w-3 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-slate-800">Available Plans</h2>
           </div>
           
-          <div className="border-l-2 border-blue-200 pl-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {gym.pricingPlans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={cn(
-                    'p-3 rounded border-l-2',
-                    plan.isFeatured 
-                      ? 'border-l-blue-400 bg-blue-50/50' 
-                      : 'border-l-slate-200 hover:border-l-blue-200'
-                  )}
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-slate-800">{plan.name}</h3>
-                      {plan.isFeatured && (
-                        <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">Featured</span>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <span className="text-2xl font-bold text-slate-800">₹{plan.price}</span>
-                      <span className="text-slate-600 text-sm">/{plan.duration}</span>
-                    </div>
-                    
-                    {plan.description && (
-                      <p className="text-xs text-slate-600 leading-relaxed">{plan.description}</p>
-                    )}
-                    
-                    {plan.features.length > 0 && (
-                      <ul className="space-y-1">
-                        {plan.features.map((feature, index) => (
-                          <li key={index} className="text-xs flex items-center gap-2">
-                            <Zap className="h-2 w-2 text-emerald-500" />
-                            <span className="text-slate-700">{feature.description}</span>
-                          </li>
-                        ))}
-                      </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {gym.pricingPlans.map((plan) => (
+              <div
+                key={plan.id}
+                className={cn(
+                  'p-6 rounded-xl border transition-all hover:shadow-lg',
+                  plan.isFeatured 
+                    ? 'border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md' 
+                    : 'bg-white border-blue-100 hover:border-blue-200'
+                )}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-slate-800">{plan.name}</h3>
+                    {plan.isFeatured && (
+                      <span className="bg-blue-100 text-blue-700 border border-blue-200 px-2 py-1 rounded text-xs font-medium">Featured</span>
                     )}
                   </div>
+                  
+                  <div>
+                    <span className="text-3xl font-bold text-slate-800">₹{plan.price}</span>
+                    <span className="text-slate-600">/{plan.duration}</span>
+                  </div>
+                  
+                  {plan.description && (
+                    <p className="text-sm text-slate-600 leading-relaxed">{plan.description}</p>
+                  )}
+                  
+                  {plan.features.length > 0 && (
+                    <ul className="space-y-2">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="text-sm flex items-center gap-2">
+                          <Zap className="h-3 w-3 text-emerald-500" />
+                          <span className="text-slate-700">{feature.description}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
