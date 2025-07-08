@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, UserX, Heart, Users } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, UserX, Heart, Users, ChevronLeft, UserCheck } from "lucide-react"
 import { UserHeader } from "./user-header"
 import { OverviewTab } from "./overview-tab"
 import { HealthTab } from "./health-tab"
@@ -56,23 +58,68 @@ function ErrorState({ error }: { error?: string }) {
 
 export function UserProfileClient({ profileData, userId }: UserProfileClientProps) {
   const [activeTab, setActiveTab] = useState("overview")
+  const router = useRouter()
 
   // If there's an error and no data at all
   if (profileData.error && !profileData.userData) {
     return (
-      <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
-        <ErrorState error={profileData.error} />
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="sticky top-0 z-10 bg-white border-b border-gray-200">
+          <div className="flex items-center h-16 px-4 gap-3">
+            <Button
+              onClick={() => router.back()}
+              variant="ghost"
+              size="icon"
+              aria-label="Go back"
+              className="min-h-[44px] min-w-[44px] focus-visible:ring-2 focus-visible:ring-offset-2"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <UserCheck className="h-6 w-6 text-blue-600" />
+            <h1 className="text-lg font-semibold truncate">User Profile</h1>
+          </div>
+        </header>
+        
+        <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+          <ErrorState error={profileData.error} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
-      {/* Header Section */}
-      <UserHeader 
-        userData={profileData.userData!} 
-        monthlyVisits={profileData.overview?.stats.monthlyVisits || 0} 
-      />
+    <div className="min-h-screen bg-gray-50">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-10 bg-white border-b border-gray-200">
+        <div className="flex items-center h-16 px-4 gap-3">
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            size="icon"
+            aria-label="Go back"
+            className="min-h-[44px] min-w-[44px] focus-visible:ring-2 focus-visible:ring-offset-2"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <UserCheck className="h-6 w-6 text-blue-600" />
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold truncate" title={profileData.userData?.name}>
+              {profileData.userData?.name || 'User Profile'}
+            </h1>
+            <p className="text-sm text-gray-500 truncate">
+              {profileData.userData?.membershipType} Member
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+        {/* User Header Card */}
+        <UserHeader 
+          userData={profileData.userData!} 
+          monthlyVisits={profileData.overview?.stats.monthlyVisits || 0} 
+        />
 
       {/* Show error banner if there's an error but some data exists */}
       {profileData.error && (
@@ -170,6 +217,7 @@ export function UserProfileClient({ profileData, userId }: UserProfileClientProp
           )}
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   )
 }

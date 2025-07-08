@@ -25,7 +25,7 @@ export default async function UserProfilePage({ params }: PageProps) {
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
       {/* Breadcrumb Navigation */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Breadcrumb>
           <BreadcrumbList className="flex items-center space-x-1 text-sm">
             <BreadcrumbItem>
@@ -54,7 +54,7 @@ export default async function UserProfilePage({ params }: PageProps) {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-      </div>
+      </div> */}
 
       <UserProfileClient profileData={profileData} userId={id} />
     </div>

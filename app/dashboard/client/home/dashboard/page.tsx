@@ -1,10 +1,23 @@
-export default function DashboardPage() {
-	return (
-		<div className="py-8">
-			<h1 className="text-3xl font-bold">Dashboard</h1>
-			<div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{/* Add dashboard metrics and stats here */}
-			</div>
-		</div>
-	);
+import { getDashboardOverview } from './_actions/get-dashboard-overview';
+import { DashboardOverview } from './_components/dashboard-overview';
+
+export default async function DashboardPage() {
+  const data = await getDashboardOverview();
+  
+  if (!data) {
+    return (
+      <div className="p-4">
+        <div className="text-center py-8">
+          <h2 className="text-xl font-semibold text-muted-foreground">
+            Unable to load dashboard data
+          </h2>
+          <p className="text-muted-foreground">
+            Please try refreshing the page or contact support if the issue persists.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  
+  return <DashboardOverview data={data} />;
 }
