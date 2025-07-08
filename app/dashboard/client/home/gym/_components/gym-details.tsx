@@ -161,44 +161,43 @@ export function GymDetails({ data }: GymDetailsProps) {
 
         {/* Trainer Information */}
         {trainer && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-lg shadow-blue-100/20 p-6 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                <User className="h-3 w-3 text-white" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-800">My Trainer</h2>
+              <h2 className="text-lg font-semibold text-slate-800">My Trainer</h2>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-6">
-              <div className="flex items-start gap-6">
+            <div className="border-l-2 border-blue-200 pl-4">
+              <div className="flex items-start gap-4">
                 {trainer.image ? (
                   <div className="relative">
                     <Image
                       src={trainer.image}
                       alt={trainer.name}
-                      width={80}
-                      height={80}
-                      className="rounded-full border-3 border-white shadow-lg"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
                     />
-                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-300 to-indigo-300 rounded-full blur opacity-30" />
                   </div>
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-200 to-indigo-200 flex items-center justify-center shadow-lg">
-                    <User className="h-10 w-10 text-blue-600" />
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <User className="h-6 w-6 text-blue-600" />
                   </div>
                 )}
                 
-                <div className="flex-1 space-y-4">
+                <div className="flex-1 space-y-2">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-800">{trainer.name}</h3>
+                    <h3 className="text-lg font-bold text-slate-800">{trainer.name}</h3>
                     {trainer.rating && (
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-1 mt-1">
                         <div className="flex items-center">
                           {[...Array(5)].map((_, i) => (
                             <Star 
                               key={i} 
                               className={cn(
-                                "h-4 w-4",
+                                "h-3 w-3",
                                 i < Math.floor(trainer.rating!) 
                                   ? "fill-amber-400 text-amber-400" 
                                   : "fill-gray-200 text-gray-200"
@@ -206,7 +205,7 @@ export function GymDetails({ data }: GymDetailsProps) {
                             />
                           ))}
                         </div>
-                        <span className="text-sm font-medium text-slate-600">
+                        <span className="text-xs text-slate-600">
                           {trainer.rating}/5
                         </span>
                       </div>
@@ -215,35 +214,35 @@ export function GymDetails({ data }: GymDetailsProps) {
                   
                   {trainer.specializations && (
                     <div>
-                      <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">Specializations</p>
-                      <p className="text-slate-700 mt-1">{trainer.specializations}</p>
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Specializations</p>
+                      <p className="text-sm text-slate-700">{trainer.specializations}</p>
                     </div>
                   )}
                   
                   {trainer.description && (
                     <div>
-                      <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">About</p>
-                      <p className="text-slate-700 mt-1 leading-relaxed">{trainer.description}</p>
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">About</p>
+                      <p className="text-sm text-slate-700 leading-relaxed">{trainer.description}</p>
                     </div>
                   )}
                   
-                  <div className="flex flex-wrap gap-3 pt-2">
+                  <div className="flex flex-wrap gap-2 pt-1">
                     {trainer.contactNumber && (
                       <Button 
                         variant="outline" 
                         size="sm"
-                        className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                        className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
                       >
-                        <Phone className="h-4 w-4 mr-2" />
+                        <Phone className="h-3 w-3 mr-1" />
                         Call
                       </Button>
                     )}
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                      className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
                     >
-                      <Mail className="h-4 w-4 mr-2" />
+                      <Mail className="h-3 w-3 mr-1" />
                       Email
                     </Button>
                   </div>
@@ -254,27 +253,27 @@ export function GymDetails({ data }: GymDetailsProps) {
         )}
 
       {/* Attendance History */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-lg shadow-blue-100/20 p-6 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-            <Calendar className="h-4 w-4 text-white" />
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+            <Calendar className="h-3 w-3 text-white" />
           </div>
-          <h2 className="text-xl font-semibold text-slate-800">Attendance History</h2>
-          <Badge variant="outline" className="ml-auto border-blue-200 text-blue-700">
-            {attendanceStats.percentage}% attendance rate
-          </Badge>
+          <h2 className="text-lg font-semibold text-slate-800">Attendance History</h2>
+          <span className="ml-auto text-xs text-blue-700 bg-blue-50 px-2 py-1 rounded">
+            {attendanceStats.percentage}% attendance
+          </span>
         </div>
         
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 p-5">
-          <div className="grid grid-cols-7 gap-2">
+        <div className="border-l-2 border-blue-200 pl-4">
+          <div className="grid grid-cols-7 gap-1">
             {attendanceHistory.slice(0, 28).map((record, index) => (
               <div
                 key={index}
                 className={cn(
-                  'aspect-square rounded-lg border-2 flex items-center justify-center text-xs font-medium',
+                  'aspect-square rounded text-xs font-medium flex items-center justify-center',
                   record.attended
-                    ? 'bg-emerald-100 border-emerald-300 text-emerald-800'
-                    : 'bg-red-100 border-red-300 text-red-800'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-red-100 text-red-800'
                 )}
                 title={`${formatDate(record.date)} - ${record.attended ? 'Present' : 'Absent'}`}
               >
@@ -347,55 +346,57 @@ export function GymDetails({ data }: GymDetailsProps) {
 
       {/* Pricing Plans */}
       {gym.pricingPlans.length > 0 && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-lg shadow-blue-100/20 p-6 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-              <DollarSign className="h-4 w-4 text-white" />
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+              <DollarSign className="h-3 w-3 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-slate-800">Available Plans</h2>
+            <h2 className="text-lg font-semibold text-slate-800">Available Plans</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {gym.pricingPlans.map((plan) => (
-              <div
-                key={plan.id}
-                className={cn(
-                  'p-6 rounded-xl border transition-all hover:shadow-lg',
-                  plan.isFeatured 
-                    ? 'border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md' 
-                    : 'bg-white border-blue-100 hover:border-blue-200'
-                )}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-slate-800">{plan.name}</h3>
-                    {plan.isFeatured && (
-                      <Badge className="bg-blue-100 text-blue-700 border-blue-200">Featured</Badge>
+          <div className="border-l-2 border-blue-200 pl-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {gym.pricingPlans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className={cn(
+                    'p-3 rounded border-l-2',
+                    plan.isFeatured 
+                      ? 'border-l-blue-400 bg-blue-50/50' 
+                      : 'border-l-slate-200 hover:border-l-blue-200'
+                  )}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-slate-800">{plan.name}</h3>
+                      {plan.isFeatured && (
+                        <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">Featured</span>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <span className="text-2xl font-bold text-slate-800">₹{plan.price}</span>
+                      <span className="text-slate-600 text-sm">/{plan.duration}</span>
+                    </div>
+                    
+                    {plan.description && (
+                      <p className="text-xs text-slate-600 leading-relaxed">{plan.description}</p>
+                    )}
+                    
+                    {plan.features.length > 0 && (
+                      <ul className="space-y-1">
+                        {plan.features.map((feature, index) => (
+                          <li key={index} className="text-xs flex items-center gap-2">
+                            <Zap className="h-2 w-2 text-emerald-500" />
+                            <span className="text-slate-700">{feature.description}</span>
+                          </li>
+                        ))}
+                      </ul>
                     )}
                   </div>
-                  
-                  <div>
-                    <span className="text-3xl font-bold text-slate-800">₹{plan.price}</span>
-                    <span className="text-slate-600">/{plan.duration}</span>
-                  </div>
-                  
-                  {plan.description && (
-                    <p className="text-sm text-slate-600 leading-relaxed">{plan.description}</p>
-                  )}
-                  
-                  {plan.features.length > 0 && (
-                    <ul className="space-y-2">
-                      {plan.features.map((feature, index) => (
-                        <li key={index} className="text-sm flex items-center gap-2">
-                          <Zap className="h-3 w-3 text-emerald-500" />
-                          <span className="text-slate-700">{feature.description}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
