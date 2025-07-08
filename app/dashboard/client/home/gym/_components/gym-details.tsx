@@ -75,7 +75,7 @@ export function GymDetails({ data }: GymDetailsProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
-      <div className="max-w-4xl mx-auto space-y-12 p-4 sm:p-6 pt-16">
+      <div className="mx-auto space-y-12 p-4 sm:p-6 pt-16">
         {/* Gym Header */}
         <div className="space-y-4">
           <div className="flex items-start gap-4">
@@ -120,137 +120,159 @@ export function GymDetails({ data }: GymDetailsProps) {
           </div>
         </div>
 
-        {/* Membership Information */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-              <Calendar className="h-3 w-3 text-white" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-800">My Membership</h2>
-          </div>
-          
-          <div className="border-l-2 border-blue-200 pl-4">
-            {membership.validPeriod ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Start Date</p>
-                  <p className="text-sm font-bold text-slate-800 mt-1">{formatDate(membership.validPeriod.startDate)}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">End Date</p>
-                  <p className="text-sm font-bold text-slate-800 mt-1">{formatDate(membership.validPeriod.endDate)}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Shift</p>
-                  <div className="mt-1">
-                    <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium capitalize">
-                      {membership.validPeriod.shift}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="py-4">
-                <Clock className="h-8 w-8 text-blue-300 mb-2" />
-                <p className="text-slate-600 font-medium">No active membership found</p>
-                <p className="text-xs text-slate-500 mt-1">Contact your gym to activate your membership</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Trainer Information */}
-        {trainer && (
+        {/* Membership & Trainer Information - Desktop: Side by side, Mobile: Stacked */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Membership Information */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-                <User className="h-3 w-3 text-white" />
+                <Calendar className="h-3 w-3 text-white" />
               </div>
-              <h2 className="text-lg font-semibold text-slate-800">My Trainer</h2>
+              <h2 className="text-lg font-semibold text-slate-800">My Membership</h2>
             </div>
             
             <div className="border-l-2 border-blue-200 pl-4">
-              <div className="flex items-start gap-4">
-                {trainer.image ? (
-                  <div className="relative">
-                    <Image
-                      src={trainer.image}
-                      alt={trainer.name}
-                      width={50}
-                      height={50}
-                      className="rounded-full"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                    <User className="h-6 w-6 text-blue-600" />
-                  </div>
-                )}
-                
-                <div className="flex-1 space-y-2">
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-800">{trainer.name}</h3>
-                    {trainer.rating && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={cn(
-                                "h-3 w-3",
-                                i < Math.floor(trainer.rating!) 
-                                  ? "fill-amber-400 text-amber-400" 
-                                  : "fill-gray-200 text-gray-200"
-                              )} 
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-slate-600">
-                          {trainer.rating}/5
+              {membership.validPeriod ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div>
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Start Date</p>
+                      <p className="text-sm font-bold text-slate-800 mt-1">{formatDate(membership.validPeriod.startDate)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">End Date</p>
+                      <p className="text-sm font-bold text-slate-800 mt-1">{formatDate(membership.validPeriod.endDate)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Shift</p>
+                      <div className="mt-1">
+                        <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium capitalize">
+                          {membership.validPeriod.shift}
                         </span>
                       </div>
-                    )}
+                    </div>
                   </div>
-                  
-                  {trainer.specializations && (
-                    <div>
-                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Specializations</p>
-                      <p className="text-sm text-slate-700">{trainer.specializations}</p>
+                </div>
+              ) : (
+                <div className="py-4">
+                  <Clock className="h-8 w-8 text-blue-300 mb-2" />
+                  <p className="text-slate-600 font-medium">No active membership found</p>
+                  <p className="text-xs text-slate-500 mt-1">Contact your gym to activate your membership</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Trainer Information */}
+          {trainer ? (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                  <User className="h-3 w-3 text-white" />
+                </div>
+                <h2 className="text-lg font-semibold text-slate-800">My Trainer</h2>
+              </div>
+              
+              <div className="border-l-2 border-blue-200 pl-4">
+                <div className="flex items-start gap-4">
+                  {trainer.image ? (
+                    <div className="relative">
+                      <Image
+                        src={trainer.image}
+                        alt={trainer.name}
+                        width={50}
+                        height={50}
+                        className="rounded-full"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                      <User className="h-6 w-6 text-blue-600" />
                     </div>
                   )}
                   
-                  {trainer.description && (
+                  <div className="flex-1 space-y-2">
                     <div>
-                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">About</p>
-                      <p className="text-sm text-slate-700 leading-relaxed">{trainer.description}</p>
+                      <h3 className="text-lg font-bold text-slate-800">{trainer.name}</h3>
+                      {trainer.rating && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star 
+                                key={i} 
+                                className={cn(
+                                  "h-3 w-3",
+                                  i < Math.floor(trainer.rating!) 
+                                    ? "fill-amber-400 text-amber-400" 
+                                    : "fill-gray-200 text-gray-200"
+                                )} 
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-slate-600">
+                            {trainer.rating}/5
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {trainer.contactNumber && (
+                    
+                    {trainer.specializations && (
+                      <div>
+                        <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Specializations</p>
+                        <p className="text-sm text-slate-700">{trainer.specializations}</p>
+                      </div>
+                    )}
+                    
+                    {trainer.description && (
+                      <div>
+                        <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">About</p>
+                        <p className="text-sm text-slate-700 leading-relaxed">{trainer.description}</p>
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {trainer.contactNumber && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
+                        >
+                          <Phone className="h-3 w-3 mr-1" />
+                          Call
+                        </Button>
+                      )}
                       <Button 
                         variant="outline" 
                         size="sm"
                         className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
                       >
-                        <Phone className="h-3 w-3 mr-1" />
-                        Call
+                        <Mail className="h-3 w-3 mr-1" />
+                        Email
                       </Button>
-                    )}
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Mail className="h-3 w-3 mr-1" />
-                      Email
-                    </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                  <User className="h-3 w-3 text-white" />
+                </div>
+                <h2 className="text-lg font-semibold text-slate-800">My Trainer</h2>
+              </div>
+              
+              <div className="border-l-2 border-blue-200 pl-4">
+                <div className="py-4">
+                  <User className="h-8 w-8 text-blue-300 mb-2" />
+                  <p className="text-slate-600 font-medium">No trainer assigned</p>
+                  <p className="text-xs text-slate-500 mt-1">Contact your gym to get a trainer assigned</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
       {/* Attendance History */}
       <div className="space-y-3">
