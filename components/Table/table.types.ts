@@ -29,7 +29,7 @@ export interface DataTableProps<TData extends BaseData> {
 	dropdownConfig?: ColumnDropdownConfig;
 }
 
-export interface DataCardProps<TData> {
+export interface DataCardProps<TData extends BaseData> {
 	data: TData[];
 	renderCard: (item: TData) => React.ReactNode;
 	statusColors?: Record<string, string>;
