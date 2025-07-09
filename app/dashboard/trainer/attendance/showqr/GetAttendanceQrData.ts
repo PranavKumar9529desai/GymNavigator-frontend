@@ -20,6 +20,6 @@ export const GetAttendanceQrData = async () => {
 		};
 	} catch (error) {
 		console.log('Error:', error);
-		return null;
+		return undefined;
 	}
 };
