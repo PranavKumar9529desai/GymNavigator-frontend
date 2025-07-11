@@ -76,12 +76,21 @@ export function MoreActions({
     if (item.tooltip) {
       return (
         <TooltipProvider key={item.id}>
-          <Tooltip>
+          <Tooltip delayDuration={300}>
             <TooltipTrigger asChild>
               <div>{MenuItem}</div>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-slate-900 text-white text-xs">
-              {item.tooltip}
+            <TooltipContent 
+              side="right" 
+              className="bg-slate-800 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-slate-700 max-w-xs"
+              sideOffset={8}
+            >
+              <div className="flex items-center gap-2">
+                {item.disabled && (
+                  <div className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0" />
+                )}
+                <span className="font-medium">{item.tooltip}</span>
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

@@ -3,7 +3,7 @@ import type { AssignedUser } from '@/app/dashboard/trainer/diet/dietassigneduser
 import type {
 	HealthProfile,
 	Selection,
-} from '@/app/dashboard/trainer/diet/assigndietplanwithai2/_actions/get-healthprofile-by-id';
+} from '@/app/dashboard/trainer/diet/assigndietplanwithai/_actions/get-healthprofile-by-id';
 
 /**
  * Generate a diet plan for a user based on their profile and trainer preferences

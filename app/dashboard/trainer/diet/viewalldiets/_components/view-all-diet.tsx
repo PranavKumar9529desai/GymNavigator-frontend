@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Search,
   Plus,
@@ -37,6 +38,7 @@ interface DietManagementProps {
 }
 
 export default function DietManagement({ dietPlans }: DietManagementProps) {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("all")
   const [viewMode, setViewMode] = useState("grid")
@@ -52,208 +54,176 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
 
   const statuses = ["all", "active", "draft", "archived"]
 
+  const handleCreateDiet = () => {
+    router.push('/dashboard/trainer/diet/createdietplan')
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-700 border-green-200"
       case "draft":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-amber-100 text-amber-700 border-amber-200"
       case "archived":
-        return "bg-gray-100 text-gray-800"
+        return "bg-slate-100 text-slate-700 border-slate-200"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-slate-100 text-slate-700 border-slate-200"
     }
   }
 
   const MacroBar = ({ label, percentage, color }: { label: string; percentage: number; color: string }) => (
     <div className="space-y-1">
       <div className="flex justify-between text-xs">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="font-medium">{percentage}%</span>
+        <span className="text-slate-600">{label}</span>
+        <span className="font-medium text-slate-800">{percentage}%</span>
       </div>
-      <Progress value={percentage} className="h-2" />
+      <Progress 
+        value={percentage} 
+        className="h-2 bg-slate-100" 
+      />
     </div>
   )
 
   const DietCard = ({ diet }: { diet: ViewDietPlan }) => (
-    <Card className="group hover:shadow-lg transition-all duration-200 border-l-4 border-l-primary/20">
-      <CardHeader className="pb-3">
+    <Card className="group hover:shadow-md transition-all duration-200 border border-slate-100 hover:border-blue-200 bg-white">
+      <CardHeader className="pb-3 p-4">
         <div className="flex items-start justify-between">
-          <div className="space-y-1 flex-1">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-lg leading-tight">{diet.name}</CardTitle>
+          <div className="space-y-2 flex-1">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                <Target className="h-4 w-4 text-white" />
+              </div>
+              <CardTitle className="text-lg leading-tight text-slate-800">{diet.name}</CardTitle>
             </div>
-            <Badge className={getStatusColor(diet.status)} variant="secondary">
-              {diet.status}
+            <Badge 
+              className={`text-xs ${getStatusColor(diet.status)}`} 
+              variant="secondary"
+            >
+              {diet.status.toUpperCase()}
             </Badge>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>
-                <Eye className="h-4 w-4 mr-2" />
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Copy className="h-4 w-4 mr-2" />
-                Duplicate
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Download className="h-4 w-4 mr-2" />
-                Export PDF
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem disabled={!diet.hasAccess} className={!diet.hasAccess ? "opacity-50" : ""}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Diet
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={!diet.hasAccess}
-                className={`${!diet.hasAccess ? "opacity-50" : ""} text-red-600 focus:text-red-600`}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete Diet
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground line-clamp-2">{diet.description}</p>
+      <CardContent className="space-y-4 p-4 pt-0">
+        <p className="text-sm text-slate-600 line-clamp-2">{diet.description}</p>
 
-        <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1">
-            <Target className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{diet.totalCalories}</span>
-            <span className="text-muted-foreground">kcal</span>
+        <div className="grid grid-cols-3 gap-3 text-sm">
+          <div className="flex flex-col items-center p-2 bg-blue-50/50 rounded-lg">
+            <Target className="h-4 w-4 text-blue-600 mb-1" />
+            <span className="font-medium text-slate-800">{diet.totalCalories}</span>
+            <span className="text-xs text-slate-500">kcal</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{diet.assignedMembers}</span>
-            <span className="text-muted-foreground">members</span>
+          <div className="flex flex-col items-center p-2 bg-green-50/50 rounded-lg">
+            <Users className="h-4 w-4 text-green-600 mb-1" />
+            <span className="font-medium text-slate-800">{diet.assignedMembers}</span>
+            <span className="text-xs text-slate-500">members</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{diet.mealsCount}</span>
-            <span className="text-muted-foreground">meals</span>
+          <div className="flex flex-col items-center p-2 bg-purple-50/50 rounded-lg">
+            <Calendar className="h-4 w-4 text-purple-600 mb-1" />
+            <span className="font-medium text-slate-800">{diet.mealsCount}</span>
+            <span className="text-xs text-slate-500">meals</span>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium">Macronutrients</h4>
-          <div className="grid grid-cols-3 gap-3">
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-slate-700">Macronutrients</h4>
+          <div className="space-y-2">
             <MacroBar label="Protein" percentage={diet.macros.protein} color="blue" />
             <MacroBar label="Carbs" percentage={diet.macros.carbs} color="green" />
             <MacroBar label="Fats" percentage={diet.macros.fats} color="orange" />
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-2 border-t">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarImage src={diet.creator.avatar || "/placeholder.svg"} />
-              <AvatarFallback>
+              <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
                 {diet.creator.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")}
               </AvatarFallback>
             </Avatar>
-            <span className="text-xs text-muted-foreground">{diet.creator.name}</span>
+            <span className="text-xs text-slate-600">{diet.creator.name}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{diet.createdDate}</span>
+            <Calendar className="h-3 w-3 text-slate-400" />
+            <span className="text-xs text-slate-500">{diet.createdDate}</span>
           </div>
-        </div>
-
-        <div className="flex gap-2 pt-2">
-          <Button size="sm" variant="outline" disabled={!diet.hasAccess} className="flex-1 bg-transparent">
-            <Edit className="h-3 w-3 mr-1" />
-            Edit
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={!diet.hasAccess}
-            className="flex-1 text-red-600 hover:text-red-700 bg-transparent"
-          >
-            <Trash2 className="h-3 w-3 mr-1" />
-            Delete
-          </Button>
         </div>
       </CardContent>
     </Card>
   )
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="mx-auto p-2 sm:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Diet Management</h1>
-          <p className="text-muted-foreground">Manage and monitor all diet plans in your gym</p>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold text-slate-800">Diet Management</h1>
+          <p className="text-slate-600">Manage and monitor all diet plans in your gym</p>
         </div>
-        <Button>
+        <Button 
+          onClick={handleCreateDiet}
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-sm"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Create New Diet
         </Button>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Target className="h-4 w-4 text-blue-600" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <Card className="border-blue-100 hover:border-blue-200 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                <Target className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Diets</p>
-                <p className="text-2xl font-bold">{dietPlans.length}</p>
+                <p className="text-sm text-slate-600">Total Diets</p>
+                <p className="text-xl font-bold text-slate-800">{dietPlans.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Users className="h-4 w-4 text-green-600" />
+        <Card className="border-green-100 hover:border-green-200 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center">
+                <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Active Members</p>
-                <p className="text-2xl font-bold">{dietPlans.reduce((sum, diet) => sum + diet.assignedMembers, 0)}</p>
+                <p className="text-sm text-slate-600">Active Members</p>
+                <p className="text-xl font-bold text-slate-800">{dietPlans.reduce((sum, diet) => sum + diet.assignedMembers, 0)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Calendar className="h-4 w-4 text-orange-600" />
+        <Card className="border-purple-100 hover:border-purple-200 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-indigo-400 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Meals</p>
-                <p className="text-2xl font-bold">{dietPlans.reduce((sum, diet) => sum + diet.mealsCount, 0)}</p>
+                <p className="text-sm text-slate-600">Total Meals</p>
+                <p className="text-xl font-bold text-slate-800">{dietPlans.reduce((sum, diet) => sum + diet.mealsCount, 0)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Target className="h-4 w-4 text-purple-600" />
+        <Card className="border-amber-100 hover:border-amber-200 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Avg Calories</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm text-slate-600">Avg Calories</p>
+                <p className="text-xl font-bold text-slate-800">
                   {dietPlans.length > 0 ? Math.round(dietPlans.reduce((sum, diet) => sum + diet.totalCalories, 0) / dietPlans.length) : 0}
                 </p>
               </div>
@@ -263,20 +233,20 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
       </div>
 
       {/* Filters and Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <Card className="border-slate-100">
+        <CardContent className="p-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 placeholder="Search diets by name or description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 border-slate-200 focus:border-blue-400 focus:ring-blue-400"
               />
             </div>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-full sm:w-32">
+              <SelectTrigger className="w-full sm:w-36 border-slate-200 focus:border-blue-400 focus:ring-blue-400">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -292,19 +262,24 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
       </Card>
 
       {/* Diet Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {filteredDiets.map((diet) => (
           <DietCard key={diet.id} diet={diet} />
         ))}
       </div>
 
       {filteredDiets.length === 0 && (
-        <Card>
+        <Card className="border-slate-100">
           <CardContent className="p-12 text-center">
-            <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No diets found</h3>
-            <p className="text-muted-foreground mb-4">Try adjusting your search criteria or create a new diet plan.</p>
-            <Button>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center mx-auto mb-4">
+              <Target className="h-8 w-8 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No diets found</h3>
+            <p className="text-slate-600 mb-6">Try adjusting your search criteria or create a new diet plan.</p>
+            <Button 
+              onClick={handleCreateDiet}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Create New Diet
             </Button>

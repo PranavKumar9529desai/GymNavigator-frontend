@@ -137,6 +137,12 @@ export const TrainerDashboardMenuItems: MenuItem[] = [
 				link: '/dashboard/trainer/diet/dietassignedusers',
 				iconName: 'UserPlus',
 			},
+			{
+				name: 'View All Diet Plans',
+				label: 'viewalldiets',
+				link: '/dashboard/trainer/diet/viewalldiets',
+				iconName: 'UserPlus',
+			},
 		],
 	},
 	{
