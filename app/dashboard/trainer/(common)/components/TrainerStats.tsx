@@ -109,9 +109,9 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 						<div className="pb-3">
 							<div className="space-y-2">
 								{recentActivities && recentActivities.length > 0 ? (
-									recentActivities.map((activity) => (
+									recentActivities.map((activity , index) => (
 										<div
-											key={activity.name}
+											key={index}
 											className="flex items-center gap-3 py-2 px-6 hover:bg-blue-50/30 rounded transition-colors"
 										>
 											<Users className="w-4 h-4 text-blue-600" />

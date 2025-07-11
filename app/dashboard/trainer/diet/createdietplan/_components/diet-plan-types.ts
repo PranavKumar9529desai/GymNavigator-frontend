@@ -8,6 +8,8 @@ export interface MealInterface {
 	ingredients: string[];
 	instructions: string;
 	order: number;
+	scheduledDate?: Date;
+	scheduledTime?: string;
 }
 
 export interface DietPlanInterface {

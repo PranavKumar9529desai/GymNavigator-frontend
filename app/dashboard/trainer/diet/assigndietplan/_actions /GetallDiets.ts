@@ -26,7 +26,8 @@ export const getAllDietPlans = async () => {
 		const response = await trainerAxios.get('/diet/alldietplans');
 		console.log('response.data.dietPlans', response.data.dietPlans);
 		const data = response.data;
-
+		console.log('data from the getalldietplans', data);
+        
 		if (data.msg === 'success') {
 			return data.dietPlans as DietPlan[];
 		}

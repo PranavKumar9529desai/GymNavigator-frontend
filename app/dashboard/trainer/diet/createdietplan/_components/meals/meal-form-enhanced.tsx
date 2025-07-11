@@ -76,8 +76,6 @@ export default function MealForm({
 		setCurrentMeal((prev) => ({
 			...prev,
 			instructions: enhancedInstructions,
-			scheduledDate,
-			scheduledTime,
 		}));
 
 		// Call the original addMeal function
@@ -90,11 +88,13 @@ export default function MealForm({
 	};
 
 	return (
-		<div className="bg-white p-6 rounded-lg border border-gray-200 space-y-4">
-			<h3 className="text-lg font-semibold">Add New Meal</h3>
+		<div className="bg-white p-6 rounded-lg border border-slate-200 space-y-6">
+			<h3 className="text-lg font-semibold text-slate-800">Add New Meal</h3>
+			
+			{/* Basic Meal Info */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div>
-					<label className="block text-sm font-medium mb-2" htmlFor="meal-name">
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-name">
 						Meal Name
 					</label>
 					<Input
@@ -107,10 +107,11 @@ export default function MealForm({
 							}))
 						}
 						placeholder="e.g., Breakfast"
+						className="border-slate-200 focus:border-blue-400"
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2" htmlFor="meal-time">
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-time">
 						Time of Day
 					</label>
 					<Select
@@ -119,7 +120,7 @@ export default function MealForm({
 						}
 						value={currentMeal.time || undefined}
 					>
-						<SelectTrigger id="meal-time">
+						<SelectTrigger id="meal-time" className="border-slate-200 focus:border-blue-400">
 							<SelectValue placeholder="Select time" />
 						</SelectTrigger>
 						<SelectContent>
@@ -134,9 +135,9 @@ export default function MealForm({
 			</div>
 
 			{/* Meal Scheduling Section */}
-			<div className="space-y-4 border-t pt-4">
+			<div className="space-y-4 border-t pt-4 border-slate-100">
 				<div className="flex items-center justify-between">
-					<Label className="text-sm font-medium">
+					<Label className="text-sm font-medium text-slate-700">
 						Meal Scheduling (Optional)
 					</Label>
 					<Button
@@ -144,7 +145,7 @@ export default function MealForm({
 						variant="outline"
 						size="sm"
 						onClick={() => setShowScheduling(!showScheduling)}
-						className="flex items-center gap-2"
+						className="flex items-center gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
 					>
 						<Clock className="h-4 w-4" />
 						{showScheduling ? 'Hide Scheduling' : 'Set Schedule'}
@@ -154,14 +155,14 @@ export default function MealForm({
 				{showScheduling && (
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50/30 rounded-lg border border-blue-100">
 						<div className="space-y-2">
-							<Label className="text-sm font-medium">Select Date</Label>
+							<Label className="text-sm font-medium text-slate-700">Select Date</Label>
 							<Popover>
 								<PopoverTrigger asChild>
 									<Button
 										variant="outline"
 										className={cn(
-											"w-full justify-start text-left font-normal",
-											!scheduledDate && "text-slate-600"
+											"w-full justify-start text-left font-normal border-slate-200",
+											!scheduledDate && "text-slate-500"
 										)}
 									>
 										<CalendarIcon className="mr-2 h-4 w-4" />
@@ -187,7 +188,7 @@ export default function MealForm({
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="scheduled-time" className="text-sm font-medium">
+							<Label htmlFor="scheduled-time" className="text-sm font-medium text-slate-700">
 								Exact Time
 							</Label>
 							<Input
@@ -195,7 +196,7 @@ export default function MealForm({
 								type="time"
 								value={scheduledTime}
 								onChange={(e) => setScheduledTime(e.target.value)}
-								className="w-full"
+								className="w-full border-slate-200 focus:border-blue-400"
 							/>
 						</div>
 
@@ -230,10 +231,7 @@ export default function MealForm({
 			{/* Nutrition Info */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				<div>
-					<label
-						className="block text-sm font-medium mb-2"
-						htmlFor="meal-calories"
-					>
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-calories">
 						Calories
 					</label>
 					<Input
@@ -247,13 +245,11 @@ export default function MealForm({
 							}))
 						}
 						placeholder="Calories"
+						className="border-slate-200 focus:border-blue-400"
 					/>
 				</div>
 				<div>
-					<label
-						className="block text-sm font-medium mb-2"
-						htmlFor="meal-protein"
-					>
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-protein">
 						Protein (g)
 					</label>
 					<Input
@@ -267,13 +263,11 @@ export default function MealForm({
 							}))
 						}
 						placeholder="Protein in grams"
+						className="border-slate-200 focus:border-blue-400"
 					/>
 				</div>
 				<div>
-					<label
-						className="block text-sm font-medium mb-2"
-						htmlFor="meal-carbs"
-					>
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-carbs">
 						Carbs (g)
 					</label>
 					<Input
@@ -287,10 +281,11 @@ export default function MealForm({
 							}))
 						}
 						placeholder="Carbs in grams"
+						className="border-slate-200 focus:border-blue-400"
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2" htmlFor="meal-fats">
+					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-fats">
 						Fats (g)
 					</label>
 					<Input
@@ -304,16 +299,14 @@ export default function MealForm({
 							}))
 						}
 						placeholder="Fats in grams"
+						className="border-slate-200 focus:border-blue-400"
 					/>
 				</div>
 			</div>
 
 			{/* Ingredients Section */}
 			<div className="space-y-3">
-				<label
-					className="block text-sm font-medium mb-2"
-					htmlFor="meal-ingredients"
-				>
+				<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-ingredients">
 					Ingredients
 				</label>
 				<div className="flex gap-2">
@@ -323,8 +316,14 @@ export default function MealForm({
 						onChange={(e) => setNewIngredient(e.target.value)}
 						placeholder="Add ingredient"
 						onKeyDown={handleKeyDown}
+						className="border-slate-200 focus:border-blue-400"
 					/>
-					<Button onClick={addIngredient} type="button">
+					<Button 
+						onClick={addIngredient} 
+						type="button"
+						variant="outline"
+						className="border-blue-200 text-blue-600 hover:bg-blue-50"
+					>
 						Add
 					</Button>
 				</div>
@@ -332,14 +331,14 @@ export default function MealForm({
 					{currentMeal.ingredients.map((ingredient) => (
 						<div
 							key={`ingredient-${ingredient}`}
-							className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-2"
+							className="bg-blue-50 px-3 py-1 rounded-full flex items-center gap-2 border border-blue-100"
 						>
-							<span>{ingredient}</span>
+							<span className="text-slate-700">{ingredient}</span>
 							<button
 								onClick={() =>
 									removeIngredient(currentMeal.ingredients.indexOf(ingredient))
 								}
-								className="text-gray-500 hover:text-red-500"
+								className="text-slate-500 hover:text-red-500"
 								type="button"
 								aria-label={`Remove ${ingredient}`}
 							>
@@ -352,10 +351,7 @@ export default function MealForm({
 
 			{/* Instructions */}
 			<div>
-				<label
-					className="block text-sm font-medium mb-2"
-					htmlFor="meal-instructions"
-				>
+				<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-instructions">
 					Instructions
 				</label>
 				<Textarea
@@ -369,12 +365,13 @@ export default function MealForm({
 					}
 					placeholder="Add preparation instructions"
 					rows={3}
+					className="border-slate-200 focus:border-blue-400"
 				/>
 			</div>
 
 			<Button
 				onClick={handleAddMeal}
-				className="w-full"
+				className="w-full bg-blue-600 hover:bg-blue-700"
 				disabled={!currentMeal.name || !currentMeal.time}
 			>
 				Add Meal to Plan
