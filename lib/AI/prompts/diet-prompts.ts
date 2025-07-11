@@ -1,9 +1,9 @@
-import type { DietPlan } from '@/app/dashboard/trainer/diet/assigndietplan/_actions /GetallDiets';
-import type { AssignedUser } from '@/app/dashboard/trainer/diet/assigndietplan/_actions /GetassignedUserDietInfo';
+import type { DietPlan } from '@/app/dashboard/trainer/diet/dietassignedusers/_actions /GetallDiets';
+import type { AssignedUser } from '@/app/dashboard/trainer/diet/dietassignedusers/_actions /GetassignedUserDietInfo';
 import type {
 	HealthProfile,
 	Selection,
-} from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai2/_actions/get-healthprofile-by-id';
+} from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai2/_actions/get-healthprofile-by-id';
 
 /**
  * Generate a diet plan for a user based on their profile and trainer preferences

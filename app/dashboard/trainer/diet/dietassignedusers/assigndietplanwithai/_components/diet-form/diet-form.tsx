@@ -8,9 +8,9 @@ import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import type { DietPlan } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/get-customdiets';
-import { generateAIDiet } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/generate-ai-diet';
-import { useDietViewStore } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_store/diet-view-store';
+import type { DietPlan } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai/_actions/get-customdiets';
+import { generateAIDiet } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai/_actions/generate-ai-diet';
+import { useDietViewStore } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai/_store/diet-view-store';
 
 const DIET_PREFERENCES = [
 	'Vegetarian',

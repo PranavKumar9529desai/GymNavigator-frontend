@@ -11,7 +11,7 @@ import {
 	assignWeeklyDietPlan,
 } from '../../_actions/assign-diet-plan';
 import { generateDietWithAI2 } from '../../_actions/generate-diet-with-ai2';
-import { DietControls } from '../DietPlanner/DietControls'; // Adjust path if needed
+import { DietControls } from './DietControls'; // Adjust path if needed
 import { DietDisplay } from './DietDisplay/DietDisplay'; // Adjust path if needed
 
 // Define Meal interface to work with the diet plan data

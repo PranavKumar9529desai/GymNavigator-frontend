@@ -6,7 +6,7 @@ import { assignDietPlan } from '@/app/dashboard/trainer/diet/createdietplan/_act
 import {
 	saveDietPlan,
 	type DietPlanInput,
-} from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai/_actions/save-diet-plan';
+} from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai/_actions/save-diet-plan';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';

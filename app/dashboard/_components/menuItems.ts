@@ -134,7 +134,7 @@ export const TrainerDashboardMenuItems: MenuItem[] = [
 			{
 				name: 'Assign Diet plan',
 				label: 'assigndietplan',
-				link: '/dashboard/trainer/diet/assigndietplan',
+				link: '/dashboard/trainer/diet/dietassignedusers',
 				iconName: 'UserPlus',
 			},
 		],

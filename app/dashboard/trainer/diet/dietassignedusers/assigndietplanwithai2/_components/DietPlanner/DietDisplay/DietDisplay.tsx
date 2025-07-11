@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 // src/app/diet-page/components/DietPlanner/DietDisplay.tsx
-import { type Meal, MealCard } from '../DietDisplay/MealCard'; // Adjust path if needed
+import { type Meal, MealCard } from './MealCard'; // Adjust path if needed
 
 interface DietDisplayProps {
 	dietPlan: Meal[]; // Expects an array of meal objects

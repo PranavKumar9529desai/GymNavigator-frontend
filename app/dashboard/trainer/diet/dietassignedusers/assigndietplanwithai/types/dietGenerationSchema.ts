@@ -1,4 +1,4 @@
-import type { HealthProfile } from '@/app/dashboard/trainer/diet/assigndietplan/assigndietplanwithai2/_actions/get-healthprofile-by-id';
+import type { HealthProfile } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai2/_actions/get-healthprofile-by-id';
 import { z } from 'zod';
 
 export const dietGenerationSchema = z.object({
