@@ -82,7 +82,7 @@ const createColumns = (): ColumnDef<AssignedUser>[] => [
 	},
 ];
 
-export default function AssignDietToUsers({ users, dietPlans }: Props) {
+export default function DietAssignedUsers({ users, dietPlans }: Props) {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filteredUsers, setFilteredUsers] = useState(users);
 

@@ -1,7 +1,7 @@
 'use server';
 
-import { gethealthprofileById } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai2/_actions/get-healthprofile-by-id';
-import type { HealthProfile } from '@/app/dashboard/trainer/diet/dietassignedusers/assigndietplanwithai2/_actions/get-healthprofile-by-id';
+import { gethealthprofileById } from '@/app/dashboard/trainer/diet/assigndietplanwithai2/_actions/get-healthprofile-by-id';
+import type { HealthProfile } from '@/app/dashboard/trainer/diet/assigndietplanwithai2/_actions/get-healthprofile-by-id';
 import {
 	generateStructuredContent,
 	validateResponseWithSchema,
