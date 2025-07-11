@@ -30,99 +30,26 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Progress } from "@/components/ui/progress"
+import type { ViewDietPlan } from "../_action/get-all-view-diets"
 
-// Mock data for demonstration
-const mockDiets = [
-  {
-    id: 1,
-    name: "High Protein Muscle Building",
-    description: "Designed for muscle gain with emphasis on protein intake and balanced macronutrients.",
-    creator: { name: "Sarah Johnson", avatar: "/placeholder.svg?height=32&width=32", id: "trainer1" },
-    createdDate: "2024-01-15",
-    status: "active",
-    category: "Muscle Building",
-    totalCalories: 2800,
-    macros: { protein: 35, carbs: 40, fats: 25 },
-    assignedMembers: 12,
-    successRate: 87,
-    rating: 4.8,
-    tags: ["High Protein", "Muscle Gain", "Advanced"],
-    hasAccess: true,
-    isFavorite: true,
-  },
-  {
-    id: 2,
-    name: "Keto Fat Loss Plan",
-    description: "Low-carb, high-fat ketogenic diet plan for rapid fat loss and metabolic improvement.",
-    creator: { name: "Mike Chen", avatar: "/placeholder.svg?height=32&width=32", id: "trainer2" },
-    createdDate: "2024-01-10",
-    status: "active",
-    category: "Weight Loss",
-    totalCalories: 1800,
-    macros: { protein: 25, carbs: 5, fats: 70 },
-    assignedMembers: 8,
-    successRate: 92,
-    rating: 4.9,
-    tags: ["Keto", "Fat Loss", "Low Carb"],
-    hasAccess: false,
-    isFavorite: false,
-  },
-  {
-    id: 3,
-    name: "Balanced Maintenance Diet",
-    description: "Well-rounded nutrition plan for maintaining current weight and overall health.",
-    creator: { name: "Emily Davis", avatar: "/placeholder.svg?height=32&width=32", id: "trainer3" },
-    createdDate: "2024-01-08",
-    status: "draft",
-    category: "Maintenance",
-    totalCalories: 2200,
-    macros: { protein: 30, carbs: 45, fats: 25 },
-    assignedMembers: 5,
-    successRate: 78,
-    rating: 4.5,
-    tags: ["Balanced", "Maintenance", "Beginner"],
-    hasAccess: true,
-    isFavorite: false,
-  },
-  {
-    id: 4,
-    name: "Vegan Performance Diet",
-    description: "Plant-based nutrition optimized for athletic performance and recovery.",
-    creator: { name: "Alex Rodriguez", avatar: "/placeholder.svg?height=32&width=32", id: "trainer4" },
-    createdDate: "2024-01-05",
-    status: "active",
-    category: "Performance",
-    totalCalories: 2600,
-    macros: { protein: 20, carbs: 55, fats: 25 },
-    assignedMembers: 15,
-    successRate: 85,
-    rating: 4.7,
-    tags: ["Vegan", "Performance", "Plant-Based"],
-    hasAccess: true,
-    isFavorite: true,
-  },
-]
+interface DietManagementProps {
+  dietPlans: ViewDietPlan[]
+}
 
-const currentTrainerId = "trainer1" // This would come from your auth context
-
-export default function DietManagement() {
+export default function DietManagement({ dietPlans }: DietManagementProps) {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedStatus, setSelectedStatus] = useState("all")
   const [viewMode, setViewMode] = useState("grid")
 
-  const filteredDiets = mockDiets.filter((diet) => {
+  const filteredDiets = dietPlans.filter((diet) => {
     const matchesSearch =
       diet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      diet.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      diet.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-    const matchesCategory = selectedCategory === "all" || diet.category === selectedCategory
+      (diet.description && diet.description.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesStatus = selectedStatus === "all" || diet.status === selectedStatus
 
-    return matchesSearch && matchesCategory && matchesStatus
+    return matchesSearch && matchesStatus
   })
 
-  const categories = ["all", ...Array.from(new Set(mockDiets.map((diet) => diet.category)))]
   const statuses = ["all", "active", "draft", "archived"]
 
   const getStatusColor = (status: string) => {
@@ -148,14 +75,13 @@ export default function DietManagement() {
     </div>
   )
 
-  const DietCard = ({ diet }: { diet: (typeof mockDiets)[0] }) => (
+  const DietCard = ({ diet }: { diet: ViewDietPlan }) => (
     <Card className="group hover:shadow-lg transition-all duration-200 border-l-4 border-l-primary/20">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1">
             <div className="flex items-center gap-2">
               <CardTitle className="text-lg leading-tight">{diet.name}</CardTitle>
-              {diet.isFavorite && <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />}
             </div>
             <Badge className={getStatusColor(diet.status)} variant="secondary">
               {diet.status}
@@ -211,9 +137,9 @@ export default function DietManagement() {
             <span className="text-muted-foreground">members</span>
           </div>
           <div className="flex items-center gap-1">
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{diet.successRate}%</span>
-            <span className="text-muted-foreground">success</span>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <span className="font-medium">{diet.mealsCount}</span>
+            <span className="text-muted-foreground">meals</span>
           </div>
         </div>
 
@@ -243,14 +169,6 @@ export default function DietManagement() {
             <Calendar className="h-3 w-3 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">{diet.createdDate}</span>
           </div>
-        </div>
-
-        <div className="flex flex-wrap gap-1">
-          {diet.tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
         </div>
 
         <div className="flex gap-2 pt-2">
@@ -296,7 +214,7 @@ export default function DietManagement() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Diets</p>
-                <p className="text-2xl font-bold">{mockDiets.length}</p>
+                <p className="text-2xl font-bold">{dietPlans.length}</p>
               </div>
             </div>
           </CardContent>
@@ -309,7 +227,7 @@ export default function DietManagement() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Active Members</p>
-                <p className="text-2xl font-bold">{mockDiets.reduce((sum, diet) => sum + diet.assignedMembers, 0)}</p>
+                <p className="text-2xl font-bold">{dietPlans.reduce((sum, diet) => sum + diet.assignedMembers, 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -318,13 +236,11 @@ export default function DietManagement() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-orange-100 rounded-lg">
-                <TrendingUp className="h-4 w-4 text-orange-600" />
+                <Calendar className="h-4 w-4 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Avg Success Rate</p>
-                <p className="text-2xl font-bold">
-                  {Math.round(mockDiets.reduce((sum, diet) => sum + diet.successRate, 0) / mockDiets.length)}%
-                </p>
+                <p className="text-sm text-muted-foreground">Total Meals</p>
+                <p className="text-2xl font-bold">{dietPlans.reduce((sum, diet) => sum + diet.mealsCount, 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -333,12 +249,12 @@ export default function DietManagement() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-purple-100 rounded-lg">
-                <Star className="h-4 w-4 text-purple-600" />
+                <Target className="h-4 w-4 text-purple-600" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Avg Rating</p>
+                <p className="text-sm text-muted-foreground">Avg Calories</p>
                 <p className="text-2xl font-bold">
-                  {(mockDiets.reduce((sum, diet) => sum + diet.rating, 0) / mockDiets.length).toFixed(1)}
+                  {dietPlans.length > 0 ? Math.round(dietPlans.reduce((sum, diet) => sum + diet.totalCalories, 0) / dietPlans.length) : 0}
                 </p>
               </div>
             </div>
@@ -353,24 +269,12 @@ export default function DietManagement() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search diets by name, description, or tags..."
+                placeholder="Search diets by name or description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category === "all" ? "All Categories" : category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
               <SelectTrigger className="w-full sm:w-32">
                 <SelectValue placeholder="Status" />
