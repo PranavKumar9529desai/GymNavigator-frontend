@@ -55,6 +55,8 @@ export interface MealTime {
 
 export interface HealthProfileState {
 	// Form data
+	fullName: string;
+	whatsappNumber: string;
 	gender: Gender | null;
 	age: number | null;
 	activityLevel: ActivityLevel | null;
@@ -85,6 +87,8 @@ export interface HealthProfileState {
 	totalSteps: number;
 
 	// Actions
+	setFullName: (name: string) => void;
+	setWhatsappNumber: (number: string) => void;
 	setGender: (gender: Gender) => void;
 	setAge: (age: number) => void;
 	setActivityLevel: (level: ActivityLevel) => void;
@@ -179,6 +183,8 @@ const getDefaultMealTimings = (mealCount: MealTimes): MealTime[] => {
 
 export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 	// Initial state
+	fullName: '',
+	whatsappNumber: '',
 	gender: null,
 	age: null,
 	activityLevel: null,
@@ -205,9 +211,11 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 	dietaryRestrictions: [],
 
 	currentStep: 1,
-	totalSteps: 14, // Increased from 13 to 14 to accommodate the new form
+	totalSteps: 15, // Default value, actual totalSteps is calculated dynamically in the UI
 
 	// Actions
+	setFullName: (name) => set({ fullName: name }),
+	setWhatsappNumber: (number) => set({ whatsappNumber: number }),
 	setGender: (gender) => set({ gender }),
 	setAge: (age) => set({ age }),
 	setActivityLevel: (activityLevel) => set({ activityLevel }),
@@ -309,7 +317,7 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 
 	nextStep: () =>
 		set((state) => ({
-			currentStep: Math.min(state.currentStep + 1, state.totalSteps),
+			currentStep: state.currentStep + 1,
 		})),
 
 	prevStep: () =>
@@ -321,6 +329,8 @@ export const useHealthProfileStore = create<HealthProfileState>((set) => ({
 
 	resetForm: () =>
 		set({
+			fullName: '',
+			whatsappNumber: '',
 			gender: null,
 			age: null,
 			activityLevel: null,

@@ -37,23 +37,27 @@ export default function MedicalConditionsForm({
 	};
 
 	const handleSubmit = async () => {
-		// If "None" is selected, make sure it's the only one
-		if (medicalConditions.find((c) => c.id === '9' && c.selected)) {
-			for (const c of medicalConditions) {
-				if (c.id !== '9' && c.selected) {
-					toggleMedicalCondition(c.id); // Unselect any other conditions
+		try {
+			// If "None" is selected, make sure it's the only one
+			if (medicalConditions.find((c) => c.id === '9' && c.selected)) {
+				for (const c of medicalConditions) {
+					if (c.id !== '9' && c.selected) {
+						toggleMedicalCondition(c.id); // Unselect any other conditions
+					}
 				}
 			}
-		}
-		// If nothing is selected, select "None" by default
-		else if (
-			!medicalConditions.some((condition) => condition.selected) &&
-			!otherMedicalCondition
-		) {
-			toggleMedicalCondition('9'); // Select "None"
-		}
+			// If nothing is selected, select "None" by default
+			else if (
+				!medicalConditions.some((condition) => condition.selected) &&
+				!otherMedicalCondition
+			) {
+				toggleMedicalCondition('9'); // Select "None"
+			}
 
-		await onSubmit();
+			await onSubmit();
+		} catch (error) {
+			console.error('Error in medical conditions form:', error);
+		}
 	};
 
 	return (

@@ -37,12 +37,12 @@ interface ApiUserResponse {
 export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 	const trainerAxios = await TrainerReqConfig();
 	try {
-		console.log('getuserassignedwithtodietplans is called');
-		const response = await trainerAxios.get('/client/assignedusers');
+		console.log('getUsersAssignedToTrainer is called');
+		const response = await trainerAxios.get('/client/dietassignedusers');
 		if (response.data.msg === 'success') {
 			console.log('response.data.users', response.data.users);
 			// Transform the data to ensure all fields are present even if null
-			console.log('user id of the user is ', response.data.users[0].id);
+			console.log('user id of the user is ', response.data.users[0]?.id);
 			return response.data.users.map((user: ApiUserResponse) => ({
 				id: user.id,
 				name: user.name,

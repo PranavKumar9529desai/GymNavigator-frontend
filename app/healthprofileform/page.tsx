@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { gymTheme } from '@/styles/theme';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
-import { submitHealthProfileAction } from './_actions/submit-health-profile-action';
+import { submitHealthProfileToApi } from './_actions/submit-health-profile';
 import { useHealthProfileStore } from './_store/health-profile-store';
 import type { HealthMetrics } from './calculate-health-data/health-data-types';
 
@@ -12,6 +12,7 @@ import ActivityForm from './_components/activity-form';
 import AgeForm from './_components/age-form';
 import AllergiesForm from './_components/allergies-form';
 import DietaryPreferencesForm from './_components/dietary-preferences-form';
+import FullNameForm from './_components/full-name-form';
 import GenderForm from './_components/gender-form';
 import GoalForm from './_components/goal-form';
 import HeightForm from './_components/height-form';
@@ -23,6 +24,7 @@ import ReligiousPreferencesForm from './_components/religious-preferences-form';
 import SuccessForm from './_components/success-form';
 import TargetWeightForm from './_components/target-weight-form';
 import WeightForm from './_components/weight-form';
+import WhatsappNumberForm from './_components/whatsapp-number-form';
 
 // Progress indicator component
 const ProgressIndicator = ({
@@ -75,11 +77,7 @@ export default function HealthProfileFormPage() {
 			try {
 				// Retrieve current state directly from the store
 				const currentState = useHealthProfileStore.getState();
-				// Use the current state as-is without forcing default meal timings
-				const result = await submitHealthProfileAction({
-					...currentState,
-					dietaryPreference,
-				});
+				const result = await submitHealthProfileToApi(currentState);
 
 				if (result.success) {
 					if (result.data) {
@@ -113,55 +111,68 @@ export default function HealthProfileFormPage() {
 	};
 
 	const handleNextStep = async (): Promise<void> => {
-		useHealthProfileStore.getState().nextStep();
-		return Promise.resolve();
+		try {
+			useHealthProfileStore.getState().nextStep();
+			return Promise.resolve();
+		} catch (error) {
+			console.error('Error in handleNextStep:', error);
+			toast({
+				title: 'Error',
+				description: 'Failed to proceed to next step. Please try again.',
+				variant: 'destructive',
+			});
+		}
 	};
 
 	// Define form step arrays for non-vegetarian and vegetarian flows.
 	const forms = useMemo(() => {
 		return isNonVegetarian
 			? [
-					<GenderForm key="1" />,
-					<AgeForm key="2" />,
-					<HeightForm key="3" />,
-					<WeightForm key="4" />,
-					<ActivityForm key="5" />,
-					<GoalForm key="6" />,
-					<DietaryPreferencesForm key="7" />,
-					<NonVegDaysForm key="8" />,
-					<MealTimesForm key="9" />,
-					<MealTimingsForm key="10" />,
-					<AllergiesForm key="11" />,
+					<FullNameForm key="1" />,
+					<WhatsappNumberForm key="2" />,
+					<GenderForm key="3" />,
+					<AgeForm key="4" />,
+					<HeightForm key="5" />,
+					<WeightForm key="6" />,
+					<ActivityForm key="7" />,
+					<GoalForm key="8" />,
+					<DietaryPreferencesForm key="9" />,
+					<NonVegDaysForm key="10" />,
+					<MealTimesForm key="11" />,
+					<MealTimingsForm key="12" />,
+					<AllergiesForm key="13" />,
 					<MedicalConditionsForm
-						key="12"
+						key="14"
 						onSubmit={handleNextStep}
 						isSubmitting={false}
 					/>,
 					<ReligiousPreferencesForm
-						key="13"
+						key="15"
 						onSubmit={handleFormSubmit}
 						isSubmitting={isSubmitting}
 						isLast={true}
 					/>,
 				]
 			: [
-					<GenderForm key="1" />,
-					<AgeForm key="2" />,
-					<HeightForm key="3" />,
-					<WeightForm key="4" />,
-					<ActivityForm key="5" />,
-					<GoalForm key="6" />,
-					<DietaryPreferencesForm key="7" />,
-					<MealTimesForm key="8" />,
-					<MealTimingsForm key="9" />,
-					<AllergiesForm key="10" />,
+					<FullNameForm key="1" />,
+					<WhatsappNumberForm key="2" />,
+					<GenderForm key="3" />,
+					<AgeForm key="4" />,
+					<HeightForm key="5" />,
+					<WeightForm key="6" />,
+					<ActivityForm key="7" />,
+					<GoalForm key="8" />,
+					<DietaryPreferencesForm key="9" />,
+					<MealTimesForm key="10" />,
+					<MealTimingsForm key="11" />,
+					<AllergiesForm key="12" />,
 					<MedicalConditionsForm
-						key="11"
+						key="13"
 						onSubmit={handleNextStep}
 						isSubmitting={false}
 					/>,
 					<ReligiousPreferencesForm
-						key="12"
+						key="14"
 						onSubmit={handleFormSubmit}
 						isSubmitting={isSubmitting}
 						isLast={true}

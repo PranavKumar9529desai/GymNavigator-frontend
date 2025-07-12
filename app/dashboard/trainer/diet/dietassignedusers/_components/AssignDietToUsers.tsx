@@ -29,19 +29,28 @@ interface Props {
 }
 
 // Helper function to check if health profile is complete
-const isHealthProfileComplete = (healthProfile: any) => {
+const isHealthProfileComplete = (healthProfile: unknown) => {
 	if (!healthProfile) return false;
 	
+	const profile = healthProfile as {
+		gender?: string;
+		goal?: string;
+		weight?: number;
+		height?: number;
+		dietaryPreference?: string;
+	};
+	
 	const requiredFields = [
-		'gender', 'age', 'goal', 'activityLevel', 
-		'heightValue', 'weightValue', 'dietaryPreference', 'mealTimes'
+		'gender', 'goal', 'weight', 'height', 'dietaryPreference'
 	];
 	
-	return requiredFields.every(field => 
-		healthProfile[field] !== null && 
-		healthProfile[field] !== undefined && 
-		healthProfile[field] !== ''
-	);
+	return requiredFields.every(field => {
+		const value = profile[field as keyof typeof profile];
+		return value !== null && 
+			value !== undefined && 
+			value !== '' &&
+			value !== 0;
+	});
 };
 
 const createColumns = (router: any): ColumnDef<AssignedUser>[] => [
@@ -66,8 +75,8 @@ const createColumns = (router: any): ColumnDef<AssignedUser>[] => [
 			
 			return (
 				<Badge 
-					variant={isComplete ? "default" : "secondary"}
-					className={isComplete ? "bg-green-600 hover:bg-green-700" : "bg-red-100 text-red-700 hover:bg-red-200"}
+					variant="outline"
+					className={isComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}
 				>
 					{isComplete ? 'Complete' : 'Incomplete'}
 				</Badge>
@@ -289,8 +298,8 @@ export default function DietAssignedUsers({ users, dietPlans }: Props) {
 								<div className="flex items-center gap-2">
 									<span className="text-sm text-slate-600 font-medium">Health Profile:</span>
 									<Badge 
-										variant={isProfileComplete ? "default" : "secondary"}
-										className={isProfileComplete ? "bg-green-600 hover:bg-green-700" : "bg-red-100 text-red-700 hover:bg-red-200"}
+										variant="outline"
+										className={isProfileComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}
 									>
 										{isProfileComplete ? 'Complete' : 'Incomplete'}
 									</Badge>

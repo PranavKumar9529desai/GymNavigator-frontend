@@ -19,7 +19,7 @@ export const attachDietPlanToUser = async (
 ): Promise<AttachDietPlanResponse> => {
 	const trainerAxios = await TrainerReqConfig();
 	console.log(
-		'dietplan id is , userid is recievd from the client',
+		'dietplan id is, userid is received from the client',
 		dietPlanId,
 		userId,
 	);
