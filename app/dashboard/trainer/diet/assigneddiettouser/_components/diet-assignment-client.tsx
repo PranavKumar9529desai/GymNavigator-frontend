@@ -59,6 +59,11 @@ interface DietPlan {
     instructions: string;
   }[];
   createdByTrainerId?: number;
+  createdByTrainer?: {
+    id: number;
+    name: string;
+  } | null;
+  isOwnPlan?: boolean;
 }
 
 interface DietAssignmentClientProps {
@@ -209,6 +214,7 @@ export function DietAssignmentClient({
           <DietPlanSelector 
             dietPlans={dietPlans}
             userProfile={userProfile}
+            userId={userId}
             onSelectDietPlan={handleDietPlanSelect}
           />
         </div>
