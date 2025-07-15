@@ -1,0 +1,16 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /onboarding/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /static/
+
+# Host
+Host: https://www.gymnavigator.in
+
+# Sitemaps
+Sitemap: https://www.gymnavigator.in/sitemap.xml

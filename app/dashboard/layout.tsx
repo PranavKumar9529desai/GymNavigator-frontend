@@ -12,6 +12,56 @@ import Sidebar from './_components/sidebar';
 // Import the preload function for performance improvement
 import { preloadCommonIcons } from './_components/common-icons';
 import { IsClient } from '@/lib/is-client';
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+	const session = await auth();
+	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';
+	const role = session?.role || 'user';
+	const gym = session?.gym || null;
+
+	let title = 'Dashboard | GymNavigator';
+	let description = 'Access your personalized dashboard on GymNavigator.';
+
+	if (role === 'owner') {
+		title = gym
+			? `Owner Dashboard – ${gym} | GymNavigator`
+			: 'Owner Dashboard | GymNavigator';
+		description = gym
+			? `Manage your gym (${gym}) operations, trainers, and clients with GymNavigator.`
+			: 'Manage your gym operations, trainers, and clients with GymNavigator.';
+	} else if (role === 'trainer') {
+		title = gym
+			? `Trainer Dashboard – ${gym} | GymNavigator`
+			: 'Trainer Dashboard | GymNavigator';
+		description = gym
+			? `View and manage your clients, workouts, and attendance at ${gym} with GymNavigator.`
+			: 'View and manage your clients, workouts, and attendance with GymNavigator.';
+	} else if (role === 'client') {
+		title = gym
+			? `Client Dashboard – ${gym} | GymNavigator`
+			: 'Client Dashboard | GymNavigator';
+		description = gym
+			? `Track your workouts, diet, and attendance at ${gym} with GymNavigator.`
+			: 'Track your workouts, diet, and attendance with GymNavigator.';
+	}
+
+	return {
+		title,
+		description,
+		alternates: {
+			canonical: `${siteUrl}/dashboard`,
+		},
+		robots: {
+			index: false,
+			follow: false,
+			googleBot: {
+				index: false,
+				follow: false,
+			},
+		},
+	};
+}
 
 export default async function Layout({
 	children,

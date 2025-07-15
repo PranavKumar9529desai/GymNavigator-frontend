@@ -1,6 +1,8 @@
 import React from 'react';
 import FetchGymData from './FetchGymData';
 import Gym from './Gym';
+import { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 // Reintroduce generateStaticParams for static generation
 interface GymNameResponse {
@@ -36,6 +38,26 @@ interface PageProps {
 	}>;
 }
 
+// Inject JSON-LD structured data for LocalBusiness
+function GymStructuredData({ gymData }: { gymData: any }) {
+	if (!gymData) return null;
+	const structuredData = {
+		'@context': 'https://schema.org',
+		'@type': 'LocalBusiness',
+		name: gymData.name,
+		image: gymData.img,
+		address: gymData.address,
+		url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in'}/gym/${encodeURIComponent(gymData.name)}`,
+		// Add more fields as available
+	};
+	return (
+		<script
+			type="application/ld+json"
+			dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+		/>
+	);
+}
+
 const GymPage = async (props: PageProps) => {
 	const params = await props.params;
 	const { gymname } = params;
@@ -52,9 +74,12 @@ const GymPage = async (props: PageProps) => {
 	}
 
 	return (
-		<div>
-			<Gym gymData={gymData} />
-		</div>
+		<>
+			<GymStructuredData gymData={gymData} />
+			<div>
+				<Gym gymData={gymData} />
+			</div>
+		</>
 	);
 };
 
@@ -62,16 +87,77 @@ const GymPage = async (props: PageProps) => {
 export const revalidate = 3600; // Revalidate all pages every hour
 
 // Add metadata for SEO
-export async function generateMetadata(props: PageProps) {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
 	const params = await props.params;
 	const gymData = await FetchGymData(params.gymname);
+	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';
+	const gymUrl = `${siteUrl}/gym/${encodeURIComponent(params.gymname)}`;
+	const ogImage = gymData?.img || '/gymnavigator-og.jpg';
+	const title = gymData?.name
+		? `${gymData.name} – Modern Gym Management | GymNavigator`
+		: 'Gym – Modern Gym Management | GymNavigator';
+	const description = gymData?.address
+		? `Visit ${gymData.name} at ${gymData.address}. Join the best fitness experience with GymNavigator.`
+		: 'Professional fitness center powered by GymNavigator.';
+
 	return {
-		title: `${gymData?.name || 'Gym'} | Fitness Platform`,
-		description: gymData?.address
-			? `Visit ${gymData.name} at ${gymData.address}`
-			: 'Professional fitness center',
+		title,
+		description,
+		alternates: {
+			canonical: gymUrl,
+		},
 		openGraph: {
-			images: [gymData?.img || '/default-gym.jpg'],
+			title,
+			description,
+			url: gymUrl,
+			siteName: 'GymNavigator',
+			images: [
+				{
+					url: ogImage,
+					width: 1200,
+					height: 630,
+					alt: gymData?.name || 'GymNavigator - Modern Gym Management',
+					type: 'image/jpeg',
+				},
+			],
+			locale: 'en_US',
+			type: 'website',
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title,
+			description,
+			images: [ogImage],
+		},
+		robots: {
+			index: true,
+			follow: true,
+			googleBot: {
+				index: true,
+				follow: true,
+			},
+		},
+		icons: {
+			icon: [
+				{ url: '/favicon.ico' },
+				{ url: '/icon.png', type: 'image/png' },
+			],
+			apple: [
+				{ url: '/apple-touch-icon.png' },
+			],
+			other: [
+				{
+					rel: 'mask-icon',
+					url: '/favicon/safari-pinned-tab.svg',
+					color: '#1e40af',
+				},
+			],
+		},
+		manifest: '/site.webmanifest',
+		other: {
+			'og:image:secure_url': `${siteUrl}/gymnavigator-og.jpg`,
+			'theme-color': '#1e40af',
+			'msapplication-TileColor': '#1e40af',
 		},
 	};
 }

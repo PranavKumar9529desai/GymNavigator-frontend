@@ -1,5 +1,6 @@
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { ClientAnimatedPricingCard } from './ClientAnimatedPricingCard';
+import { GradientBackground } from '@/components/theme/GradientBackground';
 
 const plans = [
 	{
@@ -48,8 +49,8 @@ const plans = [
 
 const Pricing = () => {
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 py-24">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<GradientBackground>
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
 				<div className="text-center mb-16">
 					<h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-6">
 						Simple, Transparent Pricing
@@ -70,7 +71,7 @@ const Pricing = () => {
 					))}
 				</div>
 			</div>
-		</div>
+		</GradientBackground>
 	);
 };
 

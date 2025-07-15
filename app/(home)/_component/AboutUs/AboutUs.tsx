@@ -5,6 +5,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { ClientAnimatedFeature } from './ClientAnimatedFeature';
 import { ClientAnimatedStats } from './ClientAnimatedStats';
+import { GradientBackground } from '@/components/theme/GradientBackground';
 
 const features = [
 	{
@@ -36,7 +37,7 @@ const stats = [
 
 const AboutUs = () => {
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+		<GradientBackground>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
 				<div className="text-center mb-16">
 					<h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-6">
@@ -83,7 +84,7 @@ const AboutUs = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</GradientBackground>
 	);
 };
 
