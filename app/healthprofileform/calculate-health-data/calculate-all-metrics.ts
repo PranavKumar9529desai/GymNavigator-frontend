@@ -49,7 +49,7 @@ export function calculateHealthMetrics(
 	const bmiCategory = getBMICategory(bmi);
 
 	// Calculate BMR
-	const bmr = calculateBMR(params.gender, weightInKg, heightInCm, params.age);
+const bmr = calculateBMR(params.gender, weightInKg, heightInCm, params.age);
 
 	// Calculate TDEE
 	const tdee = calculateTDEE(bmr, params.activityLevel);

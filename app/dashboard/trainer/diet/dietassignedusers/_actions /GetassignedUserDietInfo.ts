@@ -11,6 +11,12 @@ export interface AssignedUser {
 		height: number;
 		goal: string | null;
 		gender: string;
+		dietaryPreference?: string;
+	} | null;
+	computedHealthMetrics?: {
+		bmi: number | null;
+		bmr: number | null;
+		tdee: number | null;
 	} | null;
 	dietPlanId?: number | null;
 	dietPlanName?: string | null;
@@ -27,6 +33,12 @@ interface ApiUserResponse {
 		height: number;
 		goal: string | null;
 		gender: string;
+		dietaryPreference?: string;
+	} | null;
+	computedHealthMetrics?: {
+		bmi: number | null;
+		bmr: number | null;
+		tdee: number | null;
 	} | null;
 	dietPlanId?: number | null;
 	dietPlanName?: string | null;
@@ -49,6 +61,7 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 				email: user.email,
 				membershipStatus: 'active',
 				HealthProfile: user.HealthProfile || null,
+				computedHealthMetrics: user.computedHealthMetrics || { bmi: null, bmr: null, tdee: null },
 				dietPlanId: user.dietPlanId || null,
 				dietPlanName: user.dietPlanName || null,
 				dietPlanCompliance: user.dietPlanCompliance || 0,

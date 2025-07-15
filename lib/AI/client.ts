@@ -5,11 +5,10 @@ import type { Message } from 'ai';
 import { OpenAI } from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { v4 as uuidv4 } from 'uuid';
-import { WeeklyDietPlanSchema, DietPlansByDay, DietPlan, Meal } from './types/diet-types';
 
 // Get API key with fallbacks for different environment variable names
 const geminiApiKey =
-	process.env.GOOGLE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+	process.env.GOOGLE_GEMINI_API_KEY || "";
 
 // Initialize AI providers
 const openai = new OpenAI({
@@ -25,6 +24,37 @@ console.log(
 );
 console.log('backend url is', process.env.NEXT_PUBLIC_BACKEND_URL);
 const genAI = new GoogleGenerativeAI(geminiApiKey);
+
+/**
+ * Fetch and log available Gemini models using the REST API
+ */
+export async function logAvailableGeminiModels() {
+  try {
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    if (!apiKey) {
+      console.error('No Gemini API key found.');
+      return;
+    }
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error('Failed to fetch models:', res.status, res.statusText);
+      return;
+    }
+    const data = await res.json();
+    console.log('Available Gemini models:', data.models?.map((m: { name: string; displayName?: string; description?: string }) => ({
+      name: m.name,
+      displayName: m.displayName,
+      description: m.description,
+    })));
+  } catch (error) {
+    console.error('Error fetching Gemini models:', error);
+  }
+}
+
+// Call this for debugging on startup
+// Un comment this to see the available models
+// logAvailableGeminiModels();
 
 /**
  * Generate content with Gemini model
@@ -44,9 +74,8 @@ export async function generateWithGemini(
 			);
 		}
 
-		// Using free tier model instead of pro models
-		// Try gemini-1.0-pro-vision-latest first (available on free tier)
-		const modelName = 'gemini-1.5-flash';
+		// Use Gemini 2.0 Flash-Lite as the default for higher free tier quota
+		const modelName = 'gemini-2.0-flash-lite';
 
 		const model = genAI.getGenerativeModel({
 			model: modelName,
@@ -66,10 +95,10 @@ export async function generateWithGemini(
 			return result.response.text();
 		} catch (modelError: unknown) {
 			console.log('modelError', modelError);
-			// If the first model fails, try another free model
-			console.log(`${modelName} failed, trying gemini-pro...`);
+			// If the first model fails, try gemini-2.0-flash as fallback
+			console.log(`${modelName} failed, trying gemini-2.0-flash...`);
 			const fallbackModel = genAI.getGenerativeModel({
-				model: 'gemini-pro',
+				model: 'gemini-2.0-flash',
 				generationConfig: {
 					temperature: options?.temperature || 0.4,
 					topK: 32,

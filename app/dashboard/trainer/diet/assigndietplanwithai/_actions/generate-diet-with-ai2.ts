@@ -48,22 +48,18 @@ Create a comprehensive weekly diet plan (Monday through Sunday) for a client wit
 Basic Information:
 - Gender: ${healthProfile.gender || 'Unknown'}
 - Age: ${healthProfile.age || 'Unknown'}
-- Weight: ${healthProfile.weightValue || 'Unknown'} ${
-			healthProfile.weightUnit || 'kg'
-		}
-- Height: ${healthProfile.heightValue || 'Unknown'} ${
-			healthProfile.heightUnit || 'cm'
-		}
+- Weight: ${healthProfile.weightValue || 'Unknown'} ${healthProfile.weightUnit || 'kg'}
+- Height: ${healthProfile.heightValue || 'Unknown'} ${healthProfile.heightUnit || 'cm'}
 - Activity Level: ${healthProfile.activityLevel || 'Moderate'}
 - Primary Goal: ${healthProfile.goal || 'General fitness'}
 - BMI: ${healthProfile.bmi || 'Not provided'} 
 - BMR: ${healthProfile.bmr || 'Not provided'} calories/day
 - TDEE: ${healthProfile.tdee || 'Not provided'} calories/day
+${healthProfile.targetCalories ? `- Target Calories: ${healthProfile.targetCalories} kcal/day` : ''}
+${healthProfile.macros ? `- Macros: Protein: ${healthProfile.macros.protein}g, Carbs: ${healthProfile.macros.carbs}g, Fats: ${healthProfile.macros.fats}g` : ''}
 
 Dietary Preferences:
-- Dietary Preference: ${
-			healthProfile.dietaryPreference || 'No specific preference'
-		}
+- Dietary Preference: ${healthProfile.dietaryPreference || 'No specific preference'}
 - Religious Considerations: ${healthProfile.religiousPreference || 'None'}
 
 Meal Schedule:
@@ -106,30 +102,14 @@ Location & Cultural Context:
 IMPORTANT REQUIREMENTS:
 1. NATIVE/LOCAL DIET FOCUS: Create a diet plan that incorporates traditional, native foods from the client's region (${country}, ${state}). Use local ingredients, cooking methods, and dishes that are culturally appropriate.
 2. Balance nutrition requirements with cultural preferences.
-3. ${
-			healthProfile.mealTimes
-				? `Ensure exactly ${healthProfile.mealTimes} meals per day.`
-				: 'Each day should have 4-5 meals including breakfast, lunch, dinner, and snacks.'
-		}
-4. ${
-			healthProfile.mealTimings
-				? `Follow the exact meal timings specified: ${healthProfile.mealTimings}.`
-				: 'Space meals appropriately throughout the day.'
-		}
-5. ${
-			healthProfile.dietaryPreference?.toLowerCase().includes('vegetarian')
-				? 'Create a completely vegetarian meal plan.'
-				: healthProfile.nonVegDays
-					? 'IMPORTANT: Only include non-vegetarian dishes on the specified non-vegetarian days. All other days must be strictly vegetarian.'
-					: 'Balance vegetarian and non-vegetarian options appropriately.'
-		}
+3. ${healthProfile.mealTimes ? `Ensure exactly ${healthProfile.mealTimes} meals per day.` : 'Each day should have 4-5 meals including breakfast, lunch, dinner, and snacks.'}
+4. ${healthProfile.mealTimings ? `Follow the exact meal timings specified: ${healthProfile.mealTimings}.` : 'Space meals appropriately throughout the day.'}
+5. ${healthProfile.dietaryPreference?.toLowerCase().includes('vegetarian') ? 'Create a completely vegetarian meal plan.' : healthProfile.nonVegDays ? 'IMPORTANT: Only include non-vegetarian dishes on the specified non-vegetarian days. All other days must be strictly vegetarian.' : 'Balance vegetarian and non-vegetarian options appropriately.'}
 6. Ensure variety across the week while maintaining cultural relevance.
 7. Include preparation instructions that are clear and easy to follow.
-8. ${
-			healthProfile.bmr && healthProfile.tdee
-				? `Base caloric calculations on the client's BMR (${healthProfile.bmr}) and TDEE (${healthProfile.tdee}).`
-				: "Calculate appropriate caloric intake based on the client's profile."
-		}
+8. ${healthProfile.bmr && healthProfile.tdee ? `Base caloric calculations on the client's BMR (${healthProfile.bmr}) and TDEE (${healthProfile.tdee}).` : "Calculate appropriate caloric intake based on the client's profile."}
+${healthProfile.targetCalories ? `9. IMPORTANT: The total daily calories for each day should be as close as possible to ${healthProfile.targetCalories} kcal.` : ''}
+${healthProfile.macros ? `10. IMPORTANT: The total daily macros for each day should be as close as possible to Protein: ${healthProfile.macros.protein}g, Carbs: ${healthProfile.macros.carbs}g, Fats: ${healthProfile.macros.fats}g.` : ''}
 
 RESPONSE FORMAT:
 You must respond with a valid JSON object that strictly follows this schema for each day of the week:

@@ -30,6 +30,7 @@ interface Props {
 
 // Helper function to check if health profile is complete
 const isHealthProfileComplete = (healthProfile: unknown) => {
+	const router = useRouter();
 	if (!healthProfile) return false;
 	
 	const profile = healthProfile as {
@@ -53,7 +54,7 @@ const isHealthProfileComplete = (healthProfile: unknown) => {
 	});
 };
 
-const createColumns = (router: any): ColumnDef<AssignedUser>[] => [
+const createColumns = (router: unknown): ColumnDef<AssignedUser>[] => [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
@@ -72,7 +73,6 @@ const createColumns = (router: any): ColumnDef<AssignedUser>[] => [
 		cell: ({ row }) => {
 			const user = row.original;
 			const isComplete = isHealthProfileComplete(user.HealthProfile);
-			
 			return (
 				<Badge 
 					variant="outline"
@@ -83,13 +83,13 @@ const createColumns = (router: any): ColumnDef<AssignedUser>[] => [
 			);
 		},
 	},
+	
 	{
 		id: 'assignedDiet',
 		header: 'Assigned Diet Plan',
 		cell: ({ row }) => {
 			const user = row.original;
 			const dietPlanName = user.dietPlanName;
-			
 			return (
 				<span className={`text-sm ${dietPlanName ? 'text-slate-800 font-medium' : 'text-slate-500'}`}>
 					{dietPlanName || '-'}
@@ -241,77 +241,40 @@ export default function DietAssignedUsers({ users, dietPlans }: Props) {
 					renderCard={(user) => {
 						const isProfileComplete = isHealthProfileComplete(user.HealthProfile);
 						const hasDiet = !!user.dietPlanId;
-						
-						const actions = [
-							{
-								id: 'assign-diet',
-								label: hasDiet ? 'Update Diet Plan' : 'Assign Diet Plan',
-								icon: ChefHat,
-								onClick: () => {
-									if (isProfileComplete) {
-										router.push(`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`);
-									}
-								},
-								disabled: !isProfileComplete,
-								className: !isProfileComplete 
-									? 'text-gray-400 cursor-not-allowed' 
-									: hasDiet 
-										? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700' 
-										: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
-								tooltip: !isProfileComplete 
-									? 'Health profile must be completed before assigning diet plans' 
-									: hasDiet 
-										? 'Modify the currently assigned diet plan for this user' 
-										: 'Select and assign a diet plan from available options',
-							},
-							{
-								id: 'generate-ai',
-								label: 'Generate with AI',
-								icon: Sparkles,
-								onClick: () => {
-									if (isProfileComplete) {
-										router.push(`/dashboard/trainer/diet/assigndietplanwithai?userId=${user.id}`);
-									}
-								},
-								disabled: !isProfileComplete,
-								className: !isProfileComplete 
-									? 'text-gray-400 cursor-not-allowed' 
-									: 'text-purple-600 hover:bg-purple-50 hover:text-purple-700',
-								tooltip: !isProfileComplete 
-									? 'Health profile must be completed before generating AI diet plans' 
-									: 'Create a personalized diet plan using AI based on user\'s health profile',
-							},
-						];
-						
 						return (
-							<div className="p-4 space-y-3 bg-white rounded-lg border border-slate-100 hover:border-blue-200 transition-colors shadow-sm hover:shadow-md">
-								{/* Header with name and actions */}
-								<div className="flex justify-between items-start">
-									<h3 className="font-medium text-lg text-slate-800">{user.name}</h3>
-									<MoreActions 
-										actions={actions} 
-										label="Diet Actions"
-									/>
-								</div>
-
-								{/* Health Profile Status */}
-								<div className="flex items-center gap-2">
-									<span className="text-sm text-slate-600 font-medium">Health Profile:</span>
-									<Badge 
-										variant="outline"
-										className={isProfileComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}
-									>
-										{isProfileComplete ? 'Complete' : 'Incomplete'}
+							<div className="p-3 border rounded-lg mb-4 bg-white shadow-sm">
+								<div className="flex items-center justify-between mb-2">
+									<span className="font-semibold text-slate-800">{user.name}</span>
+									<Badge variant="outline" className={isProfileComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}>
+										{isProfileComplete ? 'Profile Complete' : 'Incomplete'}
 									</Badge>
 								</div>
-
-								{/* Assigned Diet Plan */}
-								<div className="flex items-center gap-2">
-									<span className="text-sm text-slate-600 font-medium">Assigned Diet Plan:</span>
-									<span className={`text-sm ${user.dietPlanName ? 'text-slate-800 font-medium' : 'text-slate-500'}`}>
-										{user.dietPlanName || '-'}
-									</span>
+								<div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
+									<span>BMI:</span>
+									<span className="font-medium">{user.computedHealthMetrics?.bmi !== null && user.computedHealthMetrics?.bmi !== undefined ? user.computedHealthMetrics.bmi.toFixed(1) : '-'}</span>
 								</div>
+								<div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
+									<span>Diet Plan:</span>
+									<span className="font-medium">{user.dietPlanName || '-'}</span>
+								</div>
+								<MoreActions actions={[
+									{
+										id: 'assign-diet',
+										label: hasDiet ? 'Update Diet Plan' : 'Assign Diet Plan',
+										icon: ChefHat,
+										onClick: () => {
+											if (isProfileComplete) {
+												router.push(`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`);
+											}
+										},
+										disabled: !isProfileComplete,
+										className: !isProfileComplete 
+											? 'text-gray-400 cursor-not-allowed' 
+											: hasDiet 
+												? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700' 
+												: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
+									},
+								]} label="Diet Actions" />
 							</div>
 						);
 					}}

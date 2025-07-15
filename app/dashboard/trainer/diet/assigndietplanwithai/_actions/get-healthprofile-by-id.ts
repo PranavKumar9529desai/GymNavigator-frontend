@@ -45,6 +45,14 @@ export interface HealthProfile {
 	fullname?: string;
 	contact?: string;
 	goal?: string; // Added missing goal property
+
+	// Computed health metrics
+	targetCalories?: number;
+	macros?: {
+		protein: number;
+		carbs: number;
+		fats: number;
+	};
 }
 
 // Helper function to safely parse JSON strings

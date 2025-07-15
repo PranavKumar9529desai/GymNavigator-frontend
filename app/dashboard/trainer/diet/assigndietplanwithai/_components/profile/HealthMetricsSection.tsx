@@ -135,7 +135,34 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 							</p>
 						</div>
 					)}
+
+					{/* Target Calories */}
+					{profile?.targetCalories && (
+						<div className="flex-1 p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-100">
+							<span className="text-xs font-medium uppercase tracking-wide block mb-1">
+								Target Calories
+							</span>
+							<p className="font-medium text-lg">
+								{profile.targetCalories}
+								<span className="block text-xs mt-1 font-normal">
+									kcal/day
+								</span>
+							</p>
+						</div>
+					)}
 				</div>
+
+				{/* Macros */}
+				{profile?.macros && (
+					<div className="mt-4 p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-100">
+						<span className="text-xs font-medium uppercase tracking-wide block mb-1">
+							Macros (per day)
+						</span>
+						<p className="font-medium">
+							Protein: {profile.macros.protein}g, Carbs: {profile.macros.carbs}g, Fats: {profile.macros.fats}g
+						</p>
+					</div>
+				)}
 
 				{profile?.goal && (
 					<div className="p-3 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
