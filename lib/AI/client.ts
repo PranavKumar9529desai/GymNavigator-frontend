@@ -5,6 +5,7 @@ import type { Message } from 'ai';
 import { OpenAI } from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { v4 as uuidv4 } from 'uuid';
+import { WeeklyDietPlanSchema, DietPlansByDay, DietPlan, Meal } from './types/diet-types';
 
 // Get API key with fallbacks for different environment variable names
 const geminiApiKey =

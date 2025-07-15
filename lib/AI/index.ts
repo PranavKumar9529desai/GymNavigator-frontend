@@ -9,4 +9,4 @@ export * from './types/diet-types';
 
 // Export prompts
 export * from './prompts/workout-prompts';
-export * from './prompts/diet-prompts';
+// export * from './prompts/diet-prompts';

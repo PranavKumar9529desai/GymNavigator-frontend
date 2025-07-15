@@ -1,227 +1,17 @@
 'use server';
 
+import { generateStructuredContent } from '@/lib/AI';
 import {
-	generateStructuredContent,
-	validateResponseWithSchema,
-} from '@/lib/AI';
+	Meal,
+	DietPlan,
+	DietPlansByDay,
+	LocationInfo,
+	WeeklyDietPlanSchema,
+	validateWeeklyDietPlanResponse,
+} from '@/lib/AI/types/diet-types';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import { z } from 'zod';
 import { gethealthprofileById } from './get-healthprofile-by-id';
-
-// Interface for a single meal in the diet plan
-interface Meal {
-	id: number;
-	name: string;
-	timeOfDay: string;
-	calories: number;
-	protein: number;
-	carbs: number;
-	fats: number;
-	instructions: string;
-}
-
-// Interface for a single day's diet plan
-interface DietPlan {
-	id: number;
-	name: string;
-	description?: string;
-	targetCalories: number;
-	proteinRatio: number;
-	carbsRatio: number;
-	fatsRatio: number;
-	meals: Meal[];
-}
-
-// Interface for diet plans organized by day
-interface DietPlansByDay {
-	[day: string]: DietPlan;
-}
-
-// Interface for location information
-interface LocationInfo {
-	country: string;
-	state: string;
-}
-
-// Schema for validating the weekly diet plan response from AI
-const WeeklyDietPlanSchema = z.object({
-	Monday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Tuesday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Wednesday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Thursday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Friday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Saturday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-	Sunday: z.object({
-		name: z.string(),
-		description: z.string().optional(),
-		targetCalories: z.number(),
-		proteinRatio: z.number(),
-		carbsRatio: z.number(),
-		fatsRatio: z.number(),
-		meals: z.array(
-			z.object({
-				name: z.string(),
-				timeOfDay: z.string(),
-				calories: z.number(),
-				protein: z.number(),
-				carbs: z.number(),
-				fats: z.number(),
-				instructions: z.string(),
-			}),
-		),
-	}),
-});
-
-/**
- * Custom validation function to ensure successful parsing of weekly diet plans
- */
-function validateWeeklyDietPlanResponse(response: string) {
-	try {
-		// First, try to extract JSON from the response
-		let jsonData: Record<string, unknown> | null = null;
-
-		// Try parsing directly first
-		try {
-			jsonData = JSON.parse(response);
-		} catch (_e) {
-			// Try extracting from code blocks if direct parsing fails
-			const codeBlockMatch = response.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-			if (codeBlockMatch?.[1]) {
-				jsonData = JSON.parse(codeBlockMatch[1]);
-			} else {
-				// Try finding a JSON object pattern
-				const jsonMatch = response.match(/{[\s\S]*}/);
-				if (jsonMatch) {
-					jsonData = JSON.parse(jsonMatch[0]);
-				}
-			}
-		}
-
-		if (!jsonData) {
-			return { valid: false, errors: 'No valid JSON found in response' };
-		}
-
-		// Now validate against the schema
-		const result = WeeklyDietPlanSchema.safeParse(jsonData);
-
-		if (result.success) {
-			return { valid: true, data: result.data };
-		}
-
-		return { valid: false, errors: result.error };
-	} catch (error) {
-		console.error('Weekly diet plan validation error:', error);
-		return { valid: false, errors: error };
-	}
-}
 
 /**
  * Generates diet plans for the entire week in a single API call
@@ -396,6 +186,9 @@ IMPORTANT:
 		const weeklyPlan = response.data;
 		const dietPlans: DietPlansByDay = {};
 
+		// Log the raw weekly plan and the processed dietPlans for verification
+		console.log('Raw weeklyPlan from AI:', weeklyPlan);
+
 		Object.entries(weeklyPlan).forEach(([day, plan], index) => {
 			dietPlans[day] = {
 				...plan,
@@ -406,6 +199,8 @@ IMPORTANT:
 				})),
 			};
 		});
+
+		console.log('Processed dietPlans with IDs:', dietPlans);
 
 		return {
 			success: true,
