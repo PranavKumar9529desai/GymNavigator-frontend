@@ -17,7 +17,6 @@ import {
 	UserX,
 	Sparkles,
 } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useMemo } from 'react';
 import type { DietPlan } from '../_actions /GetallDiets';
@@ -31,6 +30,7 @@ interface Props {
 // Helper function to check if health profile is complete
 const isHealthProfileComplete = (healthProfile: unknown) => {
 	const router = useRouter();
+
 	if (!healthProfile) return false;
 	
 	const profile = healthProfile as {
@@ -54,7 +54,7 @@ const isHealthProfileComplete = (healthProfile: unknown) => {
 	});
 };
 
-const createColumns = (router: unknown): ColumnDef<AssignedUser>[] => [
+const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<AssignedUser>[] => [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (

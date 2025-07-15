@@ -196,11 +196,8 @@ export async function submitHealthProfile(
 		}
 		console.log('Calculated health metrics are ', healthMetrics);
 
-		// Pass profileData with fullname and contact included
-		const apiResponse = await submitHealthProfileToApi({
-			healthProfileFormData: profileData,
-			healthMetrics: healthMetrics as HealthMetrics,
-		});
+		// Pass the full formData as HealthProfileState to match the expected type
+		const apiResponse = await submitHealthProfileToApi(formData as HealthProfileState);
 
 		// Revalidate paths that may depend on this data
 		revalidatePath('/dashboard');
