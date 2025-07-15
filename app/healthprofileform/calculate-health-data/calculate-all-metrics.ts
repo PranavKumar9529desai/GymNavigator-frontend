@@ -65,6 +65,7 @@ export function calculateHealthMetrics(
 
 	// Calculate macros
 	const macros = calculateMacros(targetCalories, params.goal);
+	console.log('macros are this', macros);
 
 	return {
 		bmi: Math.round(bmi * 10) / 10, // Round to 1 decimal place
