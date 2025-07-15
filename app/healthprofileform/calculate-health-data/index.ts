@@ -184,61 +184,63 @@ export function convertHeight(
 }
 
 /**
- * Calculate macronutrient distribution based on target calories and goal (Updated Rules)
- * Uses midpoints for percentage ranges.
+ * Calculate macronutrient distribution based on target calories, weight, gender, and goal (Evidence-Based)
  *
  * @param targetCalories Target daily caloric intake
+ * @param weightKg Weight in kilograms
+ * @param gender User's gender
  * @param goal Weight goal
  * @returns Object containing protein, carbs, and fat in grams
  */
-export function calculateMacros(targetCalories: number, goal: GoalType) {
-	let proteinPercentage: number;
-	let carbsPercentage: number;
-	let fatPercentage: number;
+export function calculateMacros(
+	targetCalories: number,
+	weightKg: number,
+	gender: Gender,
+	goal: GoalType,
+) {
+	// Set protein (g/kg) and fat (g/kg or %), carbs as remainder
+	let proteinPerKg: number;
+	let fatPerKg: number | null = null;
+	let fatPercent: number | null = null;
 
-	// Set macronutrient percentages based on goal using new rules (midpoints for ranges)
 	switch (goal) {
-		case 'fat-loss': // Fat Loss for Obese Individuals
-			proteinPercentage = 0.45; // Midpoint of 40-50%
-			carbsPercentage = 0.2; // Midpoint of 10-30%
-			fatPercentage = 0.35; // Midpoint of 30-40%
+		case 'fat-loss':
+			proteinPerKg = 2.0; // 1.8-2.2g/kg for fat loss
+			fatPercent = 0.25; // 20-30% of calories from fat
 			break;
-		case 'muscle-building-with-fat-loss': // Fat Loss with Muscle Building
-			proteinPercentage = 0.35; // Midpoint of 30-40%
-			carbsPercentage = 0.45; // Midpoint of 40-50%
-			fatPercentage = 0.2; // Midpoint of 15-25%
+		case 'muscle-building-with-fat-loss':
+			proteinPerKg = 2.0; // 1.8-2.2g/kg for recomp
+			fatPercent = 0.25;
 			break;
-		case 'muscle-building': // Normal Muscle Building
-			proteinPercentage = 0.3; // Midpoint of 25-35%
-			carbsPercentage = 0.5; // Midpoint of 40-60%
-			fatPercentage = 0.2; // Midpoint of 15-25%
+		case 'muscle-building':
+			proteinPerKg = 1.8; // 1.6-2.0g/kg for muscle gain
+			fatPercent = 0.25;
 			break;
-		case 'bodybuilding': // Body Building
-			proteinPercentage = 0.35; // Midpoint of 30-40%
-			carbsPercentage = 0.5; // Midpoint of 40-60%
-			fatPercentage = 0.2; // Midpoint of 15-25%
+		case 'bodybuilding':
+			proteinPerKg = gender === 'male' ? 2.2 : 2.0; // higher for advanced
+			fatPercent = 0.20;
 			break;
-		// @ts-ignore
 		default:
-			proteinPercentage = 0.25; // Midpoint of 20-30%
-			carbsPercentage = 0.55; // Midpoint of 50-60%
-			fatPercentage = 0.25; // Midpoint of 20-30%
+			proteinPerKg = 1.6; // maintenance
+			fatPercent = 0.25;
 			break;
 	}
 
-	// Ensure percentages add up to 1 (or 100%) - adjust primary levers if needed
-	// Basic check/adjustment - can be refined
-	const totalPercentage = proteinPercentage + carbsPercentage + fatPercentage;
-	if (Math.abs(totalPercentage - 1.0) > 0.01) {
-		// Simple adjustment: scale carbs to make it sum to 1
-		carbsPercentage = 1.0 - proteinPercentage - fatPercentage;
-		console.warn('Adjusted macro percentages to sum to 100%');
+	const proteinGrams = Math.round(proteinPerKg * weightKg);
+	const proteinCals = proteinGrams * 4;
+
+	// Fat: use % of calories, but ensure at least 0.5g/kg
+	let fatCals = Math.round(targetCalories * (fatPercent ?? 0.25));
+	let fatGrams = Math.round(fatCals / 9);
+	const minFatGrams = Math.round(0.5 * weightKg);
+	if (fatGrams < minFatGrams) {
+		fatGrams = minFatGrams;
+		fatCals = fatGrams * 9;
 	}
 
-	// Calculate macros in grams
-	const proteinGrams = Math.round((targetCalories * proteinPercentage) / 4);
-	const carbsGrams = Math.round((targetCalories * carbsPercentage) / 4);
-	const fatGrams = Math.round((targetCalories * fatPercentage) / 9);
+	// Carbs: remainder of calories
+	const remainingCals = targetCalories - (proteinCals + fatCals);
+	const carbsGrams = Math.max(0, Math.round(remainingCals / 4));
 
 	return {
 		protein: proteinGrams,

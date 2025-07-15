@@ -64,7 +64,7 @@ export function calculateHealthMetrics(
 	);
 
 	// Calculate macros
-	const macros = calculateMacros(targetCalories, params.goal);
+	const macros = calculateMacros(targetCalories, weightInKg, params.gender, params.goal);
 	console.log('macros are this', macros);
 
 	return {
