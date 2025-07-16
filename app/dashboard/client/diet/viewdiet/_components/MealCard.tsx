@@ -11,50 +11,62 @@ interface MealCardProps {
 	index: number;
 }
 
+// Types for meal info
+interface MealTypeInfo {
+  type: string;
+  color: string;
+  borderColor: string;
+  bgColor: string;
+  icon: React.ReactNode;
+}
+
 export const MealCard = ({ meal }: MealCardProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	// Determine meal type from timeOfDay
-	const getMealTypeInfo = (timeOfDay: string) => {
-		if (timeOfDay.includes('7:00 AM'))
-			return {
-				type: 'Breakfast',
-				color: 'text-blue-600',
-				borderColor: 'border-blue-400',
-				bgColor: 'bg-blue-50',
-				icon: <BreakfastIcon size={20} className="text-blue-500" />,
-			};
-		if (timeOfDay.includes('1:00 PM'))
-			return {
-				type: 'Lunch',
-				color: 'text-amber-600',
-				borderColor: 'border-amber-400',
-				bgColor: 'bg-amber-50',
-				icon: <LunchIcon size={20} className="text-amber-500" />,
-			};
-		if (timeOfDay.includes('4:00 PM'))
-			return {
-				type: 'Snack',
-				color: 'text-green-600',
-				borderColor: 'border-green-400',
-				bgColor: 'bg-green-50',
-				icon: <SnackIcon size={20} className="text-green-500" />,
-			};
-		if (timeOfDay.includes('7:00 PM'))
-			return {
-				type: 'Dinner',
-				color: 'text-purple-600',
-				borderColor: 'border-purple-400',
-				bgColor: 'bg-purple-50',
-				icon: <DinnerIcon size={20} className="text-purple-500" />,
-			};
+	// Determine meal type from timeOfDay using flexible time ranges
+	const getMealTypeInfo = (timeOfDay: string): MealTypeInfo => {
+	  // Parse hour and minute from timeOfDay (e.g., "8:00 AM")
+	  const match = timeOfDay.match(/(\d{1,2}):(\d{2}) (AM|PM)/);
+	  if (!match) {
 		return {
-			type: 'Meal',
-			color: 'text-slate-600',
-			borderColor: 'border-slate-400',
-			bgColor: 'bg-slate-50',
-			icon: <DefaultMealIcon size={20} className="text-slate-400" />,
+		  type: 'Meal',
+		  color: 'text-blue-600',
+		  borderColor: 'border-blue-200',
+		  bgColor: 'bg-blue-50',
+		  icon: <DefaultMealIcon size={20} className="text-blue-500" />,
 		};
+	  }
+	  let hour = parseInt(match[1], 10);
+	  const minute = parseInt(match[2], 10);
+	  const period = match[3];
+
+	  if (period === 'PM' && hour !== 12) hour += 12;
+	  if (period === 'AM' && hour === 12) hour = 0;
+
+	  let type = 'Meal';
+	  let icon = <DefaultMealIcon size={20} className="text-blue-500" />;
+
+	  if (hour >= 7 && hour < 11) {
+		type = 'Breakfast';
+		icon = <BreakfastIcon size={20} className="text-blue-500" />;
+	  } else if (hour >= 11 && hour < 15) {
+		type = 'Lunch';
+		icon = <LunchIcon size={20} className="text-blue-500" />;
+	  } else if (hour >= 15 && hour < 18) {
+		type = 'Snack';
+		icon = <SnackIcon size={20} className="text-blue-500" />;
+	  } else if (hour >= 18 && hour < 22) {
+		type = 'Dinner';
+		icon = <DinnerIcon size={20} className="text-blue-500" />;
+	  }
+
+	  return {
+		type,
+		color: 'text-blue-600',
+		borderColor: 'border-blue-200',
+		bgColor: 'bg-blue-50',
+		icon,
+	  };
 	};
 
 	const mealInfo = getMealTypeInfo(meal.timeOfDay);

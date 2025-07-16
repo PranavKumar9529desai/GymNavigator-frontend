@@ -25,6 +25,7 @@ const DEFAULT_DIET_PLAN: DietPlanInterface = {
 	meals: [],
 };
 
+// TODO need to review this code later on 
 const DEFAULT_MEAL: MealInterface = {
 	name: '',
 	time: '',

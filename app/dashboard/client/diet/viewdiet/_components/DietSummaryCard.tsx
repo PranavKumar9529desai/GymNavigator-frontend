@@ -47,23 +47,34 @@ interface CustomTooltipProps {
 }
 
 export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
-	// Calculate totals
-	const totalCalories = dietPlan.meals.reduce(
-		(acc, meal) => acc + meal.calories,
-		0,
-	);
-	const totalProtein = dietPlan.meals.reduce(
-		(acc, meal) => acc + meal.protein,
-		0,
-	);
-	const totalCarbs = dietPlan.meals.reduce((acc, meal) => acc + meal.carbs, 0);
-	const totalFats = dietPlan.meals.reduce((acc, meal) => acc + meal.fats, 0);
+	// Guard all macro and calorie values
+	const proteinRatio = dietPlan.proteinRatio ?? 0;
+	const carbsRatio = dietPlan.carbsRatio ?? 0;
+	const fatsRatio = dietPlan.fatsRatio ?? 0;
+	const targetCalories = dietPlan.targetCalories ?? 0;
 
-	// Calculate percentages for the progress bars
-	const _caloriePercentage = Math.min(
-		Math.round((totalCalories / dietPlan.targetCalories) * 100),
-		100,
+	// Use (dietPlan.meals ?? []) for all reductions
+	const totalCalories = (dietPlan.meals ?? []).reduce(
+		(acc, meal) => acc + (meal.calories ?? 0),
+		0,
 	);
+	const totalProtein = (dietPlan.meals ?? []).reduce(
+		(acc, meal) => acc + (meal.protein ?? 0),
+		0,
+	);
+	const totalCarbs = (dietPlan.meals ?? []).reduce(
+		(acc, meal) => acc + (meal.carbs ?? 0),
+		0,
+	);
+	const totalFats = (dietPlan.meals ?? []).reduce(
+		(acc, meal) => acc + (meal.fats ?? 0),
+		0,
+	);
+
+	// Calculate percentages for the progress bars, guard against division by zero
+	const _caloriePercentage = targetCalories
+		? Math.min(Math.round((totalCalories / targetCalories) * 100), 100)
+		: 0;
 
 	// Format created date
 	const formattedDate = new Date(dietPlan.createdAt).toLocaleDateString(
@@ -75,17 +86,17 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 		},
 	);
 
-	// Data for pie chart
+	// Data for pie chart (always use percent format)
 	const macroData: MacroDataItem[] = [
-		{ name: 'Protein', value: dietPlan.proteinRatio, color: '#9333ea' },
-		{ name: 'Carbs', value: dietPlan.carbsRatio, color: '#d97706' },
-		{ name: 'Fats', value: dietPlan.fatsRatio, color: '#3b82f6' },
+		{ name: 'Protein', value: proteinRatio, color: '#9333ea' },
+		{ name: 'Carbs', value: carbsRatio, color: '#d97706' },
+		{ name: 'Fats', value: fatsRatio, color: '#3b82f6' },
 	];
 
 	// Data for calorie bar chart
 	const _calorieData: CalorieDataItem[] = [
 		{ name: 'Current', calories: totalCalories, fill: '#4f46e5' },
-		{ name: 'Target', calories: dietPlan.targetCalories, fill: '#94a3b8' },
+		{ name: 'Target', calories: targetCalories, fill: '#94a3b8' },
 	];
 
 	const renderCustomizedLabel = (props: CustomPieLabelProps) => {

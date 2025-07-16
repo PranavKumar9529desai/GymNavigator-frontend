@@ -1,8 +1,8 @@
 'use server';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import type { AxiosError } from 'axios';
+// Use DietPlanInput from diet-types if available
 
-// Types matching the backend expectations
 export interface MealIngredientInput {
 	name: string;
 	quantity: number;
@@ -35,10 +35,8 @@ export interface DietPlanInput {
 	meals: MealInput[];
 }
 
-// Replace 'any' with a more specific generic type or unknown
 export interface ApiResponse<T = unknown> {
 	success: boolean;
-	message: string;
 	data?: T;
 	error?: string;
 }
@@ -46,7 +44,7 @@ export interface ApiResponse<T = unknown> {
 export async function createDietPlan(
 	dietPlan: DietPlanInput,
 ): Promise<ApiResponse> {
-	'use server'; // Ensure this is marked as a server action
+	'use server';
 
 	const trainerAxios = await TrainerReqConfig();
 
@@ -66,17 +64,16 @@ export async function createDietPlan(
 		if (response.status === 201) {
 			return {
 				success: true,
-				message: 'Diet plan created successfully',
 				data: response.data.data,
 			};
 		}
-		throw new Error(response.data.msg || 'Failed to create diet plan');
+		throw new Error(response.data.error || 'Failed to create diet plan');
 	} catch (error: unknown) {
-		const axiosError = error as AxiosError<{ msg: string }>;
+		const axiosError = error as AxiosError<{ error: string }>;
 		console.error('Error creating diet plan:', axiosError);
 		return {
 			success: false,
-			message: axiosError.response?.data?.msg || 'Failed to create diet plan',
+			error: axiosError.response?.data?.error || 'Failed to create diet plan',
 		};
 	}
 }

@@ -30,6 +30,7 @@ export interface DietPlan {
 	meals: Meal[];
 	createdAt: string;
 	updatedAt: string;
+	trainer?: { name: string } | null;
 }
 
 export interface DietResponse {
@@ -53,6 +54,8 @@ export const fetchTodaysDiet = async (): Promise<TodaysDiet> => {
 			console.error("Failed to fetch today's diet:", response.data.error);
 			return { dietPlan: null };
 		}
+
+		console.log('response', response.data.data.dietPlan);
 
 		// Return the direct response from the backend without transformation
 		return { dietPlan: response.data.data.dietPlan };

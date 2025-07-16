@@ -1,35 +1,33 @@
 'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { revalidatePath } from 'next/cache';
+import type { AssignSingleDietPayload } from '../../diet/diet-types';
 
-export interface AssignDietPlanInput {
-	userId: number;
-	dietPlanId: number;
-}
-
-export async function assignDietPlan({ userId, dietPlanId }: AssignDietPlanInput) {
+export async function assignDietPlan({ userId, dietPlan, day }: AssignSingleDietPayload) {
 	try {
 		const trainerAxios = await TrainerReqConfig();
-
-		const response = await trainerAxios.post('/diet/assigndiettouser', {
-			userId,
-			dietPlanId,
-		});
-
-		if (response.status !== 200) {
-			throw new Error(response.data.msg || 'Failed to assign diet plan');
+		// Prepare payload for new assignment endpoint
+		const payload = {
+			userId: Number(userId),
+			dietPlanId: dietPlan.id, // Assumes dietPlan has an id (should be created first)
+			startDate: new Date().toISOString(), // Placeholder, UI should provide
+			endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Placeholder: 1 week
+			daysOfWeek: [day],
+			notes: dietPlan.description || '',
+		};
+		const response = await trainerAxios.post('/diet/assigndiettouser/enhanced', payload);
+		if (response.data.success) {
+			return {
+				success: true,
+				data: response.data.data,
+			};
 		}
-
-		// Revalidate paths that show diet plan assignments
-		revalidatePath('/dashboard/trainer/clients');
-		revalidatePath(`/dashboard/trainer/clients/${userId}`);
-
-		return { success: true, data: response.data.data };
+		throw new Error(response.data.error || 'Failed to assign diet plan');
 	} catch (error) {
-		const errorMessage =
-			error instanceof Error ? error.message : 'An unknown error occurred';
-		console.error('Error assigning diet plan:', errorMessage);
-		return { success: false, error: errorMessage };
+		console.error('Error assigning diet plan:', error);
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : 'Failed to assign diet plan',
+		};
 	}
 }

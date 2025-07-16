@@ -29,9 +29,20 @@ export default function TodaysDietComponent({
     );
   }
 
-  // Sort meals by time of day
+  // Sort meals by time of day (chronological order)
+  const parseTime = (timeStr: string) => {
+    const match = timeStr.match(/(\d{1,2}):(\d{2}) (AM|PM)/);
+    if (!match) return 0;
+    let hour = parseInt(match[1], 10);
+    const minute = parseInt(match[2], 10);
+    const period = match[3];
+    if (period === 'PM' && hour !== 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+    return hour * 60 + minute;
+  };
+
   const sortedMeals = [...data.dietPlan.meals].sort((a, b) => {
-    return a.timeOfDay.localeCompare(b.timeOfDay);
+    return parseTime(a.timeOfDay) - parseTime(b.timeOfDay);
   });
 
   // Calculate nutrition summary

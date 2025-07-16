@@ -2,6 +2,7 @@
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import { toast } from 'sonner';
+import type { AssignWeeklyDietPayload, AssignSingleDietPayload } from '../../diet-types'; // Adjust import path as needed
 
 interface AssignDietPlanParams {
 	userId: string;
@@ -26,45 +27,28 @@ interface AssignDietPlanParams {
 	day: string;
 }
 
+// Refactored: Assign a single diet plan using the new assignment endpoint
 export async function assignDietPlan({
 	userId,
 	dietPlan,
 	day,
-}: AssignDietPlanParams) {
+}: AssignSingleDietPayload & { day: string; dietPlan: AssignSingleDietPayload['dietPlan'] }) {
 	try {
 		const trainerAxios = await TrainerReqConfig();
-
-		// Format the diet plan to match the backend expectations
-		const formattedDietPlan = {
-			name: `${day} Diet Plan - ${dietPlan.name || 'Custom Diet'}`,
-			description: dietPlan.description || `Generated diet plan for ${day}`,
-			targetCalories: dietPlan.targetCalories,
-			proteinRatio: dietPlan.proteinRatio,
-			carbsRatio: dietPlan.carbsRatio,
-			fatsRatio: dietPlan.fatsRatio,
-			meals: dietPlan.meals.map((meal, index) => ({
-				name: meal.name,
-				timeOfDay: meal.timeOfDay,
-				calories: meal.calories,
-				protein: meal.protein,
-				carbs: meal.carbs,
-				fats: meal.fats,
-				instructions: `[Time: ${meal.timeOfDay}] ${meal.instructions}`,
-				order: index + 1, // Add order field
-			})),
-		};
-
-		// Call the createandassign endpoint
-		const response = await trainerAxios.post('/diet/createandassign', {
+		// Prepare payload for new assignment endpoint
+		const payload = {
 			userId: Number(userId),
-			dietPlan: formattedDietPlan,
-		});
-
+			dietPlanId: dietPlan.id, // Assumes dietPlan has an id (should be created first)
+			startDate: new Date().toISOString(), // Placeholder, UI should provide
+			endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Placeholder: 1 week
+			daysOfWeek: [day],
+			notes: dietPlan.description || '',
+		};
+		const response = await trainerAxios.post('/diet/assigndiettouser/enhanced', payload);
 		if (response.data.success) {
 			return {
 				success: true,
 				data: response.data.data,
-				message: 'Diet plan assigned successfully',
 			};
 		}
 		throw new Error(response.data.error || 'Failed to assign diet plan');
@@ -72,70 +56,36 @@ export async function assignDietPlan({
 		console.error('Error assigning diet plan:', error);
 		return {
 			success: false,
-			error:
-				error instanceof Error ? error.message : 'Failed to assign diet plan',
+			error: error instanceof Error ? error.message : 'Failed to assign diet plan',
 		};
 	}
 }
 
-// Function to assign the weekly diet plan
+// Refactored: Assign a weekly diet plan using the new assignment endpoint
 export async function assignWeeklyDietPlan({
 	userId,
 	weeklyPlans,
-}: {
-	userId: string;
-	weeklyPlans: Record<string, AssignDietPlanParams['dietPlan']>;
-}) {
+}: AssignWeeklyDietPayload & { weeklyPlans: Record<string, AssignSingleDietPayload['dietPlan']> }) {
 	try {
 		const trainerAxios = await TrainerReqConfig();
-
-		// Format all the diet plans
-		const formattedWeeklyPlans = Object.entries(weeklyPlans).map(
-			([day, plan]) => ({
-				day,
-				plan: {
-					name: `${day} Diet Plan - ${plan.name || 'Custom Diet'}`,
-					description: plan.description || `Generated diet plan for ${day}`,
-					targetCalories: plan.targetCalories,
-					proteinRatio: plan.proteinRatio,
-					carbsRatio: plan.carbsRatio,
-					fatsRatio: plan.fatsRatio,
-					meals: plan.meals.map((meal, index) => ({
-						name: meal.name,
-						timeOfDay: meal.timeOfDay,
-						calories: meal.calories,
-						protein: meal.protein,
-						carbs: meal.carbs,
-						fats: meal.fats,
-						instructions: `[Time: ${meal.timeOfDay}] ${meal.instructions}`,
-						order: index + 1,
-					})),
-				},
-			}),
-		);
-
-		// Call the createandassignweekly endpoint
-		const response = await trainerAxios.post('/diet/createandassignweekly', {
+		// Refactored: Send a single POST with the correct structure
+		const payload = {
 			userId: Number(userId),
-			weeklyPlans: formattedWeeklyPlans,
-		});
-
+			weeklyPlans: Object.entries(weeklyPlans).map(([day, plan]) => ({ day, plan })),
+		};
+		const response = await trainerAxios.post('/diet/createandassignweekly', payload);
 		if (response.data.success) {
 			return {
 				success: true,
 				data: response.data.data,
-				message: 'Weekly diet plan assigned successfully',
 			};
 		}
-		throw new Error(response.data.error || 'Failed to assign weekly diet plan');
+		throw new Error(response.data.error || 'Failed to assign weekly diet plans');
 	} catch (error) {
 		console.error('Error assigning weekly diet plan:', error);
 		return {
 			success: false,
-			error:
-				error instanceof Error
-					? error.message
-					: 'Failed to assign weekly diet plan',
+			error: error instanceof Error ? error.message : 'Failed to assign weekly diet plan',
 		};
 	}
 }

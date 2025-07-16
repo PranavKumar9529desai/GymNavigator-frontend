@@ -77,7 +77,7 @@ export async function createDietPlan(dietPlan: DietPlanInput) {
 		});
 
 		if (response.status !== 201) {
-			throw new Error(response.data.msg || 'Failed to create diet plan');
+			throw new Error(response.data.error || 'Failed to create diet plan');
 		}
 
 		revalidatePath('/dashboard/trainer/diet');
@@ -98,7 +98,7 @@ export async function updateDietPlan(dietPlan: DietPlanUpdateInput) {
 		const response = await trainerAxios.put('/diet/updatedietplan', dietPlan);
 
 		if (response.status !== 200) {
-			throw new Error(response.data.msg || 'Failed to update diet plan');
+			throw new Error(response.data.error || 'Failed to update diet plan');
 		}
 
 		revalidatePath('/dashboard/trainer/diet');

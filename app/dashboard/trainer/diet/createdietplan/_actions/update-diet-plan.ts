@@ -25,17 +25,16 @@ export async function updateDietPlan(
 		if (response.status === 200) {
 			return {
 				success: true,
-				message: 'Diet plan updated successfully',
 				data: response.data.data,
 			};
 		}
-		throw new Error(response.data.msg || 'Failed to update diet plan');
+		throw new Error(response.data.error || 'Failed to update diet plan');
 	} catch (error: unknown) {
-		const axiosError = error as AxiosError<{ msg: string }>;
+		const axiosError = error as AxiosError<{ error: string }>;
 		console.error('Error updating diet plan:', axiosError);
 		return {
 			success: false,
-			message: axiosError.response?.data?.msg || 'Failed to update diet plan',
+			error: axiosError.response?.data?.error || 'Failed to update diet plan',
 		};
 	}
 }
