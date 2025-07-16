@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
 import type { Meal } from '../_actions/get-todays-diet';
 import { NutritionCard } from './NutritionCard';
+import { BreakfastIcon, LunchIcon, SnackIcon, DinnerIcon, DefaultMealIcon } from './MealIcons';
 
 interface MealCardProps {
 	meal: Meal;
@@ -19,40 +20,40 @@ export const MealCard = ({ meal }: MealCardProps) => {
 			return {
 				type: 'Breakfast',
 				color: 'text-blue-600',
-				borderColor: 'border-blue-500',
+				borderColor: 'border-blue-400',
 				bgColor: 'bg-blue-50',
-				icon: '☀️',
+				icon: <BreakfastIcon size={20} className="text-blue-500" />,
 			};
 		if (timeOfDay.includes('1:00 PM'))
 			return {
 				type: 'Lunch',
 				color: 'text-amber-600',
-				borderColor: 'border-amber-500',
+				borderColor: 'border-amber-400',
 				bgColor: 'bg-amber-50',
-				icon: '🍽️',
+				icon: <LunchIcon size={20} className="text-amber-500" />,
 			};
 		if (timeOfDay.includes('4:00 PM'))
 			return {
 				type: 'Snack',
 				color: 'text-green-600',
-				borderColor: 'border-green-500',
+				borderColor: 'border-green-400',
 				bgColor: 'bg-green-50',
-				icon: '🥗',
+				icon: <SnackIcon size={20} className="text-green-500" />,
 			};
 		if (timeOfDay.includes('7:00 PM'))
 			return {
 				type: 'Dinner',
 				color: 'text-purple-600',
-				borderColor: 'border-purple-500',
+				borderColor: 'border-purple-400',
 				bgColor: 'bg-purple-50',
-				icon: '🌙',
+				icon: <DinnerIcon size={20} className="text-purple-500" />,
 			};
 		return {
 			type: 'Meal',
-			color: 'text-gray-600',
-			borderColor: 'border-gray-500',
-			bgColor: 'bg-gray-50',
-			icon: '🍴',
+			color: 'text-slate-600',
+			borderColor: 'border-slate-400',
+			bgColor: 'bg-slate-50',
+			icon: <DefaultMealIcon size={20} className="text-slate-400" />,
 		};
 	};
 

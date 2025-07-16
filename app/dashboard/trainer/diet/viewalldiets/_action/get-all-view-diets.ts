@@ -1,5 +1,13 @@
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 
+export interface ViewDietMeal {
+  id: number;
+  name: string;
+  mealTime: string;
+  calories: number;
+  instructions?: string | null;
+}
+
 export interface ViewDietPlan {
   id: number;
   name: string;
@@ -20,6 +28,7 @@ export interface ViewDietPlan {
   assignedMembers: number;
   hasAccess: boolean;
   mealsCount: number;
+  meals: ViewDietMeal[]; // <-- add meals array
   createdAt: string; // ISO string
   updatedAt: string; // ISO string
 }

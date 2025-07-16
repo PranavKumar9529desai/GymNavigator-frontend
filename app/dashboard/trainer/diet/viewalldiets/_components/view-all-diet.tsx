@@ -16,6 +16,8 @@ import {
   Eye,
   Star,
   Download,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -84,78 +86,118 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
     </div>
   )
 
-  const DietCard = ({ diet }: { diet: ViewDietPlan }) => (
-    <Card className="group hover:shadow-md transition-all duration-200 border border-slate-100 hover:border-blue-200 bg-white">
-      <CardHeader className="pb-3 p-4">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
-                <Target className="h-4 w-4 text-white" />
+  const DietCard = ({ diet }: { diet: ViewDietPlan }) => {
+    const [expanded, setExpanded] = useState(false);
+    return (
+      <Card className="group hover:shadow-md transition-all duration-200 border border-slate-100 hover:border-blue-200 bg-white">
+        <CardHeader className="pb-3 p-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+                  <Target className="h-4 w-4 text-white" />
+                </div>
+                <CardTitle className="text-lg leading-tight text-slate-800">{diet.name}</CardTitle>
               </div>
-              <CardTitle className="text-lg leading-tight text-slate-800">{diet.name}</CardTitle>
+              <Badge 
+                className={`text-xs ${getStatusColor(diet.status)}`} 
+                variant="secondary"
+              >
+                {diet.status.toUpperCase()}
+              </Badge>
             </div>
-            <Badge 
-              className={`text-xs ${getStatusColor(diet.status)}`} 
-              variant="secondary"
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              aria-label={expanded ? 'Collapse meal list' : 'Expand meal list'}
+              className="ml-2 p-2 rounded-full hover:bg-blue-50/50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              tabIndex={0}
+              role="button"
             >
-              {diet.status.toUpperCase()}
-            </Badge>
+              {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
           </div>
-        
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4 p-4 pt-0">
-        <p className="text-sm text-slate-600 line-clamp-2">{diet.description}</p>
+        </CardHeader>
+        <CardContent className="space-y-4 p-4 pt-0">
+          <p className="text-sm text-slate-600 line-clamp-2">{diet.description}</p>
 
-        <div className="grid grid-cols-3 gap-3 text-sm">
-          <div className="flex flex-col items-center p-2 bg-blue-50/50 rounded-lg">
-            <Target className="h-4 w-4 text-blue-600 mb-1" />
-            <span className="font-medium text-slate-800">{diet.totalCalories}</span>
-            <span className="text-xs text-slate-500">kcal</span>
+          <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="flex flex-col items-center p-2 bg-blue-50/50 rounded-lg">
+              <Target className="h-4 w-4 text-blue-600 mb-1" />
+              <span className="font-medium text-slate-800">{diet.totalCalories}</span>
+              <span className="text-xs text-slate-500">kcal</span>
+            </div>
+            <div className="flex flex-col items-center p-2 bg-green-50/50 rounded-lg">
+              <Users className="h-4 w-4 text-green-600 mb-1" />
+              <span className="font-medium text-slate-800">{diet.assignedMembers}</span>
+              <span className="text-xs text-slate-500">members</span>
+            </div>
+            <div className="flex flex-col items-center p-2 bg-purple-50/50 rounded-lg">
+              <Calendar className="h-4 w-4 text-purple-600 mb-1" />
+              <span className="font-medium text-slate-800">{diet.mealsCount}</span>
+              <span className="text-xs text-slate-500">meals</span>
+            </div>
           </div>
-          <div className="flex flex-col items-center p-2 bg-green-50/50 rounded-lg">
-            <Users className="h-4 w-4 text-green-600 mb-1" />
-            <span className="font-medium text-slate-800">{diet.assignedMembers}</span>
-            <span className="text-xs text-slate-500">members</span>
-          </div>
-          <div className="flex flex-col items-center p-2 bg-purple-50/50 rounded-lg">
-            <Calendar className="h-4 w-4 text-purple-600 mb-1" />
-            <span className="font-medium text-slate-800">{diet.mealsCount}</span>
-            <span className="text-xs text-slate-500">meals</span>
-          </div>
-        </div>
 
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-slate-700">Macronutrients</h4>
-          <div className="space-y-2">
-            <MacroBar label="Protein" percentage={diet.macros.protein} color="blue" />
-            <MacroBar label="Carbs" percentage={diet.macros.carbs} color="green" />
-            <MacroBar label="Fats" percentage={diet.macros.fats} color="orange" />
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-700">Macronutrients</h4>
+            <div className="space-y-2">
+              <MacroBar label="Protein" percentage={diet.macros.protein} color="blue" />
+              <MacroBar label="Carbs" percentage={diet.macros.carbs} color="green" />
+              <MacroBar label="Fats" percentage={diet.macros.fats} color="orange" />
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={diet.creator.avatar || "/placeholder.svg"} />
-              <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
-                {diet.creator.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-xs text-slate-600">{diet.creator.name}</span>
+          {expanded && (
+            <div className="pt-4 border-t border-slate-100">
+              <h4 className="text-xs font-semibold text-blue-700 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                Meals in this diet
+              </h4>
+              {diet.meals.length === 0 ? (
+                <div className="text-xs text-slate-500">No meals in this diet plan.</div>
+              ) : (
+                <ul className="space-y-2">
+                  {diet.meals.map((meal) => (
+                    <li key={meal.id} className="bg-blue-50/40 rounded p-2 flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-slate-800 text-sm">{meal.name}</span>
+                        <span className="text-xs text-blue-600 bg-blue-100 rounded px-2 py-0.5 ml-2">{meal.mealTime}</span>
+                        <span className="text-xs text-slate-600 ml-auto">{meal.calories} kcal</span>
+                      </div>
+                      {meal.instructions && (
+                        <div className="text-xs text-slate-500 mt-1">{meal.instructions}</div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src={diet.creator.avatar || "/placeholder.svg"} />
+                <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                  {diet.creator.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-xs text-slate-600">{diet.creator.name}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="h-3 w-3 text-slate-400" />
+              <span className="text-xs text-slate-500">{diet.createdDate}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 text-slate-400" />
-            <span className="text-xs text-slate-500">{diet.createdDate}</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="mx-auto p-2 sm:p-6 space-y-6">
@@ -262,7 +304,7 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
       </Card>
 
       {/* Diet Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-start">
         {filteredDiets.map((diet) => (
           <DietCard key={diet.id} diet={diet} />
         ))}
