@@ -19,27 +19,28 @@ export async function generateMetadata(): Promise<Metadata> {
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';
 	const role = session?.role || 'user';
 	const gym = session?.gym || null;
-
+	
+	console.log("title from the dashboard layout is " , gym , role);
 	let title = 'Dashboard | GymNavigator';
 	let description = 'Access your personalized dashboard on GymNavigator.';
 
 	if (role === 'owner') {
 		title = gym
-			? `Owner Dashboard – ${gym} | GymNavigator`
+			? `Owner Dashboard  ${gym} | GymNavigator`
 			: 'Owner Dashboard | GymNavigator';
 		description = gym
 			? `Manage your gym (${gym}) operations, trainers, and clients with GymNavigator.`
 			: 'Manage your gym operations, trainers, and clients with GymNavigator.';
 	} else if (role === 'trainer') {
 		title = gym
-			? `Trainer Dashboard – ${gym} | GymNavigator`
+			? `Trainer Dashboard  ${gym} | GymNavigator`
 			: 'Trainer Dashboard | GymNavigator';
 		description = gym
 			? `View and manage your clients, workouts, and attendance at ${gym} with GymNavigator.`
 			: 'View and manage your clients, workouts, and attendance with GymNavigator.';
 	} else if (role === 'client') {
 		title = gym
-			? `Client Dashboard – ${gym} | GymNavigator`
+			? `Client Dashboard  ${gym} | GymNavigator`
 			: 'Client Dashboard | GymNavigator';
 		description = gym
 			? `Track your workouts, diet, and attendance at ${gym} with GymNavigator.`

@@ -1,7 +1,7 @@
 'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import type { AssignSingleDietPayload } from '../../diet/diet-types';
+import type { AssignSingleDietPayload } from '../../diet-types';
 
 export async function assignDietPlan({ userId, dietPlan, day }: AssignSingleDietPayload) {
 	try {

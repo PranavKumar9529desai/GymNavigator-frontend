@@ -18,12 +18,13 @@ import {
 	SparklesIcon,
 } from 'lucide-react';
 import type React from 'react';
+import type { DayOfWeek } from './DietPlanner';
 import { useEffect, useState } from 'react';
 
 interface DietControlsProps {
 	onGenerate: (location: { country: string; state: string }) => void;
-	activeDay?: string;
-	onDayChange?: (day: string) => void;
+	activeDay?: DayOfWeek;
+	onDayChange?: (day: DayOfWeek) => void;
 }
 
 export const DietControls: React.FC<DietControlsProps> = ({
@@ -40,7 +41,7 @@ export const DietControls: React.FC<DietControlsProps> = ({
 	const [selectedEndDate, setSelectedEndDate] = useState<Date>(defaultEndDate);
 	const [country, setCountry] = useState<string>('');
 	const [state, setState] = useState<string>('');
-	const days = [
+	const days: DayOfWeek[] = [
 		'Monday',
 		'Tuesday',
 		'Wednesday',
@@ -49,9 +50,9 @@ export const DietControls: React.FC<DietControlsProps> = ({
 		'Saturday',
 		'Sunday',
 	];
-	const initialDay =
+	const initialDay: DayOfWeek =
 		new Date().getDay() === 0 ? 'Sunday' : days[new Date().getDay() - 1];
-	const [localActiveDay, setLocalActiveDay] = useState<string>(
+	const [localActiveDay, setLocalActiveDay] = useState<DayOfWeek>(
 		propActiveDay || initialDay,
 	);
 
@@ -84,9 +85,12 @@ export const DietControls: React.FC<DietControlsProps> = ({
 	};
 
 	const handleDayChange = (day: string) => {
-		setLocalActiveDay(day);
-		if (onDayChange) {
-			onDayChange(day);
+		// Only allow valid DayOfWeek values
+		if (days.includes(day as DayOfWeek)) {
+			setLocalActiveDay(day as DayOfWeek);
+			if (onDayChange) {
+				onDayChange(day as DayOfWeek);
+			}
 		}
 	};
 

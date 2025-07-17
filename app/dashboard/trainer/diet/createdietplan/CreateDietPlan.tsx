@@ -267,10 +267,10 @@ export default function CreateDietPlan() {
 				localStorage.removeItem('dietPlanData');
 				localStorage.removeItem('currentMealData');
 
-				toast.success(result.message);
+				toast.success('Diet plan created successfully!');
 				router.push('/dashboard/trainer/diet/assigndietplan');
 			} else {
-				toast.error(result.message);
+				toast.error(result.error ?? 'An error occurred.');
 			}
 		} catch (error) {
 			console.error('Error submitting diet plan:', error);

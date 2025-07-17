@@ -47,6 +47,16 @@ interface DietPlan {
 	}[];
 }
 
+// Define DayOfWeek type for strict typing
+export type DayOfWeek =
+	| 'Monday'
+	| 'Tuesday'
+	| 'Wednesday'
+	| 'Thursday'
+	| 'Friday'
+	| 'Saturday'
+	| 'Sunday';
+
 // Helper to convert from API diet plan meal to display meal
 const convertToDisplayMeal = (meal: DietPlan['meals'][0]): Meal => {
 	return {
@@ -67,16 +77,13 @@ export function DietPlanner() {
 
 	const [isPending, startTransition] = useTransition();
 	const [isAssigning, setIsAssigning] = useState(false);
-	const [dietPlans, setDietPlans] = useState<Record<string, Meal[]> | null>(
+	const [dietPlans, setDietPlans] = useState<Record<DayOfWeek, Meal[]> | null>(
 		null,
 	);
-	const [originalPlans, setOriginalPlans] = useState<Record<
-		string,
-		DietPlan
-	> | null>(null);
-	const [activeDay, setActiveDay] = useState<string>('Monday');
+	const [originalPlans, setOriginalPlans] = useState<Record<DayOfWeek, DietPlan> | null>(null);
+	const [activeDay, setActiveDay] = useState<DayOfWeek>('Monday');
 
-	const handleDayChange = (day: string) => {
+	const handleDayChange = (day: DayOfWeek) => {
 		setActiveDay(day);
 	};
 
@@ -96,15 +103,31 @@ export function DietPlanner() {
 				}
 
 				// Store the original plans for later use in assignment
-				setOriginalPlans(result.data);
+				// Ensure only valid days are included
+				const validDays: DayOfWeek[] = [
+					'Monday',
+					'Tuesday',
+					'Wednesday',
+					'Thursday',
+					'Friday',
+					'Saturday',
+					'Sunday',
+				];
+				const filteredOriginalPlans: Record<DayOfWeek, DietPlan> = {} as Record<DayOfWeek, DietPlan>;
+				for (const day of validDays) {
+					if (result.data[day]) {
+						filteredOriginalPlans[day] = result.data[day];
+					}
+				}
+				setOriginalPlans(filteredOriginalPlans);
 
 				// Convert the diet plans to the format required by DietDisplay
-				const formattedDietPlans: Record<string, Meal[]> = {};
-
-				Object.entries(result.data).forEach(([day, plan]) => {
-					formattedDietPlans[day] = plan.meals.map(convertToDisplayMeal);
-				});
-
+				const formattedDietPlans: Record<DayOfWeek, Meal[]> = {} as Record<DayOfWeek, Meal[]>;
+				for (const day of validDays) {
+					if (filteredOriginalPlans[day]) {
+						formattedDietPlans[day] = filteredOriginalPlans[day].meals.map(convertToDisplayMeal);
+					}
+				}
 				setDietPlans(formattedDietPlans);
 				toast.success('Weekly diet plan generated successfully!');
 			} catch (error) {
