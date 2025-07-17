@@ -26,25 +26,25 @@ export async function generateMetadata(): Promise<Metadata> {
 	let description = 'Access your personalized dashboard on GymNavigator.';
 
 	if (role === 'owner') {
-		title = gym
-			? `Owner Dashboard  ${gym} | GymNavigator`
+		title = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `Owner Dashboard  ${gym.gym_name} | GymNavigator`
 			: 'Owner Dashboard | GymNavigator';
-		description = gym
-			? `Manage your gym (${gym}) operations, trainers, and clients with GymNavigator.`
+		description = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `Manage your gym (${gym.gym_name}) operations, trainers, and clients with GymNavigator.`
 			: 'Manage your gym operations, trainers, and clients with GymNavigator.';
 	} else if (role === 'trainer') {
-		title = gym
-			? `Trainer Dashboard  ${gym} | GymNavigator`
+		title = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `Trainer Dashboard  ${gym.gym_name} | GymNavigator`
 			: 'Trainer Dashboard | GymNavigator';
-		description = gym
-			? `View and manage your clients, workouts, and attendance at ${gym} with GymNavigator.`
+		description = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `View and manage your clients, workouts, and attendance at ${gym.gym_name} with GymNavigator.`
 			: 'View and manage your clients, workouts, and attendance with GymNavigator.';
 	} else if (role === 'client') {
-		title = gym
-			? `Client Dashboard  ${gym} | GymNavigator`
+		title = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `Client Dashboard  ${gym.gym_name} | GymNavigator`
 			: 'Client Dashboard | GymNavigator';
-		description = gym
-			? `Track your workouts, diet, and attendance at ${gym} with GymNavigator.`
+		description = gym && typeof gym === 'object' && 'gym_name' in gym
+			? `Track your workouts, diet, and attendance at ${gym.gym_name} with GymNavigator.`
 			: 'Track your workouts, diet, and attendance with GymNavigator.';
 	}
 
