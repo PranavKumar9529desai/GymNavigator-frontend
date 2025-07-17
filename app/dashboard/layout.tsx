@@ -13,6 +13,7 @@ import Sidebar from './_components/sidebar';
 import { preloadCommonIcons } from './_components/common-icons';
 import { IsClient } from '@/lib/is-client';
 import { Metadata } from 'next';
+import PostHogIdentify from './PostHogIdentify';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const session = await auth();
@@ -136,6 +137,16 @@ export default async function Layout({
 
 	return (
 		<div className="flex h-screen bg-gray-50">
+			{/* Identify user for PostHog */}
+			{session?.user?.id && (
+				<PostHogIdentify
+					userId={session.user.id ?? undefined}
+					email={session.user.email ?? undefined}
+					name={session.user.name ?? undefined}
+					role={session.role}
+					gym={session.gym}
+				/>
+			)}
 			{/* Server-rendered sidebar - visible only on desktop */}
 			<div className="hidden md:block h-screen">
 				<Sidebar menuItems={menuItems} />

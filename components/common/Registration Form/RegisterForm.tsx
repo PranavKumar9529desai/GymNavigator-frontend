@@ -29,6 +29,7 @@ import {
 } from '../../ui/select';
 import SignIn from '../Auth/SigninForm';
 import { type RegisterFormValues, registerSchema } from './register-schema';
+import posthog from 'posthog-js';
 
 // Remove the formSchema definition as it's now in register-schema.ts
 
