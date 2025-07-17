@@ -10,6 +10,7 @@ import { auth } from '@/app/(auth)/auth'; // Assuming your auth config is in /au
 import localFont from 'next/font/local';
 import ClientMotionProvider from '../providers/ClientMotionProvider';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+import { PostHogProvider } from '@/providers/PostHogProvider';
 const siteUrl = 'https://gymnavigator.in';
 
 export const viewport: Viewport = {
@@ -104,24 +105,21 @@ export default async function RootLayout({
 	return (
 		<html lang="en">
 			<head />
-			<body
-			// className={
-			// `${oronPax.variable} ${upheaval.variable} ${productSans.variable}`
-			// }
-			>
-				<Providers session={session}>
-					{' '}
-					{/* Pass the session as a prop */}
-					<OnlineStatusProvider>
-						<OfflineIndicator /> {/* Add the indicator here */}
-						<ClientMotionProvider>
-							{children}
-							<RegisterServiceWorker />
-							<Toaster {...toasterProps} />
-						</ClientMotionProvider>
-					</OnlineStatusProvider>
-				</Providers>
-				<PWAInstallPrompt />
+			<body>
+				<PostHogProvider>
+					<Providers session={session}>
+						{/* Pass the session as a prop */}
+						<OnlineStatusProvider>
+							<OfflineIndicator /> {/* Add the indicator here */}
+							<ClientMotionProvider>
+								{children}
+								<RegisterServiceWorker />
+								<Toaster {...toasterProps} />
+							</ClientMotionProvider>
+						</OnlineStatusProvider>
+					</Providers>
+					<PWAInstallPrompt />
+				</PostHogProvider>
 			</body>
 		</html>
 	);

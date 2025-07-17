@@ -75,7 +75,15 @@ const nextConfig = {
 						// Broader CSP for React Three Fiber and 3D components
 						key: 'Content-Security-Policy',
 						value:
-							"default-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://*.pmnd.rs https://*.githubusercontent.com https://raw.githack.com https://nominatim.openstreetmap.org; img-src 'self' https: data:; object-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net data:; worker-src 'self' blob:; frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
+							"default-src 'self'; " +
+							"connect-src 'self' https://cdn.jsdelivr.net https://*.pmnd.rs https://*.githubusercontent.com https://raw.githack.com https://nominatim.openstreetmap.org https://us.i.posthog.com https://us-assets.i.posthog.com; " +
+							"img-src 'self' https: data:; " +
+							"object-src 'self' data:; " +
+							"script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; " +
+							"style-src 'self' 'unsafe-inline'; " +
+							"font-src 'self' https://cdn.jsdelivr.net data:; " +
+							"worker-src 'self' blob:; " +
+							"frame-src 'self' https://*.youtube.com https://youtube.com https://*.youtube-nocookie.com;",
 					},
 					{
 						// Prevent XSS attacks
@@ -102,7 +110,24 @@ const nextConfig = {
 		return config;
 	},
 
-	
+	async rewrites() {
+		return [
+			{
+				source: '/ingest/static/:path*',
+				destination: 'https://us-assets.i.posthog.com/static/:path*',
+			},
+			{
+				source: '/ingest/:path*',
+				destination: 'https://us.i.posthog.com/:path*',
+			},
+			{
+				source: '/ingest/decide',
+				destination: 'https://us.i.posthog.com/decide',
+			},
+		];
+	},
+	// This is required to support PostHog trailing slash API requests
+	skipTrailingSlashRedirect: true,
 };
 
 export default withPWA({
