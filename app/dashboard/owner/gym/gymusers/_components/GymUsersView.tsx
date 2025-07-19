@@ -79,8 +79,8 @@ export default function GymUsersView({ data, role, setRole }: GymUsersViewProps)
             id: 'view-profile',
             label: 'View Profile',
             icon: UserIcon,
-            onClick: () => router.push(`/dashboard/owner/gymusers/${user.id}`),
-            className: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
+            onClick: () => router.push(`/dashboard/owner/gym/gymusers/${user.id}`),
+            // className: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
             tooltip: `View ${user.name}'s profile`,
           },
           // Add more actions here if needed
