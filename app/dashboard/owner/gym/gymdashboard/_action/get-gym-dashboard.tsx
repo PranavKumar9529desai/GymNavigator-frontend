@@ -2,11 +2,13 @@ import type { GymDashboardData } from '../types';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import { AxiosError, type AxiosResponse } from 'axios';
 
+// TODO : see check this some actual users
 export async function getGymDashboardData(): Promise<GymDashboardData> {
   try {
     const ownerAxios = await OwnerReqConfig();
     const response: AxiosResponse<any> = await ownerAxios.get('/dashboard/getdashboarddata');
     const data = response.data?.data;
+    console.log("data returned from the getdashboard  route" , data);
 
     return {
       stats: {
