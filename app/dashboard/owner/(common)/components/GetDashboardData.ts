@@ -7,25 +7,70 @@ interface DashboardStats {
 	activeTrainers: number;
 	todayAttendance: number;
 	revenue: number;
+	expiringMemberships: number;
+	newMembers: number;
+	inactiveMembers: number;
 }
 
-interface RecentActivity {
+interface RecentSignup {
+	id: number;
 	name: string;
 	createdAt: string;
-	Validperiod: {
-		startDate: string;
-		shift: string;
-	} | null;
 }
 
-interface DashboardData {
+interface RecentAttendance {
+	id: number;
+	user: { id: number; name: string };
+	scanTime: string;
+}
+
+interface RecentTrainerAssignment {
+	id: number;
+	name: string;
+	trainer: { name: string } | null;
+	updatedAt: string;
+}
+
+interface RecentActivities {
+	recentSignups: RecentSignup[];
+	recentAttendance: RecentAttendance[];
+	recentTrainerAssignments: RecentTrainerAssignment[];
+}
+
+interface GymDetails {
+	gym_name: string;
+	gym_logo: string;
+	address: {
+		street: string;
+		city: string;
+		state: string;
+		postalCode: string;
+		country: string;
+		latitude: number;
+		longitude: number;
+	} | null;
+	phone_number: string;
+	Email: string;
+	amenities: string[];
+	pricingPlans: Array<{
+		name: string;
+		price: string;
+		duration: string;
+		isFeatured?: boolean;
+		color?: string;
+		icon?: string;
+	}>;
+}
+
+export interface OwnerDashboardData {
 	stats: DashboardStats;
-	recentActivities: RecentActivity[];
+	recentActivities: RecentActivities;
+	gymDetails: GymDetails;
 }
 
 interface DashboardResponse {
 	msg: string;
-	data: DashboardData;
+	data: OwnerDashboardData;
 }
 
 interface DashboardError {
@@ -33,13 +78,13 @@ interface DashboardError {
 	msg?: string;
 }
 
-type DashboardResult = DashboardData | DashboardError;
+type DashboardResult = OwnerDashboardData | DashboardError;
 
 export async function GetDashboardData(): Promise<DashboardResult> {
 	try {
 		const ownerAxios = await OwnerReqConfig();
 		const response: AxiosResponse<DashboardResponse> =
-			await ownerAxios.get('/getdashboarddata');
+			await ownerAxios.get('/dashboard/getdashboarddata');
 
 		if (response.data.data) {
 			return response.data.data;

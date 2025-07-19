@@ -104,7 +104,7 @@ export default async function Layout({
 			if (pathname.startsWith('/dashboard/owner') && !IsOwner(session)) {
 				redirect('/unauthorized');
 			} else if (pathname === '/dashboard') {
-				redirect('/dashboard/owner/gymdetails/viewgymdetails');
+				redirect('/dashboard/owner/');
 			}
 			break;
 

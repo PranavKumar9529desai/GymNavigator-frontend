@@ -24,10 +24,22 @@ export const OwnerDashboardMenuItems: MenuItem[] = [
 		label: 'gymDetails',
 		subItems: [
 			{
+				name: 'Gym Dashboard',
+				link: '/dashboard/owner/gym/gymdashboard',
+				label: 'gymDashboard',
+				iconName: 'LayoutDashboard',
+			},
+			{
 				name: 'View Details',
-				link: '/dashboard/owner/gymdetails/viewgymdetails',
+				link: '/dashboard/owner/gym/viewgymdetails',
 				label: 'viewGymDetails',
 				iconName: 'Eye',
+			},
+			{
+				name: 'Gym Users',
+				link: '/dashboard/owner/gym/gymuser',
+				label: 'gymUser',
+				iconName: 'Users',
 			},
 		],
 	},
