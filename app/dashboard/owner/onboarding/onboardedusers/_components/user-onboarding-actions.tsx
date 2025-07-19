@@ -91,7 +91,7 @@ export function UserActions({
                 <DropdownMenuItem
                   className="flex items-center gap-2 hover:bg-gray-50 py-2.5 my-1 focus:bg-gray-50 cursor-pointer"
                   onClick={() => {
-                    router.push(`/dashboard/owner/gymuser/${user.id}`);
+                    router.push(`/dashboard/owner/gym/gymusers/${user.id}`);
                   }}
                 >
                   <User className="h-4 w-4 text-gray-500" />

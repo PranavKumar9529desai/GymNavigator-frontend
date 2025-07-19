@@ -4,6 +4,9 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, UserX, Heart, Users } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { UserHeader } from "./user-header"
 import { OverviewTab } from "./overview-tab"
 import { HealthTab } from "./health-tab"
@@ -56,6 +59,11 @@ function ErrorState({ error }: { error?: string }) {
 
 export function UserProfileClient({ profileData, userId }: UserProfileClientProps) {
   const [activeTab, setActiveTab] = useState("overview")
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push('/dashboard/owner/gym/gymusers');
+  };
 
   // If there's an error and no data at all
   if (profileData.error && !profileData.userData) {
@@ -68,6 +76,27 @@ export function UserProfileClient({ profileData, userId }: UserProfileClientProp
 
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+      {/* Back Button */}
+      <div className="flex items-center mb-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleBack();
+            }
+          }}
+          className="flex items-center gap-2 p-2 hover:bg-blue-50/50 text-blue-600"
+          role="button"
+          tabIndex={0}
+          aria-label="Go back to gym users list"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          <span className="text-sm font-medium">Back to Users</span>
+        </Button>
+      </div>
       {/* Header Section */}
       <UserHeader 
         userData={profileData.userData!} 

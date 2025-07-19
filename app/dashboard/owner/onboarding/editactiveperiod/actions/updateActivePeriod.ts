@@ -32,7 +32,7 @@ export const UpdateUserActivePeriod = async ({
 	const OwnerAxios = await OwnerReqConfig();
 	try {
 		const response: AxiosResponse<UpdateUserResponseType> =
-			await OwnerAxios.post('/updateuservalidity', {
+			await OwnerAxios.post('/user/updateuservalidity', {
 				userId,
 				startDate,
 				endDate,

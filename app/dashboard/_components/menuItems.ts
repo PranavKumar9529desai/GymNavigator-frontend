@@ -27,7 +27,7 @@ export const OwnerDashboardMenuItems: MenuItem[] = [
 				name: 'Gym Dashboard',
 				link: '/dashboard/owner/gym/gymdashboard',
 				label: 'gymDashboard',
-				iconName: 'LayoutDashboard',
+				iconName: 'ClipboardCheck', // Changed from "Gauge" to "ClipboardCheck" (see @file_context_0)
 			},
 			{
 				name: 'View Details',
@@ -37,7 +37,7 @@ export const OwnerDashboardMenuItems: MenuItem[] = [
 			},
 			{
 				name: 'Gym Users',
-				link: '/dashboard/owner/gym/gymuser',
+				link: '/dashboard/owner/gym/gymusers',
 				label: 'gymUser',
 				iconName: 'Users',
 			},
