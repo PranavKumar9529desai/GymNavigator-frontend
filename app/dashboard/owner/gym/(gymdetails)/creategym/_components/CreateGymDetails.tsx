@@ -1,5 +1,5 @@
 'use client';
-import Loader from '@/app/dashboard/owner/gymdetails/editgymdetails/loading';
+import Loader from '../loading';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

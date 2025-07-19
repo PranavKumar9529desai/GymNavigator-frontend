@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 
-import Loader from '@/app/dashboard/owner/gymdetails/editgymdetails/loading';
+import Loader from './loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
