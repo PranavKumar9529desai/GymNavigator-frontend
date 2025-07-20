@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import type { GymLocation } from '../../types/gym-types';
 
+export const rumtime  = "dynamic"
 // Define a default location value
 const defaultLocation: GymLocation = {
 	lat: 34.0522,

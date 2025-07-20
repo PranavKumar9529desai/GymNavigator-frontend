@@ -5,6 +5,8 @@ import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import type { GymData } from './types/gym-types';
 
+export const rutime = "dynamic"
+
 interface GymInfo {
 	gym_name: string;
 	gym_logo: string;
@@ -14,6 +16,13 @@ interface GymInfo {
 	gymauthtoken: string;
 }
 
+// Helper to format address object to string
+function formatAddress(addressObj: any) {
+	if (!addressObj) return '';
+	const { street, city, state, postalCode, country } = addressObj;
+	return [street, city, state, postalCode, country].filter(Boolean).join(', ');
+}
+
 export default async function GymLayout() {
 	// Server-side data fetching
 	const [gymDetails, gymTabData] = await Promise.all([
@@ -21,12 +30,15 @@ export default async function GymLayout() {
 		getAllGymTabData(),
 	]);
 
+	console.log("Gym Details from the ViewGymdeatails Route", gymDetails);
+	console.log("Gym Details from the TabsData Route", gymTabData);
+
 	// Convert GymInfo to GymData format
 	const convertedGymData: GymData | null = gymDetails
 		? {
 				gym_name: gymDetails.gym_name,
 				gym_logo: gymDetails.gym_logo,
-				address: gymDetails.address,
+				address: typeof gymDetails.address === 'object' ? formatAddress(gymDetails.address) : gymDetails.address,
 				phone_number: gymDetails.phone_number,
 				Email: gymDetails.Email,
 				gymauthtoken: gymDetails.gymauthtoken,
