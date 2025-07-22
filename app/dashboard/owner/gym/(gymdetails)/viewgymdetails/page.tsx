@@ -5,7 +5,6 @@ import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import type { GymData } from './types/gym-types';
 
-export const rutime = "dynamic"
 
 interface GymInfo {
 	gym_name: string;
