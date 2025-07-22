@@ -23,8 +23,14 @@ export default function AttendanceQRScanner() {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [hasProcessed, setHasProcessed] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [preferredCameraDeviceId, setPreferredCameraDeviceId] = useState<string | null>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrScannerRef = useRef<QrScanner | null>(null);
+
+	useEffect(() => {
+		const storedDeviceId = localStorage.getItem('preferredCameraDeviceId');
+		if (storedDeviceId) setPreferredCameraDeviceId(storedDeviceId);
+	}, []);
 
 	useEffect(() => {
 		if (!videoRef.current || qrScannerRef.current) return;
@@ -147,8 +153,7 @@ export default function AttendanceQRScanner() {
 			{
 				returnDetailedScanResult: true,
 				highlightScanRegion: true,
-				highlightCodeOutline: true,
-				preferredCamera: QR_SCANNER_CONFIG.PREFERRED_CAMERA,
+				preferredCamera: preferredCameraDeviceId || QR_SCANNER_CONFIG.PREFERRED_CAMERA,
 				maxScansPerSecond: QR_SCANNER_CONFIG.MAX_SCANS_PER_SECOND,
 				onDecodeError: (error: unknown) => {
 					if (error instanceof Error && !error.message?.includes('NotFound')) {
@@ -181,7 +186,7 @@ export default function AttendanceQRScanner() {
 				qrScannerRef.current = null;
 			}
 		};
-	}, [hasProcessed, isProcessing, router]);
+	}, [hasProcessed, isProcessing, router, preferredCameraDeviceId]);
 
 	// Cleanup on unmount
 	useEffect(() => {

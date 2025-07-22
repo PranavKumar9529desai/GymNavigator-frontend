@@ -106,7 +106,6 @@ export default async function RootLayout({
 		<html lang="en">
 			<head />
 			<body>
-				<PostHogProvider>
 					<Providers session={session}>
 						{/* Pass the session as a prop */}
 						<OnlineStatusProvider>
@@ -119,7 +118,7 @@ export default async function RootLayout({
 						</OnlineStatusProvider>
 					</Providers>
 					<PWAInstallPrompt />
-				</PostHogProvider>
+{/* /				</PostHogProvider> */}
 			</body>
 		</html>
 	);

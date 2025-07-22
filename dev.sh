@@ -9,12 +9,12 @@ echo "Starting Next.js development server on IP: $LOCAL_IP"
 # The local-ssl-proxy is now running in the background. You can now start your Next.js
 # development server, and then access your site at https://$LOCAL_IP:8443.
 
-echo "Access your PWA via: http://$LOCAL_IP:8443"
+echo "Access your PWA via: http://$LOCAL_IP:3000"
 
 # Generate QR code if qrencode is installed
 if command -v qrencode &> /dev/null; then
     echo "Scan this QR code with your mobile device to access the app:"
-    qrencode -t UTF8 "https://$LOCAL_IP:8443"
+    qrencode -t UTF8 "https://$LOCAL_IP:3000"
 else
     echo "Tip: Install qrencode (sudo apt install qrencode) to generate a QR code for easier mobile access"
 fi

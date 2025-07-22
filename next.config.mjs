@@ -15,6 +15,9 @@ const nextConfig = {
 	// output: "standalone",
 
 	// SWC Compiler Configuration
+	experimental : {
+          viewTransition : true
+	},
 
 	images: {
 		remotePatterns: [

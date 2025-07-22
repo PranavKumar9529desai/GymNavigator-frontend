@@ -9,7 +9,7 @@ import { RestDay } from './_component/rest-day';
 import { TodaysDiet } from './_component/todays-diet';
 import { TodaysWorkouts } from './_component/todays-workouts';
 import { WorkoutNotAssigned } from './_component/workout-not-assigned';
-
+import LoadingMyWorkouts from './loading';
 export default async function MyWorkoutsPage() {
 	try {
 		// Fetch both workout and diet data concurrently
@@ -20,7 +20,7 @@ export default async function MyWorkoutsPage() {
 
 		return (
 			<div className="space-y-10">
-				<Suspense fallback={<div>Loading workout data...</div>}>
+				<Suspense fallback={<LoadingMyWorkouts />}>
 					<section>
 						{!workout ? (
 							<WorkoutNotAssigned />
@@ -32,7 +32,7 @@ export default async function MyWorkoutsPage() {
 					</section>
 				</Suspense>
 
-				<Suspense fallback={<div>Loading diet data...</div>}>
+				<Suspense fallback={<LoadingMyWorkouts />}>
 					<section>
 						{!dietPlan ? (
 							<DietNotAssigned />

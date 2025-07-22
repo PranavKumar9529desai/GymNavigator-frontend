@@ -2,6 +2,7 @@ import { IsOwner } from '@/lib/is-owner'; // Assuming path alias @/lib
 import { IsTrainer } from '@/lib/is-trainer'; // Assuming path alias @/lib
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { unstable_ViewTransition as ViewTransition } from 'react'
 import type React from 'react';
 import { auth } from '../(auth)/auth';
 import DashboardBottomNav from './_components/DashboardBottomNav';
@@ -20,8 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';
 	const role = session?.role || 'user';
 	const gym = session?.gym || null;
-	
-	console.log("title from the dashboard layout is " , gym , role);
+
+	console.log("title from the dashboard layout is ", gym, role);
 	let title = 'Dashboard | GymNavigator';
 	let description = 'Access your personalized dashboard on GymNavigator.';
 
@@ -162,7 +163,9 @@ export default async function Layout({
 
 					{/* Original Content */}
 					<div className="container mx-auto px-2 py-4 md:py-6 max-w-7xl">
-						{children}
+						<ViewTransition  >
+							{children}
+						</ViewTransition>
 					</div>
 				</div>
 			</div>
