@@ -58,7 +58,6 @@ export async function refineWorkout(input: RefineWorkoutInput): Promise<{
 			prompt,
 			(response) => validateResponseWithSchema(response, WorkoutPlanSchema),
 			{
-				provider: 'gemini', // Or 'openai' based on your configuration
 				maxAttempts: 3,
 				temperature: 0.7,
 			},

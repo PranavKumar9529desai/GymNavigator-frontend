@@ -152,7 +152,6 @@ IMPORTANT:
 		const response = await generateStructuredContent<
 			z.infer<typeof WeeklyDietPlanSchema>
 		>(prompt, validateWeeklyDietPlanResponse, {
-			provider: 'gemini', // Use Gemini as the AI provider
 			temperature: 0.7, // Add some creativity
 			maxAttempts: 2, // Try up to 2 times
 		});

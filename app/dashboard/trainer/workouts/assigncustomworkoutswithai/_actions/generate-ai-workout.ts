@@ -67,7 +67,6 @@ export async function generateAiWorkout(
 			prompt,
 			(response) => validateResponseWithSchema(response, WorkoutPlanSchema),
 			{
-				provider: 'gemini', // Or 'openai' based on preference
 				maxAttempts: 3,
 				temperature: 0.7,
 			},

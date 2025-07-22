@@ -2,8 +2,6 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Message } from 'ai';
-import { OpenAI } from 'openai';
-import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { v4 as uuidv4 } from 'uuid';
 
 // Get API key with fallbacks for different environment variable names
@@ -11,18 +9,6 @@ const geminiApiKey =
 	process.env.GOOGLE_GEMINI_API_KEY || "";
 
 // Initialize AI providers
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY || '',
-});
-
-// Debug logging
-console.log('Environment test var:', process.env.TEST_ENV);
-console.log('Initializing Gemini with API key available:', !!geminiApiKey);
-console.log(
-	'API key first 4 chars:',
-	geminiApiKey ? geminiApiKey.substring(0, 4) : 'none',
-);
-console.log('backend url is', process.env.NEXT_PUBLIC_BACKEND_URL);
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 
 /**
@@ -67,14 +53,12 @@ export async function generateWithGemini(
 	},
 ) {
 	try {
-		// Additional validation to provide clearer error messages
 		if (!geminiApiKey) {
 			throw new Error(
 				'Gemini API key is not configured. Please check your environment variables.',
 			);
 		}
 
-		// Use Gemini 2.0 Flash-Lite as the default for higher free tier quota
 		const modelName = 'gemini-2.0-flash-lite';
 
 		const model = genAI.getGenerativeModel({
@@ -89,13 +73,11 @@ export async function generateWithGemini(
 
 		console.log(`Trying to generate content with ${modelName} model...`);
 
-		// Regular non-streaming response
 		try {
 			const result = await model.generateContent(prompt);
 			return result.response.text();
 		} catch (modelError: unknown) {
 			console.log('modelError', modelError);
-			// If the first model fails, try gemini-2.0-flash as fallback
 			console.log(`${modelName} failed, trying gemini-2.0-flash...`);
 			const fallbackModel = genAI.getGenerativeModel({
 				model: 'gemini-2.0-flash',
@@ -103,7 +85,7 @@ export async function generateWithGemini(
 					temperature: options?.temperature || 0.4,
 					topK: 32,
 					topP: 0.95,
-					maxOutputTokens: options?.maxOutputTokens || 2048, // Reduced tokens
+					maxOutputTokens: options?.maxOutputTokens || 2048,
 				},
 			});
 
@@ -112,70 +94,11 @@ export async function generateWithGemini(
 		}
 	} catch (error) {
 		console.error('Gemini API error details:', error);
-
-		// If OpenAI key is available, fallback to OpenAI
-		if (process.env.OPENAI_API_KEY) {
-			console.log('Falling back to OpenAI...');
-			try {
-				return await generateWithOpenAI(
-					[{ role: 'user', content: prompt, id: uuidv4() }],
-					{
-						temperature: options?.temperature,
-					},
-				);
-			} catch (openaiError) {
-				console.error('OpenAI fallback error:', openaiError);
-				throw new Error(
-					'Failed to generate content with both Gemini and OpenAI',
-				);
-			}
-		}
-
 		throw new Error(
 			`Failed to generate content with Gemini: ${
 				error instanceof Error ? error.message : 'Unknown error'
 			}`,
 		);
-	}
-}
-
-/**
- * Generate content with OpenAI
- */
-export async function generateWithOpenAI(
-	messages: Message[],
-	options?: {
-		temperature?: number;
-		maxTokens?: number;
-		model?: string;
-	},
-) {
-	try {
-		// Convert ai.Message to OpenAI's expected format
-		const openaiMessages: ChatCompletionMessageParam[] = messages.map((msg) => {
-			// Only include the role and content properties that OpenAI expects
-			return {
-				role:
-					msg.role === 'user'
-						? 'user'
-						: msg.role === 'assistant'
-							? 'assistant'
-							: 'system',
-				content: msg.content,
-			};
-		});
-
-		const response = await openai.chat.completions.create({
-			model: options?.model || 'gpt-3.5-turbo',
-			messages: openaiMessages,
-			temperature: options?.temperature || 0.7,
-			max_tokens: options?.maxTokens || 2048,
-		});
-
-		return response.choices[0].message.content;
-	} catch (error) {
-		console.error('OpenAI API error:', error);
-		throw new Error('Failed to generate content with OpenAI');
 	}
 }
 
@@ -186,14 +109,10 @@ export async function generateStructuredContent<T>(
 	prompt: string,
 	validateFn: (data: string) => { valid: boolean; data?: T; errors?: unknown },
 	options?: {
-		provider?: 'gemini' | 'openai';
 		maxAttempts?: number;
 		temperature?: number;
 	},
 ) {
-	// Default to OpenAI if OPENAI_API_KEY is available and no provider is specified
-	const defaultProvider = process.env.OPENAI_API_KEY ? 'openai' : 'gemini';
-	const provider = options?.provider || defaultProvider;
 	const maxAttempts = options?.maxAttempts || 3;
 	let attempts = 0;
 	let lastResponse = '';
@@ -202,22 +121,12 @@ export async function generateStructuredContent<T>(
 	while (attempts < maxAttempts) {
 		attempts++;
 		try {
-			// Generate response based on provider
-			const response =
-				provider === 'gemini'
-					? await generateWithGemini(currentPrompt, {
-							temperature: options?.temperature,
-						})
-					: await generateWithOpenAI(
-							[{ role: 'user', content: currentPrompt, id: uuidv4() }],
-							{
-								temperature: options?.temperature,
-							},
-						);
+			const response = await generateWithGemini(currentPrompt, {
+				temperature: options?.temperature,
+			});
 
 			lastResponse = response as string;
 
-			// Validate response
 			const validation = validateFn(lastResponse || '');
 
 			if (validation.valid && validation.data) {
@@ -229,7 +138,6 @@ export async function generateStructuredContent<T>(
 				};
 			}
 
-			// If invalid, refine the prompt with error feedback
 			currentPrompt = `
 I tried to generate a structured response but received these errors:
 ${JSON.stringify(validation.errors || 'Invalid format')}
@@ -241,41 +149,9 @@ ${prompt}
 `;
 		} catch (error) {
 			console.error(`Error on attempt ${attempts}:`, error);
-
-			// If we were using Gemini and it failed, try OpenAI if available
-			if (
-				provider === 'gemini' &&
-				process.env.OPENAI_API_KEY &&
-				attempts === maxAttempts
-			) {
-				console.log('Switching to OpenAI for final attempt...');
-				try {
-					const openaiResponse = await generateWithOpenAI(
-						[{ role: 'user', content: currentPrompt, id: uuidv4() }],
-						{
-							temperature: options?.temperature,
-						},
-					);
-
-					lastResponse = openaiResponse as string;
-					const validation = validateFn(lastResponse);
-
-					if (validation.valid && validation.data) {
-						return {
-							success: true,
-							data: validation.data,
-							attempts,
-							provider: 'openai',
-						};
-					}
-				} catch (openaiError) {
-					console.error('OpenAI fallback error:', openaiError);
-				}
-			}
 		}
 	}
 
-	// If all attempts failed
 	throw new Error(
 		`Failed to generate valid structured content after ${maxAttempts} attempts. Last response: ${lastResponse}`,
 	);
@@ -290,12 +166,9 @@ export async function regenerateWithFeedback<T>(
 	feedback: string,
 	validateFn: (data: string) => { valid: boolean; data?: T; errors?: unknown },
 	options?: {
-		provider?: 'gemini' | 'openai';
 		temperature?: number;
 	},
 ) {
-	const provider = options?.provider || 'gemini';
-
 	const feedbackPrompt = `
 I previously generated this response:
 ${JSON.stringify(originalResponse, null, 2)}
@@ -311,20 +184,10 @@ ${originalPrompt}
 `;
 
 	try {
-		// Generate improved response with feedback
-		const response =
-			provider === 'gemini'
-				? await generateWithGemini(feedbackPrompt, {
-						temperature: options?.temperature || 0.5,
-					})
-				: await generateWithOpenAI(
-						[{ role: 'user', content: feedbackPrompt, id: uuidv4() }],
-						{
-							temperature: options?.temperature || 0.5,
-						},
-					);
+		const response = await generateWithGemini(feedbackPrompt, {
+			temperature: options?.temperature || 0.5,
+		});
 
-		// Validate response
 		const validation = validateFn(response || '');
 
 		if (validation.valid && validation.data) {
