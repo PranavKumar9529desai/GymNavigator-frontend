@@ -19,6 +19,7 @@ export default async function MarkAttendancePage() {
 	}
 
 	if (result.data?.isMarked) {
+		// 'use cache'
 		return <AttendanceSuccess />;
 	}
 

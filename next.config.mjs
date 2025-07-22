@@ -16,7 +16,9 @@ const nextConfig = {
 
 	// SWC Compiler Configuration
 	experimental : {
-          viewTransition : true
+          viewTransition : true,
+		  useCache : true,
+		  webVitalsAttribution: ['CLS', 'LCP'],
 	},
 
 	images: {
