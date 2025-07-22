@@ -20,7 +20,6 @@ export default async function MyWorkoutsPage() {
 
 		return (
 			<div className="space-y-10">
-				<Suspense fallback={<LoadingMyWorkouts />}>
 					<section>
 						{!workout ? (
 							<WorkoutNotAssigned />
@@ -30,9 +29,7 @@ export default async function MyWorkoutsPage() {
 							<TodaysWorkouts workout={workout} />
 						)}
 					</section>
-				</Suspense>
 
-				<Suspense fallback={<LoadingMyWorkouts />}>
 					<section>
 						{!dietPlan ? (
 							<DietNotAssigned />
@@ -40,7 +37,6 @@ export default async function MyWorkoutsPage() {
 							<TodaysDiet dietPlan={dietPlan} />
 						)}
 					</section>
-				</Suspense>
 			</div>
 		);
 	} catch (error) {

@@ -19,8 +19,6 @@ export default async function AttendancePage() {
 	const attendanceData: TodayAttendanceResponse = await TodayAttendance();
 
 	return (
-		<Suspense fallback={<Spinner />}>
-			<UserAttendance attendanceData={attendanceData} />
-		</Suspense>
+		<UserAttendance attendanceData={attendanceData} />
 	);
 }

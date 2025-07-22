@@ -163,7 +163,7 @@ export default async function Layout({
 
 					{/* Original Content */}
 					<div className="container mx-auto px-2 py-4 md:py-6 max-w-7xl">
-						<ViewTransition  >
+						<ViewTransition name='dashboard-layout'  >
 							{children}
 						</ViewTransition>
 					</div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { getGymDashboardData } from './_action/get-gym-dashboard';
 import GymDashboard from './_components/GymDashboard';
+import { unstable_ViewTransition as ViewTransition } from 'react'
 
 export default async function GymDashboardPage() {
   let data;
@@ -9,5 +10,5 @@ export default async function GymDashboardPage() {
   } catch (error) {
     return <div className="p-6 text-center text-red-600">Failed to load dashboard data.</div>;
   }
-  return <GymDashboard data={data} />;
+  return <GymDashboard data={data} />
 }

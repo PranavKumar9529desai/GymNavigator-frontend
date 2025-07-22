@@ -4,6 +4,9 @@ import { ViewGymDetailsClient } from './_components/view-gym-details-client';
 import FetchGymDetailsSA from './_actions/GetGymDetails';
 import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import type { GymData } from './types/gym-types';
+import { Suspense } from 'react';
+import Loading from './loading';
+import { unstable_ViewTransition as ViewTransition } from 'react'
 
 
 interface GymInfo {
@@ -35,16 +38,16 @@ export default async function GymLayout() {
 	// Convert GymInfo to GymData format
 	const convertedGymData: GymData | null = gymDetails
 		? {
-				gym_name: gymDetails.gym_name,
-				gym_logo: gymDetails.gym_logo,
-				address: typeof gymDetails.address === 'object' ? formatAddress(gymDetails.address) : gymDetails.address,
-				phone_number: gymDetails.phone_number,
-				Email: gymDetails.Email,
-				gymauthtoken: gymDetails.gymauthtoken,
-				// Initialize other optional fields
-				amenities: {},
-				fitnessPlans: [],
-			}
+			gym_name: gymDetails.gym_name,
+			gym_logo: gymDetails.gym_logo,
+			address: typeof gymDetails.address === 'object' ? formatAddress(gymDetails.address) : gymDetails.address,
+			phone_number: gymDetails.phone_number,
+			Email: gymDetails.Email,
+			gymauthtoken: gymDetails.gymauthtoken,
+			// Initialize other optional fields
+			amenities: {},
+			fitnessPlans: [],
+		}
 		: null;
 
 	// Handle error states
@@ -63,26 +66,29 @@ export default async function GymLayout() {
 	}
 
 	return (
-		<div className="min-h-screen p-2 md:p-6">
-			<div className="mx-auto max-w-6xl">
-				{/* Pass data to client component for edit functionality */}
-				<ViewGymDetailsClient 
-					gymData={convertedGymData}
-					gymTabData={gymTabData}
-				/>
+		// <Suspense fallback={< Loading />}>
 
-				{gymDetails && <GymHeader gymData={convertedGymData} />}
-
-				{/* Enhanced Tabs Section */}
-				<div className="">
-					<GymTabs
-						overviewData={gymTabData?.overview}
-						amenitiesData={gymTabData?.amenities}
-						locationData={gymTabData?.location}
-						pricingData={gymTabData?.pricing}
+			<div className="min-h-screen p-2 md:p-6">
+				<div className="mx-auto max-w-6xl">
+					{/* Pass data to client component for edit functionality */}
+					<ViewGymDetailsClient
+						gymData={convertedGymData}
+						gymTabData={gymTabData}
 					/>
+
+					{gymDetails && <GymHeader gymData={convertedGymData} />}
+
+					{/* Enhanced Tabs Section */}
+					<div className="">
+						<GymTabs
+							overviewData={gymTabData?.overview}
+							amenitiesData={gymTabData?.amenities}
+							locationData={gymTabData?.location}
+							pricingData={gymTabData?.pricing}
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
+		// </Suspense>
 	);
 }

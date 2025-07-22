@@ -16,9 +16,7 @@ export default async function AssignedUsersPage() {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<Suspense fallback={<Spinner />}>
 				<AssignedUserToTrainer assignedUsers={assignedUsers} />
-			</Suspense>
 		</div>
 	);
 }

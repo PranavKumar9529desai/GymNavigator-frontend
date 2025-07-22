@@ -29,9 +29,8 @@ export default async function MarkAttendancePage() {
 				<h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
 					Mark Your Attendance
 				</h1>
-				<Suspense fallback={<MarkAttendanceLoading />}>
+
 					<ClientQRWrapper />
-				</Suspense>
 			</div>
 		</main>
 	);

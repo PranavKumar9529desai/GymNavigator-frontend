@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, UserX, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import type { TodayAttendanceResponse } from './getTodayAttendance';
 
 const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {
@@ -114,14 +114,17 @@ const columns: ColumnDef<FormattedUser>[] = [
 export default function UserAttendance({
 	attendanceData,
 }: UserAttendanceProps) {
-	const formattedUsers: FormattedUser[] =
-		attendanceData?.users?.map((user) => ({
-			id: user.id,
-			name: user.name,
-			shift: formatShift(user.shift),
-			todaysAttendance: user.isPresent,
-			attendanceTime: user.attendanceTime,
-		})) || [];
+	const formattedUsers: FormattedUser[] = useMemo(
+		() =>
+			attendanceData?.users?.map((user) => ({
+				id: user.id,
+				name: user.name,
+				shift: formatShift(user.shift),
+				todaysAttendance: user.isPresent,
+				attendanceTime: user.attendanceTime,
+			})) || [],
+		[attendanceData],
+	);
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filteredUsers, setFilteredUsers] =

@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { GetAttendanceQrData } from './GetAttendanceQrData';
 import GymQRCode from '@/components/gym-owner/QrCode';
-
+import { Suspense } from 'react';
+import Loading from './loading';
 
 export default async function AttendanceComponent() {
 	// First check if gym exists
@@ -45,11 +46,11 @@ export default async function AttendanceComponent() {
 
 	return (
 		<div className="container mx-auto py-6">
-			<GymQRCode
-				qrdata={qrValue}
-				title={gymData.gymname}
-				subtitle="Scan this QR code to mark your attendance"
-			/>
+				<GymQRCode
+					qrdata={qrValue}
+					title={gymData.gymname}
+					subtitle="Scan this QR code to mark your attendance"
+				/>
 		</div>
 	);
 }

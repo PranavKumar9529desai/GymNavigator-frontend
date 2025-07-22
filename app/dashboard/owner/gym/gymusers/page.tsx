@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import GymUsersClient from './_components/GymUsersClient';
+import { unstable_ViewTransition as ViewTransition } from 'react'
 
 
 export default async function Page() {
@@ -7,9 +8,11 @@ export default async function Page() {
   return (
     <>
       <h1 className="text-3xl font-bold text-center pt-4">Gym Users & Trainers</h1>
-      <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+      <ViewTransition   >
         <GymUsersClient />
-      </Suspense>
+      </ViewTransition>
+      {/* <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+      </Suspense> */}
     </>
   );
 } 
