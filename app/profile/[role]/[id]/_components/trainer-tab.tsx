@@ -115,7 +115,7 @@ export function TrainerTab({ trainerData }: TrainerTabProps) {
               </div>
             </div>
             <div className="flex flex-row sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2">
-              <Button 
+              <button  type="button" 
                 size="sm" 
                 className="text-xs"
                 onClick={() => openWhatsApp('call')}
@@ -124,7 +124,7 @@ export function TrainerTab({ trainerData }: TrainerTabProps) {
                 <Phone className="h-3 w-3 mr-1" />
                 Call
               </Button>
-              <Button 
+              <button  type="button" 
                 variant="outline" 
                 size="sm" 
                 className="text-xs bg-transparent"

@@ -10,7 +10,7 @@ export default function LoadingMyWorkouts() {
         </div>
         <div className="space-y-6">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div  key={ i as number }  className="bg-white rounded-xl border border-gray-100 overflow-hidden">
               <Skeleton className="h-16 w-full" />
               <div className="p-5">
                 <div className="space-y-5">
@@ -44,7 +44,7 @@ export default function LoadingMyWorkouts() {
         </div>
         <div className="space-y-6">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div  key={ i as number }  className="bg-white rounded-xl border border-gray-100 overflow-hidden">
               <Skeleton className="h-16 w-full" />
               <div className="p-5">
                 <div className="mb-5">

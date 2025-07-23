@@ -116,6 +116,7 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 								)}
 								{gymData.gymauthtoken && (
 									<div
+									
 										className="text-left flex items-center gap-3 col-span-1 sm:col-span-2 lg:col-span-1 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors"
 										onClick={() => {
 											navigator.clipboard.writeText(gymData.gymauthtoken);

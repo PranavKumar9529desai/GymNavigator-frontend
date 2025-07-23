@@ -12,7 +12,7 @@ export default function Loading() {
       {/* Mobile card skeletons */}
       <div className="md:hidden space-y-4">
         {[...Array(4)].map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full" />
+          <Skeleton  key={ i as number }  className="h-24 w-full" />
         ))}
       </div>
       {/* Table skeleton for desktop */}

@@ -7,7 +7,7 @@ export default function LoadingGroceryList() {
       <Skeleton className="h-10 w-1/3 mb-6" />
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="p-4 border rounded-lg bg-white flex items-center gap-4">
+          <div  key={ i as number }  className="p-4 border rounded-lg bg-white flex items-center gap-4">
             <Skeleton className="h-6 w-1/4" />
             <Skeleton className="h-4 w-2/3" />
           </div>

@@ -62,7 +62,7 @@ export default function MedicalDisplay({ data }: MedicalDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{allergies.map((item, index) => (
 									<Badge
-										key={index}
+										  key={ index as number } 
 										variant="outline"
 										className="bg-red-50 text-red-800 border-red-200"
 									>
@@ -99,7 +99,7 @@ export default function MedicalDisplay({ data }: MedicalDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{medicalConditions.map((item, index) => (
 									<Badge
-										key={index}
+										  key={ index as number } 
 										variant="outline"
 										className="bg-blue-50 text-blue-800 border-blue-200"
 									>

@@ -177,7 +177,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
 
       {/* Quick Actions Section */}
       <div className="border-b border-slate-100">
-        <button 
+        <button  type="button" 
           onClick={() => toggleSection('actions')}
           className="w-full flex items-center justify-between py-2 hover:bg-blue-50/50 transition-colors"
         >
@@ -193,8 +193,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
         {expandedSections.actions && (
           <div className="pb-3">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <Button 
-                variant="outline" 
+              <Button  
                 className="h-20 flex-col gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
               >
                 <QrCode className="h-6 w-6" />
@@ -236,7 +235,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
 
       {/* Recent Activity Section */}
       <div className="border-b border-slate-100">
-        <button 
+        <button  type="button" 
           onClick={() => toggleSection('attendance')}
           className="w-full flex items-center justify-between py-2 hover:bg-blue-50/50 transition-colors"
         >
@@ -256,7 +255,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
             <div className="space-y-1">
               {attendance.recentAttendances.length > 0 ? (
                 attendance.recentAttendances.map((record, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 hover:bg-blue-50/30 rounded transition-colors">
+                  <div   key={ index as number }  className="flex items-center justify-between p-2 hover:bg-blue-50/30 rounded transition-colors">
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         'w-2 h-2 rounded-full', 

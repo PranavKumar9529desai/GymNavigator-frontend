@@ -51,7 +51,7 @@ export function ScanningState({ videoRef, zoomLevel }: ScanningStateProps) {
 								{ bottom: '1rem', left: '1rem', rotate: '270deg' }
 							].map((corner, i) => (
 								<motion.div
-									key={i}
+									 key={ i as number } 
 									className="absolute w-6 h-6 border-l-2 border-t-2 border-primary"
 									style={{ 
 										...corner,

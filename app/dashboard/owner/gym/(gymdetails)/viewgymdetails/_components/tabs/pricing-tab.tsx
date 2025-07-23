@@ -122,7 +122,7 @@ export function PricingTab({
 
 					return (
 						<Card
-							key={index}
+							  key={ index as number } 
 							className={`border shadow-lg transition-transform hover:scale-105 ${
 								plan.isFeatured ? 'border-2' : ''
 							}`}
@@ -166,7 +166,7 @@ export function PricingTab({
 									{plan.features.map(
 										(feature: string, featureIndex: number) => (
 											<div
-												key={featureIndex}
+												key={featureIndex as number}
 												className="flex items-center gap-2"
 											>
 												<div
@@ -194,7 +194,7 @@ export function PricingTab({
 				<CardContent>
 					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 						{additionalServices.map((service, index) => (
-							<div key={index} className="text-center">
+							<div   key={ index as number }  className="text-center">
 								<p className="font-semibold text-gray-900">{service.name}</p>
 								<p className="text-2xl font-bold text-gray-900">
 									{service.price}

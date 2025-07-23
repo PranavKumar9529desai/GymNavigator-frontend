@@ -393,7 +393,7 @@ export function DietPlanSelector({
                         </div>
                         <div className="space-y-1">
                           {recommendations.map((rec, index) => (
-                            <p key={index} className="text-xs text-green-600">• {rec}</p>
+                            <p   key={ index as number }  className="text-xs text-green-600">• {rec}</p>
                           ))}
                         </div>
                       </div>
@@ -429,7 +429,7 @@ export function DietPlanSelector({
         {/* Confirm Selection Button */}
         {selectedDietPlan && (
           <div className="pt-4 border-t border-slate-200">
-            <Button 
+            <button  type="button" 
               onClick={handleConfirmSelection}
               disabled={isAssigning}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"

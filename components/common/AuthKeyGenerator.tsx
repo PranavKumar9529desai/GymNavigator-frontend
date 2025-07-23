@@ -24,7 +24,7 @@
 //   return (
 //     <div className="flex flex-col items-center justify-center p-4 bg-white shadow-md rounded-lg">
 //       <h2 className="text-xl font-bold mb-4">Generate Auth Key</h2>
-//       <Button onClick={generateAuthKey} className="mb-4">
+//       <button  type="button" onClick={generateAuthKey} className="mb-4">
 //         Generate Key
 //       </Button>
 //       {authKey && (

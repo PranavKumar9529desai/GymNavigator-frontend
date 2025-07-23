@@ -30,7 +30,7 @@ export function LoadingSkeleton() {
             <div className="h-6 w-48 bg-slate-200 rounded animate-pulse" />
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="p-4 border rounded-lg space-y-2">
+                <div  key={ i as number }  className="p-4 border rounded-lg space-y-2">
                   <div className="h-5 w-3/4 bg-slate-200 rounded animate-pulse" />
                   <div className="h-4 w-full bg-slate-200 rounded animate-pulse" />
                   <div className="h-4 w-1/2 bg-slate-200 rounded animate-pulse" />

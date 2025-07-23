@@ -103,7 +103,7 @@ export function MealsSection({ profile }: MealsSectionProps) {
 					const { mainTitle, subtitle } = displayMealName(meal, index);
 					return (
 						<li
-							key={index}
+							  key={ index as number } 
 							className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"
 						>
 							<span className="w-9 h-9 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mr-3 font-medium">

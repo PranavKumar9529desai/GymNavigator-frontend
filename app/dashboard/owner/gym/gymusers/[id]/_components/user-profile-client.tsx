@@ -99,7 +99,7 @@ export function UserProfileClient({ profileData, userId }: UserProfileClientProp
       </div>
       {/* Header Section */}
       <UserHeader 
-        userData={profileData.userData!} 
+        userData={profileData.userData || {}} 
         monthlyVisits={profileData.overview?.stats.monthlyVisits || 0} 
       />
 

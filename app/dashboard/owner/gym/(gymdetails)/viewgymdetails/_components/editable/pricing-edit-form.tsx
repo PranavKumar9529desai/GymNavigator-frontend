@@ -736,7 +736,7 @@ export function PricingEditForm({
 						<div className="grid gap-4">
 							{additionalServices.map((service, index) => (
 								<motion.div
-									key={index}
+									  key={ index as number } 
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									exit={{ opacity: 0, y: -20 }}

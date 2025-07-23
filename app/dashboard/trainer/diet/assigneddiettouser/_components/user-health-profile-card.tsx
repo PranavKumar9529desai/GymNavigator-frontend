@@ -234,7 +234,7 @@ export function UserHealthProfileCard({ userProfile }: UserHealthProfileCardProp
             <div className="pl-6 flex flex-wrap gap-2">
               {allergies.map((allergy: { name: string; selected: boolean }, index: number) => 
                 allergy.selected && (
-                  <Badge key={index} variant="destructive" className="text-xs">
+                  <Badge   key={ index as number }  variant="destructive" className="text-xs">
                     {allergy.name}
                   </Badge>
                 )
@@ -253,7 +253,7 @@ export function UserHealthProfileCard({ userProfile }: UserHealthProfileCardProp
             <div className="pl-6 flex flex-wrap gap-2">
               {medicalConditions.map((condition: { name: string; selected: boolean }, index: number) => 
                 condition.selected && (
-                  <Badge key={index} variant="secondary" className="text-xs bg-red-100 text-red-800">
+                  <Badge   key={ index as number }  variant="secondary" className="text-xs bg-red-100 text-red-800">
                     {condition.name}
                   </Badge>
                 )

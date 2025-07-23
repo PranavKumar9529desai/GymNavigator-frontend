@@ -120,7 +120,7 @@ export function AttendanceTab({ weeklyAttendance, recentVisits, stats }: Attenda
         <CardContent>
           <div className="space-y-3">
             {visitsToShow.map((visit, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+              <div   key={ index as number }  className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center space-x-3">
                   <CalendarDays className="h-4 w-4 text-muted-foreground" />
                   <div>

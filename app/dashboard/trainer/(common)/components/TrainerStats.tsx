@@ -111,7 +111,7 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 								{recentActivities && recentActivities.length > 0 ? (
 									recentActivities.map((activity , index) => (
 										<div
-											key={index}
+											  key={ index as number } 
 											className="flex items-center gap-3 py-2 px-6 hover:bg-blue-50/30 rounded transition-colors"
 										>
 											<Users className="w-4 h-4 text-blue-600" />

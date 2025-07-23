@@ -37,7 +37,7 @@ export function GymUserMobileCard({ user, type }: GymUserMobileCardProps) {
       <CardContent className="flex items-center gap-3 p-0 pt-6">
         <Avatar className="h-10 w-10">
           {type === 'trainer' && (user as GymTrainer).image ? (
-            <AvatarImage src={(user as GymTrainer).image!} alt={user.name} />
+            <AvatarImage src={(user as GymTrainer).image ?? ''} alt={user.name} />
           ) : (
             <AvatarFallback
               className="bg-indigo-100/50 text-indigo-500"

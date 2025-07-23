@@ -102,7 +102,7 @@ export default function MealTimingsDisplay({
 
 					return (
 						<div
-							key={index}
+							  key={ index as number } 
 							className="bg-white border border-gray-100 rounded-lg p-4 shadow-sm flex justify-between items-center hover:shadow-md transition-shadow"
 						>
 							<div className="flex items-center gap-3">

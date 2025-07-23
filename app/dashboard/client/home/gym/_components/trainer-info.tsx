@@ -95,10 +95,10 @@ export function TrainerInfo({ trainer }: TrainerInfoProps) {
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star 
-                        key={i} 
+                         key={ i as number }  
                         className={cn(
                           "h-3 w-3",
-                          i < Math.floor(trainer.rating!) 
+                          typeof trainer.rating === 'number' && i < Math.floor(trainer.rating)
                             ? "fill-amber-400 text-amber-400" 
                             : "fill-gray-200 text-gray-200"
                         )} 
@@ -128,7 +128,8 @@ export function TrainerInfo({ trainer }: TrainerInfoProps) {
             
             <div className="flex flex-wrap gap-2 pt-1">
               {trainer.contactNumber && (
-                <Button 
+                <Button  
+                  type="button" 
                   variant="outline" 
                   size="sm"
                   className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
@@ -137,7 +138,8 @@ export function TrainerInfo({ trainer }: TrainerInfoProps) {
                   Call
                 </Button>
               )}
-              <Button 
+              <Button   
+              type="button" 
                 variant="outline" 
                 size="sm"
                 className="h-7 px-2 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
@@ -146,7 +148,7 @@ export function TrainerInfo({ trainer }: TrainerInfoProps) {
                 Email
               </Button>
               {trainer.contactNumber && (
-                <Button 
+                <Button   type="button" 
                   variant="outline" 
                   size="sm"
                   onClick={openWhatsApp}

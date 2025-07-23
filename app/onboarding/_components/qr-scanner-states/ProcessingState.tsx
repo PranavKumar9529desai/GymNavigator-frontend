@@ -35,7 +35,7 @@ export function ProcessingState() {
 							<div className="flex space-x-2">
 								{[0, 1, 2].map((i) => (
 									<div
-										key={i}
+										 key={ i as number } 
 										className="w-2 h-2 bg-primary rounded-full animate-bounce"
 										style={{ animationDelay: `${i * 0.2}s` }}
 									/>

@@ -206,7 +206,7 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
           <h1 className="text-2xl font-bold text-slate-800">Diet Management</h1>
           <p className="text-slate-600">Manage and monitor all diet plans in your gym</p>
         </div>
-        <Button 
+        <button  type="button" 
           onClick={handleCreateDiet}
           className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-sm"
         >
@@ -317,7 +317,7 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
             </div>
             <h3 className="text-lg font-semibold text-slate-800 mb-2">No diets found</h3>
             <p className="text-slate-600 mb-6">Try adjusting your search criteria or create a new diet plan.</p>
-            <Button 
+            <button  type="button" 
               onClick={handleCreateDiet}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
             >

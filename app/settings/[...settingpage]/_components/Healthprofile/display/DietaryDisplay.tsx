@@ -143,7 +143,7 @@ export default function DietaryDisplay({ data }: DietaryDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{dietaryRestrictions.map((item, index) => (
 									<Badge
-										key={index}
+										  key={ index as number } 
 										variant="outline"
 										className="bg-yellow-50 text-yellow-800 border-yellow-200"
 									>
@@ -173,7 +173,7 @@ export default function DietaryDisplay({ data }: DietaryDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{nonVegDays.map((day, index) => (
 									<Badge
-										key={index}
+										  key={ index as number } 
 										variant="outline"
 										className="bg-red-50 text-red-800 border-red-200"
 									>

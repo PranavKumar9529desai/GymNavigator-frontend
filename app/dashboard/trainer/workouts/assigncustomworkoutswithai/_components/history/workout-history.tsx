@@ -182,7 +182,7 @@ export default function WorkoutHistory({
 		return (
 			<div className="space-y-4">
 				{[1, 2, 3].map((i) => (
-					<div key={i} className="p-4 border rounded-lg">
+					<div  key={ i as number }  className="p-4 border rounded-lg">
 						<div className="flex justify-between items-start">
 							<Skeleton className="h-6 w-1/3 mb-2" />
 							<Skeleton className="h-5 w-20" />

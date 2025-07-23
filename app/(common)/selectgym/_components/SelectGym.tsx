@@ -23,7 +23,7 @@ const GymSkeleton = () => (
 	<>
 		{[1, 2, 3, 4].map((index) => (
 			<div
-				key={index}
+				  key={ index as number } 
 				className="flex items-center p-4 bg-white rounded-xl border border-gray-100"
 			>
 				{/* Skeleton Image */}
