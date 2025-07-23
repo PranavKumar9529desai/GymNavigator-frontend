@@ -60,7 +60,9 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 						<div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
 							<Users className="h-3 w-3 text-white" />
 						</div>
-						<h1 className="text-2xl font-bold text-slate-800">Trainer Dashboard</h1>
+						<h1 className="text-2xl font-bold text-slate-800">
+							Trainer Dashboard
+						</h1>
 					</div>
 					<p className="text-slate-600">
 						Here&apos;s an overview of your members and activities today.
@@ -73,7 +75,9 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 						<div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
 							<Dumbbell className="h-3 w-3 text-white" />
 						</div>
-						<h2 className="text-lg font-semibold text-slate-800">Quick Stats</h2>
+						<h2 className="text-lg font-semibold text-slate-800">
+							Quick Stats
+						</h2>
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
 						{statCards.map((stat) => (
@@ -82,14 +86,18 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 								className="p-3 hover:bg-blue-50/30 transition-colors border-blue-100"
 							>
 								<div className="flex items-center gap-3">
-									<div className={`w-8 h-8 rounded-full bg-gradient-to-r ${stat.iconBg} flex items-center justify-center`}>
+									<div
+										className={`w-8 h-8 rounded-full bg-gradient-to-r ${stat.iconBg} flex items-center justify-center`}
+									>
 										<stat.icon className="h-4 w-4 text-white" />
 									</div>
 									<div>
 										<p className="text-xs font-medium text-slate-600 uppercase tracking-wide">
 											{stat.label}
 										</p>
-										<h3 className="text-lg font-semibold text-slate-800">{stat.value}</h3>
+										<h3 className="text-lg font-semibold text-slate-800">
+											{stat.value}
+										</h3>
 									</div>
 								</div>
 							</Card>
@@ -103,15 +111,17 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 						<div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
 							<Calendar className="h-3 w-3 text-white" />
 						</div>
-						<h2 className="text-lg font-semibold text-slate-800">Recent Member Activities</h2>
+						<h2 className="text-lg font-semibold text-slate-800">
+							Recent Member Activities
+						</h2>
 					</div>
 					<div className="border-b border-slate-100">
 						<div className="pb-3">
 							<div className="space-y-2">
 								{recentActivities && recentActivities.length > 0 ? (
-									recentActivities.map((activity , index) => (
+									recentActivities.map((activity, index) => (
 										<div
-											  key={ index as number } 
+											key={index as number}
 											className="flex items-center gap-3 py-2 px-6 hover:bg-blue-50/30 rounded transition-colors"
 										>
 											<Users className="w-4 h-4 text-blue-600" />

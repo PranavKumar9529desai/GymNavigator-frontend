@@ -20,11 +20,11 @@ export default function NonVegDaysForm() {
 	const handleSubmit = () => {
 		// If no days are selected, select all days as a default
 		if (!anyDaySelected) {
-			nonVegDays.forEach((day) => {
+			for (const day of nonVegDays) {
 				if (!day.selected) {
 					toggleNonVegDay(day.day);
 				}
-			});
+			}
 		}
 		nextStep();
 	};
@@ -62,11 +62,11 @@ export default function NonVegDaysForm() {
 						<Button
 							variant="outline"
 							type="button"
-							onClick={() =>
-								nonVegDays.forEach((day) => {
+							onClick={() => {
+								for (const day of nonVegDays) {
 									if (!day.selected) toggleNonVegDay(day.day);
-								})
-							}
+								}
+							}}
 							className="mr-2"
 						>
 							Select All
@@ -74,11 +74,11 @@ export default function NonVegDaysForm() {
 						<Button
 							variant="outline"
 							type="button"
-							onClick={() =>
-								nonVegDays.forEach((day) => {
+							onClick={() => {
+								for (const day of nonVegDays) {
 									if (day.selected) toggleNonVegDay(day.day);
-								})
-							}
+								}
+							}}
 						>
 							Clear All
 						</Button>

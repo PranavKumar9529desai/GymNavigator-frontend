@@ -21,7 +21,7 @@ export default function MedicalConditionsForm({
 		medicalConditions,
 		otherMedicalCondition,
 		toggleMedicalCondition,
-		setOtherMedicalCondition,
+		// setOtherMedicalCondition,
 		addMedicalCondition,
 		prevStep,
 	} = useHealthProfileStore();

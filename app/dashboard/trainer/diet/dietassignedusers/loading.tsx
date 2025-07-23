@@ -26,7 +26,10 @@ export default function Loading() {
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
 						{[...Array(6)].map((_, i) => (
-							<div key={`user-${i}`} className="p-2 border border-slate-100 rounded hover:bg-blue-50/30 transition-colors">
+							<div
+								key={`user-${i as number}`}
+								className="p-2 border border-slate-100 rounded hover:bg-blue-50/30 transition-colors"
+							>
 								<div className="flex items-center gap-3">
 									<Skeleton className="w-10 h-10 rounded-full" />
 									<div className="space-y-2 flex-1">
@@ -52,7 +55,10 @@ export default function Loading() {
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
 						{[...Array(4)].map((_, i) => (
-							<div key={`diet-${i}`} className="p-3 border border-blue-100 rounded hover:bg-blue-50/30 transition-colors">
+							<div
+								key={`diet-${i as number}`}
+								className="p-3 border border-blue-100 rounded hover:bg-blue-50/30 transition-colors"
+							>
 								<div className="space-y-3">
 									<div className="flex items-center justify-between">
 										<Skeleton className="h-5 w-32" />

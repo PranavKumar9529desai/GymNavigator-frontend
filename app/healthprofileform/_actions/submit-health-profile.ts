@@ -50,10 +50,18 @@ export const submitHealthProfileToApi = async (
 ): Promise<HealthProfileResponse> => {
 	try {
 		// Validate required fields
-		if (!storeState.fullName || !storeState.whatsappNumber || !storeState.gender || 
-		    !storeState.age || !storeState.height.value || !storeState.weight.value || 
-		    !storeState.activityLevel || !storeState.goal || !storeState.dietaryPreference || 
-		    !storeState.mealTimes) {
+		if (
+			!storeState.fullName ||
+			!storeState.whatsappNumber ||
+			!storeState.gender ||
+			!storeState.age ||
+			!storeState.height.value ||
+			!storeState.weight.value ||
+			!storeState.activityLevel ||
+			!storeState.goal ||
+			!storeState.dietaryPreference ||
+			!storeState.mealTimes
+		) {
 			return {
 				success: false,
 				error: 'Missing required fields',
@@ -62,8 +70,10 @@ export const submitHealthProfileToApi = async (
 		}
 
 		// Import calculateHealthMetrics function
-		const { calculateHealthMetrics } = await import('../calculate-health-data/calculate-all-metrics');
-		
+		const { calculateHealthMetrics } = await import(
+			'../calculate-health-data/calculate-all-metrics'
+		);
+
 		// Calculate health metrics from the current state
 		const healthMetrics = calculateHealthMetrics({
 			age: storeState.age,

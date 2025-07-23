@@ -2,7 +2,7 @@
 import type React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-
+import { Button } from '@/components/ui/button';
 const VISIT_KEY = 'pwa_install_visits';
 const FIRST_VISIT_KEY = 'pwa_install_first_visit';
 const DISMISS_KEY = 'pwa_install_dismissed_at';
@@ -137,19 +137,19 @@ const PWAInstallPrompt: React.FC = () => {
 				<span className="text-white font-semibold text-base whitespace-nowrap">
 					Install GymNavigator
 				</span>
-				<button
+				<Button
 					onClick={handleInstallClick}
 					className="bg-white text-[#2563eb] rounded-lg px-4 py-1 font-semibold text-sm cursor-pointer ml-2 shadow"
 				>
 					Install
-				</button>
-				<button
+				</Button>
+				<Button
 					onClick={handleDismiss}
 					className="bg-white text-gray-500 rounded-lg px-2 py-1 font-semibold text-sm cursor-pointer ml-1 shadow"
 					aria-label="Dismiss install prompt"
 				>
 					✕
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

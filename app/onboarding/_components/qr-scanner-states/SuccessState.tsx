@@ -12,9 +12,11 @@ export function SuccessState() {
 							<CheckCircle2 className="w-8 h-8 text-green-500" />
 							<div className="absolute inset-0 w-8 h-8 bg-green-500/20 rounded-full animate-ping" />
 						</div>
-						<h2 className="text-xl font-semibold text-foreground">QR Code Scanned!</h2>
+						<h2 className="text-xl font-semibold text-foreground">
+							QR Code Scanned!
+						</h2>
 					</div>
-					
+
 					{/* Success Card */}
 					<div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 shadow-lg">
 						{/* Animated Background Pattern */}
@@ -28,7 +30,7 @@ export function SuccessState() {
 							<div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
 								<CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
 							</div>
-							
+
 							{/* Success Message */}
 							<div className="text-center space-y-3">
 								<h3 className="text-lg font-semibold text-green-700 dark:text-green-300">

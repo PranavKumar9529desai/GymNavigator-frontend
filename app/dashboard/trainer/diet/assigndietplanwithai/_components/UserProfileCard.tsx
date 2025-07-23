@@ -16,22 +16,29 @@ export function UserProfileCard({ profile }: UserProfileCardProps) {
 	const [showMore, setShowMore] = useState(false);
 
 	// Helper function to ensure we always pass string arrays to components
-	// @ts-ignore
-	const ensureStringArray = (value: any): string[] => {
+	const ensureStringArray = (
+		value?: string | { name: string; selected: boolean }[],
+	): string[] => {
 		if (!value) return [];
 		if (Array.isArray(value)) {
-			// If it's an array of Selection objects, extract the names
 			if (
 				value.length > 0 &&
 				typeof value[0] === 'object' &&
-				'name' in value[0]
+				value[0] !== null &&
+				'name' in value[0] &&
+				'selected' in value[0]
 			) {
-				return value.filter((item) => item.selected).map((item) => item.name);
+				// Array of Selection objects
+				return (value as { name: string; selected: boolean }[])
+					.filter((item) => item.selected)
+					.map((item) => item.name);
 			}
-			// If it's already a string array, return it
-			return value;
+			if (value.every((v) => typeof v === 'string')) {
+				// Array of strings
+				return value as string[];
+			}
+			return [];
 		}
-		// If it's a string, convert to array with single item
 		if (typeof value === 'string') {
 			return [value];
 		}
@@ -51,6 +58,7 @@ export function UserProfileCard({ profile }: UserProfileCardProps) {
 
 			{/* Show More Button */}
 			<button
+				type="button"
 				onClick={() => setShowMore(!showMore)}
 				className="w-full py-3 text-center text-blue-600 font-medium hover:bg-blue-50 transition-colors border-t border-blue-100"
 			>

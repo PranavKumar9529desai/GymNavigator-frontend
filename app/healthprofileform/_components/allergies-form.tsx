@@ -14,7 +14,7 @@ export default function AllergiesForm() {
 		otherAllergy,
 		toggleAllergy,
 		addAllergy,
-		setOtherAllergy,
+		// setOtherAllergy,
 		nextStep,
 		prevStep,
 	} = useHealthProfileStore();

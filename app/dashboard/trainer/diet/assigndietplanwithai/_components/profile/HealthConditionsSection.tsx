@@ -23,6 +23,7 @@ export function HealthConditionsSection({
 	return (
 		<div className="p-4 border-b border-blue-100">
 			<h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+				{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
 				<svg
 					// @ts-ignore
 					title="Health Conditions"

@@ -20,11 +20,11 @@ export async function updateGymOverview(data: {
 	try {
 		const ownerAxios = await OwnerReqConfig();
 		const response = await ownerAxios.put('/gym/update-overview', data);
-		
+
 		// Revalidate the gym details pages
 		revalidatePath('/dashboard/owner/gymdetails/viewgymdetails');
 		revalidatePath('/dashboard/owner/gymdetails');
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('Error updating gym overview:', error);
@@ -40,11 +40,11 @@ export async function updateGymAmenities(
 		const ownerAxios = await OwnerReqConfig();
 		const response: AxiosResponse<UpdateAmenitiesResponse> =
 			await ownerAxios.put('/gym/update-amenities', data);
-		
+
 		// Revalidate the gym details pages
 		revalidatePath('/dashboard/owner/gymdetails/viewgymdetails');
 		revalidatePath('/dashboard/owner/gymdetails');
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('Error updating gym amenities:', error);
@@ -65,11 +65,11 @@ export async function updateGymLocation(data: {
 	try {
 		const ownerAxios = await OwnerReqConfig();
 		const response = await ownerAxios.put('/gym/update-location', data);
-		
+
 		// Revalidate the gym details pages
 		revalidatePath('/dashboard/owner/gymdetails/viewgymdetails');
 		revalidatePath('/dashboard/owner/gymdetails');
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('Error updating gym location:', error);
@@ -82,12 +82,12 @@ export async function updateGymPricing(data: PricingFormData) {
 	try {
 		const ownerAxios = await OwnerReqConfig();
 		const response = await ownerAxios.put('/gym/update-pricing', data);
-		
+
 		// Revalidate the gym details pages
 		revalidatePath('/dashboard/owner/gymdetails/viewgymdetails');
 		revalidatePath('/dashboard/owner/gymdetails');
 		revalidatePath('/dashboard/owner/gymdetails/viewgymdetails/pricing');
-		
+
 		return response.data;
 	} catch (error) {
 		console.error('Error updating gym pricing:', error);

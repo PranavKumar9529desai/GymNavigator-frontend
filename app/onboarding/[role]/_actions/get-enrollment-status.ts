@@ -1,3 +1,5 @@
+import type { AxiosInstance } from 'axios';
+
 interface GetEnrollmentStatusType {
 	msg: string;
 	isEnrolled: boolean;
@@ -25,7 +27,7 @@ export async function getEnrollmentStatus(
 	'use server';
 
 	try {
-		let axiosInstance;
+		let axiosInstance: AxiosInstance;
 		let endpoint: string;
 
 		// Determine which axios instance and endpoint to use based on role

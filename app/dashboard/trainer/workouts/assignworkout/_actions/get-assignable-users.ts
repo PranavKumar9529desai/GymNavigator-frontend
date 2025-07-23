@@ -17,15 +17,25 @@ export async function getAssignableUsers(): Promise<AssignableUser[]> {
 		const response = await trainerAxios.get('/client/assignedusers');
 
 		if (response.data.msg === 'success' && Array.isArray(response.data.users)) {
-			return response.data.users.map((user: any) => ({
-				id: user.id,
-				name: user.name,
-				email: user.email,
-				membershipStatus: 'active',
-				activeWorkoutPlanId: user.activeWorkoutPlanId || null,
-				activeWorkoutPlanName: user.activeWorkoutPlanName || null,
-				hasActiveWorkoutPlan: !!user.activeWorkoutPlanId,
-			}));
+			return response.data.users.map(
+				(
+					user: Omit<
+						AssignableUser,
+						'membershipStatus' | 'hasActiveWorkoutPlan'
+					> & {
+						activeWorkoutPlanId?: number | null;
+						activeWorkoutPlanName?: string | null;
+					},
+				) => ({
+					id: user.id,
+					name: user.name,
+					email: user.email,
+					membershipStatus: 'active',
+					activeWorkoutPlanId: user.activeWorkoutPlanId || null,
+					activeWorkoutPlanName: user.activeWorkoutPlanName || null,
+					hasActiveWorkoutPlan: !!user.activeWorkoutPlanId,
+				}),
+			);
 		}
 
 		return [];

@@ -9,7 +9,11 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { CalendarIcon, Clock } from 'lucide-react';
 import { format } from 'date-fns';
@@ -60,11 +64,11 @@ export default function MealForm({
 	const handleAddMeal = () => {
 		// Create enhanced meal with scheduling info if provided
 		let enhancedInstructions = currentMeal.instructions;
-		
+
 		if (scheduledDate || scheduledTime) {
 			const schedulingInfo = [];
 			if (scheduledDate) {
-				schedulingInfo.push(`Date: ${format(scheduledDate, "yyyy-MM-dd")}`);
+				schedulingInfo.push(`Date: ${format(scheduledDate, 'yyyy-MM-dd')}`);
 			}
 			if (scheduledTime) {
 				schedulingInfo.push(`Time: ${scheduledTime}`);
@@ -82,7 +86,7 @@ export default function MealForm({
 
 		// Call the original addMeal function
 		addMeal();
-		
+
 		// Reset scheduling state
 		setScheduledDate(undefined);
 		setScheduledTime('');
@@ -160,13 +164,13 @@ export default function MealForm({
 									<Button
 										variant="outline"
 										className={cn(
-											"w-full justify-start text-left font-normal",
-											!scheduledDate && "text-slate-600"
+											'w-full justify-start text-left font-normal',
+											!scheduledDate && 'text-slate-600',
 										)}
 									>
 										<CalendarIcon className="mr-2 h-4 w-4" />
 										{scheduledDate ? (
-											format(scheduledDate, "PPP")
+											format(scheduledDate, 'PPP')
 										) : (
 											<span>Pick a date</span>
 										)}
@@ -205,7 +209,7 @@ export default function MealForm({
 									<Clock className="h-4 w-4" />
 									<span className="font-medium">Scheduled for:</span>
 									{scheduledDate && (
-										<span>{format(scheduledDate, "MMM dd, yyyy")}</span>
+										<span>{format(scheduledDate, 'MMM dd, yyyy')}</span>
 									)}
 									{scheduledTime && <span>at {scheduledTime}</span>}
 								</div>

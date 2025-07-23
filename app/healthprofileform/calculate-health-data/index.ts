@@ -218,7 +218,7 @@ export function calculateMacros(
 			break;
 		case 'bodybuilding':
 			proteinPerKg = gender === 'male' ? 2.2 : 2.0; // higher for advanced
-			fatPercent = 0.20;
+			fatPercent = 0.2;
 			break;
 		default:
 			proteinPerKg = 1.6; // maintenance

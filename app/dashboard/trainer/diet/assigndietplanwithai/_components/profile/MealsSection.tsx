@@ -22,13 +22,22 @@ export function MealsSection({ profile }: MealsSectionProps) {
 		if (!profile) return [];
 
 		// Try to access mealPreferences if it exists
-		const mealPrefs = (profile as any).mealPreferences;
-		if (Array.isArray(mealPrefs) && mealPrefs.length > 0) {
-			return mealPrefs;
+		const mealPrefsUnknown = (
+			profile as unknown as { mealPreferences?: unknown }
+		).mealPreferences;
+		if (
+			Array.isArray(mealPrefsUnknown) &&
+			mealPrefsUnknown.length > 0 &&
+			typeof mealPrefsUnknown[0] === 'object' &&
+			mealPrefsUnknown[0] !== null &&
+			'name' in mealPrefsUnknown[0] &&
+			'time' in mealPrefsUnknown[0]
+		) {
+			return mealPrefsUnknown as MealTime[];
 		}
 
 		// Try to access mealTimings if it exists
-		const mealTimings = (profile as any).mealTimings;
+		const mealTimings = profile.mealTimings;
 		if (mealTimings && typeof mealTimings === 'string') {
 			try {
 				const parsed = JSON.parse(mealTimings);
@@ -52,9 +61,9 @@ export function MealsSection({ profile }: MealsSectionProps) {
 	// Helper to get number of meals safely
 	const getNumberOfMeals = (profile?: HealthProfile): number | undefined => {
 		if (!profile) return undefined;
-		return typeof (profile as any).numberOfMeals === 'number'
-			? (profile as any).numberOfMeals
-			: undefined;
+		const numUnknown = (profile as unknown as { numberOfMeals?: unknown })
+			.numberOfMeals;
+		return typeof numUnknown === 'number' ? numUnknown : undefined;
 	};
 
 	// Helper to display meal name appropriately (handles both generic and descriptive names)
@@ -88,6 +97,7 @@ export function MealsSection({ profile }: MealsSectionProps) {
 					viewBox="0 0 24 24"
 					stroke="currentColor"
 				>
+					<title>Meal Schedule Icon</title>
 					<path
 						strokeLinecap="round"
 						strokeLinejoin="round"
@@ -103,7 +113,7 @@ export function MealsSection({ profile }: MealsSectionProps) {
 					const { mainTitle, subtitle } = displayMealName(meal, index);
 					return (
 						<li
-							  key={ index as number } 
+							key={index as number}
 							className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100"
 						>
 							<span className="w-9 h-9 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full mr-3 font-medium">

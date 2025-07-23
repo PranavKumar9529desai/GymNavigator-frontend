@@ -75,39 +75,41 @@ export function EditGymDrawer({
 								<SingleTab name="pricing" label="Pricing" icon={DollarSign} />
 							</TabsList>
 
-							<div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">							<TabsContent value="overview" className="mt-0">
-								<OverviewEditForm
-									data={formData}
-									onDataChange={setFormData}
-									onSave={() => onClose()}
-								/>
-							</TabsContent>
-							<TabsContent value="amenities" className="mt-0">
-								<AmenitiesEditForm
-									onSave={() => onClose()}
-									onCancel={() => onClose()}
-								/>
-							</TabsContent>
-							<TabsContent value="location" className="mt-0">
-								<LocationEditForm
-									data={{
-										...formData,
-										location: gymTabData?.location?.location,
-									}}
-									onDataChange={setFormData}
-									onSave={() => onClose()}
-								/>
-							</TabsContent>
-							<TabsContent value="pricing" className="mt-0">
-								<PricingEditForm
-									data={{
-										...formData,
-										fitnessPlans: gymTabData?.pricing?.pricingPlans || [],
-									}}
-									onDataChange={setFormData}
-									onSave={() => onClose()}
-								/>
-							</TabsContent>
+							<div className="px-4 mt-24 h-[calc(100vh-350px)] overflow-y-auto">
+								{' '}
+								<TabsContent value="overview" className="mt-0">
+									<OverviewEditForm
+										data={formData}
+										onDataChange={setFormData}
+										onSave={() => onClose()}
+									/>
+								</TabsContent>
+								<TabsContent value="amenities" className="mt-0">
+									<AmenitiesEditForm
+										onSave={() => onClose()}
+										onCancel={() => onClose()}
+									/>
+								</TabsContent>
+								<TabsContent value="location" className="mt-0">
+									<LocationEditForm
+										data={{
+											...formData,
+											location: gymTabData?.location?.location,
+										}}
+										onDataChange={setFormData}
+										onSave={() => onClose()}
+									/>
+								</TabsContent>
+								<TabsContent value="pricing" className="mt-0">
+									<PricingEditForm
+										data={{
+											...formData,
+											fitnessPlans: gymTabData?.pricing?.pricingPlans || [],
+										}}
+										onDataChange={setFormData}
+										onSave={() => onClose()}
+									/>
+								</TabsContent>
 							</div>
 						</Tabs>
 						{/* Removed global save/cancel buttons since each form now has its own */}

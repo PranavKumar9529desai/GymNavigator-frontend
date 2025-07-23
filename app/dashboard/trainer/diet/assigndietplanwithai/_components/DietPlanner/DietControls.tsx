@@ -20,6 +20,7 @@ import {
 import type React from 'react';
 import type { DayOfWeek } from './DietPlanner';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface DietControlsProps {
 	onGenerate: (location: { country: string; state: string }) => void;
@@ -117,7 +118,8 @@ export const DietControls: React.FC<DietControlsProps> = ({
 
 					<Popover>
 						<PopoverTrigger asChild>
-							<button
+							<Button
+								type="button"
 								className={`flex items-center bg-blue-50 p-3 rounded-md border ${
 									dateChanged
 										? 'border-blue-500 ring-2 ring-blue-200'
@@ -139,7 +141,7 @@ export const DietControls: React.FC<DietControlsProps> = ({
 										{durationDays} days
 									</span>
 								)}
-							</button>
+							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="p-0" align="start">
 							<Calendar
@@ -153,14 +155,14 @@ export const DietControls: React.FC<DietControlsProps> = ({
 					</Popover>
 				</div>
 
-				<button
+				<Button
 					type="button"
 					onClick={handleGenerate}
 					className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-md shadow-sm transition flex items-center justify-center gap-2"
 				>
 					<SparklesIcon className="h-5 w-5" />
 					Generate Diet Plan
-				</button>
+				</Button>
 			</div>
 
 			{/* Location Input Section */}

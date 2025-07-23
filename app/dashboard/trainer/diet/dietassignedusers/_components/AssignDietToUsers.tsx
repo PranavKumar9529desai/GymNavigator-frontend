@@ -32,7 +32,7 @@ const isHealthProfileComplete = (healthProfile: unknown) => {
 	const _router = useRouter();
 
 	if (!healthProfile) return false;
-	
+
 	const profile = healthProfile as {
 		gender?: string;
 		goal?: string;
@@ -40,21 +40,24 @@ const isHealthProfileComplete = (healthProfile: unknown) => {
 		height?: number;
 		dietaryPreference?: string;
 	};
-	
+
 	const requiredFields = [
-		'gender', 'goal', 'weight', 'height', 'dietaryPreference'
+		'gender',
+		'goal',
+		'weight',
+		'height',
+		'dietaryPreference',
 	];
-	
-	return requiredFields.every(field => {
+
+	return requiredFields.every((field) => {
 		const value = profile[field as keyof typeof profile];
-		return value !== null && 
-			value !== undefined && 
-			value !== '' &&
-			value !== 0;
+		return value !== null && value !== undefined && value !== '' && value !== 0;
 	});
 };
 
-const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<AssignedUser>[] => [
+const createColumns = (
+	router: ReturnType<typeof useRouter>,
+): ColumnDef<AssignedUser>[] => [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
@@ -74,16 +77,20 @@ const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<Assigned
 			const user = row.original;
 			const isComplete = isHealthProfileComplete(user.HealthProfile);
 			return (
-				<Badge 
+				<Badge
 					variant="outline"
-					className={isComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}
+					className={
+						isComplete
+							? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
+							: 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+					}
 				>
 					{isComplete ? 'Complete' : 'Incomplete'}
 				</Badge>
 			);
 		},
 	},
-	
+
 	{
 		id: 'assignedDiet',
 		header: 'Assigned Diet Plan',
@@ -91,7 +98,9 @@ const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<Assigned
 			const user = row.original;
 			const dietPlanName = user.dietPlanName;
 			return (
-				<span className={`text-sm ${dietPlanName ? 'text-slate-800 font-medium' : 'text-slate-500'}`}>
+				<span
+					className={`text-sm ${dietPlanName ? 'text-slate-800 font-medium' : 'text-slate-500'}`}
+				>
 					{dietPlanName || '-'}
 				</span>
 			);
@@ -104,7 +113,7 @@ const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<Assigned
 			const user = row.original;
 			const hasDiet = !!user.dietPlanId;
 			const isProfileComplete = isHealthProfileComplete(user.HealthProfile);
-			
+
 			const actions = [
 				{
 					id: 'assign-diet',
@@ -112,19 +121,21 @@ const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<Assigned
 					icon: ChefHat,
 					onClick: () => {
 						if (isProfileComplete) {
-							router.push(`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`);
+							router.push(
+								`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`,
+							);
 						}
 					},
 					disabled: !isProfileComplete,
-					className: !isProfileComplete 
-						? 'text-gray-400 cursor-not-allowed' 
-						: hasDiet 
-							? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700' 
+					className: !isProfileComplete
+						? 'text-gray-400 cursor-not-allowed'
+						: hasDiet
+							? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
 							: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
-					tooltip: !isProfileComplete 
-						? 'Health profile must be completed before assigning diet plans' 
-						: hasDiet 
-							? 'Modify the currently assigned diet plan for this user' 
+					tooltip: !isProfileComplete
+						? 'Health profile must be completed before assigning diet plans'
+						: hasDiet
+							? 'Modify the currently assigned diet plan for this user'
 							: 'Select and assign a diet plan from available options',
 				},
 				{
@@ -133,30 +144,27 @@ const createColumns = (router: ReturnType<typeof useRouter>): ColumnDef<Assigned
 					icon: Sparkles,
 					onClick: () => {
 						if (isProfileComplete) {
-							router.push(`/dashboard/trainer/diet/assigndietplanwithai?userId=${user.id}`);
+							router.push(
+								`/dashboard/trainer/diet/assigndietplanwithai?userId=${user.id}`,
+							);
 						}
 					},
 					disabled: !isProfileComplete,
-					className: !isProfileComplete 
-						? 'text-gray-400 cursor-not-allowed' 
+					className: !isProfileComplete
+						? 'text-gray-400 cursor-not-allowed'
 						: 'text-purple-600 hover:bg-purple-50 hover:text-purple-700',
-					tooltip: !isProfileComplete 
-						? 'Health profile must be completed before generating AI diet plans' 
-						: 'Create a personalized diet plan using AI based on user\'s health profile',
+					tooltip: !isProfileComplete
+						? 'Health profile must be completed before generating AI diet plans'
+						: "Create a personalized diet plan using AI based on user's health profile",
 				},
 			];
 
-			return (
-				<MoreActions 
-					actions={actions} 
-					label="Diet Actions"
-				/>
-			);
+			return <MoreActions actions={actions} label="Diet Actions" />;
 		},
 	},
 ];
 
-export default function DietAssignedUsers({ users, dietPlans }: Props) {
+export default function DietAssignedUsers({ users }: Props) {
 	const router = useRouter();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filteredUsers, setFilteredUsers] = useState(users);
@@ -165,7 +173,9 @@ export default function DietAssignedUsers({ users, dietPlans }: Props) {
 	const totalUsers = users.length;
 	const usersWithDiet = users.filter((u) => u.dietPlanId).length;
 	const usersWithoutDiet = totalUsers - usersWithDiet;
-	const usersWithIncompleteProfile = users.filter((u) => !isHealthProfileComplete(u.HealthProfile)).length;
+	const usersWithIncompleteProfile = users.filter(
+		(u) => !isHealthProfileComplete(u.HealthProfile),
+	).length;
 
 	const statusCards = [
 		{
@@ -194,15 +204,11 @@ export default function DietAssignedUsers({ users, dietPlans }: Props) {
 		},
 	] as const;
 
-	const columns = useMemo(
-		() => createColumns(router),
-		[router],
-	);
+	const columns = useMemo(() => createColumns(router), [router]);
 
 	useEffect(() => {
-		const filtered = users.filter(
-			(user) =>
-				user.name.toLowerCase().includes(searchTerm.toLowerCase()),
+		const filtered = users.filter((user) =>
+			user.name.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 		setFilteredUsers(filtered);
 	}, [searchTerm, users]);
@@ -239,42 +245,65 @@ export default function DietAssignedUsers({ users, dietPlans }: Props) {
 				<DataCard
 					data={filteredUsers}
 					renderCard={(user) => {
-						const isProfileComplete = isHealthProfileComplete(user.HealthProfile);
+						const isProfileComplete = isHealthProfileComplete(
+							user.HealthProfile,
+						);
 						const hasDiet = !!user.dietPlanId;
 						return (
 							<div className="p-3 border rounded-lg mb-4 bg-white shadow-sm">
 								<div className="flex items-center justify-between mb-2">
-									<span className="font-semibold text-slate-800">{user.name}</span>
-									<Badge variant="outline" className={isProfileComplete ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"}>
+									<span className="font-semibold text-slate-800">
+										{user.name}
+									</span>
+									<Badge
+										variant="outline"
+										className={
+											isProfileComplete
+												? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
+												: 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+										}
+									>
 										{isProfileComplete ? 'Profile Complete' : 'Incomplete'}
 									</Badge>
 								</div>
 								<div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
 									<span>BMI:</span>
-									<span className="font-medium">{user.computedHealthMetrics?.bmi !== null && user.computedHealthMetrics?.bmi !== undefined ? user.computedHealthMetrics.bmi.toFixed(1) : '-'}</span>
+									<span className="font-medium">
+										{user.computedHealthMetrics?.bmi !== null &&
+										user.computedHealthMetrics?.bmi !== undefined
+											? user.computedHealthMetrics.bmi.toFixed(1)
+											: '-'}
+									</span>
 								</div>
 								<div className="flex items-center gap-2 text-xs text-slate-600 mb-1">
 									<span>Diet Plan:</span>
-									<span className="font-medium">{user.dietPlanName || '-'}</span>
+									<span className="font-medium">
+										{user.dietPlanName || '-'}
+									</span>
 								</div>
-								<MoreActions actions={[
-									{
-										id: 'assign-diet',
-										label: hasDiet ? 'Update Diet Plan' : 'Assign Diet Plan',
-										icon: ChefHat,
-										onClick: () => {
-											if (isProfileComplete) {
-												router.push(`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`);
-											}
+								<MoreActions
+									actions={[
+										{
+											id: 'assign-diet',
+											label: hasDiet ? 'Update Diet Plan' : 'Assign Diet Plan',
+											icon: ChefHat,
+											onClick: () => {
+												if (isProfileComplete) {
+													router.push(
+														`/dashboard/trainer/diet/assigneddiettouser?userId=${user.id}`,
+													);
+												}
+											},
+											disabled: !isProfileComplete,
+											className: !isProfileComplete
+												? 'text-gray-400 cursor-not-allowed'
+												: hasDiet
+													? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700'
+													: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
 										},
-										disabled: !isProfileComplete,
-										className: !isProfileComplete 
-											? 'text-gray-400 cursor-not-allowed' 
-											: hasDiet 
-												? 'text-amber-600 hover:bg-amber-50 hover:text-amber-700' 
-												: 'text-blue-600 hover:bg-blue-50 hover:text-blue-700',
-									},
-								]} label="Diet Actions" />
+									]}
+									label="Diet Actions"
+								/>
 							</div>
 						);
 					}}

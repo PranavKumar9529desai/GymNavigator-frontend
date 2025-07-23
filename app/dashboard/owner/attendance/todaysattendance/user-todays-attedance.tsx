@@ -107,12 +107,15 @@ const columns: ColumnDef<AttendanceUser>[] = [
 			const time = row.getValue('attendanceTime') as string | null;
 			const status = getAttendanceStatus(attendance, time);
 			const colorClasses = attendanceColorClasses[status];
-			
+
 			return (
 				<div className="flex items-center">
-					<Badge 
-						variant={attendanceBadgeVariants[status]} 
-						className={cn("font-medium", colorClasses ? `${colorClasses.bg} ${colorClasses.text}` : "")}
+					<Badge
+						variant={attendanceBadgeVariants[status]}
+						className={cn(
+							'font-medium',
+							colorClasses ? `${colorClasses.bg} ${colorClasses.text}` : '',
+						)}
 					>
 						{attendanceLabels[status]}
 					</Badge>
@@ -214,17 +217,25 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 				<DataCard
 					data={filteredUsers}
 					renderCard={(user) => {
-						const status = getAttendanceStatus(user.todaysAttendance, user.attendanceTime);
+						const status = getAttendanceStatus(
+							user.todaysAttendance,
+							user.attendanceTime,
+						);
 						const colorClasses = attendanceColorClasses[status];
-						
+
 						return (
 							<div className="p-4 space-y-2">
 								<h3 className="font-medium">{user.name}</h3>
 								<div className="flex justify-between items-center">
 									<p className="text-sm text-gray-500">Shift: {user.shift}</p>
-									<Badge 
-										variant={attendanceBadgeVariants[status]} 
-										className={cn("font-medium", colorClasses ? `${colorClasses.bg} ${colorClasses.text}` : "")}
+									<Badge
+										variant={attendanceBadgeVariants[status]}
+										className={cn(
+											'font-medium',
+											colorClasses
+												? `${colorClasses.bg} ${colorClasses.text}`
+												: '',
+										)}
 									>
 										{attendanceLabels[status]}
 									</Badge>
@@ -232,12 +243,14 @@ export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
 								{user.attendanceTime && (
 									<div className="flex items-center text-sm text-gray-500">
 										<Clock className="mr-1 h-3 w-3" />
-										{new Date(user.attendanceTime).toLocaleTimeString('en-IN', {
-											hour: '2-digit',
-											minute: '2-digit',
-											hour12: true,
-											timeZone: 'Asia/Kolkata',
-										}).toUpperCase()}
+										{new Date(user.attendanceTime)
+											.toLocaleTimeString('en-IN', {
+												hour: '2-digit',
+												minute: '2-digit',
+												hour12: true,
+												timeZone: 'Asia/Kolkata',
+											})
+											.toUpperCase()}
 									</div>
 								)}
 							</div>

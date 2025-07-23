@@ -17,11 +17,13 @@ interface UpdateActivePeriodResponse {
 	};
 }
 
-type UpdateActivePeriodResult = 
+type UpdateActivePeriodResult =
 	| { success: true; data: UpdateActivePeriodResponse }
 	| { success: false; error: string };
 
-export const updateActivePeriod = async (data: UpdateActivePeriodData): Promise<UpdateActivePeriodResult> => {
+export const updateActivePeriod = async (
+	data: UpdateActivePeriodData,
+): Promise<UpdateActivePeriodResult> => {
 	const ownerAxios = await OwnerReqConfig();
 	try {
 		const response: AxiosResponse<UpdateActivePeriodResponse> =
@@ -33,9 +35,10 @@ export const updateActivePeriod = async (data: UpdateActivePeriodData): Promise<
 		return { success: true, data: response.data };
 	} catch (error: unknown) {
 		console.error('Error updating active period:', error);
-		return { 
-			success: false, 
-			error: error instanceof Error ? error.message : 'An unexpected error occurred'
+		return {
+			success: false,
+			error:
+				error instanceof Error ? error.message : 'An unexpected error occurred',
 		};
 	}
 };

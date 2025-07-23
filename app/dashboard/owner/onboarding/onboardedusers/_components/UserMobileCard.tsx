@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import {
 	statusBadgeVariants,
 	statusColorClasses,
 	statusLabels,
-} from "@/lib/constants/status-variants";
-import type { UserType } from "./OnboardedUsers";
-import { UserActions } from "./user-onboarding-actions";
+} from '@/lib/constants/status-variants';
+import type { UserType } from './OnboardedUsers';
+import { UserActions } from './user-onboarding-actions';
 
 interface UserMobileCardProps {
 	user: UserType;
@@ -25,11 +25,11 @@ interface UserMobileCardProps {
 }
 
 const formatDate = (date: Date | null): string => {
-	if (!date) return "N/A";
-	return new Date(date).toLocaleDateString("en-GB", {
-		day: "2-digit",
-		month: "2-digit",
-		year: "numeric",
+	if (!date) return 'N/A';
+	return new Date(date).toLocaleDateString('en-GB', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric',
 	});
 };
 
@@ -53,9 +53,9 @@ export function UserMobileCard({
 			<Badge
 				variant={statusBadgeVariants[user.status]}
 				className={cn(
-					"capitalize mb-4 px-2.5 py-0.5",
+					'capitalize mb-4 px-2.5 py-0.5',
 					statusColorClasses[user.status].bg,
-					statusColorClasses[user.status].text
+					statusColorClasses[user.status].text,
 				)}
 			>
 				{statusLabels[user.status] || user.status}

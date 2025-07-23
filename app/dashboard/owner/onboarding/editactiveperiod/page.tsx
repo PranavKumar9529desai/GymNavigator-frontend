@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import EditActivePeriodWrapper from './EditActivePeriodWrapper';
 export default function Page() {
 	return (
-			<div className="container flex justify-center lg:h-screen py-10">
-				<EditActivePeriodWrapper />
-			</div>
+		<div className="container flex justify-center lg:h-screen py-10">
+			<EditActivePeriodWrapper />
+		</div>
 	);
 }

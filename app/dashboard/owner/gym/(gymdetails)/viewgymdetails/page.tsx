@@ -6,30 +6,20 @@ import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import type { GymData } from './types/gym-types';
 import { Suspense } from 'react';
 import Loading from './loading';
-import { unstable_ViewTransition as ViewTransition } from 'react'
-
-
-interface GymInfo {
-	gym_name: string;
-	gym_logo: string;
-	address: string;
-	phone_number: string;
-	Email: string;
-	gymauthtoken: string;
-}
+import { unstable_ViewTransition as ViewTransition } from 'react';
 
 // Helper to format address object to string
 interface AddressObj {
-  street?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
+	street?: string;
+	city?: string;
+	state?: string;
+	postalCode?: string;
+	country?: string;
 }
 function formatAddress(addressObj: AddressObj | null | undefined) {
-  if (!addressObj) return '';
-  const { street, city, state, postalCode, country } = addressObj;
-  return [street, city, state, postalCode, country].filter(Boolean).join(', ');
+	if (!addressObj) return '';
+	const { street, city, state, postalCode, country } = addressObj;
+	return [street, city, state, postalCode, country].filter(Boolean).join(', ');
 }
 
 export default async function GymLayout() {
@@ -39,22 +29,25 @@ export default async function GymLayout() {
 		getAllGymTabData(),
 	]);
 
-	console.log("Gym Details from the ViewGymdeatails Route", gymDetails);
-	console.log("Gym Details from the TabsData Route", gymTabData);
+	console.log('Gym Details from the ViewGymdeatails Route', gymDetails);
+	console.log('Gym Details from the TabsData Route', gymTabData);
 
 	// Convert GymInfo to GymData format
 	const convertedGymData: GymData | null = gymDetails
 		? {
-			gym_name: gymDetails.gym_name,
-			gym_logo: gymDetails.gym_logo,
-			address: typeof gymDetails.address === 'object' ? formatAddress(gymDetails.address) : gymDetails.address,
-			phone_number: gymDetails.phone_number,
-			Email: gymDetails.Email,
-			gymauthtoken: gymDetails.gymauthtoken,
-			// Initialize other optional fields
-			amenities: {},
-			fitnessPlans: [],
-		}
+				gym_name: gymDetails.gym_name,
+				gym_logo: gymDetails.gym_logo,
+				address:
+					typeof gymDetails.address === 'object'
+						? formatAddress(gymDetails.address)
+						: gymDetails.address,
+				phone_number: gymDetails.phone_number,
+				Email: gymDetails.Email,
+				gymauthtoken: gymDetails.gymauthtoken,
+				// Initialize other optional fields
+				amenities: {},
+				fitnessPlans: [],
+			}
 		: null;
 
 	// Handle error states
@@ -75,27 +68,27 @@ export default async function GymLayout() {
 	return (
 		// <Suspense fallback={< Loading />}>
 
-			<div className="min-h-screen p-2 md:p-6">
-				<div className="mx-auto max-w-6xl">
-					{/* Pass data to client component for edit functionality */}
-					<ViewGymDetailsClient
-						gymData={convertedGymData}
-						gymTabData={gymTabData}
+		<div className="min-h-screen p-2 md:p-6">
+			<div className="mx-auto max-w-6xl">
+				{/* Pass data to client component for edit functionality */}
+				<ViewGymDetailsClient
+					gymData={convertedGymData}
+					gymTabData={gymTabData}
+				/>
+
+				{gymDetails && <GymHeader gymData={convertedGymData} />}
+
+				{/* Enhanced Tabs Section */}
+				<div className="">
+					<GymTabs
+						overviewData={gymTabData?.overview}
+						amenitiesData={gymTabData?.amenities}
+						locationData={gymTabData?.location}
+						pricingData={gymTabData?.pricing}
 					/>
-
-					{gymDetails && <GymHeader gymData={convertedGymData} />}
-
-					{/* Enhanced Tabs Section */}
-					<div className="">
-						<GymTabs
-							overviewData={gymTabData?.overview}
-							amenitiesData={gymTabData?.amenities}
-							locationData={gymTabData?.location}
-							pricingData={gymTabData?.pricing}
-						/>
-					</div>
 				</div>
 			</div>
+		</div>
 		// </Suspense>
 	);
 }

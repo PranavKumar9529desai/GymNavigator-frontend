@@ -11,11 +11,20 @@ import type { AdditionalService } from '../_action/create-pricing-plan';
 export interface AdditionalServiceCardProps {
 	service: AdditionalService;
 	index: number;
-	onUpdate: (index: number, field: keyof AdditionalService, value: string) => void;
+	onUpdate: (
+		index: number,
+		field: keyof AdditionalService,
+		value: string,
+	) => void;
 	onRemove: (index: number) => void;
 }
 
-export function AdditionalServiceCard({ service, index, onUpdate, onRemove }: AdditionalServiceCardProps) {
+export function AdditionalServiceCard({
+	service,
+	index,
+	onUpdate,
+	onRemove,
+}: AdditionalServiceCardProps) {
 	return (
 		<motion.div
 			layout
@@ -26,7 +35,9 @@ export function AdditionalServiceCard({ service, index, onUpdate, onRemove }: Ad
 			<Card>
 				<CardHeader className="pb-3">
 					<div className="flex items-center justify-between">
-						<CardTitle className="text-base">{service.name || 'Untitled Service'}</CardTitle>
+						<CardTitle className="text-base">
+							{service.name || 'Untitled Service'}
+						</CardTitle>
 						<Button
 							type="button"
 							variant="outline"
@@ -82,4 +93,4 @@ export function AdditionalServiceCard({ service, index, onUpdate, onRemove }: Ad
 			</Card>
 		</motion.div>
 	);
-} 
+}

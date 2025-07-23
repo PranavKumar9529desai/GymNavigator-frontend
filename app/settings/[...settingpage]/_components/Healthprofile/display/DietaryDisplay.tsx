@@ -13,35 +13,35 @@ interface DietaryDisplayProps {
 }
 
 // Helper to display selection arrays or strings
-function renderSelection(
-	selection: Selection[] | string | undefined,
-	otherValue?: string,
-): string {
-	if (!selection) return 'N/A';
-	if (typeof selection === 'string') {
-		// Attempt to parse if it looks like JSON, otherwise display as string
-		try {
-			const parsed = JSON.parse(selection);
-			if (Array.isArray(parsed)) {
-				return (
-					parsed.map((item) => item.name).join(', ') +
-					(otherValue ? `, ${otherValue}` : '')
-				);
-			}
-		} catch (_e) {
-			/* Ignore parsing error, treat as plain string */
-		}
-		return selection + (otherValue ? `, ${otherValue}` : '');
-	}
-	if (Array.isArray(selection)) {
-		const names = selection
-			.filter((item) => item.selected)
-			.map((item) => item.name)
-			.join(', ');
-		return names + (otherValue ? `, ${otherValue}` : '');
-	}
-	return 'N/A';
-}
+// function renderSelection(
+// 	selection: Selection[] | string | undefined,
+// 	otherValue?: string,
+// ): string {
+// 	if (!selection) return 'N/A';
+// 	if (typeof selection === 'string') {
+// 		// Attempt to parse if it looks like JSON, otherwise display as string
+// 		try {
+// 			const parsed = JSON.parse(selection);
+// 			if (Array.isArray(parsed)) {
+// 				return (
+// 					parsed.map((item) => item.name).join(', ') +
+// 					(otherValue ? `, ${otherValue}` : '')
+// 				);
+// 			}
+// 		} catch (_e) {
+// 			/* Ignore parsing error, treat as plain string */
+// 		}
+// 		return selection + (otherValue ? `, ${otherValue}` : '');
+// 	}
+// 	if (Array.isArray(selection)) {
+// 		const names = selection
+// 			.filter((item) => item.selected)
+// 			.map((item) => item.name)
+// 			.join(', ');
+// 		return names + (otherValue ? `, ${otherValue}` : '');
+// 	}
+// 	return 'N/A';
+// }
 
 // Helper to get individual selection items
 function getSelectionItems(
@@ -143,7 +143,7 @@ export default function DietaryDisplay({ data }: DietaryDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{dietaryRestrictions.map((item, index) => (
 									<Badge
-										  key={ index as number } 
+										key={index as number}
 										variant="outline"
 										className="bg-yellow-50 text-yellow-800 border-yellow-200"
 									>
@@ -173,7 +173,7 @@ export default function DietaryDisplay({ data }: DietaryDisplayProps) {
 							<div className="flex flex-wrap gap-2">
 								{nonVegDays.map((day, index) => (
 									<Badge
-										  key={ index as number } 
+										key={index as number}
 										variant="outline"
 										className="bg-red-50 text-red-800 border-red-200"
 									>

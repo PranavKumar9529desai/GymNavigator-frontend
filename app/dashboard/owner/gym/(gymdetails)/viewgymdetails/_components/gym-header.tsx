@@ -115,13 +115,20 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 									</div>
 								)}
 								{gymData.gymauthtoken && (
-									<div
-									
+									<button
+										type="button"
 										className="text-left flex items-center gap-3 col-span-1 sm:col-span-2 lg:col-span-1 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors"
 										onClick={() => {
 											navigator.clipboard.writeText(gymData.gymauthtoken);
 											// Optional: Add toast notification here
 										}}
+										onKeyDown={(e) => {
+											if (e.key === 'Enter' || e.key === ' ') {
+												navigator.clipboard.writeText(gymData.gymauthtoken);
+												// Optional: Add toast notification here
+											}
+										}}
+										aria-label="Copy Auth Token"
 									>
 										<Key className="h-6 w-6 text-gray-600" />
 										<div>
@@ -130,7 +137,7 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 												{gymData.gymauthtoken}
 											</p>
 										</div>
-									</div>
+									</button>
 								)}
 							</div>
 						</div>

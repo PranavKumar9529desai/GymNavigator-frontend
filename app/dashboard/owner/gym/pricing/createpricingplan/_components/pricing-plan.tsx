@@ -6,7 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { createPricingPlan, type PricingPlan, type AdditionalService } from '../_action/create-pricing-plan';
+import {
+	createPricingPlan,
+	type PricingPlan,
+	type AdditionalService,
+} from '../_action/create-pricing-plan';
 import { PlansList } from './plans-list';
 import { AdditionalServicesList } from './additional-services-list';
 import { planColors } from './pricing-plan-constants';
@@ -16,7 +20,9 @@ export default function CreatePricingPlan() {
 	const [isPending, startTransition] = useTransition();
 	const [activeTab, setActiveTab] = useState('plans');
 	const [plans, setPlans] = useState<PricingPlan[]>([]);
-	const [additionalServices, setAdditionalServices] = useState<AdditionalService[]>([]);
+	const [additionalServices, setAdditionalServices] = useState<
+		AdditionalService[]
+	>([]);
 
 	const addNewPlan = () => {
 		const newPlan: PricingPlan = {
@@ -32,7 +38,9 @@ export default function CreatePricingPlan() {
 	};
 
 	const updatePlan = (index: number, updatedPlan: PricingPlan) => {
-		const updatedPlans = plans.map((plan, i) => (i === index ? updatedPlan : plan));
+		const updatedPlans = plans.map((plan, i) =>
+			i === index ? updatedPlan : plan,
+		);
 		setPlans(updatedPlans);
 	};
 
@@ -69,7 +77,10 @@ export default function CreatePricingPlan() {
 	const handleSubmit = async () => {
 		startTransition(async () => {
 			try {
-				const plansWithSortOrder = plans.map((plan, index) => ({ ...plan, sortOrder: index }));
+				const plansWithSortOrder = plans.map((plan, index) => ({
+					...plan,
+					sortOrder: index,
+				}));
 				const pricingData = { plans: plansWithSortOrder, additionalServices };
 				const result = await createPricingPlan(pricingData);
 				if (result.success) {
@@ -97,8 +108,12 @@ export default function CreatePricingPlan() {
 						<DollarSign className="h-4 w-4 text-white" />
 					</div>
 					<div>
-						<h1 className="text-2xl font-bold text-slate-800">Create Pricing Plans</h1>
-						<p className="text-slate-600">Set up your gym's pricing structure</p>
+						<h1 className="text-2xl font-bold text-slate-800">
+							Create Pricing Plans
+						</h1>
+						<p className="text-slate-600">
+							Set up your gym's pricing structure
+						</p>
 					</div>
 				</div>
 			</div>
@@ -134,7 +149,9 @@ export default function CreatePricingPlan() {
 				<Button
 					type="button"
 					onClick={handleSubmit}
-					disabled={isPending || (plans.length === 0 && additionalServices.length === 0)}
+					disabled={
+						isPending || (plans.length === 0 && additionalServices.length === 0)
+					}
 					className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-medium min-w-[160px] group"
 				>
 					{isPending ? (
@@ -152,4 +169,4 @@ export default function CreatePricingPlan() {
 			</div>
 		</div>
 	);
-} 
+}

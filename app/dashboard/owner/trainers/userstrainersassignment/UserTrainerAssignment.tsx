@@ -40,7 +40,9 @@ export default function TrainerAssignment({
 		return initialAssignments;
 	});
 
-	const [loadingAssignments, setLoadingAssignments] = useState<Record<string, boolean>>({});
+	const [loadingAssignments, setLoadingAssignments] = useState<
+		Record<string, boolean>
+	>({});
 
 	const handleTrainerAssignment = async (
 		rowId: number | string,
@@ -48,27 +50,28 @@ export default function TrainerAssignment({
 	) => {
 		const userId = typeof rowId === 'string' ? Number.parseInt(rowId) : rowId;
 		const assignmentKey = `${userId}-${trainerId}`;
-		
+
 		// Don't allow multiple simultaneous assignments for the same user
 		if (loadingAssignments[assignmentKey]) return;
-		
+
 		try {
-			setLoadingAssignments(prev => ({ ...prev, [assignmentKey]: true }));
+			setLoadingAssignments((prev) => ({ ...prev, [assignmentKey]: true }));
 			await AssignTrainerToUsers(userId.toString(), trainerId);
-			
+
 			// Update state with new assignment
 			setAssignedTrainers((prev) => ({
 				...prev,
 				[userId]: Number(trainerId),
 			}));
-			
+
 			toast.success('Trainer assigned successfully');
 		} catch (error: unknown) {
 			console.error('Error assigning trainer:', error);
-			const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+			const errorMessage =
+				error instanceof Error ? error.message : 'Unknown error occurred';
 			toast.error(`Assignment failed: ${errorMessage}`);
 		} finally {
-			setLoadingAssignments(prev => {
+			setLoadingAssignments((prev) => {
 				const newState = { ...prev };
 				delete newState[assignmentKey];
 				return newState;
@@ -101,15 +104,14 @@ export default function TrainerAssignment({
 				const currentTrainerId = row.getValue('trainerid') as number | null;
 				const assignedTrainerId = assignedTrainers[userId];
 				const hasTrainer = currentTrainerId || assignedTrainerId;
-				
+
 				// Determine if this cell is in loading state
-				const isLoading = Object.keys(loadingAssignments).some(key => 
-					key.startsWith(`${userId}-`)
+				const isLoading = Object.keys(loadingAssignments).some((key) =>
+					key.startsWith(`${userId}-`),
 				);
-				
-				const selectedValue = assignedTrainerId?.toString() || 
-					currentTrainerId?.toString() || 
-					'';
+
+				const selectedValue =
+					assignedTrainerId?.toString() || currentTrainerId?.toString() || '';
 
 				return (
 					<div
@@ -121,26 +123,43 @@ export default function TrainerAssignment({
 					>
 						<Select
 							value={selectedValue}
-							onValueChange={(value) =>
-								handleTrainerAssignment(userId, value)
-							}
+							onValueChange={(value) => handleTrainerAssignment(userId, value)}
 							disabled={isLoading}
 						>
-							<SelectTrigger 
+							<SelectTrigger
 								className="border-none bg-transparent hover:bg-white/50 transition-colors"
-								aria-label={hasTrainer ? "Change trainer" : "Assign trainer"}
+								aria-label={hasTrainer ? 'Change trainer' : 'Assign trainer'}
 							>
 								{isLoading ? (
 									<div className="flex items-center">
-										<svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-											<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-											<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+										{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+										<svg
+											className="animate-spin -ml-1 mr-3 h-4 w-4 text-primary"
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+										>
+											<circle
+												className="opacity-25"
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												strokeWidth="4"
+											/>
+											<path
+												className="opacity-75"
+												fill="currentColor"
+												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+											/>
 										</svg>
 										<span>Assigning...</span>
 									</div>
 								) : (
 									<SelectValue
-										placeholder={hasTrainer ? 'Change Trainer' : 'Assign Trainer'}
+										placeholder={
+											hasTrainer ? 'Change Trainer' : 'Assign Trainer'
+										}
 									/>
 								)}
 							</SelectTrigger>
@@ -228,14 +247,14 @@ export default function TrainerAssignment({
 		show: {
 			opacity: 1,
 			transition: {
-				staggerChildren: 0.1
-			}
-		}
+				staggerChildren: 0.1,
+			},
+		},
 	};
 
 	const itemVariants = {
 		hidden: { opacity: 0, y: 20 },
-		show: { opacity: 1, y: 0 }
+		show: { opacity: 1, y: 0 },
 	};
 
 	// Handle no trainers scenario
@@ -250,15 +269,13 @@ export default function TrainerAssignment({
 				<m.h1 className="text-2xl font-bold" variants={itemVariants}>
 					User-Trainer Assignment
 				</m.h1>
-				
-				<m.div 
-					className="py-10 text-center space-y-4" 
-					variants={itemVariants}
-				>
+
+				<m.div className="py-10 text-center space-y-4" variants={itemVariants}>
 					<Users className="h-16 w-16 mx-auto text-muted-foreground/60" />
 					<h2 className="text-xl font-medium">No Trainers Available</h2>
 					<p className="text-muted-foreground max-w-md mx-auto">
-						You need to add trainers to your gym before you can assign them to users.
+						You need to add trainers to your gym before you can assign them to
+						users.
 					</p>
 				</m.div>
 			</m.div>
@@ -277,15 +294,13 @@ export default function TrainerAssignment({
 				<m.h1 className="text-2xl font-bold" variants={itemVariants}>
 					User-Trainer Assignment
 				</m.h1>
-				
-				<m.div 
-					className="py-10 text-center space-y-4" 
-					variants={itemVariants}
-				>
+
+				<m.div className="py-10 text-center space-y-4" variants={itemVariants}>
 					<UserX className="h-16 w-16 mx-auto text-muted-foreground/60" />
 					<h2 className="text-xl font-medium">No Users Available</h2>
 					<p className="text-muted-foreground max-w-md mx-auto">
-						There are no users in your gym yet. Users will appear here once they register.
+						There are no users in your gym yet. Users will appear here once they
+						register.
 					</p>
 				</m.div>
 			</m.div>
@@ -300,15 +315,12 @@ export default function TrainerAssignment({
 			animate="show"
 			variants={containerVariants}
 		>
-			<m.h1 
-				className="text-2xl font-bold text-center"
-				variants={itemVariants}
-			>
+			<m.h1 className="text-2xl font-bold text-center" variants={itemVariants}>
 				User-Trainer Assignment
 			</m.h1>
 
 			<Toaster position="top-right" />
-			<m.div 
+			<m.div
 				className="grid grid-cols-1 md:grid-cols-3 gap-6"
 				variants={itemVariants}
 			>
@@ -319,7 +331,7 @@ export default function TrainerAssignment({
 				))}
 			</m.div>
 
-			<m.div 
+			<m.div
 				className="flex flex-col md:flex-row gap-4 items-start"
 				variants={itemVariants}
 			>
@@ -336,7 +348,10 @@ export default function TrainerAssignment({
 						setFilterStatus(value)
 					}
 				>
-					<SelectTrigger className="w-[180px]" aria-label="Filter users by assignment status">
+					<SelectTrigger
+						className="w-[180px]"
+						aria-label="Filter users by assignment status"
+					>
 						<SelectValue placeholder="Filter by status" />
 					</SelectTrigger>
 					<SelectContent>
@@ -350,10 +365,7 @@ export default function TrainerAssignment({
 				</div>
 			</m.div>
 
-			<m.div 
-				className="hidden md:block" 
-				variants={itemVariants}
-			>
+			<m.div className="hidden md:block" variants={itemVariants}>
 				<DataTable
 					data={filteredUsers}
 					columns={columns}
@@ -362,10 +374,7 @@ export default function TrainerAssignment({
 				/>
 			</m.div>
 
-			<m.div 
-				className="md:hidden"
-				variants={itemVariants}
-			>
+			<m.div className="md:hidden" variants={itemVariants}>
 				{filteredUsers.length === 0 ? (
 					<div className="py-8 text-center text-muted-foreground">
 						No users match your search criteria
@@ -377,15 +386,15 @@ export default function TrainerAssignment({
 						renderCard={(user) => {
 							const userId = user.id;
 							const hasTrainer = user.trainerid || assignedTrainers[userId];
-							const isLoading = Object.keys(loadingAssignments).some(key => 
-								key.startsWith(`${userId}-`)
+							const isLoading = Object.keys(loadingAssignments).some((key) =>
+								key.startsWith(`${userId}-`),
 							);
-							
+
 							return (
 								<div className="p-4 space-y-3">
 									<h3 className="font-medium">{user.name}</h3>
 									<p className="text-sm text-muted-foreground">
-										{user.HealthProfile?.fullname || "No full name provided"}
+										{user.HealthProfile?.fullname || 'No full name provided'}
 									</p>
 									{user.HealthProfile?.goal && (
 										<p className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded inline-block">
@@ -394,10 +403,10 @@ export default function TrainerAssignment({
 									)}
 									<div
 										className={cn(
-											"rounded-lg border transition-colors duration-200",
+											'rounded-lg border transition-colors duration-200',
 											hasTrainer
-												? "bg-green-50/80 border-green-200"
-												: "bg-red-50/80 border-red-200"
+												? 'bg-green-50/80 border-green-200'
+												: 'bg-red-50/80 border-red-200',
 										)}
 									>
 										<Select
@@ -411,21 +420,42 @@ export default function TrainerAssignment({
 											}
 											disabled={isLoading}
 										>
-											<SelectTrigger 
+											<SelectTrigger
 												className="w-full border-none bg-transparent hover:bg-white/50 transition-colors"
-												aria-label={hasTrainer ? "Change trainer" : "Assign trainer"}
+												aria-label={
+													hasTrainer ? 'Change trainer' : 'Assign trainer'
+												}
 											>
 												{isLoading ? (
 													<div className="flex items-center">
-														<svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-															<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-															<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+														{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+														<svg
+															className="animate-spin -ml-1 mr-3 h-4 w-4 text-primary"
+															xmlns="http://www.w3.org/2000/svg"
+															fill="none"
+															viewBox="0 0 24 24"
+														>
+															<circle
+																className="opacity-25"
+																cx="12"
+																cy="12"
+																r="10"
+																stroke="currentColor"
+																strokeWidth="4"
+															/>
+															<path
+																className="opacity-75"
+																fill="currentColor"
+																d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+															/>
 														</svg>
 														<span>Assigning...</span>
 													</div>
 												) : (
 													<SelectValue
-														placeholder={hasTrainer ? 'Change Trainer' : 'Assign Trainer'}
+														placeholder={
+															hasTrainer ? 'Change Trainer' : 'Assign Trainer'
+														}
 													/>
 												)}
 											</SelectTrigger>

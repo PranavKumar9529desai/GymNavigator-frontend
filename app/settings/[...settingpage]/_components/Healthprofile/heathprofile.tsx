@@ -102,7 +102,7 @@ export default async function HealthProfile2({
 							return (
 								<Link
 									href={`/settings/healthprofile/${topic.toLowerCase()}`}
-									  key={ index as number } 
+									key={index as number}
 									className="block border-b border-gray-100 min-h-[56px] transition-colors hover:bg-gray-50 text-black"
 									scroll={false}
 								>

@@ -3,6 +3,7 @@ import FetchGymData from './FetchGymData';
 import Gym from './Gym';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
+import type { GymData } from '@/app/dashboard/owner/gym/(gymdetails)/viewgymdetails/types/gym-types';
 
 // Reintroduce generateStaticParams for static generation
 interface GymNameResponse {
@@ -39,22 +40,19 @@ interface PageProps {
 }
 
 // Inject JSON-LD structured data for LocalBusiness
-function GymStructuredData({ gymData }: { gymData: any }) {
+function GymStructuredData({ gymData }: { gymData: GymData }) {
 	if (!gymData) return null;
 	const structuredData = {
 		'@context': 'https://schema.org',
 		'@type': 'LocalBusiness',
 		name: gymData.name,
-		image: gymData.img,
+		image: gymData.gym_logo,
 		address: gymData.address,
-		url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in'}/gym/${encodeURIComponent(gymData.name)}`,
+		url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in'}/gym/${encodeURIComponent(gymData.gym_name)}`,
 		// Add more fields as available
 	};
 	return (
-		<script
-			type="application/ld+json"
-			dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-		/>
+		<script type="application/ld+json">{JSON.stringify(structuredData)}</script>
 	);
 }
 
@@ -75,7 +73,7 @@ const GymPage = async (props: PageProps) => {
 
 	return (
 		<>
-			<GymStructuredData gymData={gymData} />
+			<GymStructuredData gymData={gymData as unknown as GymData} />
 			<div>
 				<Gym gymData={gymData} />
 			</div>
@@ -138,13 +136,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 			},
 		},
 		icons: {
-			icon: [
-				{ url: '/favicon.ico' },
-				{ url: '/icon.png', type: 'image/png' },
-			],
-			apple: [
-				{ url: '/apple-touch-icon.png' },
-			],
+			icon: [{ url: '/favicon.ico' }, { url: '/icon.png', type: 'image/png' }],
+			apple: [{ url: '/apple-touch-icon.png' }],
 			other: [
 				{
 					rel: 'mask-icon',

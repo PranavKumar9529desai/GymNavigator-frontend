@@ -2,7 +2,7 @@ import { IsOwner } from '@/lib/is-owner'; // Assuming path alias @/lib
 import { IsTrainer } from '@/lib/is-trainer'; // Assuming path alias @/lib
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { unstable_ViewTransition as ViewTransition } from 'react'
+import { unstable_ViewTransition as ViewTransition } from 'react';
 import type React from 'react';
 import { auth } from '../(auth)/auth';
 import DashboardBottomNav from './_components/DashboardBottomNav';
@@ -22,31 +22,37 @@ export async function generateMetadata(): Promise<Metadata> {
 	const role = session?.role || 'user';
 	const gym = session?.gym || null;
 
-	console.log("title from the dashboard layout is ", gym, role);
+	console.log('title from the dashboard layout is ', gym, role);
 	let title = 'Dashboard | GymNavigator';
 	let description = 'Access your personalized dashboard on GymNavigator.';
 
 	if (role === 'owner') {
-		title = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `Owner Dashboard  ${gym.gym_name} | GymNavigator`
-			: 'Owner Dashboard | GymNavigator';
-		description = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `Manage your gym (${gym.gym_name}) operations, trainers, and clients with GymNavigator.`
-			: 'Manage your gym operations, trainers, and clients with GymNavigator.';
+		title =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `Owner Dashboard  ${gym.gym_name} | GymNavigator`
+				: 'Owner Dashboard | GymNavigator';
+		description =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `Manage your gym (${gym.gym_name}) operations, trainers, and clients with GymNavigator.`
+				: 'Manage your gym operations, trainers, and clients with GymNavigator.';
 	} else if (role === 'trainer') {
-		title = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `Trainer Dashboard  ${gym.gym_name} | GymNavigator`
-			: 'Trainer Dashboard | GymNavigator';
-		description = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `View and manage your clients, workouts, and attendance at ${gym.gym_name} with GymNavigator.`
-			: 'View and manage your clients, workouts, and attendance with GymNavigator.';
+		title =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `Trainer Dashboard  ${gym.gym_name} | GymNavigator`
+				: 'Trainer Dashboard | GymNavigator';
+		description =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `View and manage your clients, workouts, and attendance at ${gym.gym_name} with GymNavigator.`
+				: 'View and manage your clients, workouts, and attendance with GymNavigator.';
 	} else if (role === 'client') {
-		title = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `Client Dashboard  ${gym.gym_name} | GymNavigator`
-			: 'Client Dashboard | GymNavigator';
-		description = gym && typeof gym === 'object' && 'gym_name' in gym
-			? `Track your workouts, diet, and attendance at ${gym.gym_name} with GymNavigator.`
-			: 'Track your workouts, diet, and attendance with GymNavigator.';
+		title =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `Client Dashboard  ${gym.gym_name} | GymNavigator`
+				: 'Client Dashboard | GymNavigator';
+		description =
+			gym && typeof gym === 'object' && 'gym_name' in gym
+				? `Track your workouts, diet, and attendance at ${gym.gym_name} with GymNavigator.`
+				: 'Track your workouts, diet, and attendance with GymNavigator.';
 	}
 
 	return {
@@ -163,9 +169,7 @@ export default async function Layout({
 
 					{/* Original Content */}
 					<div className="container mx-auto px-2 py-4 md:py-6 max-w-7xl">
-						<ViewTransition name='dashboard-layout'  >
-							{children}
-						</ViewTransition>
+						<ViewTransition name="dashboard-layout">{children}</ViewTransition>
 					</div>
 				</div>
 			</div>

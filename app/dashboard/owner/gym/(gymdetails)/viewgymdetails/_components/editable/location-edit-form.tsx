@@ -40,7 +40,10 @@ export function LocationEditForm({
 		loading: geoLoading,
 		error: geoError,
 	} = useGetLocationFromCoordinates() as {
-		getAddress: (lat: number, lng: number) => Promise<{
+		getAddress: (
+			lat: number,
+			lng: number,
+		) => Promise<{
 			address?: string;
 			city?: string;
 			state?: string;
@@ -328,11 +331,7 @@ export function LocationEditForm({
 			)}
 
 			<div className="flex gap-2 pt-4">
-				<Button
-					type="submit"
-					disabled={isPending}
-					className="flex-1"
-				>
+				<Button type="submit" disabled={isPending} className="flex-1">
 					{isPending ? 'Saving...' : 'Save Location'}
 				</Button>
 			</div>

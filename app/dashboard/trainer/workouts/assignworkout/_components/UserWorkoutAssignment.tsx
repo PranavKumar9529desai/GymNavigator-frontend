@@ -101,14 +101,15 @@ interface UserWorkoutAssignmentProps {
 	initialWorkoutPlans?: WorkoutPlan[];
 }
 
-export default function UserWorkoutAssignment({ 
-	initialUsers = [], 
-	initialWorkoutPlans = [] 
+export default function UserWorkoutAssignment({
+	initialUsers = [],
+	initialWorkoutPlans = [],
 }: UserWorkoutAssignmentProps) {
 	const router = useRouter();
 
 	const [users, setUsers] = useState<AssignableUser[]>(initialUsers);
-	const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlan[]>(initialWorkoutPlans);
+	const [workoutPlans, setWorkoutPlans] =
+		useState<WorkoutPlan[]>(initialWorkoutPlans);
 	const [_isLoading, setIsLoading] = useState(!initialUsers.length);
 
 	useEffect(() => {

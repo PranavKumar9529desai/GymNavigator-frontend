@@ -20,23 +20,19 @@ export default async function MyWorkoutsPage() {
 
 		return (
 			<div className="space-y-10">
-					<section>
-						{!workout ? (
-							<WorkoutNotAssigned />
-						) : workout.muscleGroups.length === 0 ? (
-							<RestDay />
-						) : (
-							<TodaysWorkouts workout={workout} />
-						)}
-					</section>
+				<section>
+					{!workout ? (
+						<WorkoutNotAssigned />
+					) : workout.muscleGroups.length === 0 ? (
+						<RestDay />
+					) : (
+						<TodaysWorkouts workout={workout} />
+					)}
+				</section>
 
-					<section>
-						{!dietPlan ? (
-							<DietNotAssigned />
-						) : (
-							<TodaysDiet dietPlan={dietPlan} />
-						)}
-					</section>
+				<section>
+					{!dietPlan ? <DietNotAssigned /> : <TodaysDiet dietPlan={dietPlan} />}
+				</section>
 			</div>
 		);
 	} catch (error) {

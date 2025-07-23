@@ -17,7 +17,9 @@ interface ExerciseApiResponse {
 	muscle_image?: string;
 }
 
-export async function fetchExercises(muscleName: string): Promise<Excercisetype[]> {
+export async function fetchExercises(
+	muscleName: string,
+): Promise<Excercisetype[]> {
 	try {
 		const response = await axios.get(
 			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/workouts/${muscleName}`,

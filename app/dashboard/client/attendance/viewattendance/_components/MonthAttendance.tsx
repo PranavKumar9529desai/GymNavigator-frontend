@@ -26,7 +26,9 @@ interface MonthAttendanceProps {
 	attendanceDays: Date[];
 }
 
-export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps) {
+export default function MonthAttendance({
+	attendanceDays,
+}: MonthAttendanceProps) {
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [progress, setProgress] = useState(0);
 
@@ -37,7 +39,10 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	const gymDaysMap = useMemo(() => {
 		const map = new Map<string, boolean>();
 		for (const date of gymAttendanceDays) {
-			map.set(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`, true);
+			map.set(
+				`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+				true,
+			);
 		}
 		return map;
 	}, [gymAttendanceDays]);
@@ -80,24 +85,31 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	}, [currentDate, gymAttendanceDays]);
 
 	// Optimized helper functions with memoization
-	const isToday = useCallback((date: Date) => {
-		return (
-			date.getDate() === today.getDate() &&
-			date.getMonth() === today.getMonth() &&
-			date.getFullYear() === today.getFullYear()
-		);
-	}, [today]);
+	const isToday = useCallback(
+		(date: Date) => {
+			return (
+				date.getDate() === today.getDate() &&
+				date.getMonth() === today.getMonth() &&
+				date.getFullYear() === today.getFullYear()
+			);
+		},
+		[today],
+	);
 
-	const isGymDay = useCallback((date: Date) => {
-		const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-		return gymDaysMap.has(key);
-	}, [gymDaysMap]);
+	const isGymDay = useCallback(
+		(date: Date) => {
+			const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+			return gymDaysMap.has(key);
+		},
+		[gymDaysMap],
+	);
 
-	const isMissedDay = useCallback((date: Date) => {
-		return (
-			date < today && !isGymDay(date) && date.getDay() !== 0
-		);
-	}, [today, isGymDay]);
+	const isMissedDay = useCallback(
+		(date: Date) => {
+			return date < today && !isGymDay(date) && date.getDay() !== 0;
+		},
+		[today, isGymDay],
+	);
 
 	// Memoize days in month calculation to prevent recalculation on every render
 	const daysInMonth = useMemo(() => {
@@ -123,54 +135,61 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	};
 
 	// Memoize day class calculation for better performance
-	const getDayClasses = useCallback((date: Date) => {
-		const isSunday = date.getDay() === 0;
-		const isGymAttendance = isGymDay(date);
-		const isTodayDate = isToday(date);
-		const isMissed = isMissedDay(date);
+	const getDayClasses = useCallback(
+		(date: Date) => {
+			const isSunday = date.getDay() === 0;
+			const isGymAttendance = isGymDay(date);
+			const isTodayDate = isToday(date);
+			const isMissed = isMissedDay(date);
 
-		return cn(
-			"flex flex-col items-center justify-center",
-			"w-12 h-12 md:w-14 md:h-14 rounded-xl",
-			"text-center relative",
-			"transition-transform",
-			"hover:scale-105",
-			"cursor-default",
-			{
-				"bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md shadow-green-200/50 dark:shadow-green-900/50": isGymAttendance,
-				"bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shadow-blue-200/50 dark:shadow-blue-900/50": isTodayDate && !isGymAttendance,
-				"bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/50 dark:to-red-800/50": isMissed,
-				"bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800/50 dark:to-gray-700/50 text-gray-400 dark:text-gray-600": isSunday
-			}
-		);
-	}, [isGymDay, isToday, isMissedDay]);
+			return cn(
+				'flex flex-col items-center justify-center',
+				'w-12 h-12 md:w-14 md:h-14 rounded-xl',
+				'text-center relative',
+				'transition-transform',
+				'hover:scale-105',
+				'cursor-default',
+				{
+					'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md shadow-green-200/50 dark:shadow-green-900/50':
+						isGymAttendance,
+					'bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shadow-blue-200/50 dark:shadow-blue-900/50':
+						isTodayDate && !isGymAttendance,
+					'bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/50 dark:to-red-800/50':
+						isMissed,
+					'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800/50 dark:to-gray-700/50 text-gray-400 dark:text-gray-600':
+						isSunday,
+				},
+			);
+		},
+		[isGymDay, isToday, isMissedDay],
+	);
 
 	// Memoize day rendering
-	const renderDay = useCallback((date: Date | null) => {
-		if (!date) return <div className="w-12 h-12 md:w-14 md:h-14" />;
+	const renderDay = useCallback(
+		(date: Date | null) => {
+			if (!date) return <div className="w-12 h-12 md:w-14 md:h-14" />;
 
-		const showGymIcon = isGymDay(date) && date.getDay() !== 0;
-		const showMissedIcon = isMissedDay(date);
+			const showGymIcon = isGymDay(date) && date.getDay() !== 0;
+			const showMissedIcon = isMissedDay(date);
 
-		return (
-			<div className={getDayClasses(date)}>
-				<span className="text-base md:text-lg font-semibold">
-					{date.getDate()}
-				</span>
-				{showGymIcon && (
-					<Dumbbell className="w-4 h-4 md:w-5 md:h-5" />
-				)}
-				{showMissedIcon && (
-					<X className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
-				)}
-			</div>
-		);
-	}, [getDayClasses, isGymDay, isMissedDay]);
-
+			return (
+				<div className={getDayClasses(date)}>
+					<span className="text-base md:text-lg font-semibold">
+						{date.getDate()}
+					</span>
+					{showGymIcon && <Dumbbell className="w-4 h-4 md:w-5 md:h-5" />}
+					{showMissedIcon && (
+						<X className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
+					)}
+				</div>
+			);
+		},
+		[getDayClasses, isGymDay, isMissedDay],
+	);
 
 	// Memoize navigation handler functions
 	const handlePrevMonth = useCallback(() => {
-		setCurrentDate(prev => {
+		setCurrentDate((prev) => {
 			const newDate = new Date(prev);
 			newDate.setMonth(newDate.getMonth() - 1);
 			return newDate;
@@ -178,7 +197,7 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	}, []);
 
 	const handleNextMonth = useCallback(() => {
-		setCurrentDate(prev => {
+		setCurrentDate((prev) => {
 			const newDate = new Date(prev);
 			newDate.setMonth(newDate.getMonth() + 1);
 			return newDate;
@@ -246,9 +265,7 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 				<div className="grid grid-cols-7 gap-2 sm:gap-4 mb-4">
 					{calendarHeaders}
 				</div>
-				<div className="grid grid-cols-7 gap-3 sm:gap-3">
-					{calendarDays}
-				</div>
+				<div className="grid grid-cols-7 gap-3 sm:gap-3">{calendarDays}</div>
 			</div>
 
 			{/* Legend and Progress */}
@@ -334,5 +351,4 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 			</div>
 		</div>
 	);
-
 }

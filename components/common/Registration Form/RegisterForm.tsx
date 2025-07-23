@@ -60,7 +60,7 @@ export default function RegisterForm() {
 		startTransition(async () => {
 			// Create a dismissible loading toast
 			const _loadingToast = toast.loading('Processing registration...');
-			
+
 			try {
 				// Check if the user already exists using the updated getUserByEmail function
 				const userExistsResponse = await getUserByEmail(email);
@@ -90,7 +90,8 @@ export default function RegisterForm() {
 					settype('fail');
 					try {
 						const errorData = JSON.parse(signInResult.error);
-						const errorMessage = errorData.message || 'Registration failed. Please try again.';
+						const errorMessage =
+							errorData.message || 'Registration failed. Please try again.';
 						seterror(errorMessage);
 						toast.dismiss();
 						toast.error('Registration failed', {
@@ -111,7 +112,7 @@ export default function RegisterForm() {
 						description: 'Your account has been created successfully',
 					});
 					router.refresh();
-					
+
 					// Redirect to dashboard on success - moved here from finally block
 					router.push('/dashboard');
 				}
@@ -146,7 +147,7 @@ export default function RegisterForm() {
 
 		startTransition(async () => {
 			const _loadingToast = toast.loading('Connecting to Google...');
-			
+
 			try {
 				// Pass the role as a state parameter to Google auth
 				await signIn('google', {
@@ -166,16 +167,15 @@ export default function RegisterForm() {
 
 	return (
 		<div className="w-full max-w-md mx-auto p-8 rounded-xl shadow-xl">
-			<div className='h-8 sm:mb-4 mb-2'>
-
-			{error && type ? (
-				<FormError
-				FormErrorProps={{
-					message: error,
-					type: type as 'success' | 'fail',
-				}}
-				/>
-			) : null}
+			<div className="h-8 sm:mb-4 mb-2">
+				{error && type ? (
+					<FormError
+						FormErrorProps={{
+							message: error,
+							type: type as 'success' | 'fail',
+						}}
+					/>
+				) : null}
 			</div>
 
 			<div className="space-y-8">
@@ -284,9 +284,13 @@ export default function RegisterForm() {
 													type="button"
 													className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 hover:text-blue-300 transition-colors"
 													onClick={() => setShowPassword(!showPassword)}
-													onKeyDown={(e) => e.key === 'Enter' && setShowPassword(!showPassword)}
+													onKeyDown={(e) =>
+														e.key === 'Enter' && setShowPassword(!showPassword)
+													}
 													tabIndex={0}
-													aria-label={showPassword ? "Hide password" : "Show password"}
+													aria-label={
+														showPassword ? 'Hide password' : 'Show password'
+													}
 												>
 													{showPassword ? (
 														<EyeOff className="h-4 w-4" />
@@ -297,8 +301,8 @@ export default function RegisterForm() {
 											</div>
 										</FormControl>
 										<div className="text-xs text-gray-400 mt-1 hidden sm:block">
-											Password must contain: 6+ characters, uppercase & lowercase letters, 
-											a number, and a special character
+											Password must contain: 6+ characters, uppercase &
+											lowercase letters, a number, and a special character
 										</div>
 										<FormMessage className="text-xs" />
 									</FormItem>
@@ -373,7 +377,6 @@ export default function RegisterForm() {
 					</form>
 				</Form>
 
-				
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
 						<span className="w-full border-t border-blue-500/30" />

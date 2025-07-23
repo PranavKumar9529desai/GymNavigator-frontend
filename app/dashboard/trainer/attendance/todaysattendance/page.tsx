@@ -7,18 +7,8 @@ import {
 	type TodayAttendanceResponse,
 } from './getTodayAttendance';
 
-function Spinner() {
-	return (
-		<div className="flex h-screen w-full items-center justify-center">
-			<Loader2 className="h-8 w-8 animate-spin text-primary" />
-		</div>
-	);
-}
-
 export default async function AttendancePage() {
 	const attendanceData: TodayAttendanceResponse = await TodayAttendance();
 
-	return (
-		<UserAttendance attendanceData={attendanceData} />
-	);
+	return <UserAttendance attendanceData={attendanceData} />;
 }

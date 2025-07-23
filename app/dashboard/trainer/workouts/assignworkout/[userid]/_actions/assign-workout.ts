@@ -1,6 +1,7 @@
 'use server';
 
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
+import type { AxiosError } from 'axios';
 
 export async function assignWorkoutPlanToUser(
 	userId: string,
@@ -32,12 +33,19 @@ export async function assignWorkoutPlanToUser(
 			message: response.data.msg || 'Failed to assign workout plan',
 			error: response.data.error,
 		};
-	} catch (error: any) {
+	} catch (error) {
 		console.error('Error assigning workout plan:', error);
 
-		if (error.response) {
+		// Attempt to extract error message if error is an AxiosError
+		if (
+			typeof error === 'object' &&
+			error !== null &&
+			'response' in error &&
+			(error as AxiosError).response
+		) {
+			const err = error as { response?: { data?: { msg?: string } } };
 			const message =
-				error.response.data?.msg || 'Failed to assign workout plan';
+				err.response?.data?.msg || 'Failed to assign workout plan';
 			throw new Error(message);
 		}
 

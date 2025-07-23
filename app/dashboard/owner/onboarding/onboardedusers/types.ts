@@ -9,8 +9,6 @@ import type { LucideIcon } from 'lucide-react';
 
 export type EnrollmentStatus = 'active' | 'pending';
 
-
-
 export interface TableState {
 	sorting: SortingState;
 	columnFilters: ColumnFiltersState;

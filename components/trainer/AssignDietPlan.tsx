@@ -104,7 +104,6 @@ export default function AssignWorkout() {
 
 	return (
 		<div className="container mx-auto p-6 pb-14">
-		
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 				<Card>
 					<CardContent className="flex items-center justify-between p-4">

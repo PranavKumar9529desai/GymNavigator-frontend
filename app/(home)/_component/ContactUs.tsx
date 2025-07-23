@@ -52,8 +52,7 @@ const ContactUs: React.FC = () => {
 	};
 
 	return (
-		<GradientBackground >
-
+		<GradientBackground>
 			<Container maxWidth="lg">
 				<Box py={8}>
 					<m.div
@@ -233,7 +232,7 @@ const ContactUs: React.FC = () => {
 									className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-3 rounded-lg 
 									font-medium hover:shadow-lg hover:from-blue-600 hover:to-cyan-600 
                             transition-all duration-200"
-							>
+								>
 									Send Message
 								</Button>
 							</Box>
@@ -241,7 +240,7 @@ const ContactUs: React.FC = () => {
 					</m.div>
 				</Box>
 			</Container>
-	</GradientBackground>
+		</GradientBackground>
 	);
 };
 

@@ -81,9 +81,9 @@ export function AmenitiesEditForm({
 				const allSelected: string[] = [];
 
 				// Add all existing selected amenities
-				Object.values(selectedAmenities).forEach((amenityKeys) => {
+				for (const amenityKeys of Object.values(selectedAmenities)) {
 					allSelected.push(...amenityKeys);
-				});
+				}
 
 				// Add newly selected amenities
 				allSelected.push(...newlySelectedAmenities);
@@ -305,10 +305,7 @@ export function AmenitiesEditForm({
 				<div className="flex gap-2 pt-4">
 					<Button
 						type="submit"
-						disabled={
-							isPending ||
-							newlySelectedAmenities.length === 0
-						}
+						disabled={isPending || newlySelectedAmenities.length === 0}
 						className="flex-1"
 					>
 						{isPending ? (

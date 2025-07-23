@@ -11,7 +11,9 @@ import { LoadingState } from './components/LoadingState';
 
 export default function AttachToGymPage() {
 	const { data: session, update } = useSession();
+	console.log('session', session, update);
 	const router = useRouter();
+
 	const pathname = usePathname();
 
 	const searchParams = useSearchParams();
@@ -54,6 +56,7 @@ export default function AttachToGymPage() {
 		}
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		processAttachment();
 		// eslint-disable-next-line react-hooks/exhaustive-deps

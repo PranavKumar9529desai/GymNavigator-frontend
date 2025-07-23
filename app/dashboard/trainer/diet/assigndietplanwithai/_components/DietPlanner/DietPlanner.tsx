@@ -71,6 +71,32 @@ const convertToDisplayMeal = (meal: DietPlan['meals'][0]): Meal => {
 	};
 };
 
+const mapDietPlanToBackend = (plan: DietPlan) => ({
+	id: plan.id,
+	name: plan.name,
+	description: plan.description,
+	targetCalories: plan.targetCalories,
+	proteinRatio: plan.proteinRatio,
+	carbsRatio: plan.carbsRatio,
+	fatsRatio: plan.fatsRatio,
+	meals: plan.meals.map((meal) => ({
+		id: meal.id,
+		name: meal.name,
+		mealTime: meal.timeOfDay,
+		calories: meal.calories,
+		proteinPercent: meal.protein
+			? Math.round((meal.protein * 4 * 100) / meal.calories)
+			: undefined,
+		carbsPercent: meal.carbs
+			? Math.round((meal.carbs * 4 * 100) / meal.calories)
+			: undefined,
+		fatsPercent: meal.fats
+			? Math.round((meal.fats * 9 * 100) / meal.calories)
+			: undefined,
+		instructions: meal.instructions,
+	})),
+});
+
 export function DietPlanner() {
 	const searchParams = useSearchParams();
 	const userId = searchParams.get('userId') || 'defaultUserId';
@@ -80,7 +106,10 @@ export function DietPlanner() {
 	const [dietPlans, setDietPlans] = useState<Record<DayOfWeek, Meal[]> | null>(
 		null,
 	);
-	const [originalPlans, setOriginalPlans] = useState<Record<DayOfWeek, DietPlan> | null>(null);
+	const [originalPlans, setOriginalPlans] = useState<Record<
+		DayOfWeek,
+		DietPlan
+	> | null>(null);
 	const [activeDay, setActiveDay] = useState<DayOfWeek>('Monday');
 
 	const handleDayChange = (day: DayOfWeek) => {
@@ -113,7 +142,10 @@ export function DietPlanner() {
 					'Saturday',
 					'Sunday',
 				];
-				const filteredOriginalPlans: Record<DayOfWeek, DietPlan> = {} as Record<DayOfWeek, DietPlan>;
+				const filteredOriginalPlans: Record<DayOfWeek, DietPlan> = {} as Record<
+					DayOfWeek,
+					DietPlan
+				>;
 				for (const day of validDays) {
 					if (result.data[day]) {
 						filteredOriginalPlans[day] = result.data[day];
@@ -122,10 +154,14 @@ export function DietPlanner() {
 				setOriginalPlans(filteredOriginalPlans);
 
 				// Convert the diet plans to the format required by DietDisplay
-				const formattedDietPlans: Record<DayOfWeek, Meal[]> = {} as Record<DayOfWeek, Meal[]>;
+				const formattedDietPlans: Record<DayOfWeek, Meal[]> = {} as Record<
+					DayOfWeek,
+					Meal[]
+				>;
 				for (const day of validDays) {
 					if (filteredOriginalPlans[day]) {
-						formattedDietPlans[day] = filteredOriginalPlans[day].meals.map(convertToDisplayMeal);
+						formattedDietPlans[day] =
+							filteredOriginalPlans[day].meals.map(convertToDisplayMeal);
 					}
 				}
 				setDietPlans(formattedDietPlans);
@@ -149,7 +185,7 @@ export function DietPlanner() {
 		try {
 			const result = await assignDietPlan({
 				userId,
-				dietPlan: originalPlans[activeDay],
+				dietPlan: mapDietPlanToBackend(originalPlans[activeDay]),
 				day: activeDay,
 			});
 
@@ -176,9 +212,36 @@ export function DietPlanner() {
 		toast.info('Assigning weekly diet plans...');
 
 		try {
+			const validDays: DayOfWeek[] = [
+				'Monday',
+				'Tuesday',
+				'Wednesday',
+				'Thursday',
+				'Friday',
+				'Saturday',
+				'Sunday',
+			];
+			const backendWeeklyPlans = validDays.reduce(
+				(acc, day) => {
+					acc[day] = originalPlans[day]
+						? mapDietPlanToBackend(originalPlans[day])
+						: {
+								id: 0,
+								name: '',
+								description: '',
+								targetCalories: 0,
+								proteinRatio: 0,
+								carbsRatio: 0,
+								fatsRatio: 0,
+								meals: [],
+							};
+					return acc;
+				},
+				{} as Record<DayOfWeek, ReturnType<typeof mapDietPlanToBackend>>,
+			);
 			const result = await assignWeeklyDietPlan({
 				userId,
-				weeklyPlans: originalPlans,
+				weeklyPlans: backendWeeklyPlans,
 			});
 
 			if (result.success) {
@@ -256,7 +319,9 @@ export function DietPlanner() {
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
+							aria-hidden="true"
 						>
+							<title>No diet plan available</title>
 							<path
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -287,7 +352,9 @@ export function DietPlanner() {
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
+							aria-hidden="true"
 						>
+							<title>Generate a personalized diet plan</title>
 							<path
 								strokeLinecap="round"
 								strokeLinejoin="round"

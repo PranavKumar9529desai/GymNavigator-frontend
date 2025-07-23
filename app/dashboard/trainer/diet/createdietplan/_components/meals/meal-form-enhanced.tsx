@@ -9,7 +9,11 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { CalendarIcon, Clock } from 'lucide-react';
 import { format } from 'date-fns';
@@ -60,11 +64,11 @@ export default function MealForm({
 	const handleAddMeal = () => {
 		// Create enhanced meal with scheduling info if provided
 		let enhancedInstructions = currentMeal.instructions;
-		
+
 		if (scheduledDate || scheduledTime) {
 			const schedulingInfo = [];
 			if (scheduledDate) {
-				schedulingInfo.push(`Date: ${format(scheduledDate, "yyyy-MM-dd")}`);
+				schedulingInfo.push(`Date: ${format(scheduledDate, 'yyyy-MM-dd')}`);
 			}
 			if (scheduledTime) {
 				schedulingInfo.push(`Time: ${scheduledTime}`);
@@ -80,7 +84,7 @@ export default function MealForm({
 
 		// Call the original addMeal function
 		addMeal();
-		
+
 		// Reset scheduling state
 		setScheduledDate(undefined);
 		setScheduledTime('');
@@ -90,11 +94,14 @@ export default function MealForm({
 	return (
 		<div className="bg-white p-6 rounded-lg border border-slate-200 space-y-6">
 			<h3 className="text-lg font-semibold text-slate-800">Add New Meal</h3>
-			
+
 			{/* Basic Meal Info */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-name">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-name"
+					>
 						Meal Name
 					</label>
 					<Input
@@ -111,7 +118,10 @@ export default function MealForm({
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-time">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-time"
+					>
 						Time of Day
 					</label>
 					<Select
@@ -120,7 +130,10 @@ export default function MealForm({
 						}
 						value={currentMeal.time || undefined}
 					>
-						<SelectTrigger id="meal-time" className="border-slate-200 focus:border-blue-400">
+						<SelectTrigger
+							id="meal-time"
+							className="border-slate-200 focus:border-blue-400"
+						>
 							<SelectValue placeholder="Select time" />
 						</SelectTrigger>
 						<SelectContent>
@@ -155,19 +168,21 @@ export default function MealForm({
 				{showScheduling && (
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50/30 rounded-lg border border-blue-100">
 						<div className="space-y-2">
-							<Label className="text-sm font-medium text-slate-700">Select Date</Label>
+							<Label className="text-sm font-medium text-slate-700">
+								Select Date
+							</Label>
 							<Popover>
 								<PopoverTrigger asChild>
 									<Button
 										variant="outline"
 										className={cn(
-											"w-full justify-start text-left font-normal border-slate-200",
-											!scheduledDate && "text-slate-500"
+											'w-full justify-start text-left font-normal border-slate-200',
+											!scheduledDate && 'text-slate-500',
 										)}
 									>
 										<CalendarIcon className="mr-2 h-4 w-4" />
 										{scheduledDate ? (
-											format(scheduledDate, "PPP")
+											format(scheduledDate, 'PPP')
 										) : (
 											<span>Pick a date</span>
 										)}
@@ -188,7 +203,10 @@ export default function MealForm({
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="scheduled-time" className="text-sm font-medium text-slate-700">
+							<Label
+								htmlFor="scheduled-time"
+								className="text-sm font-medium text-slate-700"
+							>
 								Exact Time
 							</Label>
 							<Input
@@ -206,7 +224,7 @@ export default function MealForm({
 									<Clock className="h-4 w-4" />
 									<span className="font-medium">Scheduled for:</span>
 									{scheduledDate && (
-										<span>{format(scheduledDate, "MMM dd, yyyy")}</span>
+										<span>{format(scheduledDate, 'MMM dd, yyyy')}</span>
 									)}
 									{scheduledTime && <span>at {scheduledTime}</span>}
 								</div>
@@ -231,7 +249,10 @@ export default function MealForm({
 			{/* Nutrition Info */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-calories">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-calories"
+					>
 						Calories
 					</label>
 					<Input
@@ -249,7 +270,10 @@ export default function MealForm({
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-protein">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-protein"
+					>
 						Protein (g)
 					</label>
 					<Input
@@ -267,7 +291,10 @@ export default function MealForm({
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-carbs">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-carbs"
+					>
 						Carbs (g)
 					</label>
 					<Input
@@ -285,7 +312,10 @@ export default function MealForm({
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-fats">
+					<label
+						className="block text-sm font-medium mb-2 text-slate-700"
+						htmlFor="meal-fats"
+					>
 						Fats (g)
 					</label>
 					<Input
@@ -306,7 +336,10 @@ export default function MealForm({
 
 			{/* Ingredients Section */}
 			<div className="space-y-3">
-				<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-ingredients">
+				<label
+					className="block text-sm font-medium mb-2 text-slate-700"
+					htmlFor="meal-ingredients"
+				>
 					Ingredients
 				</label>
 				<div className="flex gap-2">
@@ -318,8 +351,8 @@ export default function MealForm({
 						onKeyDown={handleKeyDown}
 						className="border-slate-200 focus:border-blue-400"
 					/>
-					<Button 
-						onClick={addIngredient} 
+					<Button
+						onClick={addIngredient}
 						type="button"
 						variant="outline"
 						className="border-blue-200 text-blue-600 hover:bg-blue-50"
@@ -351,7 +384,10 @@ export default function MealForm({
 
 			{/* Instructions */}
 			<div>
-				<label className="block text-sm font-medium mb-2 text-slate-700" htmlFor="meal-instructions">
+				<label
+					className="block text-sm font-medium mb-2 text-slate-700"
+					htmlFor="meal-instructions"
+				>
 					Instructions
 				</label>
 				<Textarea

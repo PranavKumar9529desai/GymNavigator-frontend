@@ -391,7 +391,7 @@ function SortablePlanCard({
 							</div>
 							<div className="space-y-2 max-h-48 overflow-y-auto">
 								{localPlan.features?.map((feature, featureIndex) => (
-									<div key={featureIndex} className="flex gap-2">
+									<div key={featureIndex as number} className="flex gap-2">
 										<Input
 											value={feature}
 											onChange={(e) =>
@@ -579,9 +579,7 @@ export function PricingEditForm({
 				onSave?.();
 			} catch (error) {
 				console.error('Error updating additional services:', error);
-				toast.error(
-					'Failed to update additional services. Please try again.',
-				);
+				toast.error('Failed to update additional services. Please try again.');
 			}
 		});
 	};
@@ -736,7 +734,7 @@ export function PricingEditForm({
 						<div className="grid gap-4">
 							{additionalServices.map((service, index) => (
 								<motion.div
-									  key={ index as number } 
+									key={index as number}
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									exit={{ opacity: 0, y: -20 }}

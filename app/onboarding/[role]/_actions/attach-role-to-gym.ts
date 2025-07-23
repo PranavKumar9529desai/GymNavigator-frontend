@@ -1,6 +1,7 @@
 'use server';
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import type { AxiosInstance } from 'axios';
 
 interface AttachRoleToGymParams {
 	gymname: string;
@@ -24,7 +25,7 @@ export async function attachRoleToGym({
 	role,
 }: AttachRoleToGymParams): Promise<AttachRoleToGymResponse> {
 	try {
-		let axiosInstance;
+		let axiosInstance: AxiosInstance;
 		let endpoint: string;
 
 		// Determine which axios instance and endpoint to use based on role

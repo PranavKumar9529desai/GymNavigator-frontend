@@ -23,7 +23,9 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 	const [_isPending, startTransition] = useTransition();
 	const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
 	const [viewMode, setViewMode] = useState<'saved' | 'generating'>('saved');
-	const [groceryList, setGroceryList] = useState<GroceryListResponse | null>(null);
+	const [groceryList, setGroceryList] = useState<GroceryListResponse | null>(
+		null,
+	);
 	const [error, setError] = useState<string | null>(null);
 	const [isGenerating, setIsGenerating] = useState(false);
 
@@ -75,20 +77,28 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 		: { weekly: null, monthly: null, others: [] };
 
 	// Use server action for generating a new grocery list
-	const generateGroceryList = async (selectedTimeFrame: 'weekly' | 'monthly') => {
+	const generateGroceryList = async (
+		selectedTimeFrame: 'weekly' | 'monthly',
+	) => {
 		startTransition(async () => {
 			try {
 				setIsGenerating(true);
 				setError(null);
-				const result = await getWeeklyDietPlan({ timeFrame: selectedTimeFrame });
-				
+				const result = await getWeeklyDietPlan({
+					timeFrame: selectedTimeFrame,
+				});
+
 				if (!result.success || !result.groceryList) {
 					throw new Error(result.error || 'Failed to load grocery list');
 				}
-				
+
 				setGroceryList(result.groceryList);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : 'Failed to generate grocery list');
+				setError(
+					err instanceof Error
+						? err.message
+						: 'Failed to generate grocery list',
+				);
 			} finally {
 				setIsGenerating(false);
 			}
@@ -145,9 +155,7 @@ export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 								</div>
 							) : error ? (
 								<div className="p-4 text-center rounded-lg bg-destructive/10">
-									<p className="text-destructive text-sm">
-										{error}
-									</p>
+									<p className="text-destructive text-sm">{error}</p>
 									<Button
 										variant="outline"
 										className="mt-3"

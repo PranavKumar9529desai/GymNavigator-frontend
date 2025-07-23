@@ -109,7 +109,6 @@ export const TrainerDashboardMenuItems: MenuItem[] = [
 		label: 'assignedusers',
 		iconName: 'Users',
 		link: '/dashboard/trainer/assignedusers',
-		
 	},
 	{
 		name: 'Workouts',

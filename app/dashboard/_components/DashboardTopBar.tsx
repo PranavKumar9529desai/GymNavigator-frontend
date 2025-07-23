@@ -25,9 +25,9 @@ export default function DashboardTopBar() {
 
 	return (
 		<Suspense fallback={<Skeleton className="h-10 w-64 mx-auto " />}>
-			<TopBar 
-				menuItems={menuItems} 
-				userRole={session?.role} 
+			<TopBar
+				menuItems={menuItems}
+				userRole={session?.role}
 				status={status}
 				sessionData={session as UserSession | undefined}
 			/>

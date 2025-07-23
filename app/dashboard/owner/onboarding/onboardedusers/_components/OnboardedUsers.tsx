@@ -13,24 +13,21 @@ import { UserMobileCard } from './UserMobileCard';
 import { UserActions } from './user-onboarding-actions';
 import { useToast } from '@/hooks/use-toast';
 import type { ColumnDef } from '@tanstack/react-table';
-import {
-	ArrowUpDown,
-	Search,
-	User,
-	UserCheck,
-	Users,
-} from 'lucide-react';
+import { ArrowUpDown, Search, User, UserCheck, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { statusColorClasses, statusLabels } from '@/lib/constants/status-variants';
+import {
+	statusColorClasses,
+	statusLabels,
+} from '@/lib/constants/status-variants';
 import React, { useEffect, useState, useTransition } from 'react';
 import { updateActivePeriod } from '../_actions/mutations';
 import { Input } from '@/components/ui/input';
-import { 
-	Select, 
-	SelectContent, 
-	SelectItem, 
-	SelectTrigger, 
-	SelectValue 
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from '@/components/ui/select';
 
 export interface UserType {
@@ -78,7 +75,9 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 	const { toast } = useToast();
 	const [isPending, startTransition] = useTransition();
 	const [nameFilter, setNameFilter] = useState('');
-	const [statusFilter, setStatusFilter] = useState<UserType['status'] | 'all'>('all');
+	const [statusFilter, setStatusFilter] = useState<UserType['status'] | 'all'>(
+		'all',
+	);
 
 	const users: UserType[] = initialUsers.map((user) => ({
 		...user,
@@ -87,7 +86,9 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 
 	// Apply filters to users
 	const filteredUsers = users.filter((user) => {
-		const nameMatch = user.name.toLowerCase().includes(nameFilter.toLowerCase());
+		const nameMatch = user.name
+			.toLowerCase()
+			.includes(nameFilter.toLowerCase());
 		const statusMatch = statusFilter === 'all' || user.status === statusFilter;
 		return nameMatch && statusMatch;
 	});
@@ -106,7 +107,8 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 				if (result.success) {
 					toast({
 						title: 'User Activated',
-						description: 'The user has been successfully activated for one year.',
+						description:
+							'The user has been successfully activated for one year.',
 					});
 					router.refresh();
 				} else {
@@ -120,7 +122,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 				toast({
 					variant: 'destructive',
 					title: 'Activation Failed',
-					description: error instanceof Error ? error.message : 'An unexpected error occurred',
+					description:
+						error instanceof Error
+							? error.message
+							: 'An unexpected error occurred',
 				});
 			}
 		});
@@ -154,7 +159,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 			header: 'Status',
 			cell: ({ row }) => {
 				const status = row.original.status;
-				const { bg, text } = statusColorClasses[status] || { bg: 'bg-gray-100', text: 'text-gray-800' };
+				const { bg, text } = statusColorClasses[status] || {
+					bg: 'bg-gray-100',
+					text: 'text-gray-800',
+				};
 				const label = statusLabels[status] || status;
 				return (
 					<span
@@ -172,10 +180,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 				const user = row.original;
 
 				return (
-					<UserActions 
+					<UserActions
 						user={user}
 						isPending={isPending}
-						type='horizontal'
+						type="horizontal"
 						onActivate={handleUpdateActivePeriod}
 					/>
 				);
@@ -211,7 +219,10 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 			<div className="mb-4">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 					<div className="relative">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-label="Search" />
+						<Search
+							className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+							aria-label="Search"
+						/>
 						<Input
 							placeholder="Search by name..."
 							value={nameFilter}
@@ -221,7 +232,9 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 					</div>
 					<Select
 						value={statusFilter}
-						onValueChange={(value) => setStatusFilter(value as UserType['status'] | 'all')}
+						onValueChange={(value) =>
+							setStatusFilter(value as UserType['status'] | 'all')
+						}
 					>
 						<SelectTrigger>
 							<SelectValue placeholder="Filter by status" />
@@ -240,7 +253,7 @@ export default function OnboardedUsers({ initialUsers }: OnboardedUsersProps) {
 			</div>
 			<div className="md:hidden space-y-4">
 				{filteredUsers.map((user) => (
-					<UserMobileCard 
+					<UserMobileCard
 						key={user.id}
 						user={user}
 						isPending={isPending}

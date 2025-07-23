@@ -5,8 +5,7 @@ import type { Message } from 'ai';
 import { v4 as uuidv4 } from 'uuid';
 
 // Get API key with fallbacks for different environment variable names
-const geminiApiKey =
-	process.env.GOOGLE_GEMINI_API_KEY || "";
+const geminiApiKey = process.env.GOOGLE_GEMINI_API_KEY || '';
 
 // Initialize AI providers
 const genAI = new GoogleGenerativeAI(geminiApiKey);
@@ -15,27 +14,32 @@ const genAI = new GoogleGenerativeAI(geminiApiKey);
  * Fetch and log available Gemini models using the REST API
  */
 export async function logAvailableGeminiModels() {
-  try {
-    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
-    if (!apiKey) {
-      console.error('No Gemini API key found.');
-      return;
-    }
-    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-    const res = await fetch(url);
-    if (!res.ok) {
-      console.error('Failed to fetch models:', res.status, res.statusText);
-      return;
-    }
-    const data = await res.json();
-    console.log('Available Gemini models:', data.models?.map((m: { name: string; displayName?: string; description?: string }) => ({
-      name: m.name,
-      displayName: m.displayName,
-      description: m.description,
-    })));
-  } catch (error) {
-    console.error('Error fetching Gemini models:', error);
-  }
+	try {
+		const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+		if (!apiKey) {
+			console.error('No Gemini API key found.');
+			return;
+		}
+		const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+		const res = await fetch(url);
+		if (!res.ok) {
+			console.error('Failed to fetch models:', res.status, res.statusText);
+			return;
+		}
+		const data = await res.json();
+		console.log(
+			'Available Gemini models:',
+			data.models?.map(
+				(m: { name: string; displayName?: string; description?: string }) => ({
+					name: m.name,
+					displayName: m.displayName,
+					description: m.description,
+				}),
+			),
+		);
+	} catch (error) {
+		console.error('Error fetching Gemini models:', error);
+	}
 }
 
 // Call this for debugging on startup

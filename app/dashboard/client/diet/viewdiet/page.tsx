@@ -6,7 +6,10 @@ import TodaysDiet from './_components/todays-diet';
 export default async function ViewDietPage() {
 	const todaysDiet = await fetchTodaysDiet();
 	const today = new Date().toLocaleDateString('en-US', {
-		weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+		weekday: 'short',
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
 	});
 
 	// Placeholder badges/info (to be replaced with real user/trainer/gym info)
@@ -22,17 +25,40 @@ export default async function ViewDietPage() {
 				<div className="flex flex-col gap-4 w-full">
 					<div className="flex flex-col gap-2 items-center sm:flex-row sm:items-center sm:gap-3 sm:justify-start">
 						<div className="w-7 h-7 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center mb-2 sm:mb-0">
-							<svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="Meal plan icon"><title>Meal plan icon</title><path d="M4 21v-7a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v7" /><circle cx="12" cy="7" r="4" /></svg>
+							<svg
+								className="h-4 w-4 text-white"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								aria-label="Meal plan icon"
+							>
+								<title>Meal plan icon</title>
+								<path d="M4 21v-7a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v7" />
+								<circle cx="12" cy="7" r="4" />
+							</svg>
 						</div>
-						<h1 className="text-2xl font-bold text-slate-800 text-center sm:text-left">Today's Diet Plan</h1>
-						<span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-xs font-medium uppercase tracking-wide text-center sm:text-left w-fit mx-auto sm:mx-0 mt-2 sm:mt-0">{today}</span>
+						<h1 className="text-2xl font-bold text-slate-800 text-center sm:text-left">
+							Today's Diet Plan
+						</h1>
+						<span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-xs font-medium uppercase tracking-wide text-center sm:text-left w-fit mx-auto sm:mx-0 mt-2 sm:mt-0">
+							{today}
+						</span>
 					</div>
 					<div className="flex flex-col gap-2 items-center sm:flex-row sm:gap-2 sm:justify-start mt-2 sm:mt-0">
 						<div className="flex flex-row gap-2">
-							<span className="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-0.5 rounded">{userGoal}</span>
-							<span className="bg-indigo-100 text-indigo-600 text-xs font-medium px-2 py-0.5 rounded">{dietaryPref}</span>
+							<span className="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-0.5 rounded">
+								{userGoal}
+							</span>
+							<span className="bg-indigo-100 text-indigo-600 text-xs font-medium px-2 py-0.5 rounded">
+								{dietaryPref}
+							</span>
 						</div>
-						<span className="bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded mt-2 sm:mt-0">created by {trainerName}</span>
+						<span className="bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded mt-2 sm:mt-0">
+							created by {trainerName}
+						</span>
 					</div>
 				</div>
 			</header>

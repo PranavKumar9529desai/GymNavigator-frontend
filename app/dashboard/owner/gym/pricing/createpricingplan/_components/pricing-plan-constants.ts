@@ -40,4 +40,4 @@ export const durationOptions = [
 	{ value: '/month', label: 'Per Month' },
 	{ value: '/quarter', label: 'Per Quarter' },
 	{ value: '/year', label: 'Per Year' },
-]; 
+];

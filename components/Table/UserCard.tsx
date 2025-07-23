@@ -6,7 +6,10 @@ interface BaseData {
 	id: string | number;
 }
 
-export function DataCard<TData extends BaseData>({ data, renderCard }: DataCardProps<TData>) {
+export function DataCard<TData extends BaseData>({
+	data,
+	renderCard,
+}: DataCardProps<TData>) {
 	return (
 		<div className="space-y-4">
 			{data.map((item) => (

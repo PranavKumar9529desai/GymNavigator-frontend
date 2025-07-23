@@ -43,6 +43,7 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 					viewBox="0 0 24 24"
 					stroke="currentColor"
 				>
+					<title>Health Metrics Icon</title>
 					<path
 						strokeLinecap="round"
 						strokeLinejoin="round"
@@ -144,9 +145,7 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 							</span>
 							<p className="font-medium text-lg">
 								{profile.targetCalories}
-								<span className="block text-xs mt-1 font-normal">
-									kcal/day
-								</span>
+								<span className="block text-xs mt-1 font-normal">kcal/day</span>
 							</p>
 						</div>
 					)}
@@ -159,7 +158,8 @@ export function HealthMetricsSection({ profile }: HealthMetricsSectionProps) {
 							Macros (per day)
 						</span>
 						<p className="font-medium">
-							Protein: {profile.macros.protein}g, Carbs: {profile.macros.carbs}g, Fats: {profile.macros.fats}g
+							Protein: {profile.macros.protein}g, Carbs: {profile.macros.carbs}
+							g, Fats: {profile.macros.fats}g
 						</p>
 					</div>
 				)}

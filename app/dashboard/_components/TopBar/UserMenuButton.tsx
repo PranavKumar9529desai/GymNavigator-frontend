@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { type FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Rolestype, GymInfo } from '@/types/next-auth';
-import UserAvatarImage from "../../_assests/user-avtar.jpg"
+import UserAvatarImage from '../../_assests/user-avtar.jpg';
 interface MenuItem {
 	label: string;
 	icon: React.ReactNode;
@@ -30,7 +30,10 @@ interface UserMenuButtonProps {
 	sessionData?: UserSession;
 }
 
-const UserMenuButton = ({ userRole: _userRole, sessionData }: UserMenuButtonProps) => {
+const UserMenuButton = ({
+	userRole: _userRole,
+	sessionData,
+}: UserMenuButtonProps) => {
 	const [showMenu, setShowMenu] = useState(false);
 	const Router = useRouter();
 
@@ -50,7 +53,6 @@ const UserMenuButton = ({ userRole: _userRole, sessionData }: UserMenuButtonProp
 			onClick: () => Router.push(`/profile/${_userRole}`),
 		},
 		{
-
 			label: 'Settings',
 			description: 'App preferences and configuration',
 			icon: <Settings className="h-4 w-4" />,

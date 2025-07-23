@@ -75,7 +75,7 @@ export default function FullNameForm() {
 					className={cn(
 						'w-full py-6 flex items-center justify-center gap-2 text-base',
 						'bg-gradient-to-r from-blue-500 to-blue-600',
-						!value.trim() && 'opacity-50 cursor-not-allowed'
+						!value.trim() && 'opacity-50 cursor-not-allowed',
 					)}
 				>
 					Continue <ArrowRight className="h-5 w-5" />

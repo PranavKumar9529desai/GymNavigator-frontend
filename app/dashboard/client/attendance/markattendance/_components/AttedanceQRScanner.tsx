@@ -15,15 +15,15 @@ interface QrValueType {
 	};
 }
 
-
-
 export default function AttendanceQRScanner() {
 	const router = useRouter();
 	const [isScanning, setIsScanning] = useState(true);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [hasProcessed, setHasProcessed] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
-	const [preferredCameraDeviceId, setPreferredCameraDeviceId] = useState<string | null>(null);
+	const [preferredCameraDeviceId, setPreferredCameraDeviceId] = useState<
+		string | null
+	>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrScannerRef = useRef<QrScanner | null>(null);
 
@@ -40,22 +40,36 @@ export default function AttendanceQRScanner() {
 			if (QR_SCANNER_CONFIG.DEFAULT_ZOOM !== 1.0) {
 				try {
 					// Wait a bit for the scanner to fully initialize
-					await new Promise(resolve => setTimeout(resolve, 1000));
-					
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+
 					// Get the video stream and apply zoom
 					const video = videoRef.current;
 					if (video?.srcObject) {
 						const stream = video.srcObject as MediaStream;
 						const track = stream.getVideoTracks()[0];
-						
+
 						if (track && 'getCapabilities' in track) {
-							const capabilities = (track as MediaStreamTrack & { getCapabilities?: () => MediaTrackCapabilities }).getCapabilities?.();
+							const capabilities = (
+								track as MediaStreamTrack & {
+									getCapabilities?: () => MediaTrackCapabilities;
+								}
+							).getCapabilities?.();
 							if (capabilities && 'zoom' in capabilities) {
 								const constraints = {
-									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }]
+									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }],
 								};
-								await (track as MediaStreamTrack & { applyConstraints?: (constraints: MediaTrackConstraints) => Promise<void> }).applyConstraints?.(constraints);
-								console.log(`Applied zoom level: ${QR_SCANNER_CONFIG.DEFAULT_ZOOM}`);
+								await (
+									track as MediaStreamTrack & {
+										applyConstraints?: (
+											constraints: MediaTrackConstraints,
+										) => Promise<void>;
+									}
+								).applyConstraints?.({
+									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }],
+								} as unknown as MediaTrackConstraints);
+								console.log(
+									`Applied zoom level: ${QR_SCANNER_CONFIG.DEFAULT_ZOOM}`,
+								);
 							}
 						}
 					}
@@ -118,9 +132,10 @@ export default function AttendanceQRScanner() {
 							}, 2000);
 						} else {
 							// Use the specific error and details from the server response
-							const errorMessage = attendanceResult.error || 'Failed to mark attendance';
+							const errorMessage =
+								attendanceResult.error || 'Failed to mark attendance';
 							const errorDetails = attendanceResult.details;
-							
+
 							const error = new Error(errorMessage);
 							// Attach details to the error object for better error handling
 							if (errorDetails) {
@@ -133,15 +148,17 @@ export default function AttendanceQRScanner() {
 					}
 				} catch (error: unknown) {
 					console.error('Error processing QR code:', error);
-					
+
 					// Dismiss any loading toast
 					toast.dismiss();
-					
-					const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-					const errorDetails = error instanceof Error && 'details' in error 
-						? (error as Error & { details?: string }).details 
-						: undefined;
-					
+
+					const errorMessage =
+						error instanceof Error ? error.message : 'Unknown error occurred';
+					const errorDetails =
+						error instanceof Error && 'details' in error
+							? (error as Error & { details?: string }).details
+							: undefined;
+
 					toast.error('Failed to process QR code', {
 						description: errorDetails || errorMessage,
 					});
@@ -153,20 +170,22 @@ export default function AttendanceQRScanner() {
 			{
 				returnDetailedScanResult: true,
 				highlightScanRegion: true,
-				preferredCamera: preferredCameraDeviceId || QR_SCANNER_CONFIG.PREFERRED_CAMERA,
+				preferredCamera:
+					preferredCameraDeviceId || QR_SCANNER_CONFIG.PREFERRED_CAMERA,
 				maxScansPerSecond: QR_SCANNER_CONFIG.MAX_SCANS_PER_SECOND,
 				onDecodeError: (error: unknown) => {
 					if (error instanceof Error && !error.message?.includes('NotFound')) {
 						console.error('QR scan error:', error);
 					}
 				},
-			}
+			},
 		);
 
 		qrScannerRef.current = qrScanner;
 
 		// Start scanning
-		qrScanner.start()
+		qrScanner
+			.start()
 			.then(() => {
 				console.log('Attendance QR Scanner started successfully');
 				// Apply default zoom after scanner starts
@@ -276,7 +295,9 @@ export default function AttendanceQRScanner() {
 								<li>Make sure the QR code is within the scanning area</li>
 								<li>Ensure good lighting for better scanning</li>
 								<li>Hold your device steady while scanning</li>
-								<li>Zoom level: {QR_SCANNER_CONFIG.DEFAULT_ZOOM}x (configurable)</li>
+								<li>
+									Zoom level: {QR_SCANNER_CONFIG.DEFAULT_ZOOM}x (configurable)
+								</li>
 							</ul>
 						</div>
 					)}

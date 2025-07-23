@@ -46,11 +46,11 @@ export default async function AttendanceComponent() {
 
 	return (
 		<div className="container mx-auto py-6">
-				<GymQRCode
-					qrdata={qrValue}
-					title={gymData.gymname}
-					subtitle="Scan this QR code to mark your attendance"
-				/>
+			<GymQRCode
+				qrdata={qrValue}
+				title={gymData.gymname}
+				subtitle="Scan this QR code to mark your attendance"
+			/>
 		</div>
 	);
 }

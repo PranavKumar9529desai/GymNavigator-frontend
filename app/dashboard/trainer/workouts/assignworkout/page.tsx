@@ -22,7 +22,7 @@ export default async function AssignWorkoutPage() {
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<Suspense fallback={<Spinner />}>
-				<UserWorkoutAssignment 
+				<UserWorkoutAssignment
 					initialUsers={users}
 					initialWorkoutPlans={workoutPlans}
 				/>

@@ -16,6 +16,19 @@ export interface AssignedUser {
 	hasActiveDietPlan: boolean;
 }
 
+// Define the expected user shape from the API
+interface ApiUser {
+	id: string;
+	name: string;
+	email: string;
+	gender?: string;
+	dietaryPreference?: string;
+	activeWorkoutPlanId?: number | null;
+	activeWorkoutPlanName?: string | null;
+	dietPlanId?: number | null;
+	dietPlanName?: string | null;
+}
+
 export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 	const trainerAxios = await TrainerReqConfig();
 	try {
@@ -25,7 +38,7 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 			response.data,
 		);
 		if (response.data.msg === 'success' && Array.isArray(response.data.users)) {
-			return response.data.users.map((user: any) => ({
+			return response.data.users.map((user: ApiUser) => ({
 				id: user.id,
 				name: user.name,
 				email: user.email,

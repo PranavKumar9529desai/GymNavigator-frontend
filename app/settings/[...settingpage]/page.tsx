@@ -13,7 +13,9 @@ export default async function SettingPage({
 	const selectedTopic = settingParams[1] as string | undefined; // Second segment is the topic (optional)
 
 	// Map route parameters to components
-	const components: { [key: string]: React.ComponentType<Record<string, unknown>> } = {
+	const components: {
+		[key: string]: React.ComponentType<Record<string, unknown>>;
+	} = {
 		gym: GymSettings,
 		payment: PaymentSettings,
 		trainer: TrainerSettings,

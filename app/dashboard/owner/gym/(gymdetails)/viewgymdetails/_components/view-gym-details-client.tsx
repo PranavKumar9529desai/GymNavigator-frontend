@@ -14,9 +14,9 @@ interface ViewGymDetailsClientProps {
 	gymTabData: GymTabData | null;
 }
 
-export function ViewGymDetailsClient({ 
-	gymData, 
-	gymTabData 
+export function ViewGymDetailsClient({
+	gymData,
+	gymTabData,
 }: ViewGymDetailsClientProps) {
 	const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
 	const [isSmallDevice, setIsSmallDevice] = useState(false);

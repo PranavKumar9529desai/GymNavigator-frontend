@@ -61,7 +61,11 @@ export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
 				email: user.email,
 				membershipStatus: 'active',
 				HealthProfile: user.HealthProfile || null,
-				computedHealthMetrics: user.computedHealthMetrics || { bmi: null, bmr: null, tdee: null },
+				computedHealthMetrics: user.computedHealthMetrics || {
+					bmi: null,
+					bmr: null,
+					tdee: null,
+				},
 				dietPlanId: user.dietPlanId || null,
 				dietPlanName: user.dietPlanName || null,
 				dietPlanCompliance: user.dietPlanCompliance || 0,

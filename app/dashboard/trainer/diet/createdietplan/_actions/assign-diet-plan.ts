@@ -3,7 +3,11 @@
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import type { AssignSingleDietPayload } from '../../diet-types';
 
-export async function assignDietPlan({ userId, dietPlan, day }: AssignSingleDietPayload) {
+export async function assignDietPlan({
+	userId,
+	dietPlan,
+	day,
+}: AssignSingleDietPayload) {
 	try {
 		const trainerAxios = await TrainerReqConfig();
 		// Prepare payload for new assignment endpoint
@@ -15,7 +19,10 @@ export async function assignDietPlan({ userId, dietPlan, day }: AssignSingleDiet
 			daysOfWeek: [day],
 			notes: dietPlan.description || '',
 		};
-		const response = await trainerAxios.post('/diet/assigndiettouser/enhanced', payload);
+		const response = await trainerAxios.post(
+			'/diet/assigndiettouser/enhanced',
+			payload,
+		);
 		if (response.data.success) {
 			return {
 				success: true,
@@ -27,7 +34,8 @@ export async function assignDietPlan({ userId, dietPlan, day }: AssignSingleDiet
 		console.error('Error assigning diet plan:', error);
 		return {
 			success: false,
-			error: error instanceof Error ? error.message : 'Failed to assign diet plan',
+			error:
+				error instanceof Error ? error.message : 'Failed to assign diet plan',
 		};
 	}
 }

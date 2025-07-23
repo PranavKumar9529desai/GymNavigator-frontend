@@ -33,7 +33,7 @@ export default function WorkoutResults({
 	workoutPlan,
 	onSave,
 	onDiscard,
-	isLoading = false,
+	// isLoading = false,
 	userId,
 	userName = 'Client',
 }: WorkoutResultsProps) {
@@ -62,7 +62,7 @@ export default function WorkoutResults({
 		setFeedbackError,
 		toggleFeedbackChat,
 		setShowFeedbackChat,
-		saveWorkoutToHistory,
+		// saveWorkoutToHistory,
 	} = useWorkoutChatStore();
 
 	// Initialize conversation with initial workout

@@ -1,9 +1,4 @@
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QRCodeSVG } from 'qrcode.react';
 import type React from 'react';
 
@@ -21,11 +16,9 @@ interface GymQRCodeAttendanceProps {
 
 // Unified QR Code component for both onboarding and attendance
 // This component can be used for both onboarding and attendance QR codes
-const GymQRCode: React.FC<GymQRCodeOnboardingProps | GymQRCodeAttendanceProps> = ({
-	qrdata,
-	title,
-	subtitle,
-}) => {
+const GymQRCode: React.FC<
+	GymQRCodeOnboardingProps | GymQRCodeAttendanceProps
+> = ({ qrdata, title, subtitle }) => {
 	return (
 		<Card className="w-full max-w-md mx-auto rounded-lg overflow-hidden md:min-h-0 bg-transparent border-0">
 			<CardHeader className="text-blue-600 text-center py-2">
@@ -66,13 +59,12 @@ const GymQRCode: React.FC<GymQRCodeOnboardingProps | GymQRCodeAttendanceProps> =
 				</div>
 
 				<div className="space-y-4 w-full max-w-sm text-center">
-					<p className="text-lg text-gray-700 font-medium px-4">
-						{subtitle}
-					</p>
+					<p className="text-lg text-gray-700 font-medium px-4">{subtitle}</p>
 
 					<div className="pt-4 border-t border-gray-200">
 						<p className="text-sm text-gray-500">
-							Having trouble? Position your camera 6-12 inches from the code in good lighting
+							Having trouble? Position your camera 6-12 inches from the code in
+							good lighting
 						</p>
 					</div>
 				</div>

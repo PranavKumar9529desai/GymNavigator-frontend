@@ -30,7 +30,7 @@ export default async function MarkAttendancePage() {
 					Mark Your Attendance
 				</h1>
 
-					<ClientQRWrapper />
+				<ClientQRWrapper />
 			</div>
 		</main>
 	);

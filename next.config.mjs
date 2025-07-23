@@ -15,12 +15,14 @@ const nextConfig = {
 	// output: "standalone",
 
 	// SWC Compiler Configuration
-	experimental : {
-          viewTransition : true,
-		  useCache : true,
-		  webVitalsAttribution: ['CLS', 'LCP'],
+	experimental: {
+		viewTransition: true,
+		useCache: true,
+		webVitalsAttribution: ['CLS', 'LCP'],
 	},
-
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
 	images: {
 		remotePatterns: [
 			{

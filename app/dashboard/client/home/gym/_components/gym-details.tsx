@@ -10,36 +10,36 @@ import { PricingPlans } from './pricing-plans';
 import { TrainerInfo } from './trainer-info';
 
 interface GymDetailsProps {
-  data: GymDetailsData;
+	data: GymDetailsData;
 }
 
 export function GymDetails({ data }: GymDetailsProps) {
-  const { gym, trainer, membership, attendanceHistory } = data;
+	const { gym, trainer, membership, attendanceHistory } = data;
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
-      <div className="mx-auto space-y-12 p-4 sm:p-6 pt-16">
-        {/* Gym Header */}
-        <GymHeader gym={gym} />
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
+			<div className="mx-auto space-y-12 p-4 sm:p-6 pt-16">
+				{/* Gym Header */}
+				<GymHeader gym={gym} />
 
-        {/* Membership & Trainer Information - Desktop: Side by side, Mobile: Stacked */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <MembershipInfo membership={membership} />
-          <TrainerInfo trainer={trainer} />
-        </div>
+				{/* Membership & Trainer Information - Desktop: Side by side, Mobile: Stacked */}
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+					<MembershipInfo membership={membership} />
+					<TrainerInfo trainer={trainer} />
+				</div>
 
-        {/* Attendance History */}
-        <AttendanceHistory attendanceHistory={attendanceHistory} />
+				{/* Attendance History */}
+				<AttendanceHistory attendanceHistory={attendanceHistory} />
 
-        {/* Gym Amenities */}
-        <GymAmenities amenities={gym.amenities} />
+				{/* Gym Amenities */}
+				<GymAmenities amenities={gym.amenities} />
 
-        {/* Pricing Plans */}
-        <PricingPlans pricingPlans={gym.pricingPlans} />
+				{/* Pricing Plans */}
+				<PricingPlans pricingPlans={gym.pricingPlans} />
 
-        {/* Additional Services */}
-        <AdditionalServices additionalServices={gym.additionalServices} />
-      </div>
-    </div>
-  );
+				{/* Additional Services */}
+				<AdditionalServices additionalServices={gym.additionalServices} />
+			</div>
+		</div>
+	);
 }

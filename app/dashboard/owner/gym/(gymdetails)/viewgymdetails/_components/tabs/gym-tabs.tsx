@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { TabsContent, TabsList, TabsTrigger, Tabs } from '@/components/ui/tabs';
 import {
 	TrendingUp,

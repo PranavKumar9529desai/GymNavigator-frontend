@@ -11,7 +11,7 @@ export default async function Page() {
 	return (
 		<>
 			<h1 className="text-3xl font-bold text-center pt-4">Onboarding Users</h1>
-				<OnboardedUsersClient initialData={initialData} />
+			<OnboardedUsersClient initialData={initialData} />
 		</>
 	);
 }

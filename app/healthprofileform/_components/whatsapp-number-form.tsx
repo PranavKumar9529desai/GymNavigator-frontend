@@ -8,7 +8,8 @@ import { useState } from 'react';
 import { useHealthProfileStore } from '../_store/health-profile-store';
 
 export default function WhatsappNumberForm() {
-	const { whatsappNumber, setWhatsappNumber, nextStep, prevStep } = useHealthProfileStore();
+	const { whatsappNumber, setWhatsappNumber, nextStep, prevStep } =
+		useHealthProfileStore();
 	const [value, setValue] = useState<string>(whatsappNumber || '');
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,11 +78,11 @@ export default function WhatsappNumberForm() {
 								onKeyDown={handleKeyPress}
 								className={cn(
 									'w-full text-center text-lg py-6 pl-16 border-2 rounded-xl',
-									isValidNumber() 
-										? 'border-green-500 bg-green-50' 
-										: value 
-											? 'border-red-300 bg-red-50' 
-											: 'border-gray-200'
+									isValidNumber()
+										? 'border-green-500 bg-green-50'
+										: value
+											? 'border-red-300 bg-red-50'
+											: 'border-gray-200',
 								)}
 								maxLength={10}
 								aria-label="Enter your WhatsApp number"
@@ -94,9 +95,7 @@ export default function WhatsappNumberForm() {
 								</p>
 							)}
 							{isValidNumber() && (
-								<p className="text-xs text-green-600">
-									✓ Valid number
-								</p>
+								<p className="text-xs text-green-600">✓ Valid number</p>
 							)}
 							{!value && (
 								<p className="text-xs text-gray-400">
@@ -122,7 +121,7 @@ export default function WhatsappNumberForm() {
 					className={cn(
 						'flex items-center justify-center gap-1',
 						'bg-gradient-to-r from-blue-500 to-blue-600',
-						!isValidNumber() && 'opacity-50 cursor-not-allowed'
+						!isValidNumber() && 'opacity-50 cursor-not-allowed',
 					)}
 				>
 					Continue <ArrowRight className="h-4 w-4" />

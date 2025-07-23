@@ -57,9 +57,8 @@ const ProgressIndicator = ({
 export default function HealthProfileFormPage() {
 	const {
 		currentStep,
-		resetForm,
+		// resetForm,
 		dietaryPreference,
-		...formState
 	} = useHealthProfileStore();
 	const [isSubmitting, startTransition] = useTransition();
 	const [isCompleted, setIsCompleted] = useState(false);
@@ -125,6 +124,7 @@ export default function HealthProfileFormPage() {
 	};
 
 	// Define form step arrays for non-vegetarian and vegetarian flows.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const forms = useMemo(() => {
 		return isNonVegetarian
 			? [

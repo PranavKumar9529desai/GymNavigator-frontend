@@ -5,7 +5,13 @@ import type React from 'react';
 import { useState } from 'react';
 import type { Meal } from '../_actions/get-todays-diet';
 import { NutritionCard } from './NutritionCard';
-import { BreakfastIcon, LunchIcon, SnackIcon, DinnerIcon, DefaultMealIcon } from './MealIcons';
+import {
+	BreakfastIcon,
+	LunchIcon,
+	SnackIcon,
+	DinnerIcon,
+	DefaultMealIcon,
+} from './MealIcons';
 
 interface MealCardProps {
 	meal: Meal;
@@ -14,11 +20,11 @@ interface MealCardProps {
 
 // Types for meal info
 interface MealTypeInfo {
-  type: string;
-  color: string;
-  borderColor: string;
-  bgColor: string;
-  icon: React.ReactNode;
+	type: string;
+	color: string;
+	borderColor: string;
+	bgColor: string;
+	icon: React.ReactNode;
 }
 
 export const MealCard = ({ meal }: MealCardProps) => {
@@ -26,48 +32,48 @@ export const MealCard = ({ meal }: MealCardProps) => {
 
 	// Determine meal type from timeOfDay using flexible time ranges
 	const getMealTypeInfo = (timeOfDay: string): MealTypeInfo => {
-	  // Parse hour and minute from timeOfDay (e.g., "8:00 AM")
-	  const match = timeOfDay.match(/(\d{1,2}):(\d{2}) (AM|PM)/);
-	  if (!match) {
+		// Parse hour and minute from timeOfDay (e.g., "8:00 AM")
+		const match = timeOfDay.match(/(\d{1,2}):(\d{2}) (AM|PM)/);
+		if (!match) {
+			return {
+				type: 'Meal',
+				color: 'text-blue-600',
+				borderColor: 'border-blue-200',
+				bgColor: 'bg-blue-50',
+				icon: <DefaultMealIcon size={20} className="text-blue-500" />,
+			};
+		}
+		let hour = Number.parseInt(match[1], 10);
+		const _minute = Number.parseInt(match[2], 10);
+		const period = match[3];
+
+		if (period === 'PM' && hour !== 12) hour += 12;
+		if (period === 'AM' && hour === 12) hour = 0;
+
+		let type = 'Meal';
+		let icon = <DefaultMealIcon size={20} className="text-blue-500" />;
+
+		if (hour >= 7 && hour < 11) {
+			type = 'Breakfast';
+			icon = <BreakfastIcon size={20} className="text-blue-500" />;
+		} else if (hour >= 11 && hour < 15) {
+			type = 'Lunch';
+			icon = <LunchIcon size={20} className="text-blue-500" />;
+		} else if (hour >= 15 && hour < 18) {
+			type = 'Snack';
+			icon = <SnackIcon size={20} className="text-blue-500" />;
+		} else if (hour >= 18 && hour < 22) {
+			type = 'Dinner';
+			icon = <DinnerIcon size={20} className="text-blue-500" />;
+		}
+
 		return {
-		  type: 'Meal',
-		  color: 'text-blue-600',
-		  borderColor: 'border-blue-200',
-		  bgColor: 'bg-blue-50',
-		  icon: <DefaultMealIcon size={20} className="text-blue-500" />,
+			type,
+			color: 'text-blue-600',
+			borderColor: 'border-blue-200',
+			bgColor: 'bg-blue-50',
+			icon,
 		};
-	  }
-	  let hour = Number.parseInt(match[1], 10);
-	  const _minute = Number.parseInt(match[2], 10);
-	  const period = match[3];
-
-	  if (period === 'PM' && hour !== 12) hour += 12;
-	  if (period === 'AM' && hour === 12) hour = 0;
-
-	  let type = 'Meal';
-	  let icon = <DefaultMealIcon size={20} className="text-blue-500" />;
-
-	  if (hour >= 7 && hour < 11) {
-		type = 'Breakfast';
-		icon = <BreakfastIcon size={20} className="text-blue-500" />;
-	  } else if (hour >= 11 && hour < 15) {
-		type = 'Lunch';
-		icon = <LunchIcon size={20} className="text-blue-500" />;
-	  } else if (hour >= 15 && hour < 18) {
-		type = 'Snack';
-		icon = <SnackIcon size={20} className="text-blue-500" />;
-	  } else if (hour >= 18 && hour < 22) {
-		type = 'Dinner';
-		icon = <DinnerIcon size={20} className="text-blue-500" />;
-	  }
-
-	  return {
-		type,
-		color: 'text-blue-600',
-		borderColor: 'border-blue-200',
-		bgColor: 'bg-blue-50',
-		icon,
-	  };
 	};
 
 	const mealInfo = getMealTypeInfo(meal.timeOfDay);

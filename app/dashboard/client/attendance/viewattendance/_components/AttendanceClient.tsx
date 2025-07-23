@@ -12,5 +12,7 @@ export default function AttendanceClient({
 }: AttendanceClientProps) {
 	if (!attendanceData) return <CalendarSkeleton />;
 
-	return <MonthAttendance attendanceDays={attendanceData.attendanceDays ?? []} />;
+	return (
+		<MonthAttendance attendanceDays={attendanceData.attendanceDays ?? []} />
+	);
 }

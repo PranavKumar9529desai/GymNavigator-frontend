@@ -123,12 +123,7 @@ const columns: ColumnDef<AssignedUser>[] = [
 		cell: ({ row }) => {
 			const user = row.original;
 
-			return (
-				<AssignedUserToTrainersAction 	 
-					user={user}
-					type='horizontal'
-				/>
-			);
+			return <AssignedUserToTrainersAction user={user} type="horizontal" />;
 		},
 	},
 ];
@@ -232,17 +227,21 @@ export default function AssignedUserToTrainer({
 							<div className="p-4 border-b border-gray-100">
 								<div className="flex items-center justify-between">
 									<div className="flex-1">
-										<h3 
+										<h3
 											className="font-semibold text-lg text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
 											onClick={() =>
 												user.id &&
-												router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+												router.push(
+													`/dashboard/trainer/assignedusers/${user.id}`,
+												)
 											}
 											onKeyDown={(e) => {
 												if (e.key === 'Enter' || e.key === ' ') {
-													e.preventDefault()
+													e.preventDefault();
 													user.id &&
-													router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+														router.push(
+															`/dashboard/trainer/assignedusers/${user.id}`,
+														);
 												}
 											}}
 										>
@@ -260,10 +259,10 @@ export default function AssignedUserToTrainer({
 										>
 											{user.membershipStatus}
 										</Badge>
-										<AssignedUserToTrainersAction 
+										<AssignedUserToTrainersAction
 											user={user}
-											type='vertical'
-											triggerVariant='ghost'
+											type="vertical"
+											triggerVariant="ghost"
 										/>
 									</div>
 								</div>
@@ -286,9 +285,7 @@ export default function AssignedUserToTrainer({
 													{user.activeWorkoutPlanName}
 												</p>
 											) : (
-												<p className="text-sm text-green-600">
-													No Active Plan
-												</p>
+												<p className="text-sm text-green-600">No Active Plan</p>
 											)}
 										</div>
 									</div>
@@ -314,9 +311,7 @@ export default function AssignedUserToTrainer({
 													{user.dietPlanName}
 												</p>
 											) : (
-												<p className="text-sm text-blue-600">
-													No Diet Plan
-												</p>
+												<p className="text-sm text-blue-600">No Diet Plan</p>
 											)}
 										</div>
 									</div>
@@ -330,15 +325,18 @@ export default function AssignedUserToTrainer({
 								{/* Quick Actions */}
 								<div className="flex gap-2 pt-2">
 									<button
+										type="button"
 										onClick={() =>
 											user.id &&
 											router.push(`/dashboard/trainer/assignedusers/${user.id}`)
 										}
 										onKeyDown={(e) => {
 											if (e.key === 'Enter' || e.key === ' ') {
-												e.preventDefault()
+												e.preventDefault();
 												user.id &&
-												router.push(`/dashboard/trainer/assignedusers/${user.id}`)
+													router.push(
+														`/dashboard/trainer/assignedusers/${user.id}`,
+													);
 											}
 										}}
 										className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"

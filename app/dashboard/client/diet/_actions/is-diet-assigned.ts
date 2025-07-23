@@ -17,9 +17,8 @@ export interface IsDietAssignedData {
 export const checkIsDietAssigned = async (): Promise<IsDietAssignedData> => {
 	try {
 		const clientAxios = await ClientReqConfig();
-		const response = await clientAxios.get<IsDietAssignedResponse>(
-			'/diet/is-assigned',
-		);
+		const response =
+			await clientAxios.get<IsDietAssignedResponse>('/diet/is-assigned');
 
 		if (
 			!response.data.success ||

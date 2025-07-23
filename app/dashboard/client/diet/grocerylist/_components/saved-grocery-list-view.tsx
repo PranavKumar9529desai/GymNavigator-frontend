@@ -4,12 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import {
-	ChevronDown,
-	Copy,
-	Loader2,
-	ShoppingCart,
-} from 'lucide-react';
+import { ChevronDown, Copy, Loader2, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { updateGroceryItem } from '../_actions/update-grocery-item';
@@ -46,7 +41,7 @@ export function SavedGroceryListView({
 
 	const _copyToClipboard = () => {
 		const text = groceryList.categories
-			.map(category => {
+			.map((category) => {
 				return `== ${category.name} ==\n${category.items
 					.map(
 						(item) =>
@@ -75,9 +70,7 @@ export function SavedGroceryListView({
 
 				if (result.success) {
 					toast({
-						title: currentStatus
-							? 'Item unmarked'
-							: 'Item marked as purchased',
+						title: currentStatus ? 'Item unmarked' : 'Item marked as purchased',
 						duration: 2000,
 					});
 					router.refresh();
@@ -139,7 +132,9 @@ export function SavedGroceryListView({
 							type="button"
 							className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer w-full text-left"
 							onClick={() => toggleCategory(category.id)}
-							onKeyDown={(e) => e.key === 'Enter' && toggleCategory(category.id)}
+							onKeyDown={(e) =>
+								e.key === 'Enter' && toggleCategory(category.id)
+							}
 							aria-expanded={expandedCategories.has(category.id)}
 						>
 							<h3 className="font-semibold text-md">{category.name}</h3>
@@ -169,7 +164,9 @@ export function SavedGroceryListView({
 											<label
 												htmlFor={`item-${item.id}`}
 												className={`text-sm ${
-													item.isPurchased ? 'line-through text-muted-foreground' : ''
+													item.isPurchased
+														? 'line-through text-muted-foreground'
+														: ''
 												}`}
 											>
 												{item.name} -{' '}

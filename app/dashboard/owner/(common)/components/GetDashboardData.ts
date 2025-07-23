@@ -83,8 +83,9 @@ type DashboardResult = OwnerDashboardData | DashboardError;
 export async function GetDashboardData(): Promise<DashboardResult> {
 	try {
 		const ownerAxios = await OwnerReqConfig();
-		const response: AxiosResponse<DashboardResponse> =
-			await ownerAxios.get('/dashboard/getdashboarddata');
+		const response: AxiosResponse<DashboardResponse> = await ownerAxios.get(
+			'/dashboard/getdashboarddata',
+		);
 
 		if (response.data.data) {
 			return response.data.data;

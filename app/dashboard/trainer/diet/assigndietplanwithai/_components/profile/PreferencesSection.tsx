@@ -46,7 +46,9 @@ export function PreferencesSection({
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
+					aria-label="Preferences icon"
 				>
+					<title>Preferences</title>
 					<path
 						strokeLinecap="round"
 						strokeLinejoin="round"
@@ -84,7 +86,7 @@ export function PreferencesSection({
 						<div className="flex flex-wrap gap-2">
 							{allAllergies.map((allergy, index) => (
 								<span
-									  key={ index as number } 
+									key={index as number}
 									className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm"
 								>
 									{allergy}
@@ -102,7 +104,7 @@ export function PreferencesSection({
 						<div className="flex flex-wrap gap-2">
 							{dietaryRestrictions.map((restriction, index) => (
 								<span
-									  key={ index as number } 
+									key={index as number}
 									className="px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm"
 								>
 									{restriction}
