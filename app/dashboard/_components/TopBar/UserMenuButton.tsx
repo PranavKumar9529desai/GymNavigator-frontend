@@ -6,7 +6,7 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { type FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Rolestype, GymInfo } from '@/types/next-auth';
+import type { Rolestype, GymInfo } from '@/types/next-auth';
 import UserAvatarImage from "../../_assests/user-avtar.jpg"
 interface MenuItem {
 	label: string;

@@ -22,7 +22,7 @@ interface TrainerTabProps {
 
 export function TrainerTab({ trainerData }: TrainerTabProps) {
   // Helper function to safely display data or show fallback
-  const displayData = (value: string | number | undefined, fallback: string = "-") => {
+  const displayData = (value: string | number | undefined, fallback = "-") => {
     if (value === undefined || value === null || value === "" || value === 0) {
       return fallback;
     }
@@ -46,10 +46,10 @@ export function TrainerTab({ trainerData }: TrainerTabProps) {
     // If it starts with 0, replace with country code (e.g., +91 for India)
     if (cleanPhone.startsWith('91') && cleanPhone.length === 12) {
       return cleanPhone;
-    } else if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
+    }if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
       // Replace leading 0 with country code (adjust as needed)
       return `91${cleanPhone.substring(1)}`;
-    } else if (cleanPhone.length === 10) {
+    }if (cleanPhone.length === 10) {
       // Add country code for 10-digit numbers
       return `91${cleanPhone}`;
     }

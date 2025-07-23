@@ -19,8 +19,8 @@ export default async function UserProfilePage({ params }: PageProps) {
   const profileData = await getUserProfile(id);
 
   // Capitalize the first letter of the role for display, but exclude 'client'
-  const shouldShowRole = role !== 'client';
-  const roleDisplay = role.charAt(0).toUpperCase() + role.slice(1);
+  const _shouldShowRole = role !== 'client';
+  const _roleDisplay = role.charAt(0).toUpperCase() + role.slice(1);
 
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">

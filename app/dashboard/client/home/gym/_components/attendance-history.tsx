@@ -41,9 +41,9 @@ export function AttendanceHistory({ attendanceHistory }: AttendanceHistoryProps)
       
       <div className="border-l-2 border-blue-200 pl-4">
         <div className="grid grid-cols-7 gap-1">
-          {attendanceHistory.slice(0, 28).map((record, index) => (
+          {attendanceHistory.slice(0, 28).map((record, _index) => (
             <div
-              key={index}
+              key={record.date}
               className={cn(
                 'aspect-square rounded text-xs font-medium flex items-center justify-center',
                 record.attended

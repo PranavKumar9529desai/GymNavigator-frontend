@@ -21,7 +21,7 @@ export default function Loading() {
           {Array(7)
             .fill(0)
             .map((_, i) => (
-              <Skeleton key={`day-${i}`} className="h-6 w-full" />
+              <Skeleton key={`day-${i}-${Math.random()}`} className="h-6 w-full" />
             ))}
         </div>
 
@@ -31,7 +31,7 @@ export default function Loading() {
             .fill(0)
             .map((_, i) => (
               <Skeleton
-                key={`cell-${i}`}
+                key={`cell-${i}-${Math.random()}`}
                 className="w-full aspect-square rounded-xl"
               />
             ))}
@@ -44,7 +44,7 @@ export default function Loading() {
           {Array(4)
             .fill(0)
             .map((_, i) => (
-              <div key={`legend-${i}`} className="flex items-center space-x-3">
+              <div key={`legend-${i}-${Math.random()}`} className="flex items-center space-x-3">
                 <Skeleton className="h-5 w-5 rounded-md" />
                 <Skeleton className="h-4 w-16" />
               </div>

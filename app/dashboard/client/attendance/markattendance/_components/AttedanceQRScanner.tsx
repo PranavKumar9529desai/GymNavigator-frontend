@@ -36,7 +36,7 @@ export default function AttendanceQRScanner() {
 		if (!videoRef.current || qrScannerRef.current) return;
 
 		// Helper function to apply zoom after scanner starts
-		const applyDefaultZoom = async (scanner: QrScanner) => {
+		const applyDefaultZoom = async (_scanner: QrScanner) => {
 			if (QR_SCANNER_CONFIG.DEFAULT_ZOOM !== 1.0) {
 				try {
 					// Wait a bit for the scanner to fully initialize
@@ -44,17 +44,17 @@ export default function AttendanceQRScanner() {
 					
 					// Get the video stream and apply zoom
 					const video = videoRef.current;
-					if (video && video.srcObject) {
+					if (video?.srcObject) {
 						const stream = video.srcObject as MediaStream;
 						const track = stream.getVideoTracks()[0];
 						
 						if (track && 'getCapabilities' in track) {
-							const capabilities = (track as any).getCapabilities();
+							const capabilities = (track as MediaStreamTrack & { getCapabilities?: () => MediaTrackCapabilities }).getCapabilities?.();
 							if (capabilities && 'zoom' in capabilities) {
 								const constraints = {
 									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }]
 								};
-								await (track as any).applyConstraints(constraints);
+								await (track as MediaStreamTrack & { applyConstraints?: (constraints: MediaTrackConstraints) => Promise<void> }).applyConstraints?.(constraints);
 								console.log(`Applied zoom level: ${QR_SCANNER_CONFIG.DEFAULT_ZOOM}`);
 							}
 						}
@@ -256,7 +256,6 @@ export default function AttendanceQRScanner() {
 						{isScanning && !isProcessing && !hasProcessed && (
 							<>
 								<div className="absolute inset-0 z-10 border-4 border-dashed border-primary/40 rounded-lg animate-pulse pointer-events-none" />
-								{/* biome-ignore lint/a11y/useMediaCaption: Video is for QR scanning, no audio content */}
 								<video
 									ref={videoRef}
 									style={{ width: '100%' }}

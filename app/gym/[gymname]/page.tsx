@@ -1,7 +1,7 @@
 import React from 'react';
 import FetchGymData from './FetchGymData';
 import Gym from './Gym';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 // Reintroduce generateStaticParams for static generation

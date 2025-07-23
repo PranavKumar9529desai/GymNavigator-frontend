@@ -59,7 +59,7 @@ export default function RegisterForm() {
 
 		startTransition(async () => {
 			// Create a dismissible loading toast
-			const loadingToast = toast.loading('Processing registration...');
+			const _loadingToast = toast.loading('Processing registration...');
 			
 			try {
 				// Check if the user already exists using the updated getUserByEmail function
@@ -145,7 +145,7 @@ export default function RegisterForm() {
 		await storeGoogleSignupRole(selectedRole);
 
 		startTransition(async () => {
-			const loadingToast = toast.loading('Connecting to Google...');
+			const _loadingToast = toast.loading('Connecting to Google...');
 			
 			try {
 				// Pass the role as a state parameter to Google auth
@@ -285,7 +285,6 @@ export default function RegisterForm() {
 													className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 hover:text-blue-300 transition-colors"
 													onClick={() => setShowPassword(!showPassword)}
 													onKeyDown={(e) => e.key === 'Enter' && setShowPassword(!showPassword)}
-													role="button"
 													tabIndex={0}
 													aria-label={showPassword ? "Hide password" : "Show password"}
 												>

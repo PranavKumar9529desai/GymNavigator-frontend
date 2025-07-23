@@ -52,8 +52,8 @@ export function PricingPlans({ pricingPlans }: PricingPlansProps) {
               
               {plan.features.length > 0 && (
                 <ul className="space-y-2">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="text-sm flex items-center gap-2">
+                  {plan.features.map((feature) => (
+                    <li key={feature.description} className="text-sm flex items-center gap-2">
                       <Zap className="h-3 w-3 text-emerald-500" />
                       <span className="text-slate-700">{feature.description}</span>
                     </li>

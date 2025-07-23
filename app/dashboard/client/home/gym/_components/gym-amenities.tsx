@@ -52,6 +52,7 @@ export function GymAmenities({ amenities }: GymAmenitiesProps) {
           return (
             <div key={typeName} className="border-b border-slate-100">
               <button
+                type="button"
                 onClick={() => toggleCategory(typeName)}
                 className="w-full flex items-center justify-between py-2 hover:bg-blue-50/50 transition-colors"
               >

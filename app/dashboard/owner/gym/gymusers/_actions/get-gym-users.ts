@@ -5,7 +5,7 @@ import type { GymUsersApiResponse } from '../_components/GymUsersClient';
 export async function getGymUsers(): Promise<GymUsersApiResponse> {
   const ownerAxios = await OwnerReqConfig();
   try {
-    const response = await ownerAxios.get(`/gymusers`);
+    const response = await ownerAxios.get('/gymusers');
     if (response.status !== 200 || !response.data) {
       return {
         msg: response.data?.msg || 'Failed to fetch gym users',

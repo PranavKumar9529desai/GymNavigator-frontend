@@ -245,8 +245,6 @@ export default function AssignedUserToTrainer({
 													router.push(`/dashboard/trainer/assignedusers/${user.id}`)
 												}
 											}}
-											tabIndex={0}
-											role="button"
 										>
 											{user.name}
 										</h3>

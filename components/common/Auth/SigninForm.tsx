@@ -58,7 +58,7 @@ export default function SignInForm() {
 				console.log('SignIn error:', result.error);
 				toast.dismiss();
 				const errorMessage = 'Failed to sign in ,Check your credentials';
-				const errorCode = 'UNKNOWN_ERROR';
+				const _errorCode = 'UNKNOWN_ERROR';
 
 				setError(errorMessage);
 

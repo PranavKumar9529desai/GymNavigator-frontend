@@ -6,8 +6,8 @@ import { AxiosError, type AxiosResponse } from 'axios';
 export async function getGymDashboardData(): Promise<GymDashboardData> {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response: AxiosResponse<any> = await ownerAxios.get('/dashboard/getdashboarddata');
-    const data = response.data?.data;
+    const response = await ownerAxios.get('/dashboard/getdashboarddata');
+    const data = (response as { data: { data: any } }).data?.data;
     console.log("data returned from the getdashboard  route" , data);
 
     return {
@@ -31,17 +31,17 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
         planPopularity: [],
       },
       recentActivities: {
-        recentSignups: (data.recentActivities?.recentSignups || []).map((signup: any) => ({
+        recentSignups: (data.recentActivities?.recentSignups || []).map((signup: { id: string; name: string; createdAt: string }) => ({
           id: signup.id,
           name: signup.name,
           createdAt: signup.createdAt,
         })),
-        recentAttendance: (data.recentActivities?.recentAttendance || []).map((att: any) => ({
+        recentAttendance: (data.recentActivities?.recentAttendance || []).map((att: { id: string; user: string; scanTime: string }) => ({
           id: att.id,
           user: att.user,
           scanTime: att.scanTime,
         })),
-        recentTrainerAssignments: (data.recentActivities?.recentTrainerAssignments || []).map((assign: any) => ({
+        recentTrainerAssignments: (data.recentActivities?.recentTrainerAssignments || []).map((assign: { id: string; name: string; trainer: string; updatedAt: string }) => ({
           id: assign.id,
           name: assign.name,
           trainer: assign.trainer,

@@ -1,9 +1,9 @@
 'use server';
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
-import {
-	type ActivityLevel,
-	type HealthProfileState,
+import type {
+	ActivityLevel,
+	HealthProfileState,
 } from '../_store/health-profile-store';
 import type { HealthMetrics } from '../calculate-health-data/health-data-types';
 // Define a type that matches what we need for the API request

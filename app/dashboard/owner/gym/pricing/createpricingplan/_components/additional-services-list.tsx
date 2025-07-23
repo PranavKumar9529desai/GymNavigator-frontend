@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Plus, Calendar } from 'lucide-react';
 import { AdditionalServiceCard } from './additional-service-card';
-import { type AdditionalService } from '../_action/create-pricing-plan';
+import type { AdditionalService } from '../_action/create-pricing-plan';
 
 interface AdditionalServicesListProps {
 	services: AdditionalService[];

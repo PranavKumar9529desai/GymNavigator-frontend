@@ -20,7 +20,7 @@ interface GrocerySelectorProps {
 
 export function GrocerySelector({ savedListsData }: GrocerySelectorProps) {
 	const [timeFrame, setTimeFrame] = useState<'weekly' | 'monthly'>('weekly');
-	const [isPending, startTransition] = useTransition();
+	const [_isPending, startTransition] = useTransition();
 	const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
 	const [viewMode, setViewMode] = useState<'saved' | 'generating'>('saved');
 	const [groceryList, setGroceryList] = useState<GroceryListResponse | null>(null);

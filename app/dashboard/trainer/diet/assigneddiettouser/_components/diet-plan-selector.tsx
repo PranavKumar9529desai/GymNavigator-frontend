@@ -96,7 +96,7 @@ export function DietPlanSelector({
     
     if (planName.includes("veg") || planDesc.includes("vegetarian") || planDesc.includes("vegan")) {
       return "vegetarian";
-    } else if (planName.includes("non-veg") || planDesc.includes("non-vegetarian") || 
+    }if (planName.includes("non-veg") || planDesc.includes("non-vegetarian") || 
                planName.includes("chicken") || planName.includes("meat") || planName.includes("fish")) {
       return "non-vegetarian";
     }

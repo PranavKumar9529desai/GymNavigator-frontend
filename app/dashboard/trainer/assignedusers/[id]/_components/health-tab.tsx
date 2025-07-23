@@ -31,7 +31,7 @@ interface HealthTabProps {
 
 export function HealthTab({ healthData, weightProgress }: HealthTabProps) {
   // Helper function to safely display data or show fallback
-  const displayData = (value: number | undefined, unit: string = "", fallback: string = "-") => {
+  const displayData = (value: number | undefined, unit = "", fallback = "-") => {
     if (value === undefined || value === null || value === 0) {
       return fallback;
     }

@@ -1,7 +1,8 @@
 'use client';
 
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import type { Meal } from '../_actions/get-todays-diet';
 import { NutritionCard } from './NutritionCard';
 import { BreakfastIcon, LunchIcon, SnackIcon, DinnerIcon, DefaultMealIcon } from './MealIcons';
@@ -36,8 +37,8 @@ export const MealCard = ({ meal }: MealCardProps) => {
 		  icon: <DefaultMealIcon size={20} className="text-blue-500" />,
 		};
 	  }
-	  let hour = parseInt(match[1], 10);
-	  const minute = parseInt(match[2], 10);
+	  let hour = Number.parseInt(match[1], 10);
+	  const _minute = Number.parseInt(match[2], 10);
 	  const period = match[3];
 
 	  if (period === 'PM' && hour !== 12) hour += 12;

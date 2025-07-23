@@ -3,14 +3,14 @@
 import { generateStructuredContent } from '@/lib/AI';
 import {
 	Meal,
-	DietPlan,
-	DietPlansByDay,
-	LocationInfo,
-	WeeklyDietPlanSchema,
+	type DietPlan,
+	type DietPlansByDay,
+	type LocationInfo,
+	type WeeklyDietPlanSchema,
 	validateWeeklyDietPlanResponse,
 } from '@/lib/AI/types/diet-types';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { gethealthprofileById } from './get-healthprofile-by-id';
 
 /**

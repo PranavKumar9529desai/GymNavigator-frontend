@@ -109,7 +109,7 @@ export default function UserWorkoutAssignment({
 
 	const [users, setUsers] = useState<AssignableUser[]>(initialUsers);
 	const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlan[]>(initialWorkoutPlans);
-	const [isLoading, setIsLoading] = useState(!initialUsers.length);
+	const [_isLoading, setIsLoading] = useState(!initialUsers.length);
 
 	useEffect(() => {
 		// Only fetch data if initial data wasn't provided

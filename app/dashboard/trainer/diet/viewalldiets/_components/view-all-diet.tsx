@@ -43,12 +43,12 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("all")
-  const [viewMode, setViewMode] = useState("grid")
+  const [_viewMode, _setViewMode] = useState("grid")
 
   const filteredDiets = dietPlans.filter((diet) => {
     const matchesSearch =
       diet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (diet.description && diet.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      (diet.description?.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesStatus = selectedStatus === "all" || diet.status === selectedStatus
 
     return matchesSearch && matchesStatus
@@ -114,7 +114,6 @@ export default function DietManagement({ dietPlans }: DietManagementProps) {
               aria-label={expanded ? 'Collapse meal list' : 'Expand meal list'}
               className="ml-2 p-2 rounded-full hover:bg-blue-50/50 focus:outline-none focus:ring-2 focus:ring-blue-300"
               tabIndex={0}
-              role="button"
             >
               {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>

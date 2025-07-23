@@ -13,7 +13,7 @@ import Sidebar from './_components/sidebar';
 // Import the preload function for performance improvement
 import { preloadCommonIcons } from './_components/common-icons';
 import { IsClient } from '@/lib/is-client';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import PostHogIdentify from './PostHogIdentify';
 
 export async function generateMetadata(): Promise<Metadata> {

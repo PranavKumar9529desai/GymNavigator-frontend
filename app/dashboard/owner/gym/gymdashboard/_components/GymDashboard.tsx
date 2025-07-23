@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import type React from 'react';
 import type { GymDashboardData } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend } from 'recharts';
 
@@ -18,7 +18,7 @@ export default function GymDashboard({ data }: GymDashboardProps) {
       <div className="flex items-center gap-4 mb-2">
         <img
           src={gymDetails.gym_logo}
-          alt={gymDetails.gym_name + ' logo'}
+          alt={`${gymDetails.gym_name} logo`}
           className="w-12 h-12 rounded-full border border-blue-100 bg-white object-cover"
         />
         <div>
@@ -208,8 +208,7 @@ function StatCard({ label, value, color }: { label: string; value: React.ReactNo
     <div
       className={`rounded-lg bg-gradient-to-r ${color} p-3 flex flex-col items-center justify-center shadow-sm min-h-[80px]`}
       role="status"
-      tabIndex={0}
-      aria-label={label + ': ' + value}
+      aria-label={`${label}: ${value}`}
     >
       <span className="text-xs font-medium text-slate-100 uppercase tracking-wide">{label}</span>
       <span className="text-xl font-bold text-white">{value}</span>
@@ -230,9 +229,8 @@ function SubtleStatCard({ label, value, icon }: { label: string; value: React.Re
   return (
     <div
       className="flex items-center gap-3 bg-white/70 border border-blue-100 rounded-lg px-3 py-3 shadow-sm hover:shadow-md transition-shadow min-h-[70px] focus-within:ring-2 focus-within:ring-blue-200"
-      tabIndex={0}
       role="status"
-      aria-label={label + ': ' + value}
+      aria-label={`${label}: ${value}`}
     >
       <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50">
         {icon}

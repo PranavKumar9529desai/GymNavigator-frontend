@@ -116,7 +116,7 @@ export async function updateDietPlan(dietPlan: DietPlanUpdateInput) {
 
 // Add proper types to parameters
 export const calculateTotalCalories = (meals: Meal[]): number => {
-	return meals.reduce((total, meal: Meal) => {
+	return meals.reduce((total, _meal: Meal) => {
 		// ...existing code...
 		return total;
 	}, 0);

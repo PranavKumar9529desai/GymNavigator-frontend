@@ -29,7 +29,7 @@ interface Props {
 
 // Helper function to check if health profile is complete
 const isHealthProfileComplete = (healthProfile: unknown) => {
-	const router = useRouter();
+	const _router = useRouter();
 
 	if (!healthProfile) return false;
 	

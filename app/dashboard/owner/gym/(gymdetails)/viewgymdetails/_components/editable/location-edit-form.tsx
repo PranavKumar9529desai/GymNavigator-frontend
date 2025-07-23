@@ -40,7 +40,13 @@ export function LocationEditForm({
 		loading: geoLoading,
 		error: geoError,
 	} = useGetLocationFromCoordinates() as {
-		getAddress: any;
+		getAddress: (lat: number, lng: number) => Promise<{
+			address?: string;
+			city?: string;
+			state?: string;
+			zipCode?: string;
+			country?: string;
+		} | null>;
 		loading: boolean;
 		error: string | Error | undefined;
 	};

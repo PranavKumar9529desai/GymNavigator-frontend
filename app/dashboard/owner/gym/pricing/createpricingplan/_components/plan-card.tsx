@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import { HexColorPicker } from 'react-colorful';
 import { Plus, Trash2, Star, Palette, X } from 'lucide-react';
 import { planColors, planIcons, durationOptions } from './pricing-plan-constants';
-import { type PricingPlan } from '../_action/create-pricing-plan';
+import type { PricingPlan } from '../_action/create-pricing-plan';
 
 export interface PlanCardProps {
 	plan: PricingPlan;

@@ -200,7 +200,7 @@ export function calculateMacros(
 ) {
 	// Set protein (g/kg) and fat (g/kg or %), carbs as remainder
 	let proteinPerKg: number;
-	let fatPerKg: number | null = null;
+	const _fatPerKg: number | null = null;
 	let fatPercent: number | null = null;
 
 	switch (goal) {

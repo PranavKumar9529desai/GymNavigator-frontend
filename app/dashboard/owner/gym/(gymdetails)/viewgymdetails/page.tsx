@@ -19,10 +19,17 @@ interface GymInfo {
 }
 
 // Helper to format address object to string
-function formatAddress(addressObj: any) {
-	if (!addressObj) return '';
-	const { street, city, state, postalCode, country } = addressObj;
-	return [street, city, state, postalCode, country].filter(Boolean).join(', ');
+interface AddressObj {
+  street?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+}
+function formatAddress(addressObj: AddressObj | null | undefined) {
+  if (!addressObj) return '';
+  const { street, city, state, postalCode, country } = addressObj;
+  return [street, city, state, postalCode, country].filter(Boolean).join(', ');
 }
 
 export default async function GymLayout() {

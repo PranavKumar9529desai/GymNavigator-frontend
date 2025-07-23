@@ -36,9 +36,9 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 	// Create a map of gym days for faster lookups
 	const gymDaysMap = useMemo(() => {
 		const map = new Map<string, boolean>();
-		gymAttendanceDays.forEach(date => {
+		for (const date of gymAttendanceDays) {
 			map.set(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`, true);
-		});
+		}
 		return map;
 	}, [gymAttendanceDays]);
 
@@ -116,7 +116,7 @@ export default function MonthAttendance({ attendanceDays }: MonthAttendanceProps
 		return days;
 	}, [currentDate]);
 
-	const addMonths = (date: Date, months: number) => {
+	const _addMonths = (date: Date, months: number) => {
 		const newDate = new Date(date);
 		newDate.setMonth(newDate.getMonth() + months);
 		return newDate;

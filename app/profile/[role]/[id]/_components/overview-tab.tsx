@@ -153,7 +153,7 @@ export function OverviewTab({ attendanceData, workoutTypes, stats }: OverviewTab
                         paddingAngle={3}
                         dataKey="value"
                       >
-                        {workoutTypes.filter(type => type.value > 0).map((entry, index) => (
+                        {workoutTypes.filter(type => type.value > 0).map((entry, _index) => (
                           <Cell key={`cell-${entry.name}`} fill={entry.color} />
                         ))}
                       </Pie>
@@ -164,7 +164,7 @@ export function OverviewTab({ attendanceData, workoutTypes, stats }: OverviewTab
                 <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
                   {workoutTypes.filter(type => type.value > 0).map((type) => (
                     <div key={type.name} className="flex items-center justify-center sm:justify-start space-x-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: type.color }}></div>
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: type.color }} />
                       <span className="text-sm">{type.name}: {type.value}</span>
                     </div>
                   ))}

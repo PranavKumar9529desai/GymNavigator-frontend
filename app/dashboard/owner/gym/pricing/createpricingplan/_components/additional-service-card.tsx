@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { type AdditionalService } from '../_action/create-pricing-plan';
+import type { AdditionalService } from '../_action/create-pricing-plan';
 
 export interface AdditionalServiceCardProps {
 	service: AdditionalService;

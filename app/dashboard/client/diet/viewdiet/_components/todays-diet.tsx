@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import type * as React from 'react';
 import { Clock } from 'lucide-react';
 import type { TodaysDiet } from '../_actions/get-todays-diet';
 import { MealCard } from './MealCard';
@@ -33,8 +33,8 @@ export default function TodaysDietComponent({
   const parseTime = (timeStr: string) => {
     const match = timeStr.match(/(\d{1,2}):(\d{2}) (AM|PM)/);
     if (!match) return 0;
-    let hour = parseInt(match[1], 10);
-    const minute = parseInt(match[2], 10);
+    let hour = Number.parseInt(match[1], 10);
+    const minute = Number.parseInt(match[2], 10);
     const period = match[3];
     if (period === 'PM' && hour !== 12) hour += 12;
     if (period === 'AM' && hour === 12) hour = 0;
@@ -47,14 +47,14 @@ export default function TodaysDietComponent({
 
   // Calculate nutrition summary
   let totalCalories = 0;
-  let totalProtein = 0;
-  let totalCarbs = 0;
-  let totalFats = 0;
+  let _totalProtein = 0;
+  let _totalCarbs = 0;
+  let _totalFats = 0;
   for (const meal of data.dietPlan.meals) {
     totalCalories += meal.calories;
-    totalProtein += meal.protein;
-    totalCarbs += meal.carbs;
-    totalFats += meal.fats;
+    _totalProtein += meal.protein;
+    _totalCarbs += meal.carbs;
+    _totalFats += meal.fats;
   }
 
   const targetCalories = data.dietPlan.targetCalories;

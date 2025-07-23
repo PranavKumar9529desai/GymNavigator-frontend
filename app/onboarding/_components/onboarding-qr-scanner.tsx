@@ -35,7 +35,7 @@ export default function OnboardingQrScanner() {
 	const [cameraIndex, setCameraIndex] = useState(0);
 	const [backCameras, setBackCameras] = useState<MediaDeviceInfo[]>([]);
 	const [isCameraLoading, setIsCameraLoading] = useState(false);
-	const [preferredDeviceId, setPreferredDeviceId] = useState<string | null>(null);
+	const [_preferredDeviceId, setPreferredDeviceId] = useState<string | null>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrScannerRef = useRef<QrScanner | null>(null);
 
@@ -64,26 +64,26 @@ export default function OnboardingQrScanner() {
 		let isMounted = true;
 		let destroyTimeout: NodeJS.Timeout | null = null;
 
-		const applyDefaultZoom = async (scanner: QrScanner) => {
+		const applyDefaultZoom = async (_scanner: QrScanner) => {
 			if (QR_SCANNER_CONFIG.DEFAULT_ZOOM !== 1.0) {
 				try {
 					await new Promise(resolve => setTimeout(resolve, 1000));
 					const video = videoRef.current;
-					if (video && video.srcObject) {
+					if (video?.srcObject) {
 						const stream = video.srcObject as MediaStream;
 						const track = stream.getVideoTracks()[0];
 						if (track && 'getCapabilities' in track) {
-							const capabilities = (track as any).getCapabilities();
+							const capabilities = (track as MediaStreamTrack & { getCapabilities?: () => MediaTrackCapabilities }).getCapabilities?.();
 							if (capabilities && 'zoom' in capabilities) {
 								const constraints = {
 									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }]
 								};
-								await (track as any).applyConstraints(constraints);
+								await (track as MediaStreamTrack & { applyConstraints?: (constraints: MediaTrackConstraints) => Promise<void> }).applyConstraints?.(constraints);
 								addDebugMessage(`Applied zoom level: ${QR_SCANNER_CONFIG.DEFAULT_ZOOM}`);
 							}
 						}
 					}
-				} catch (error) {
+				} catch (_error) {
 					addDebugMessage('Zoom not supported on this device');
 				}
 			}
@@ -112,7 +112,7 @@ export default function OnboardingQrScanner() {
 						const parsedData: QrValueType = JSON.parse(result.data);
 						if (parsedData.OnboardingAction) {
 							const { gymname, gymid, hash } = parsedData.OnboardingAction;
-							addDebugMessage('Onboarding action data: ' + JSON.stringify(parsedData.OnboardingAction));
+							addDebugMessage(`Onboarding action data: ${JSON.stringify(parsedData.OnboardingAction)}`);
 							toast.success('QR code scanned successfully');
 							setIsSuccess(true);
 							const userRole = localStorage.getItem('userRole') || 'client';
@@ -129,7 +129,7 @@ export default function OnboardingQrScanner() {
 							throw new Error('Invalid QR code: Not an onboarding QR code');
 						}
 					} catch (error) {
-						addDebugMessage('Error processing QR code: ' + (error instanceof Error ? error.message : 'Unknown error'));
+						addDebugMessage(`Error processing QR code: ${error instanceof Error ? error.message : 'Unknown error'}`);
 						console.error('Error processing QR code:', error);
 						toast.error('Failed to process QR code', {
 							description:
@@ -148,7 +148,7 @@ export default function OnboardingQrScanner() {
 					maxScansPerSecond: QR_SCANNER_CONFIG.MAX_SCANS_PER_SECOND,
 					onDecodeError: (error: unknown) => {
 						if (error instanceof Error && !error.message?.includes('NotFound')) {
-							addDebugMessage('QR scan error: ' + error.message);
+							addDebugMessage(`QR scan error: ${error.message}`);
 							console.error('QR scan error:', error);
 						}
 					},
@@ -167,7 +167,7 @@ export default function OnboardingQrScanner() {
 				})
 				.catch((error: unknown) => {
 					if (isMounted) {
-						addDebugMessage('Failed to start QR scanner: ' + (error instanceof Error ? error.message : 'Unknown error'));
+						addDebugMessage(`Failed to start QR scanner: ${error instanceof Error ? error.message : 'Unknown error'}`);
 						console.error('Failed to start QR scanner:', error);
 						toast.error('Failed to start camera', {
 							description: 'Please check camera permissions and try again',

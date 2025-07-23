@@ -135,14 +135,11 @@ export function SavedGroceryListView({
 			<div className="space-y-4">
 				{groceryList.categories.map((category) => (
 					<div key={category.id} className="pb-2">
-						<div
-							className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer"
+						<button
+							type="button"
+							className="flex items-center justify-between p-3 bg-muted/30 rounded-lg cursor-pointer w-full text-left"
 							onClick={() => toggleCategory(category.id)}
-							onKeyDown={(e) =>
-								e.key === 'Enter' && toggleCategory(category.id)
-							}
-							role="button"
-							tabIndex={0}
+							onKeyDown={(e) => e.key === 'Enter' && toggleCategory(category.id)}
 							aria-expanded={expandedCategories.has(category.id)}
 						>
 							<h3 className="font-semibold text-md">{category.name}</h3>
@@ -151,7 +148,7 @@ export function SavedGroceryListView({
 									expandedCategories.has(category.id) ? 'rotate-180' : ''
 								}`}
 							/>
-						</div>
+						</button>
 
 						{expandedCategories.has(category.id) && (
 							<ul className="mt-2 space-y-2 pl-4 border-l-2 border-primary/20">

@@ -7,7 +7,7 @@ export default async function GymDashboardPage() {
   let data;
   try {
     data = await getGymDashboardData();
-  } catch (error) {
+  } catch (_error) {
     return <div className="p-6 text-center text-red-600">Failed to load dashboard data.</div>;
   }
   return <GymDashboard data={data} />

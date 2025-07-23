@@ -6,7 +6,7 @@ import {
 	buildGroceryListPrompt,
 	validateGroceryList,
 } from './prompts/grocery-list-prompts';
-import { DietPlan } from './types/diet-types';
+import type { DietPlan } from './types/diet-types';
 
 /**
  * Generate a grocery list from a diet plan using AI

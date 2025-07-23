@@ -13,7 +13,7 @@ export default async function ViewDietPage() {
 	const userGoal = 'Muscle Gain'; // TODO: fetch from user profile
 	const dietaryPref = 'Vegetarian'; // TODO: fetch from user profile
 	const trainerName = todaysDiet.dietPlan?.trainer?.name || 'Your Trainer';
-	const gymName = 'FitLife Gym'; // TODO: fetch from user profile
+	const _gymName = 'FitLife Gym'; // TODO: fetch from user profile
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20 px-0 sm:px-4 max-w-full sm:max-w-4xl mx-auto">

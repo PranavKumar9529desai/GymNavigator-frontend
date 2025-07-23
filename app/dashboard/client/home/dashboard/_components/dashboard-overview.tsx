@@ -36,13 +36,13 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
     });
   };
 
-  const getStatusColor = (daysRemaining: number) => {
+  const _getStatusColor = (daysRemaining: number) => {
     if (daysRemaining <= 7) return 'bg-red-400';
     if (daysRemaining <= 30) return 'bg-yellow-400';
     return 'bg-blue-400';
   };
 
-  const getStatusBadgeVariant = (daysRemaining: number) => {
+  const _getStatusBadgeVariant = (daysRemaining: number) => {
     if (daysRemaining <= 7) return 'destructive';
     if (daysRemaining <= 30) return 'secondary';
     return 'default';

@@ -27,7 +27,7 @@ export function ScanningState({ videoRef, zoomLevel }: ScanningStateProps) {
 								scale: [1, 1.1, 1],
 								rotate: [0, 5, -5, 0] 
 							}}
-							transition={{ duration: 3, repeat: Infinity }}
+							transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
 						>
 							<QrCode className="w-7 h-7 text-primary" />
 						</motion.div>
@@ -67,7 +67,7 @@ export function ScanningState({ videoRef, zoomLevel }: ScanningStateProps) {
 							<motion.div
 								className="absolute left-4 right-4 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
 								animate={{ top: ['20%', '80%', '20%'] }}
-								transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+								transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
 							/>
 
 							{/* Pulse Effect */}
@@ -77,7 +77,7 @@ export function ScanningState({ videoRef, zoomLevel }: ScanningStateProps) {
 									scale: [1, 1.02, 1],
 									opacity: [0.3, 0.6, 0.3] 
 								}}
-								transition={{ duration: 2, repeat: Infinity }}
+								transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
 							/>
 						</div>
 
@@ -101,7 +101,7 @@ export function ScanningState({ videoRef, zoomLevel }: ScanningStateProps) {
 								<motion.div
 									className="w-2 h-2 bg-green-400 rounded-full"
 									animate={{ opacity: [0.5, 1, 0.5] }}
-									transition={{ duration: 1.5, repeat: Infinity }}
+									transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
 								/>
 								<span className="text-xs text-white font-medium">Live</span>
 							</div>
