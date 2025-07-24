@@ -107,7 +107,7 @@ export default function CreateGymDetails() {
 			if (response) {
 				setSubmitSuccess(true);
 				setTimeout(() => {
-					router.push('/dashboard/owner/gymdetails/viewgymdetails');
+					router.push('/dashboard/owner/gym/viewgymdetails');
 				}, 2000);
 			} else {
 				throw new Error('Failed to create gym');

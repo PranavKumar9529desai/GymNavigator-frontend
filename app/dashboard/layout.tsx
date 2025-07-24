@@ -98,7 +98,7 @@ export default async function Layout({
 	}
 
 	// 3 The User is not associated with any gym
-	if (session.role && !session.gym) {
+	if (session.role &&  session.role !== "owner" && !session.gym) {
 		console.log('User redirected to the /onboarding', session.role);
 
 		redirect('/onboarding/');
