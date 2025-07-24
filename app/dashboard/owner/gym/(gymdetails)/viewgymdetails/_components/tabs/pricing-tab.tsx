@@ -162,6 +162,33 @@ export function PricingTab({
 										<span>Max {plan.maxMembers} members</span>
 									</div>
 								)}
+								{plan.sessionDuration && (
+									<div className="mb-2 text-sm text-gray-600">
+										<span className="font-semibold">Session Duration:</span> {plan.sessionDuration} min
+									</div>
+								)}
+								{plan.genderCategory && (
+									<div className="mb-2 text-sm text-gray-600">
+										<span className="font-semibold">Gender:</span> {plan.genderCategory}
+									</div>
+								)}
+								{(plan.minAge || plan.maxAge) && (
+									<div className="mb-2 text-sm text-gray-600">
+										<span className="font-semibold">Age Range:</span> {plan.minAge ?? '-'} - {plan.maxAge ?? '-'}
+									</div>
+								)}
+								{plan.categoriesJson && (
+									<div className="mb-2 text-sm text-gray-600">
+										<span className="font-semibold">Categories:</span> {(() => {
+											try {
+												const arr = JSON.parse(plan.categoriesJson);
+												return Array.isArray(arr) ? arr.join(', ') : plan.categoriesJson;
+											} catch {
+												return plan.categoriesJson;
+											}
+										})()}
+									</div>
+								)}
 								<div className="space-y-3">
 									{plan.features.map((feature: string | { description?: string }, featureIndex: number) => (
 										<div

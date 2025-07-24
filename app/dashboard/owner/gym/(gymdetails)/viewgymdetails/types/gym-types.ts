@@ -73,6 +73,13 @@ export interface FitnessPlan {
 	maxMembers?: number; // Capacity limit
 	sortOrder?: number; // For custom ordering of plans
 	benefits?: string[]; // Additional benefits separate from features
+	// Added fields for backend compatibility
+	sessionDuration?: number;
+	genderCategory?: string;
+	minAge?: number;
+	maxAge?: number;
+	categoriesJson?: string;
+	gymId?: number;
 }
 
 export interface PricingFormData {
