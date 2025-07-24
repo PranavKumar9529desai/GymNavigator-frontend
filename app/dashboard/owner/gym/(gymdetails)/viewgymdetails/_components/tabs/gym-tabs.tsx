@@ -42,6 +42,9 @@ export const GymTabs = ({
 }: GymTabsProps) => {
 	// Debug logging
 	console.log('GymTabs received locationData:', locationData);
+	console.log('GymTabs received pricingData:', pricingData);
+	// console.log('GymTabs received amenitiesData:', amenitiesData);
+	// console.log('GymTabs received overviewData:', overviewData);
 
 	return (
 		<>

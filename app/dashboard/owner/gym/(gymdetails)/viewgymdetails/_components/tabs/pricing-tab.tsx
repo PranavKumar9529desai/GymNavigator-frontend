@@ -163,20 +163,22 @@ export function PricingTab({
 									</div>
 								)}
 								<div className="space-y-3">
-									{plan.features.map(
-										(feature: string, featureIndex: number) => (
+									{plan.features.map((feature: string | { description?: string }, featureIndex: number) => (
+										<div
+											key={featureIndex as number}
+											className="flex items-center gap-2"
+										>
 											<div
-												key={featureIndex as number}
-												className="flex items-center gap-2"
-											>
-												<div
-													className="h-2 w-2 rounded-full"
-													style={{ backgroundColor: plan.color || '#000000' }}
-												/>
-												<span className="text-sm text-gray-700">{feature}</span>
-											</div>
-										),
-									)}
+												className="h-2 w-2 rounded-full"
+												style={{ backgroundColor: plan.color || '#000000' }}
+											/>
+											<span className="text-sm text-gray-700">
+												{typeof feature === 'string'
+													? feature
+													: feature?.description || JSON.stringify(feature)}
+											</span>
+										</div>
+									))}
 								</div>
 							</CardContent>
 						</Card>

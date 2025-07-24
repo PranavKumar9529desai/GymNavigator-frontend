@@ -47,7 +47,7 @@ interface LocationApiResponse {
 
 interface PricingApiResponse {
 	msg: string;
-	pricingPlans: FitnessPlan[];
+	plans: FitnessPlan[];
 	additionalServices: AdditionalService[];
 }
 
@@ -160,12 +160,12 @@ export async function getPricingData(): Promise<{
 			await ownerAxios.get('/gym/pricing');
 
 		if (response.data.msg === 'success') {
+			console.log('Pricing API returned', response.data);
 			return {
-				pricingPlans: response.data.pricingPlans,
+				pricingPlans: response.data.plans, // <-- use 'plans' from backend
 				additionalServices: response.data.additionalServices,
 			};
 		}
-		console.log('Pricing API returned', response.data);
 		return { error: 'Failed to fetch pricing data' };
 	} catch (error) {
 		console.error('Error fetching pricing data:', error);
@@ -196,7 +196,7 @@ export async function getAllGymTabData(): Promise<{
 				getLocationData(),
 				getPricingData(),
 			]);
-
+		console.log('the getPricingData is ', pricingResult);
 		const errors: string[] = [];
 		// biome-ignore lint/suspicious/noExplicitAny: Result object has dynamic structure based on different tab data
 		const result: any = {};

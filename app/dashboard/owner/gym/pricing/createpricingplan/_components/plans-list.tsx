@@ -62,7 +62,7 @@ export function PlansList({
 						{plans.map((plan, index) => (
 							// eslint-disable-next-line react/no-array-index-key
 							<PlanCard
-								key={index   }
+								key={index  as number }
 								plan={plan}
 								index={index}
 								onUpdate={onUpdate}

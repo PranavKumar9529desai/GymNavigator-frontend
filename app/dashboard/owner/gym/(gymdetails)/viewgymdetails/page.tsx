@@ -30,7 +30,7 @@ export default async function GymLayout() {
 	]);
 
 	console.log('Gym Details from the ViewGymdeatails Route', gymDetails);
-	console.log('Gym Details from the TabsData Route', gymTabData);
+	console.log('Gym Details from the location tab is ', gymTabData?.location);
 
 	// Convert GymInfo to GymData format
 	const convertedGymData: GymData | null = gymDetails
