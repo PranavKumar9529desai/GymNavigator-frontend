@@ -43,7 +43,7 @@ export const OwnerDashboardMenuItems: MenuItem[] = [
 			},
 			{
 				name : "Create price plan",
-				link : "/dashboard/owner/gym/createpriceplan",
+				link : "/dashboard/owner/gym/pricing/createpricingplan",
 				label : "createpriceplan",
 				iconName : "DollarSign"
 			}

@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, Dumbbell } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { PlanCard } from './plan-card';
-import type { PricingPlan } from '../_action/create-pricing-plan';
+import type { PricingPlan, PlanTimeSlot } from '../_action/create-pricing-plan';
 
 interface PlansListProps {
 	plans: PricingPlan[];
@@ -60,8 +60,9 @@ export function PlansList({
 				<div className="space-y-4">
 					<AnimatePresence>
 						{plans.map((plan, index) => (
+							// eslint-disable-next-line react/no-array-index-key
 							<PlanCard
-								key={plan.name}
+								key={index   }
 								plan={plan}
 								index={index}
 								onUpdate={onUpdate}

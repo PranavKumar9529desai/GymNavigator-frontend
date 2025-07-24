@@ -24,6 +24,16 @@ import {
 	durationOptions,
 } from './pricing-plan-constants';
 import type { PricingPlan } from '../_action/create-pricing-plan';
+import { PlanTimeSlot } from '../_action/create-pricing-plan';
+
+const genderOptions = [
+	{ value: 'ALL', label: 'All' },
+	{ value: 'MALE', label: 'Male' },
+	{ value: 'FEMALE', label: 'Female' },
+	{ value: 'OTHER', label: 'Other' },
+];
+
+const defaultCategories = ['student', 'senior', 'adult', 'child'];
 
 export interface PlanCardProps {
 	plan: PricingPlan;
@@ -66,6 +76,28 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 	const SelectedIcon =
 		planIcons.find((icon) => icon.name === localPlan.icon)?.icon ||
 		planIcons[0].icon;
+
+	// Advanced fields state helpers
+	const addCategory = (category: string) => {
+		if (!localPlan.categories) updateLocalPlan({ categories: [category] });
+		else if (!localPlan.categories.includes(category)) updateLocalPlan({ categories: [...localPlan.categories, category] });
+	};
+	const removeCategory = (category: string) => {
+		if (localPlan.categories) updateLocalPlan({ categories: localPlan.categories.filter((c) => c !== category) });
+	};
+	const addTimeSlot = () => {
+		const newSlots = [...(localPlan.planTimeSlots || []), { startTime: '', endTime: '' }];
+		updateLocalPlan({ planTimeSlots: newSlots });
+	};
+	const updateTimeSlot = (i: number, field: 'startTime' | 'endTime', value: string) => {
+		const slots = [...(localPlan.planTimeSlots || [])];
+		slots[i][field] = value;
+		updateLocalPlan({ planTimeSlots: slots });
+	};
+	const removeTimeSlot = (i: number) => {
+		const slots = (localPlan.planTimeSlots || []).filter((_, idx) => idx !== i);
+		updateLocalPlan({ planTimeSlots: slots });
+	};
 
 	return (
 		<motion.div
@@ -293,6 +325,109 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 									</Button>
 								</div>
 							)) || []}
+						</div>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="space-y-2">
+							<Label>Session Duration (minutes)</Label>
+							<Input
+								type="number"
+								value={localPlan.sessionDuration || ''}
+								onChange={e => updateLocalPlan({ sessionDuration: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								placeholder="e.g., 60"
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label>Gender Category</Label>
+							<Select
+								value={localPlan.genderCategory || 'ALL'}
+								onValueChange={value => updateLocalPlan({ genderCategory: value as 'MALE' | 'FEMALE' | 'OTHER' | 'ALL' })}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Select gender" />
+								</SelectTrigger>
+								<SelectContent>
+									{genderOptions.map(opt => (
+										<SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div className="space-y-2">
+							<Label>Min Age</Label>
+							<Input
+								type="number"
+								value={localPlan.minAge || ''}
+								onChange={e => updateLocalPlan({ minAge: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								placeholder="e.g., 18"
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label>Max Age</Label>
+							<Input
+								type="number"
+								value={localPlan.maxAge || ''}
+								onChange={e => updateLocalPlan({ maxAge: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								placeholder="e.g., 65"
+							/>
+						</div>
+					</div>
+					<div className="space-y-2">
+						<Label>Categories</Label>
+						<div className="flex flex-wrap gap-2 mb-2">
+							{(localPlan.categories || []).map(category => (
+								<Badge key={category} variant="secondary" className="flex items-center gap-1">
+									{category}
+									<Button type="button" size="sm" variant="ghost" onClick={() => removeCategory(category)}><X className="h-3 w-3" /></Button>
+								</Badge>
+							))}
+						</div>
+						<div className="flex gap-2">
+							{defaultCategories.map(category => (
+								<Button key={category} type="button" size="sm" variant="outline" onClick={() => addCategory(category)} disabled={localPlan.categories?.includes(category)}>
+									{category}
+								</Button>
+							))}
+							<Input
+								type="text"
+								placeholder="Custom category"
+								onKeyDown={e => {
+									if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+										addCategory(e.currentTarget.value.trim());
+										e.currentTarget.value = '';
+									}
+								}}
+								className="w-32"
+							/>
+						</div>
+					</div>
+					<div className="space-y-2">
+						<Label>Plan Time Slots</Label>
+						<div className="space-y-2">
+							{(localPlan.planTimeSlots || []).map((slot, i) => {
+								const slotKey = `${slot.startTime}-${slot.endTime}-${i}`;
+								return (
+									<div key={slotKey} className="flex gap-2 items-center">
+										<Input
+											type="time"
+											value={slot.startTime}
+											onChange={e => updateTimeSlot(i, 'startTime', e.target.value)}
+											className="w-28"
+										/>
+										<span>to</span>
+										<Input
+											type="time"
+											value={slot.endTime}
+											onChange={e => updateTimeSlot(i, 'endTime', e.target.value)}
+											className="w-28"
+										/>
+										<Button type="button" size="sm" variant="ghost" onClick={() => removeTimeSlot(i)}><X className="h-3 w-3" /></Button>
+									</div>
+								);
+							})}
+							<Button type="button" size="sm" variant="outline" onClick={addTimeSlot}>Add Time Slot</Button>
 						</div>
 					</div>
 				</CardContent>

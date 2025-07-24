@@ -33,6 +33,12 @@ export default function CreatePricingPlan() {
 			features: ['Basic access'],
 			color: planColors[plans.length % planColors.length],
 			icon: 'dumbbell',
+			sessionDuration: 60,
+			genderCategory: 'ALL',
+			minAge: undefined,
+			maxAge: undefined,
+			categories: [],
+			planTimeSlots: [],
 		};
 		setPlans([...plans, newPlan]);
 	};
@@ -80,6 +86,8 @@ export default function CreatePricingPlan() {
 				const plansWithSortOrder = plans.map((plan, index) => ({
 					...plan,
 					sortOrder: index,
+					// Filter out empty/undefined features and map to string[]
+					features: (plan.features || []).filter(f => !!f && f.trim() !== ''),
 				}));
 				const pricingData = { plans: plansWithSortOrder, additionalServices };
 				const result = await createPricingPlan(pricingData);
