@@ -93,7 +93,7 @@ export default function CreatePricingPlan() {
 				const result = await createPricingPlan(pricingData);
 				if (result.success) {
 					toast.success('Pricing plans created successfully!');
-					router.push('/dashboard/owner/gym');
+					router.push('/dashboard/owner/gym/viewgymdetails');
 				} else {
 					toast.error(result.error || 'Failed to create pricing plans');
 				}
@@ -127,11 +127,17 @@ export default function CreatePricingPlan() {
 			</div>
 			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 				<TabsList className="grid w-full grid-cols-2">
-					<TabsTrigger value="plans" className="flex items-center gap-2">
+					<TabsTrigger
+						value="plans"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+					>
 						<DollarSign className="h-4 w-4" />
 						Fitness Plans ({plans.length})
 					</TabsTrigger>
-					<TabsTrigger value="services" className="flex items-center gap-2">
+					<TabsTrigger
+						value="services"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+					>
 						<DollarSign className="h-4 w-4" />
 						Additional Services ({additionalServices.length})
 					</TabsTrigger>

@@ -597,11 +597,17 @@ export function PricingEditForm({
 
 			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 				<TabsList className="grid w-full grid-cols-2">
-					<TabsTrigger value="plans" className="flex items-center gap-2">
+					<TabsTrigger
+						value="plans"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+					>
 						<Dumbbell className="h-4 w-4" />
 						Fitness Plans ({plansFormData.length})
 					</TabsTrigger>
-					<TabsTrigger value="services" className="flex items-center gap-2">
+					<TabsTrigger
+						value="services"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+					>
 						<Calendar className="h-4 w-4" />
 						Additional Services ({additionalServices.length})
 					</TabsTrigger>
@@ -624,12 +630,16 @@ export function PricingEditForm({
 					{plansFormData.length === 0 ? (
 						<Card className="p-8 text-center">
 							<div className="space-y-3">
-								<Dumbbell className="h-12 w-12 mx-auto text-gray-400" />
-								<h3 className="text-lg font-medium">No pricing plans yet</h3>
-								<p className="text-gray-500">
-									Create your first pricing plan to get started
-								</p>
-								<Button onClick={addNewPlan}>
+								<div className="flex items-center gap-3 justify-center mb-2">
+									<div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+										<Dumbbell className="h-6 w-6 text-white" />
+									</div>
+									<div className="text-left">
+										<h1 className="text-xl font-bold text-slate-800 mb-1">No pricing plans yet</h1>
+										<p className="text-slate-600 text-sm ">Create your first pricing plan to get started</p>
+									</div>
+								</div>
+								<Button onClick={addNewPlan} className="mt-2 bg-gradient-to-r from-blue-400 to-indigo-400 text-white">
 									<Plus className="h-4 w-4 mr-2" />
 									Create First Plan
 								</Button>
@@ -719,12 +729,16 @@ export function PricingEditForm({
 					) : additionalServices.length === 0 ? (
 						<Card className="p-8 text-center">
 							<div className="space-y-3">
-								<Calendar className="h-12 w-12 mx-auto text-gray-400" />
-								<h3 className="text-lg font-medium">No additional services</h3>
-								<p className="text-gray-500">
-									Add services like personal training or day passes
-								</p>
-								<Button onClick={addAdditionalService}>
+								<div className="flex items-center gap-3 justify-center mb-2">
+									<div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
+										<Calendar className="h-6 w-6 text-white" />
+									</div>
+									<div className="text-left">
+										<h1 className="text-xl font-bold text-slate-800 mb-1">No additional services</h1>
+										<p className="text-slate-600 text-sm">Add services like personal training or day passes</p>
+									</div>
+								</div>
+								<Button onClick={addAdditionalService} className="mt-2 bg-gradient-to-r from-blue-400 to-indigo-400 text-white">
 									<Plus className="h-4 w-4 mr-2" />
 									Add Service
 								</Button>
@@ -833,7 +847,7 @@ export function PricingEditForm({
 							type="button"
 							onClick={handleSubmitServices}
 							disabled={isPending || isLoadingServices}
-							className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-medium min-w-[160px] group"
+							className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 font-medium min-w-[160px] group"
 						>
 							{isPending ? (
 								<>
