@@ -145,9 +145,9 @@ export interface Equipment {
 	name: string;
 	category: string;
 	quantity: number;
-	status: "working" | "maintenance" | "broken";
+	status: 'working' | 'maintenance' | 'broken';
 	lastMaintenance: string;
 }
 
 // Re-export amenity types from constants
-export type { AmenityCategoryDefinition as AmenityCategory } from "@/lib/constants/amenities";
+export type { AmenityCategoryDefinition as AmenityCategory } from '@/lib/constants/amenities';

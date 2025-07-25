@@ -116,8 +116,7 @@ export function EditGymSheet({
 								<Card className="w-full max-w-md mx-auto p-8 flex flex-col items-center gap-6 shadow-none border-none">
 									<h3 className="text-xl font-semibold text-slate-800 mb-2 flex items-center gap-2">
 										{/* <DollarSign className="h-6 w-6 text-blue-500" />  */}
-										Pricing &
-										Diet Plan Options
+										Pricing & Diet Plan Options
 									</h3>
 									<p className="text-gray-500 text-center mb-4">
 										Manage your gym's pricing and diet plans. Choose an action

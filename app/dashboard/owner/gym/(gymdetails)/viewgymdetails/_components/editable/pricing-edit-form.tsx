@@ -62,7 +62,7 @@ import {
 	useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { feature } from  "../../types/gym-types";
+import type { feature } from '../../types/gym-types';
 
 interface PricingEditFormProps {
 	data: GymData;
@@ -105,12 +105,24 @@ const durationOptions = [
 
 // --- Feature helpers ---
 // Type guard for feature[]
-function isFeatureArray(features: string[] | feature[] | undefined): features is feature[] {
-  return Array.isArray(features) && typeof features[0] === 'object' && features[0] !== null && 'id' in features[0];
+function isFeatureArray(
+	features: string[] | feature[] | undefined,
+): features is feature[] {
+	return (
+		Array.isArray(features) &&
+		typeof features[0] === 'object' &&
+		features[0] !== null &&
+		'id' in features[0]
+	);
 }
 // Type guard for string[]
-function isStringArray(features: string[] | feature[] | undefined): features is string[] {
-  return Array.isArray(features) && (features.length === 0 || typeof features[0] === 'string');
+function isStringArray(
+	features: string[] | feature[] | undefined,
+): features is string[] {
+	return (
+		Array.isArray(features) &&
+		(features.length === 0 || typeof features[0] === 'string')
+	);
 }
 
 // Sortable Plan Card Component
@@ -151,7 +163,12 @@ function SortablePlanCard({
 		if (isStringArray(localPlan.features)) {
 			updateLocalPlan({ features: [...localPlan.features, ''] });
 		} else if (isFeatureArray(localPlan.features)) {
-			updateLocalPlan({ features: [...localPlan.features, { id: Date.now(), name: '', description: '' }] });
+			updateLocalPlan({
+				features: [
+					...localPlan.features,
+					{ id: Date.now(), name: '', description: '' },
+				],
+			});
 		} else {
 			// Default to string[]
 			updateLocalPlan({ features: [''] });
@@ -172,10 +189,14 @@ function SortablePlanCard({
 
 	const removeFeature = (featureIndex: number) => {
 		if (isStringArray(localPlan.features)) {
-			const newFeatures = localPlan.features.filter((_, i) => i !== featureIndex);
+			const newFeatures = localPlan.features.filter(
+				(_, i) => i !== featureIndex,
+			);
 			updateLocalPlan({ features: newFeatures });
 		} else if (isFeatureArray(localPlan.features)) {
-			const newFeatures = localPlan.features.filter((_, i) => i !== featureIndex);
+			const newFeatures = localPlan.features.filter(
+				(_, i) => i !== featureIndex,
+			);
 			updateLocalPlan({ features: newFeatures });
 		}
 	};
@@ -421,7 +442,9 @@ function SortablePlanCard({
 											<div key={featureIndex as number} className="flex gap-2">
 												<Input
 													value={feature}
-													onChange={(e) => updateFeature(featureIndex, e.target.value)}
+													onChange={(e) =>
+														updateFeature(featureIndex, e.target.value)
+													}
 													placeholder="Enter feature..."
 													className="flex-1"
 												/>
@@ -440,7 +463,9 @@ function SortablePlanCard({
 												<div key={feature.id} className="flex gap-2">
 													<Input
 														value={feature.name}
-														onChange={(e) => updateFeature(featureIndex, e.target.value)}
+														onChange={(e) =>
+															updateFeature(featureIndex, e.target.value)
+														}
 														placeholder="Enter feature..."
 														className="flex-1"
 													/>

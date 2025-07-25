@@ -79,7 +79,11 @@ export function LocationEditForm({
 	) => {
 		// The updateLocation function now only handles state update and reverse geocoding
 		// The map-related logic has been removed based on the user's request to remove the map.
-		const _updatedLocation: GymLocation = { ...locationFormData, latitude, longitude };
+		const _updatedLocation: GymLocation = {
+			...locationFormData,
+			latitude,
+			longitude,
+		};
 		// setLocationFormData(updatedLocation); // Update state after reverse geocoding
 		// onDataChange({ ...data, location: updatedLocation }); // Call onDataChange after reverse geocoding
 
@@ -230,16 +234,16 @@ export function LocationEditForm({
 					finalLocationData.longitude === undefined
 				) {
 					toast.error(
-						"Latitude and longitude are required. Please provide a valid address or use 'Use my current location'."
+						"Latitude and longitude are required. Please provide a valid address or use 'Use my current location'.",
 					);
 					return;
 				}
 				const LocationData = {
-					street: finalLocationData.street || "",
-					city: finalLocationData.city || "",
-					state: finalLocationData.state || "",
-					postalCode: finalLocationData.postalCode || "",
-					country: finalLocationData.country || "india",
+					street: finalLocationData.street || '',
+					city: finalLocationData.city || '',
+					state: finalLocationData.state || '',
+					postalCode: finalLocationData.postalCode || '',
+					country: finalLocationData.country || 'india',
 					latitude: finalLocationData.latitude as number,
 					longitude: finalLocationData.longitude as number,
 				};

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import type React from "react";
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import type React from 'react';
 
 export function BackButton({
-	label = "Back",
-	className = "",
+	label = 'Back',
+	className = '',
 	...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { label?: string }) {
 	const router = useRouter();
@@ -22,7 +22,7 @@ export function BackButton({
 			{...props}
 		>
 			<ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {/* <p>Back</p> */}
+			{/* <p>Back</p> */}
 			<span className="sr-only md:not-sr-only">{label}</span>
 		</Button>
 	);
