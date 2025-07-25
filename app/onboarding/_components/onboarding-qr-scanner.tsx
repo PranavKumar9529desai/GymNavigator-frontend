@@ -258,67 +258,105 @@ export default function OnboardingQrScanner() {
 		};
 	}, []);
 
-	// Debug overlay component
-	const DebugOverlay = () => (
-		<div
-			style={{
-				position: 'fixed',
-				bottom: 0,
-				left: 0,
-				width: '100vw',
-				background: 'rgba(0,0,0,0.7)',
-				color: '#fff',
-				zIndex: 9999,
-				fontSize: '12px',
-				padding: '8px',
-				maxHeight: '30vh',
-				overflowY: 'auto',
-				pointerEvents: 'none',
-			}}
-		>
-			{debugMessages.map((msg, idx) => (
-				<div key={idx as number}>{msg}</div>
-			))}
-		</div>
-	);
+	// Debug overlay component - COMMENTED OUT FOR PRODUCTION (keep for debugging)
+	// const DebugOverlay = () => (
+	// 	<div
+	// 		style={{
+	// 			position: 'fixed',
+	// 			bottom: 0,
+	// 			left: 0,
+	// 			width: '100vw',
+	// 			background: 'rgba(0,0,0,0.7)',
+	// 			color: '#fff',
+	// 			zIndex: 9999,
+	// 			fontSize: '12px',
+	// 			padding: '8px',
+	// 			maxHeight: '30vh',
+	// 			overflowY: 'auto',
+	// 			pointerEvents: 'none',
+	// 		}}
+	// 	>
+	// 		{debugMessages.map((msg, idx) => (
+	// 			<div key={idx as number}>{msg}</div>
+	// 		))}
+	// 	</div>
+	// );
 
-	// Camera switcher UI
+	// Camera switcher UI with improved styling and tooltip
 	const CameraSwitcher = () =>
 		backCameras.length > 1 ? (
-			<button
-				type="button"
-				onClick={() => {
-					const newIndex = (cameraIndex + 1) % backCameras.length;
-					setCameraIndex(newIndex);
-					// Save the new deviceId to localStorage when user manually switches
-					const newDeviceId = backCameras[newIndex].deviceId;
-					localStorage.setItem('preferredCameraDeviceId', newDeviceId);
-					toast.success("Camera switched successfully. Your preference has been saved.");
-					
-					// Reset scan states
-					setHasProcessed(false);
-					setIsScanning(true);
-					setIsProcessing(false);
-					setIsSuccess(false);
-					setDebugMessages([]);
-				}}
-				style={{
-					position: 'absolute',
-					top: 16,
-					right: 16,
-					zIndex: 10000,
-					background: '#222',
-					color: '#fff',
-					border: 'none',
-					borderRadius: 8,
-					padding: '8px 16px',
-					fontSize: 16,
-					boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-					cursor: 'pointer',
-				}}
+			<div
+				className="group relative"
+				title="Switch to next available camera"
 			>
-				Next Camera
-			</button>
+				<button
+					type="button"
+					onClick={() => {
+						const newIndex = (cameraIndex + 1) % backCameras.length;
+						setCameraIndex(newIndex);
+						// Save the new deviceId to localStorage when user manually switches
+						const newDeviceId = backCameras[newIndex].deviceId;
+						localStorage.setItem('preferredCameraDeviceId', newDeviceId);
+						toast.success("Camera switched successfully. Your preference has been saved.");
+						
+						// Reset scan states
+						setHasProcessed(false);
+						setIsScanning(true);
+						setIsProcessing(false);
+						setIsSuccess(false);
+						setDebugMessages([]);
+					}}
+					className="relative flex items-center gap-2 px-4 py-2.5 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-gray-700 hover:text-gray-900 font-medium text-sm"
+					style={{
+						position: 'absolute',
+						top: 16,
+						right: 16,
+						zIndex: 10000,
+					}}
+				>
+					{/* Camera icon */}
+					<svg
+						className="w-4 h-4"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-label="Camera icon"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+						/>
+					</svg>
+					<span>Switch Camera</span>
+					
+					{/* Camera count indicator */}
+					<span className="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-600 text-xs font-semibold rounded-full">
+						{cameraIndex + 1}/{backCameras.length}
+					</span>
+				</button>
+				
+				{/* Tooltip */}
+				<div className="absolute right-0 top-12 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10001">
+					<div className="flex items-start gap-2">
+						<div className="flex-shrink-0 mt-0.5">
+							<svg className="w-3 h-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-label="Information icon">
+								<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+							</svg>
+						</div>
+						<div>
+							<p className="font-medium mb-1">Switch Camera</p>
+							<p className="text-gray-300 leading-relaxed">
+								Click to switch between available cameras. Your preference will be saved for future use.
+							</p>
+						</div>
+					</div>
+					{/* Tooltip arrow */}
+					<div className="absolute -top-1 right-4 w-2 h-2 bg-gray-900 transform rotate-45" />
+				</div>
+			</div>
 		) : null;
 
 	// Camera loading overlay
@@ -351,7 +389,7 @@ export default function OnboardingQrScanner() {
 				<ProcessingState />
 				<CameraSwitcher />
 				<CameraLoading />
-				<DebugOverlay />
+				{/* <DebugOverlay /> */}
 			</>
 		);
 	}
@@ -362,7 +400,7 @@ export default function OnboardingQrScanner() {
 				<SuccessState />
 				<CameraSwitcher />
 				<CameraLoading />
-				<DebugOverlay />
+				{/* <DebugOverlay /> */}
 			</>
 		);
 	}
@@ -376,7 +414,7 @@ export default function OnboardingQrScanner() {
 				/>
 				<CameraSwitcher />
 				<CameraLoading />
-				<DebugOverlay />
+				{/* <DebugOverlay /> */}
 			</>
 		);
 	}
@@ -386,7 +424,7 @@ export default function OnboardingQrScanner() {
 		<>
 			<CameraSwitcher />
 			<CameraLoading />
-			<DebugOverlay />
+			{/* <DebugOverlay /> */}
 		</>
 	);
 }
