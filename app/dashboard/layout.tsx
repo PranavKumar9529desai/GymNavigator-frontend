@@ -156,7 +156,7 @@ export default async function Layout({
 			)}
 			{/* Server-rendered sidebar - visible only on desktop */}
 			<div className="hidden md:block h-screen">
-				<Sidebar menuItems={menuItems} />
+				<Sidebar menuItems={menuItems}  sessionData={session} />
 			</div>
 
 			{/* Removed overflow-hidden to allow sticky positioning below */}
