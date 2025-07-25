@@ -8,6 +8,8 @@ import { EditGymSheet } from './edit-gym-sheet';
 import type { GymData } from '../types/gym-types';
 import type { GymTabData } from '../hooks/useGymData';
 import { useRouter } from 'next/navigation';
+import { ViewGymDetailsEditButton } from './view-gym-details-edit-button';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface ViewGymDetailsClientProps {
 	gymData: GymData | null;
@@ -47,16 +49,14 @@ export function ViewGymDetailsClient({
 
 	return (
 		<>
-			<div className="flex justify-end mb-4">
-				<Button
-					onClick={() => setIsEditSheetOpen(true)}
-					variant="ghost"
-					className="hover:text-blue-600"
-				>
-					<Edit className="mr-2 text-blue-600 sm:text-gray-800 hover:text-blue-600" />
-					<p className="hidden md:block">Edit Gym Details</p>
-				</Button>
-			</div>
+			<TooltipProvider>
+				<div className="flex justify-end mb-4">
+					<ViewGymDetailsEditButton
+						onClick={() => setIsEditSheetOpen(true)}
+						className=""
+					/>
+				</div>
+			</TooltipProvider>
 
 			{isSmallDevice ? (
 				<EditGymDrawer

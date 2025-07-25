@@ -22,7 +22,7 @@ export function BackButton({
 			{...props}
 		>
 			<ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <p>Back</p>
+            {/* <p>Back</p> */}
 			<span className="sr-only md:not-sr-only">{label}</span>
 		</Button>
 	);
