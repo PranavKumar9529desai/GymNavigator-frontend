@@ -80,16 +80,27 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 	// Advanced fields state helpers
 	const addCategory = (category: string) => {
 		if (!localPlan.categories) updateLocalPlan({ categories: [category] });
-		else if (!localPlan.categories.includes(category)) updateLocalPlan({ categories: [...localPlan.categories, category] });
+		else if (!localPlan.categories.includes(category))
+			updateLocalPlan({ categories: [...localPlan.categories, category] });
 	};
 	const removeCategory = (category: string) => {
-		if (localPlan.categories) updateLocalPlan({ categories: localPlan.categories.filter((c) => c !== category) });
+		if (localPlan.categories)
+			updateLocalPlan({
+				categories: localPlan.categories.filter((c) => c !== category),
+			});
 	};
 	const addTimeSlot = () => {
-		const newSlots = [...(localPlan.planTimeSlots || []), { startTime: '', endTime: '' }];
+		const newSlots = [
+			...(localPlan.planTimeSlots || []),
+			{ startTime: '', endTime: '' },
+		];
 		updateLocalPlan({ planTimeSlots: newSlots });
 	};
-	const updateTimeSlot = (i: number, field: 'startTime' | 'endTime', value: string) => {
+	const updateTimeSlot = (
+		i: number,
+		field: 'startTime' | 'endTime',
+		value: string,
+	) => {
 		const slots = [...(localPlan.planTimeSlots || [])];
 		slots[i][field] = value;
 		updateLocalPlan({ planTimeSlots: slots });
@@ -333,7 +344,13 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 							<Input
 								type="number"
 								value={localPlan.sessionDuration || ''}
-								onChange={e => updateLocalPlan({ sessionDuration: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								onChange={(e) =>
+									updateLocalPlan({
+										sessionDuration: e.target.value
+											? Number.parseInt(e.target.value)
+											: undefined,
+									})
+								}
 								placeholder="e.g., 60"
 							/>
 						</div>
@@ -341,14 +358,24 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 							<Label>Gender Category</Label>
 							<Select
 								value={localPlan.genderCategory || 'ALL'}
-								onValueChange={value => updateLocalPlan({ genderCategory: value as 'MALE' | 'FEMALE' | 'OTHER' | 'ALL' })}
+								onValueChange={(value) =>
+									updateLocalPlan({
+										genderCategory: value as
+											| 'MALE'
+											| 'FEMALE'
+											| 'OTHER'
+											| 'ALL',
+									})
+								}
 							>
 								<SelectTrigger>
 									<SelectValue placeholder="Select gender" />
 								</SelectTrigger>
 								<SelectContent>
-									{genderOptions.map(opt => (
-										<SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+									{genderOptions.map((opt) => (
+										<SelectItem key={opt.value} value={opt.value}>
+											{opt.label}
+										</SelectItem>
 									))}
 								</SelectContent>
 							</Select>
@@ -360,7 +387,13 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 							<Input
 								type="number"
 								value={localPlan.minAge || ''}
-								onChange={e => updateLocalPlan({ minAge: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								onChange={(e) =>
+									updateLocalPlan({
+										minAge: e.target.value
+											? Number.parseInt(e.target.value)
+											: undefined,
+									})
+								}
 								placeholder="e.g., 18"
 							/>
 						</div>
@@ -369,7 +402,13 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 							<Input
 								type="number"
 								value={localPlan.maxAge || ''}
-								onChange={e => updateLocalPlan({ maxAge: e.target.value ? Number.parseInt(e.target.value) : undefined })}
+								onChange={(e) =>
+									updateLocalPlan({
+										maxAge: e.target.value
+											? Number.parseInt(e.target.value)
+											: undefined,
+									})
+								}
 								placeholder="e.g., 65"
 							/>
 						</div>
@@ -377,23 +416,41 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 					<div className="space-y-2">
 						<Label>Categories</Label>
 						<div className="flex flex-wrap gap-2 mb-2">
-							{(localPlan.categories || []).map(category => (
-								<Badge key={category} variant="secondary" className="flex items-center gap-1">
+							{(localPlan.categories || []).map((category) => (
+								<Badge
+									key={category}
+									variant="secondary"
+									className="flex items-center gap-1"
+								>
 									{category}
-									<Button type="button" size="sm" variant="ghost" onClick={() => removeCategory(category)}><X className="h-3 w-3" /></Button>
+									<Button
+										type="button"
+										size="sm"
+										variant="ghost"
+										onClick={() => removeCategory(category)}
+									>
+										<X className="h-3 w-3" />
+									</Button>
 								</Badge>
 							))}
 						</div>
 						<div className="flex gap-2">
-							{defaultCategories.map(category => (
-								<Button key={category} type="button" size="sm" variant="outline" onClick={() => addCategory(category)} disabled={localPlan.categories?.includes(category)}>
+							{defaultCategories.map((category) => (
+								<Button
+									key={category}
+									type="button"
+									size="sm"
+									variant="outline"
+									onClick={() => addCategory(category)}
+									disabled={localPlan.categories?.includes(category)}
+								>
 									{category}
 								</Button>
 							))}
 							<Input
 								type="text"
 								placeholder="Custom category"
-								onKeyDown={e => {
+								onKeyDown={(e) => {
 									if (e.key === 'Enter' && e.currentTarget.value.trim()) {
 										addCategory(e.currentTarget.value.trim());
 										e.currentTarget.value = '';
@@ -413,21 +470,39 @@ export function PlanCard({ plan, index, onUpdate, onRemove }: PlanCardProps) {
 										<Input
 											type="time"
 											value={slot.startTime}
-											onChange={e => updateTimeSlot(i, 'startTime', e.target.value)}
+											onChange={(e) =>
+												updateTimeSlot(i, 'startTime', e.target.value)
+											}
 											className="w-28"
 										/>
 										<span>to</span>
 										<Input
 											type="time"
 											value={slot.endTime}
-											onChange={e => updateTimeSlot(i, 'endTime', e.target.value)}
+											onChange={(e) =>
+												updateTimeSlot(i, 'endTime', e.target.value)
+											}
 											className="w-28"
 										/>
-										<Button type="button" size="sm" variant="ghost" onClick={() => removeTimeSlot(i)}><X className="h-3 w-3" /></Button>
+										<Button
+											type="button"
+											size="sm"
+											variant="ghost"
+											onClick={() => removeTimeSlot(i)}
+										>
+											<X className="h-3 w-3" />
+										</Button>
 									</div>
 								);
 							})}
-							<Button type="button" size="sm" variant="outline" onClick={addTimeSlot}>Add Time Slot</Button>
+							<Button
+								type="button"
+								size="sm"
+								variant="outline"
+								onClick={addTimeSlot}
+							>
+								Add Time Slot
+							</Button>
 						</div>
 					</div>
 				</CardContent>

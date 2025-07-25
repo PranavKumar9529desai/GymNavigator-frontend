@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
-import { motion, AnimatePresence } from "framer-motion";
-import { HexColorPicker } from "react-colorful";
-import { useFieldArray, useForm, Controller } from "react-hook-form";
+} from '@/components/ui/select';
+import { motion, AnimatePresence } from 'framer-motion';
+import { HexColorPicker } from 'react-colorful';
+import { useFieldArray, useForm, Controller } from 'react-hook-form';
 import {
 	Plus,
 	Trash2,
@@ -35,16 +35,16 @@ import {
 	Target,
 	Award,
 	Zap,
-} from "lucide-react";
+} from 'lucide-react';
 import type {
 	GymData,
 	FitnessPlan,
 	AdditionalService,
 	PricingFormData,
-} from "../../types/gym-types";
-import { useState, useEffect, useTransition } from "react";
-import { updateGymPricing } from "../../_actions/submit-gym-tabs-form";
-import { toast } from "sonner";
+} from '../../types/gym-types';
+import { useState, useEffect, useTransition } from 'react';
+import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
+import { toast } from 'sonner';
 
 import {
 	DndContext,
@@ -54,15 +54,15 @@ import {
 	useSensor,
 	useSensors,
 	type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
 	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 	useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface PricingEditFormProps {
 	data: GymData;
@@ -72,35 +72,35 @@ interface PricingEditFormProps {
 
 // Predefined plan colors
 const planColors = [
-	"#3B82F6", // Blue
-	"#8B5CF6", // Purple
-	"#EC4899", // Pink
-	"#F59E0B", // Amber
-	"#10B981", // Emerald
-	"#EF4444", // Red
-	"#6B7280", // Gray
-	"#000000", // Black
+	'#3B82F6', // Blue
+	'#8B5CF6', // Purple
+	'#EC4899', // Pink
+	'#F59E0B', // Amber
+	'#10B981', // Emerald
+	'#EF4444', // Red
+	'#6B7280', // Gray
+	'#000000', // Black
 ];
 
 // Predefined icons
 const planIcons = [
-	{ icon: Dumbbell, name: "dumbbell" },
-	{ icon: Star, name: "star" },
-	{ icon: Crown, name: "crown" },
-	{ icon: Users, name: "users" },
-	{ icon: Target, name: "target" },
-	{ icon: Award, name: "award" },
-	{ icon: Zap, name: "zap" },
-	{ icon: Sparkles, name: "sparkles" },
+	{ icon: Dumbbell, name: 'dumbbell' },
+	{ icon: Star, name: 'star' },
+	{ icon: Crown, name: 'crown' },
+	{ icon: Users, name: 'users' },
+	{ icon: Target, name: 'target' },
+	{ icon: Award, name: 'award' },
+	{ icon: Zap, name: 'zap' },
+	{ icon: Sparkles, name: 'sparkles' },
 ];
 
 // Duration options
 const durationOptions = [
-	{ value: "/day", label: "Per Day" },
-	{ value: "/week", label: "Per Week" },
-	{ value: "/month", label: "Per Month" },
-	{ value: "/quarter", label: "Per Quarter" },
-	{ value: "/year", label: "Per Year" },
+	{ value: '/day', label: 'Per Day' },
+	{ value: '/week', label: 'Per Week' },
+	{ value: '/month', label: 'Per Month' },
+	{ value: '/quarter', label: 'Per Quarter' },
+	{ value: '/year', label: 'Per Year' },
 ];
 
 // Sortable Plan Card Component
@@ -138,7 +138,7 @@ function SortablePlanCard({
 	};
 
 	const addFeature = () => {
-		const newFeatures = [...(localPlan.features || []), ""];
+		const newFeatures = [...(localPlan.features || []), ''];
 		updateLocalPlan({ features: newFeatures });
 	};
 
@@ -169,10 +169,10 @@ function SortablePlanCard({
 				<Card
 					className={`border-2 transition-all hover:shadow-lg ${
 						localPlan.isFeatured || localPlan.popular
-							? "border-yellow-400 shadow-lg ring-2 ring-yellow-400/20"
-							: "border-gray-200"
+							? 'border-yellow-400 shadow-lg ring-2 ring-yellow-400/20'
+							: 'border-gray-200'
 					}`}
-					style={{ borderColor: localPlan.color || "#e5e7eb" }}
+					style={{ borderColor: localPlan.color || '#e5e7eb' }}
 				>
 					<CardHeader className="pb-3">
 						<div className="flex items-center justify-between">
@@ -186,17 +186,17 @@ function SortablePlanCard({
 								<div
 									className="p-2 rounded-lg"
 									style={{
-										backgroundColor: `${localPlan.color}20` || "#f3f4f620",
+										backgroundColor: `${localPlan.color}20` || '#f3f4f620',
 									}}
 								>
 									<SelectedIcon
 										className="h-5 w-5"
-										style={{ color: localPlan.color || "#6b7280" }}
+										style={{ color: localPlan.color || '#6b7280' }}
 									/>
 								</div>
 								<div>
 									<CardTitle className="text-lg">
-										{localPlan.name || "Untitled Plan"}
+										{localPlan.name || 'Untitled Plan'}
 									</CardTitle>
 									{(localPlan.isFeatured || localPlan.popular) && (
 										<Badge variant="secondary" className="mt-1">
@@ -269,7 +269,7 @@ function SortablePlanCard({
 							<div className="space-y-2">
 								<Label>Icon</Label>
 								<Select
-									value={localPlan.icon || "dumbbell"}
+									value={localPlan.icon || 'dumbbell'}
 									onValueChange={(value) => updateLocalPlan({ icon: value })}
 								>
 									<SelectTrigger>
@@ -315,8 +315,8 @@ function SortablePlanCard({
 											type="button"
 											className={`w-8 h-8 rounded-full border-2 ${
 												localPlan.color === color
-													? "border-gray-900"
-													: "border-gray-200"
+													? 'border-gray-900'
+													: 'border-gray-200'
 											}`}
 											style={{ backgroundColor: color }}
 											onClick={() => updateLocalPlan({ color })}
@@ -333,7 +333,7 @@ function SortablePlanCard({
 								{showColorPicker && (
 									<div className="mt-2">
 										<HexColorPicker
-											color={localPlan.color || "#3B82F6"}
+											color={localPlan.color || '#3B82F6'}
 											onChange={(color) => updateLocalPlan({ color })}
 										/>
 									</div>
@@ -360,7 +360,7 @@ function SortablePlanCard({
 									<Input
 										id={`plan-max-members-${index}`}
 										type="number"
-										value={localPlan.maxMembers || ""}
+										value={localPlan.maxMembers || ''}
 										onChange={(e) =>
 											updateLocalPlan({
 												maxMembers: e.target.value
@@ -394,9 +394,9 @@ function SortablePlanCard({
 									<div key={featureIndex as number} className="flex gap-2">
 										<Input
 											value={
-												typeof feature === "string"
+												typeof feature === 'string'
 													? feature
-													: feature?.description || ""
+													: feature?.description || ''
 											}
 											onChange={(e) =>
 												updateFeature(featureIndex, e.target.value)
@@ -435,10 +435,10 @@ export function PricingEditForm({
 		AdditionalService[]
 	>([]);
 	const [isPending, startTransition] = useTransition();
-	const [activeTab, setActiveTab] = useState("plans");
+	const [activeTab, setActiveTab] = useState('plans');
 	const [isLoadingServices, setIsLoadingServices] = useState(true);
-	console.log("Initial plans data:", data);
-	console.log("Initial Plans ", data.fitnessPlans);
+	console.log('Initial plans data:', data);
+	console.log('Initial Plans ', data.fitnessPlans);
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -456,7 +456,7 @@ export function PricingEditForm({
 			try {
 				setIsLoadingServices(true);
 				const { getPricingData } = await import(
-					"../../_actions/get-gym-tab-data"
+					'../../_actions/get-gym-tab-data'
 				);
 				const result = await getPricingData();
 
@@ -464,8 +464,8 @@ export function PricingEditForm({
 					setAdditionalServices(result.additionalServices);
 				}
 			} catch (error) {
-				console.error("Error loading additional services:", error);
-				toast.error("Failed to load existing additional services");
+				console.error('Error loading additional services:', error);
+				toast.error('Failed to load existing additional services');
 			} finally {
 				setIsLoadingServices(false);
 			}
@@ -495,13 +495,13 @@ export function PricingEditForm({
 
 	const addNewPlan = () => {
 		const newPlan: FitnessPlan = {
-			name: "New Plan",
-			description: "Plan description",
-			price: "0",
-			duration: "/month",
-			features: ["Basic access"],
+			name: 'New Plan',
+			description: 'Plan description',
+			price: '0',
+			duration: '/month',
+			features: ['Basic access'],
 			color: planColors[plansFormData.length % planColors.length],
-			icon: "dumbbell",
+			icon: 'dumbbell',
 		};
 
 		const updatedPlans = [...plansFormData, newPlan];
@@ -525,10 +525,10 @@ export function PricingEditForm({
 
 	const addAdditionalService = () => {
 		const newService: AdditionalService = {
-			name: "New Service",
-			price: "0",
-			duration: "Per session",
-			description: "",
+			name: 'New Service',
+			price: '0',
+			duration: 'Per session',
+			description: '',
 		};
 		setAdditionalServices([...additionalServices, newService]);
 	};
@@ -562,11 +562,11 @@ export function PricingEditForm({
 				};
 
 				await updateGymPricing(pricingData);
-				toast.success("Pricing plans updated successfully!");
+				toast.success('Pricing plans updated successfully!');
 				onSave?.();
 			} catch (error) {
-				console.error("Error updating pricing plans:", error);
-				toast.error("Failed to update pricing plans. Please try again.");
+				console.error('Error updating pricing plans:', error);
+				toast.error('Failed to update pricing plans. Please try again.');
 			}
 		});
 	};
@@ -579,11 +579,11 @@ export function PricingEditForm({
 				};
 
 				await updateGymPricing(pricingData);
-				toast.success("Additional services updated successfully!");
+				toast.success('Additional services updated successfully!');
 				onSave?.();
 			} catch (error) {
-				console.error("Error updating additional services:", error);
-				toast.error("Failed to update additional services. Please try again.");
+				console.error('Error updating additional services:', error);
+				toast.error('Failed to update additional services. Please try again.');
 			}
 		});
 	};
@@ -619,7 +619,6 @@ export function PricingEditForm({
 
 				<TabsContent value="plans" className="space-y-4">
 					<div className="flex items-center justify-between">
-						
 						<div className="flex gap-2 ml-auto">
 							<Button type="button" onClick={addNewPlan} variant="outline">
 								<Plus className="h-4 w-4 mr-2" />
@@ -772,7 +771,7 @@ export function PricingEditForm({
 										<CardHeader className="pb-3">
 											<div className="flex items-center justify-between">
 												<CardTitle className="text-base">
-													{service.name || "Untitled Service"}
+													{service.name || 'Untitled Service'}
 												</CardTitle>
 												<Button
 													type="button"
@@ -794,7 +793,7 @@ export function PricingEditForm({
 														onChange={(e) =>
 															updateAdditionalService(
 																index,
-																"name",
+																'name',
 																e.target.value,
 															)
 														}
@@ -810,7 +809,7 @@ export function PricingEditForm({
 															onChange={(e) =>
 																updateAdditionalService(
 																	index,
-																	"price",
+																	'price',
 																	e.target.value,
 																)
 															}
@@ -826,7 +825,7 @@ export function PricingEditForm({
 														onChange={(e) =>
 															updateAdditionalService(
 																index,
-																"duration",
+																'duration',
 																e.target.value,
 															)
 														}
@@ -837,11 +836,11 @@ export function PricingEditForm({
 											<div className="space-y-2">
 												<Label>Description (Optional)</Label>
 												<Textarea
-													value={service.description || ""}
+													value={service.description || ''}
 													onChange={(e) =>
 														updateAdditionalService(
 															index,
-															"description",
+															'description',
 															e.target.value,
 														)
 													}

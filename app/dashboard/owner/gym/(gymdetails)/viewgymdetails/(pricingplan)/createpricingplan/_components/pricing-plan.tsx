@@ -87,7 +87,7 @@ export default function CreatePricingPlan() {
 					...plan,
 					sortOrder: index,
 					// Filter out empty/undefined features and map to string[]
-					features: (plan.features || []).filter(f => !!f && f.trim() !== ''),
+					features: (plan.features || []).filter((f) => !!f && f.trim() !== ''),
 				}));
 				const pricingData = { plans: plansWithSortOrder, additionalServices };
 				const result = await createPricingPlan(pricingData);

@@ -1,1 +1,1 @@
-export { PricingEditForm } from '../../../_components/editable/pricing-edit-form'; 
+export { PricingEditForm } from '../../../_components/editable/pricing-edit-form';

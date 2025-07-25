@@ -164,17 +164,20 @@ export function PricingTab({
 								)}
 								{plan.sessionDuration && (
 									<div className="mb-2 text-sm text-gray-600">
-										<span className="font-semibold">Session Duration:</span> {plan.sessionDuration} min
+										<span className="font-semibold">Session Duration:</span>{' '}
+										{plan.sessionDuration} min
 									</div>
 								)}
 								{plan.genderCategory && (
 									<div className="mb-2 text-sm text-gray-600">
-										<span className="font-semibold">Gender:</span> {plan.genderCategory}
+										<span className="font-semibold">Gender:</span>{' '}
+										{plan.genderCategory}
 									</div>
 								)}
 								{(plan.minAge || plan.maxAge) && (
 									<div className="mb-2 text-sm text-gray-600">
-										<span className="font-semibold">Age Range:</span> {plan.minAge ?? '-'} - {plan.maxAge ?? '-'}
+										<span className="font-semibold">Age Range:</span>{' '}
+										{plan.minAge ?? '-'} - {plan.maxAge ?? '-'}
 									</div>
 								)}
 								{plan.categoriesJson && (
@@ -182,7 +185,9 @@ export function PricingTab({
 										<span className="font-semibold">Categories:</span> {(() => {
 											try {
 												const arr = JSON.parse(plan.categoriesJson);
-												return Array.isArray(arr) ? arr.join(', ') : plan.categoriesJson;
+												return Array.isArray(arr)
+													? arr.join(', ')
+													: plan.categoriesJson;
 											} catch {
 												return plan.categoriesJson;
 											}
@@ -190,22 +195,27 @@ export function PricingTab({
 									</div>
 								)}
 								<div className="space-y-3">
-									{plan.features.map((feature: string | { description?: string }, featureIndex: number) => (
-										<div
-											key={featureIndex as number}
-											className="flex items-center gap-2"
-										>
+									{plan.features.map(
+										(
+											feature: string | { description?: string },
+											featureIndex: number,
+										) => (
 											<div
-												className="h-2 w-2 rounded-full"
-												style={{ backgroundColor: plan.color || '#000000' }}
-											/>
-											<span className="text-sm text-gray-700">
-												{typeof feature === 'string'
-													? feature
-													: feature?.description || JSON.stringify(feature)}
-											</span>
-										</div>
-									))}
+												key={featureIndex as number}
+												className="flex items-center gap-2"
+											>
+												<div
+													className="h-2 w-2 rounded-full"
+													style={{ backgroundColor: plan.color || '#000000' }}
+												/>
+												<span className="text-sm text-gray-700">
+													{typeof feature === 'string'
+														? feature
+														: feature?.description || JSON.stringify(feature)}
+												</span>
+											</div>
+										),
+									)}
 								</div>
 							</CardContent>
 						</Card>

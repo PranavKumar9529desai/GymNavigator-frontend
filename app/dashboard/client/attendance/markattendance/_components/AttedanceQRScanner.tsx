@@ -55,7 +55,7 @@ export default function AttendanceQRScanner() {
 								}
 							).getCapabilities?.();
 							if (capabilities && 'zoom' in capabilities) {
-								const constraints = {
+								const _constraints = {
 									advanced: [{ zoom: QR_SCANNER_CONFIG.DEFAULT_ZOOM }],
 								};
 								await (

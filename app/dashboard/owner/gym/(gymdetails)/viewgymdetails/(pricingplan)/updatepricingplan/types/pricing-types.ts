@@ -36,4 +36,4 @@ export interface AdditionalService {
 	price: string;
 	duration: string;
 	description?: string;
-} 
+}

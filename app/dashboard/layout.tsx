@@ -98,7 +98,7 @@ export default async function Layout({
 	}
 
 	// 3 The User is not associated with any gym
-	if (session.role &&  session.role !== "owner" && !session.gym) {
+	if (session.role && session.role !== 'owner' && !session.gym) {
 		console.log('User redirected to the /onboarding', session.role);
 
 		redirect('/onboarding/');
@@ -169,7 +169,7 @@ export default async function Layout({
 
 					{/* Original Content */}
 					<div className="container mx-auto px-2 py-4 md:py-6 max-w-7xl">
-						<ViewTransition >{children}</ViewTransition>
+						<ViewTransition>{children}</ViewTransition>
 					</div>
 				</div>
 			</div>
