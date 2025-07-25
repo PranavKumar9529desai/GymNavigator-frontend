@@ -60,11 +60,11 @@ export function AdditionalServicesList({
 				</div>
 			) : (
 				<div className="grid gap-4">
-					{services.map((service) => (
+					{services.map((service, idx) => (
 						<AdditionalServiceCard
-							key={service.name}
+							key={idx as number}
 							service={service}
-							index={services.indexOf(service)}
+							index={idx}
 							onUpdate={onUpdate}
 							onRemove={onRemove}
 						/>

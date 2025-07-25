@@ -393,7 +393,7 @@ function SortablePlanCard({
 								{localPlan.features?.map((feature, featureIndex) => (
 									<div key={featureIndex as number} className="flex gap-2">
 										<Input
-											value={feature}
+											value={typeof feature === 'string' ? feature : feature?.description || ''}
 											onChange={(e) =>
 												updateFeature(featureIndex, e.target.value)
 											}

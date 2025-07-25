@@ -35,8 +35,8 @@ export default function CreatePricingPlan() {
 			icon: 'dumbbell',
 			sessionDuration: 60,
 			genderCategory: 'ALL',
-			minAge: undefined,
-			maxAge: undefined,
+			minAge: 14,
+			maxAge: 60,
 			categories: [],
 			planTimeSlots: [],
 		};
