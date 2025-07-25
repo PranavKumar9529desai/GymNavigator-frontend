@@ -26,10 +26,21 @@ export default function AttendanceQRScanner() {
 	>(null);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrScannerRef = useRef<QrScanner | null>(null);
+	const hasShownToastRef = useRef(false);
 
+	// Get the saved camera deviceId from onboarding
 	useEffect(() => {
 		const storedDeviceId = localStorage.getItem('preferredCameraDeviceId');
-		if (storedDeviceId) setPreferredCameraDeviceId(storedDeviceId);
+		if (storedDeviceId) {
+			setPreferredCameraDeviceId(storedDeviceId);
+			// Show a subtle toast that we're using the saved camera (only once)
+			if (!hasShownToastRef.current) {
+				hasShownToastRef.current = true;
+				setTimeout(() => {
+					toast.info("Using your preferred camera for attendance scanning.");
+				}, 1000);
+			}
+		}
 	}, []);
 
 	useEffect(() => {
