@@ -35,7 +35,7 @@ export function GymDetails({ data }: GymDetailsProps) {
 				<GymAmenities amenities={gym.amenities} />
 
 				{/* Pricing Plans */}
-				<PricingPlans pricingPlans={gym.pricingPlans} />
+				<PricingPlans plans={gym.plans} />
 
 				{/* Additional Services */}
 				<AdditionalServices additionalServices={gym.additionalServices} />

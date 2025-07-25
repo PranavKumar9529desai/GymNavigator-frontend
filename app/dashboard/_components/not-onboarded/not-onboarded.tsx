@@ -5,7 +5,7 @@ import type { Rolestype } from '@/types/next-auth';
 import NotOnboardedImage from './_assests/not-onboarded.png';
 export default function NotOnboarded({ role }: { role: Rolestype }) {
 	return (
-		<div className="space-y-4 sm:space-y-10">
+		<div className="space-y-10 sm:space-y-10">
 			<div
 				className="text-center text-lg font-['latin'] font-semibold
         text-red-600"

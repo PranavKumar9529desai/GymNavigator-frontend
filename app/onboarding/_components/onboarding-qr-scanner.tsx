@@ -41,6 +41,7 @@ export default function OnboardingQrScanner() {
 	const [_preferredDeviceId, setPreferredDeviceId] = useState<string | null>(
 		null,
 	);
+	const [_hasUsedSavedCamera, setHasUsedSavedCamera] = useState(false);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrScannerRef = useRef<QrScanner | null>(null);
 
@@ -58,6 +59,11 @@ export default function OnboardingQrScanner() {
 				if (idx !== -1) {
 					setCameraIndex(idx);
 					setPreferredDeviceId(storedDeviceId);
+					setHasUsedSavedCamera(true);
+					// Show toast after a short delay to ensure camera is set up
+					setTimeout(() => {
+						toast.info("Using previously selected camera. Click 'Next Camera' to switch.");
+					}, 1000);
 				}
 			}
 		});
@@ -217,8 +223,12 @@ export default function OnboardingQrScanner() {
 		if (qrScannerRef.current) {
 			(qrScannerRef.current as QrScanner).destroy();
 			qrScannerRef.current = null;
-			// Add a small delay to ensure cleanup
-			destroyTimeout = setTimeout(setupScanner, 300);
+			// --- FIX: Explicitly clear the video element's srcObject ---
+			if (videoRef.current) {
+				videoRef.current.srcObject = null;
+			}
+			// Add a longer delay to ensure cleanup
+			destroyTimeout = setTimeout(setupScanner, 600);
 		} else {
 			setupScanner();
 		}
@@ -228,6 +238,10 @@ export default function OnboardingQrScanner() {
 			if (qrScannerRef.current) {
 				qrScannerRef.current.destroy();
 				qrScannerRef.current = null;
+				// --- FIX: Explicitly clear the video element's srcObject on cleanup ---
+				if (videoRef.current) {
+					videoRef.current.srcObject = null;
+				}
 			}
 			if (destroyTimeout) clearTimeout(destroyTimeout);
 		};
@@ -274,8 +288,15 @@ export default function OnboardingQrScanner() {
 			<button
 				type="button"
 				onClick={() => {
-					setCameraIndex((prev) => (prev + 1) % backCameras.length);
-					setHasProcessed(false); // reset scan state on camera switch
+					const newIndex = (cameraIndex + 1) % backCameras.length;
+					setCameraIndex(newIndex);
+					// Save the new deviceId to localStorage when user manually switches
+					const newDeviceId = backCameras[newIndex].deviceId;
+					localStorage.setItem('preferredCameraDeviceId', newDeviceId);
+					toast.success("Camera switched successfully. Your preference has been saved.");
+					
+					// Reset scan states
+					setHasProcessed(false);
 					setIsScanning(true);
 					setIsProcessing(false);
 					setIsSuccess(false);

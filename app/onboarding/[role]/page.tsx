@@ -111,7 +111,7 @@ export default async function OnboardingPage({ params }: RoleProps) {
 
 	// Show the QR scanner for onboarding
 	return (
-		<div className="flex  justify-center min-h-[80vh] p-4">
+		<div className="flex  justify-center min-h-[80vh] p-4 ">
 			<RoleStorageManager role={role} />
 			<div className="w-full max-w-md">
 				<div className="flex items-center justify-center gap-2 p-3 mb-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">

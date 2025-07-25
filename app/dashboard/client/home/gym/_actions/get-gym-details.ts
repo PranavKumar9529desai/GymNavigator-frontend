@@ -29,7 +29,7 @@ export interface GymDetailsData {
 				};
 			};
 		}>;
-		pricingPlans: Array<{
+		plans: Array<{
 			id: number;
 			name: string;
 			description: string | null;
