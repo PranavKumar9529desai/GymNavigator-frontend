@@ -5,7 +5,7 @@ import type {
 	GymData,
 	FitnessPlan,
 	AdditionalService,
-} from '../types/pricing-types';
+} from '../../../types/gym-types';
 
 // Fetch gym details
 export async function fetchGymDetails(): Promise<GymData | null> {

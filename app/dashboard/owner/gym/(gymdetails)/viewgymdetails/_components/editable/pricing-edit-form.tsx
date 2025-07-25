@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/select';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HexColorPicker } from 'react-colorful';
-import { useFieldArray, useForm, Controller } from 'react-hook-form';
 import {
 	Plus,
 	Trash2,
@@ -63,6 +62,7 @@ import {
 	useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import type { feature } from  "../../types/gym-types";
 
 interface PricingEditFormProps {
 	data: GymData;
@@ -103,6 +103,16 @@ const durationOptions = [
 	{ value: '/year', label: 'Per Year' },
 ];
 
+// --- Feature helpers ---
+// Type guard for feature[]
+function isFeatureArray(features: string[] | feature[] | undefined): features is feature[] {
+  return Array.isArray(features) && typeof features[0] === 'object' && features[0] !== null && 'id' in features[0];
+}
+// Type guard for string[]
+function isStringArray(features: string[] | feature[] | undefined): features is string[] {
+  return Array.isArray(features) && (features.length === 0 || typeof features[0] === 'string');
+}
+
 // Sortable Plan Card Component
 function SortablePlanCard({
 	plan,
@@ -138,20 +148,36 @@ function SortablePlanCard({
 	};
 
 	const addFeature = () => {
-		const newFeatures = [...(localPlan.features || []), ''];
-		updateLocalPlan({ features: newFeatures });
+		if (isStringArray(localPlan.features)) {
+			updateLocalPlan({ features: [...localPlan.features, ''] });
+		} else if (isFeatureArray(localPlan.features)) {
+			updateLocalPlan({ features: [...localPlan.features, { id: Date.now(), name: '', description: '' }] });
+		} else {
+			// Default to string[]
+			updateLocalPlan({ features: [''] });
+		}
 	};
 
 	const updateFeature = (featureIndex: number, value: string) => {
-		const newFeatures = [...(localPlan.features || [])];
-		newFeatures[featureIndex] = value;
-		updateLocalPlan({ features: newFeatures });
+		if (isStringArray(localPlan.features)) {
+			const newFeatures = [...localPlan.features];
+			newFeatures[featureIndex] = value;
+			updateLocalPlan({ features: newFeatures });
+		} else if (isFeatureArray(localPlan.features)) {
+			const newFeatures = [...localPlan.features];
+			newFeatures[featureIndex] = { ...newFeatures[featureIndex], name: value };
+			updateLocalPlan({ features: newFeatures });
+		}
 	};
 
 	const removeFeature = (featureIndex: number) => {
-		const newFeatures =
-			localPlan.features?.filter((_, i) => i !== featureIndex) || [];
-		updateLocalPlan({ features: newFeatures });
+		if (isStringArray(localPlan.features)) {
+			const newFeatures = localPlan.features.filter((_, i) => i !== featureIndex);
+			updateLocalPlan({ features: newFeatures });
+		} else if (isFeatureArray(localPlan.features)) {
+			const newFeatures = localPlan.features.filter((_, i) => i !== featureIndex);
+			updateLocalPlan({ features: newFeatures });
+		}
 	};
 
 	const SelectedIcon =
@@ -390,30 +416,45 @@ function SortablePlanCard({
 								</Button>
 							</div>
 							<div className="space-y-2 max-h-48 overflow-y-auto">
-								{localPlan.features?.map((feature, featureIndex) => (
-									<div key={featureIndex as number} className="flex gap-2">
-										<Input
-											value={
-												typeof feature === 'string'
-													? feature
-													: feature?.description || ''
-											}
-											onChange={(e) =>
-												updateFeature(featureIndex, e.target.value)
-											}
-											placeholder="Enter feature..."
-											className="flex-1"
-										/>
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											onClick={() => removeFeature(featureIndex)}
-										>
-											<X className="h-4 w-4" />
-										</Button>
-									</div>
-								)) || []}
+								{isStringArray(localPlan.features)
+									? localPlan.features.map((feature, featureIndex) => (
+											<div key={featureIndex as number} className="flex gap-2">
+												<Input
+													value={feature}
+													onChange={(e) => updateFeature(featureIndex, e.target.value)}
+													placeholder="Enter feature..."
+													className="flex-1"
+												/>
+												<Button
+													type="button"
+													variant="outline"
+													size="sm"
+													onClick={() => removeFeature(featureIndex)}
+												>
+													<X className="h-4 w-4" />
+												</Button>
+											</div>
+										))
+									: isFeatureArray(localPlan.features)
+										? localPlan.features.map((feature, featureIndex) => (
+												<div key={feature.id} className="flex gap-2">
+													<Input
+														value={feature.name}
+														onChange={(e) => updateFeature(featureIndex, e.target.value)}
+														placeholder="Enter feature..."
+														className="flex-1"
+													/>
+													<Button
+														type="button"
+														variant="outline"
+														size="sm"
+														onClick={() => removeFeature(featureIndex)}
+													>
+														<X className="h-4 w-4" />
+													</Button>
+												</div>
+											))
+										: null}
 							</div>
 						</div>
 					</CardContent>
@@ -499,7 +540,7 @@ export function PricingEditForm({
 			description: 'Plan description',
 			price: '0',
 			duration: '/month',
-			features: ['Basic access'],
+			features: [{ id: Date.now(), name: 'Basic access', description: '' }],
 			color: planColors[plansFormData.length % planColors.length],
 			icon: 'dumbbell',
 		};

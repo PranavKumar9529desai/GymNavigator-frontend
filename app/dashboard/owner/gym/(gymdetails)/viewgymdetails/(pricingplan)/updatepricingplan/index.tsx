@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { usePricingData } from './hooks/usePricingData';
 import { PricingEditForm } from './components/PricingEditForm';
 import { Loading, FeedbackError } from '../../components/Feedback';
-import type { GymData } from './types/pricing-types';
+import type { GymData } from '../../types/gym-types';
 
 export default function PricingTab() {
 	const router = useRouter();

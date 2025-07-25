@@ -113,16 +113,17 @@ export function EditGymSheet({
 								/>
 							</TabsContent>
 							<TabsContent value="pricing" className="mt-0">
-								<Card className="w-full max-w-md mx-auto p-8 flex flex-col items-center gap-6 shadow-md">
+								<Card className="w-full max-w-md mx-auto p-8 flex flex-col items-center gap-6 shadow-none border-none">
 									<h3 className="text-xl font-semibold text-slate-800 mb-2 flex items-center gap-2">
-										<DollarSign className="h-6 w-6 text-blue-500" /> Pricing &
+										{/* <DollarSign className="h-6 w-6 text-blue-500" />  */}
+										Pricing &
 										Diet Plan Options
 									</h3>
 									<p className="text-gray-500 text-center mb-4">
 										Manage your gym's pricing and diet plans. Choose an action
 										below:
 									</p>
-									<div className="flex flex-col sm:flex-row gap-4 justify-center">
+									<div className="flex flex-col  gap-4 justify-center">
 										<Button
 											className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-4 px-6 rounded-lg shadow hover:from-blue-600 hover:to-indigo-600 text-base font-medium flex items-center gap-2 w-auto"
 											onClick={() => {
@@ -131,7 +132,7 @@ export function EditGymSheet({
 											}}
 										>
 											<DollarSign className="h-5 w-5" />
-											Create Diet Plan
+											Create Price Plan
 										</Button>
 										<Button
 											className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-4 px-6 rounded-lg shadow hover:from-green-600 hover:to-emerald-600 text-base font-medium flex items-center gap-2 w-auto"

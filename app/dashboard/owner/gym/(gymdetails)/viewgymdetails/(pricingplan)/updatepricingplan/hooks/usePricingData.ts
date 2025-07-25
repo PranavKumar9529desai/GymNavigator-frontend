@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchGymDetails, fetchPricingData } from '../api/pricing';
-import type { GymData } from '../types/pricing-types';
+import type { GymData } from '../../../types/gym-types';
 
 export function usePricingData() {
 	const [gymData, setGymData] = useState<GymData | null>(null);

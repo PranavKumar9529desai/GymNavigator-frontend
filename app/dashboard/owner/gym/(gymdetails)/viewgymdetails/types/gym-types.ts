@@ -59,13 +59,21 @@ export interface GymLocation {
 	country?: string;
 }
 
+export interface feature {
+	id: number;
+	name: string;
+	description: string;
+}
+
+// --- FitnessPlan: unified superset for all usages (view, create, update) ---
 export interface FitnessPlan {
 	id?: number; // Optional for new plans
 	name: string;
 	description: string;
 	price: string;
 	duration: string;
-	features: string[];
+	// In create/update, features is string[]; in view, it may be feature[]
+	features: string[] | feature[];
 	isFeatured?: boolean;
 	color?: string; // For plan theming (hex color code)
 	icon?: string; // For plan icons (icon name)
@@ -73,25 +81,29 @@ export interface FitnessPlan {
 	maxMembers?: number; // Capacity limit
 	sortOrder?: number; // For custom ordering of plans
 	benefits?: string[]; // Additional benefits separate from features
-	// Added fields for backend compatibility
+	// Backend compatibility fields
 	sessionDuration?: number;
-	genderCategory?: string;
+	genderCategory?: string; // or 'MALE' | 'FEMALE' | 'OTHER' | 'ALL'
 	minAge?: number;
 	maxAge?: number;
 	categoriesJson?: string;
+	categories?: string[]; // Used in create/update
+	planTimeSlots?: { startTime: string; endTime: string }[]; // Used in create/update
 	gymId?: number;
 }
 
-export interface PricingFormData {
-	plans?: FitnessPlan[];
-	additionalServices?: AdditionalService[];
-}
-
+// --- AdditionalService: unified for all usages ---
 export interface AdditionalService {
 	name: string;
 	price: string;
 	duration: string;
 	description?: string;
+}
+
+// --- PricingFormData: unified for all usages ---
+export interface PricingFormData {
+	plans?: FitnessPlan[];
+	additionalServices?: AdditionalService[];
 }
 
 // API Types for amenities communication
@@ -133,9 +145,9 @@ export interface Equipment {
 	name: string;
 	category: string;
 	quantity: number;
-	status: 'working' | 'maintenance' | 'broken';
+	status: "working" | "maintenance" | "broken";
 	lastMaintenance: string;
 }
 
 // Re-export amenity types from constants
-export type { AmenityCategoryDefinition as AmenityCategory } from '@/lib/constants/amenities';
+export type { AmenityCategoryDefinition as AmenityCategory } from "@/lib/constants/amenities";

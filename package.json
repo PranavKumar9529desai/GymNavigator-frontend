@@ -10,7 +10,6 @@
 		"start": "bun run --env-file=.env.production --bun next start",
 		"format": "biome format --write .",
 		"lint": "biome lint --write --unsafe",
-		"lint:fix": " biome lint --write --unsafe",
 		"check": "biome check --write ."
 	},
 	"dependencies": {
