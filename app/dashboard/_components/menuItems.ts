@@ -41,12 +41,12 @@ export const OwnerDashboardMenuItems: MenuItem[] = [
 				label: 'gymUser',
 				iconName: 'Users',
 			},
-			{
-				name: 'Create price plan',
-				link: '/dashboard/owner/gym/viewgymdetails/createpricingplan',
-				label: 'createpriceplan',
-				iconName: 'DollarSign',
-			},
+			// {
+			// 	name: 'Create price plan',
+			// 	link: '/dashboard/owner/gym/viewgymdetails/createpricingplan',
+			// 	label: 'createpriceplan',
+			// 	iconName: 'DollarSign',
+			// },
 		],
 	},
 	{

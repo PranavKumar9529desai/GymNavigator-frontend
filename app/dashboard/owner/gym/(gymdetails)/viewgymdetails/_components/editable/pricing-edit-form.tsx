@@ -641,17 +641,17 @@ export function PricingEditForm({
 			</div>
 
 			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-				<TabsList className="grid w-full grid-cols-2">
+				<TabsList className="grid w-full grid-cols-2 space-x-2">
 					<TabsTrigger
 						value="plans"
-						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white mx-[1px]"
 					>
 						<Dumbbell className="h-4 w-4" />
 						Fitness Plans ({plansFormData.length})
 					</TabsTrigger>
 					<TabsTrigger
 						value="services"
-						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white"
+						className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white mx-[1px]"
 					>
 						<Calendar className="h-4 w-4" />
 						Additional Services ({additionalServices.length})

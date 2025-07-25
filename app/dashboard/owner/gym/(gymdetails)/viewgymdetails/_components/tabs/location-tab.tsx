@@ -10,12 +10,12 @@ import type { GymLocation } from '../../types/gym-types';
 export const rumtime = 'dynamic';
 // Define a default location value
 const defaultLocation: GymLocation = {
-	lat: 34.0522,
-	lng: -118.2437,
-	address: '123 Main St',
+	latitude: 34.0522,
+	longitude: -118.2437,
+	street: '123 Main St',
 	city: 'Los Angeles',
 	state: 'CA',
-	zipCode: '90210',
+	postalCode: '90210',
 	country: 'USA',
 };
 
@@ -38,12 +38,12 @@ export function LocationTab({
 
 	// Use default coordinates if not provided - ensure they're always numbers
 	const displayLocation = {
-		lat: (location?.lat ?? defaultLocation.lat) as number,
-		lng: (location?.lng ?? defaultLocation.lng) as number,
-		address: location?.address || defaultLocation.address,
+		latitude: (location?.latitude ?? defaultLocation.latitude) as number,
+		longitude: (location?.longitude ?? defaultLocation.longitude) as number,
+		street: location?.street || defaultLocation.street,
 		city: location?.city || defaultLocation.city,
 		state: location?.state || defaultLocation.state,
-		zipCode: location?.zipCode || defaultLocation.zipCode,
+		postalCode: location?.postalCode || defaultLocation.postalCode,
 		country: location?.country || defaultLocation.country,
 	};
 
@@ -52,7 +52,7 @@ export function LocationTab({
 			{/* Map on top, full width */}
 			<div className="w-full h-[250px] sm:h-[300px] md:h-[350px] rounded-xl overflow-hidden border shadow-lg z-30">
 				<MapContainer
-					center={[displayLocation.lat, displayLocation.lng]}
+					center={[displayLocation.latitude, displayLocation.longitude]}
 					zoom={16}
 					scrollWheelZoom={false}
 					style={{ width: '100%', height: '100%' }}
@@ -62,14 +62,14 @@ export function LocationTab({
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					/>
 					<Marker
-						position={[displayLocation.lat, displayLocation.lng]}
+						position={[displayLocation.latitude, displayLocation.longitude]}
 						icon={markerIcon}
 					>
 						<Popup>
-							{displayLocation.address}
+							{displayLocation.street}
 							<br />
 							{displayLocation.city}, {displayLocation.state}{' '}
-							{displayLocation.zipCode}
+							{displayLocation.postalCode}
 						</Popup>
 					</Marker>
 				</MapContainer>
@@ -87,7 +87,7 @@ export function LocationTab({
 					<div className="flex flex-col lg:flex-row lg:items-start lg:gap-8 space-y-2 md:space-y-4 lg:space-y-0">
 						<div>
 							<p className="font-semibold text-gray-900">Street Address</p>
-							<p className="text-gray-600">{displayLocation.address}</p>
+							<p className="text-gray-600">{displayLocation.street}</p>
 						</div>
 						<div>
 							<p className="font-semibold text-gray-900">City & State</p>
@@ -96,8 +96,8 @@ export function LocationTab({
 							</p>
 						</div>
 						<div>
-							<p className="font-semibold text-gray-900">Zip Code</p>
-							<p className="text-gray-600">{displayLocation.zipCode}</p>
+							<p className="font-semibold text-gray-900">Postal Code</p>
+							<p className="text-gray-600">{displayLocation.postalCode}</p>
 						</div>
 						{displayLocation.country && (
 							<div>

@@ -105,12 +105,9 @@ export default function CreatePricingPlan() {
 	};
 
 	return (
-		<div className="max-w-6xl mx-auto px-4">
+		<div className="max-w-6xl mx-auto px-2">
 			<div className="mb-6">
-				<Button variant="ghost" onClick={() => router.back()} className="mb-4">
-					<ArrowLeft className="h-4 w-4 mr-2" />
-					Back
-				</Button>
+		
 				<div className="flex items-center gap-3">
 					<div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center">
 						<DollarSign className="h-4 w-4 text-white" />

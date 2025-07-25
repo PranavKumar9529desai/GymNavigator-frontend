@@ -50,12 +50,12 @@ export interface GymData {
 }
 
 export interface GymLocation {
-	lat?: number;
-	lng?: number;
-	address: string;
+	latitude?: number;
+	longitude?: number;
+	street?: string;
 	city: string;
 	state: string;
-	zipCode: string;
+	postalCode: string;
 	country?: string;
 }
 

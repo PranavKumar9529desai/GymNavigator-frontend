@@ -222,6 +222,8 @@ export async function getAllGymTabData(): Promise<{
 		if (locationResult.error) {
 			errors.push(`Location: ${locationResult.error}`);
 		} else {
+			// Flatten the location object so it's { location: GymLocation }
+			console.log('the locationResult is ', locationResult);
 			result.location = { location: locationResult.location };
 		}
 
