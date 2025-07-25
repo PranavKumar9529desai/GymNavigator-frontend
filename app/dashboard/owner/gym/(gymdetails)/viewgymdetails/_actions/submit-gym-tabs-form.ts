@@ -54,13 +54,13 @@ export async function updateGymAmenities(
 
 // Location section update
 export async function updateGymLocation(data: {
-	address: string;
+	street: string;
 	city: string;
 	state: string;
-	zipCode: string;
-	country?: string;
-	lat?: number;
-	lng?: number;
+	postalCode: string;
+	country: string;
+	latitude: number;
+	longitude: number;
 }) {
 	try {
 		const ownerAxios = await OwnerReqConfig();

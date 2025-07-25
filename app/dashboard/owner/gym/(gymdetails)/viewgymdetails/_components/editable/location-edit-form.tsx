@@ -23,13 +23,13 @@ export function LocationEditForm({
 	onSave,
 }: LocationEditFormProps) {
 	const [locationFormData, setLocationFormData] = useState<GymLocation>({
-		address: data.location?.address || '',
+		street: data.location?.street || '',
 		city: data.location?.city || '',
 		state: data.location?.state || '',
-		zipCode: data.location?.zipCode || '',
+		postalCode: data.location?.postalCode || '',
 		country: data.location?.country || '',
-		lat: data.location?.lat,
-		lng: data.location?.lng,
+		latitude: data.location?.latitude,
+		longitude: data.location?.longitude,
 	});
 	console.log('data is in the locatio tab is', data);
 	console.log('the location data is', locationFormData);
@@ -62,42 +62,42 @@ export function LocationEditForm({
 	// Effect to update form state when initial data changes
 	useEffect(() => {
 		setLocationFormData({
-			address: data.location?.address || '',
+			street: data.location?.street || '',
 			city: data.location?.city || '',
 			state: data.location?.state || '',
-			zipCode: data.location?.zipCode || '',
+			postalCode: data.location?.postalCode || '',
 			country: data.location?.country || '',
-			lat: data.location?.lat,
-			lng: data.location?.lng,
+			latitude: data.location?.latitude,
+			longitude: data.location?.longitude,
 		});
 	}, [data.location]);
 
 	const updateLocation = async (
-		lat: number,
-		lng: number,
+		latitude: number,
+		longitude: number,
 		_fromSearch = false,
 	) => {
 		// The updateLocation function now only handles state update and reverse geocoding
 		// The map-related logic has been removed based on the user's request to remove the map.
-		const _updatedLocation: GymLocation = { ...locationFormData, lat, lng };
+		const _updatedLocation: GymLocation = { ...locationFormData, latitude, longitude };
 		// setLocationFormData(updatedLocation); // Update state after reverse geocoding
 		// onDataChange({ ...data, location: updatedLocation }); // Call onDataChange after reverse geocoding
 
 		if (
-			lat !== undefined &&
-			lng !== undefined &&
+			latitude !== undefined &&
+			longitude !== undefined &&
 			typeof getAddress === 'function'
 		) {
-			const result = await getAddress(lat, lng);
+			const result = await getAddress(latitude, longitude);
 			if (result) {
 				const updatedLocationWithAddress: GymLocation = {
 					...locationFormData,
-					lat,
-					lng,
-					address: result.address || '',
+					latitude,
+					longitude,
+					street: result.address || '',
 					city: result.city || '',
 					state: result.state || '',
-					zipCode: result.zipCode || '',
+					postalCode: result.zipCode || '',
 					country: result.country || '',
 				};
 				console.log('using the inline version');
@@ -128,24 +128,24 @@ export function LocationEditForm({
 
 		// Auto-geocode when enough address info is provided
 		const hasAddressInfo =
-			updatedLocation.address ||
+			updatedLocation.street ||
 			updatedLocation.city ||
-			updatedLocation.zipCode;
+			updatedLocation.postalCode;
 		if (hasAddressInfo && !coordLoading) {
 			try {
 				const coordinates = await getCoordinates({
-					address: updatedLocation.address,
+					address: updatedLocation.street,
 					city: updatedLocation.city,
 					state: updatedLocation.state,
-					zipCode: updatedLocation.zipCode,
+					zipCode: updatedLocation.postalCode,
 					country: updatedLocation.country,
 				});
 
 				if (coordinates) {
 					const locationWithCoords: GymLocation = {
 						...updatedLocation,
-						lat: coordinates.lat,
-						lng: coordinates.lng,
+						latitude: coordinates.lat,
+						longitude: coordinates.lng,
 					};
 					setLocationFormData(locationWithCoords);
 					onDataChange({ ...data, location: locationWithCoords });
@@ -189,28 +189,28 @@ export function LocationEditForm({
 
 				// If we don't have coordinates but have address info, try to geocode
 				if (
-					(!finalLocationData.lat || !finalLocationData.lng) &&
-					(finalLocationData.address ||
+					(!finalLocationData.latitude || !finalLocationData.longitude) &&
+					(finalLocationData.street ||
 						finalLocationData.city ||
-						finalLocationData.zipCode)
+						finalLocationData.postalCode)
 				) {
 					console.log(
 						'Missing coordinates, attempting to geocode before submit...',
 					);
 
 					const coordinates = await getCoordinates({
-						address: finalLocationData.address,
+						address: finalLocationData.street,
 						city: finalLocationData.city,
 						state: finalLocationData.state,
-						zipCode: finalLocationData.zipCode,
+						zipCode: finalLocationData.postalCode,
 						country: finalLocationData.country,
 					});
 
 					if (coordinates) {
 						finalLocationData = {
 							...finalLocationData,
-							lat: coordinates.lat,
-							lng: coordinates.lng,
+							latitude: coordinates.lat,
+							longitude: coordinates.lng,
 						};
 						// Update the form state with the new coordinates
 						setLocationFormData(finalLocationData);
@@ -224,17 +224,27 @@ export function LocationEditForm({
 					}
 				}
 
-				const locationData = {
-					address: finalLocationData.address || '',
-					city: finalLocationData.city || '',
-					state: finalLocationData.state || '',
-					zipCode: finalLocationData.zipCode || '',
-					country: finalLocationData.country || '',
-					lat: finalLocationData.lat,
-					lng: finalLocationData.lng,
+				// Before constructing LocationData, check for latitude/longitude
+				if (
+					finalLocationData.latitude === undefined ||
+					finalLocationData.longitude === undefined
+				) {
+					toast.error(
+						"Latitude and longitude are required. Please provide a valid address or use 'Use my current location'."
+					);
+					return;
+				}
+				const LocationData = {
+					street: finalLocationData.street || "",
+					city: finalLocationData.city || "",
+					state: finalLocationData.state || "",
+					postalCode: finalLocationData.postalCode || "",
+					country: finalLocationData.country || "india",
+					latitude: finalLocationData.latitude as number,
+					longitude: finalLocationData.longitude as number,
 				};
 
-				await updateGymLocation(locationData);
+				await updateGymLocation(LocationData);
 				toast.success('Location updated successfully!');
 				onSave?.();
 			} catch (error) {
@@ -251,10 +261,10 @@ export function LocationEditForm({
 
 			{/* Address fields - Make visible */}
 			<div className="space-y-2">
-				<Label htmlFor="address">Street Address</Label>
+				<Label htmlFor="street">Street Address</Label>
 				<Input
-					id="address"
-					value={locationFormData.address || ''}
+					id="street"
+					value={locationFormData.street || ''}
 					onChange={handleInputChange}
 					placeholder="Enter street address"
 				/>
@@ -278,12 +288,12 @@ export function LocationEditForm({
 				/>
 			</div>
 			<div className="space-y-2">
-				<Label htmlFor="zipCode">Zip Code</Label>
+				<Label htmlFor="postalCode">Postal Code</Label>
 				<Input
-					id="zipCode"
-					value={locationFormData.zipCode || ''}
+					id="postalCode"
+					value={locationFormData.postalCode || ''}
 					onChange={handleInputChange}
-					placeholder="Enter zip code"
+					placeholder="Enter postal code"
 				/>
 			</div>
 			<div className="space-y-2">
@@ -307,11 +317,11 @@ export function LocationEditForm({
 				</Button>
 			</div>
 			{/* Optionally show lat/lng if present */}
-			{locationFormData.lat !== undefined &&
-				locationFormData.lng !== undefined && (
+			{locationFormData.latitude !== undefined &&
+				locationFormData.longitude !== undefined && (
 					<div className="text-sm text-gray-600">
-						Lat: {locationFormData.lat.toFixed(6)}, Lng:{' '}
-						{locationFormData.lng.toFixed(6)}
+						Lat: {locationFormData.latitude.toFixed(6)}, Lng:{' '}
+						{locationFormData.longitude.toFixed(6)}
 					</div>
 				)}
 			{geoLoading && <div className="text-blue-600">Fetching address...</div>}
