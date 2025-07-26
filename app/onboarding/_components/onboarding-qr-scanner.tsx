@@ -154,7 +154,7 @@ export default function OnboardingQrScanner() {
 							}
 							setTimeout(() => {
 								router.push(
-									`/onboarding/${userRole}/attachtogym?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
+									`/onboarding/${userRole}/select-plan?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
 								);
 							}, 1000);
 						} else {
