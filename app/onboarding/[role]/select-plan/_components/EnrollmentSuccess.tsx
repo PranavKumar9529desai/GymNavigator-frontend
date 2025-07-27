@@ -44,7 +44,7 @@ export function EnrollmentSuccess({
   gym,
   onGoToDashboard
 }: EnrollmentSuccessProps) {
-  const router = useRouter();
+  const _router = useRouter();
   const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {

@@ -14,7 +14,7 @@ export default function Loading() {
         {/* Plans Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={`plan-skeleton-${index as number}`} className="relative rounded-lg border-2 border-slate-200 p-6 bg-white">
+            <div key={`plan-skeleton-${String.fromCharCode(65 + index)}`} className="relative rounded-lg border-2 border-slate-200 p-6 bg-white">
               {/* Featured Badge Skeleton */}
               <Skeleton className="h-6 w-20 mx-auto mb-4" />
               
@@ -34,8 +34,8 @@ export default function Loading() {
               <div className="mb-6">
                 <Skeleton className="h-5 w-32 mb-3" />
                 <div className="space-y-2">
-                  {Array.from({ length: 3 }).map((_, featureIndex) => (
-                    <div key={`feature-skeleton-${index}-${featureIndex}`} className="flex items-start">
+                  {['feature-1', 'feature-2', 'feature-3'].map((featureId) => (
+                    <div key={`plan-${String.fromCharCode(65 + index)}-${featureId}`} className="flex items-start">
                       <Skeleton className="h-4 w-4 mr-2 mt-1 flex-shrink-0" />
                       <Skeleton className="h-4 w-full" />
                     </div>
@@ -47,16 +47,16 @@ export default function Loading() {
               <div className="mb-6">
                 <Skeleton className="h-5 w-32 mb-3" />
                 <div className="space-y-1">
-                  {Array.from({ length: 2 }).map((_, slotIndex) => (
-                    <Skeleton key={`slot-skeleton-${index}-${slotIndex}`} className="h-4 w-24" />
+                  {['slot-1', 'slot-2'].map((slotId) => (
+                    <Skeleton key={`plan-${String.fromCharCode(65 + index)}-${slotId}`} className="h-4 w-24" />
                   ))}
                 </div>
               </div>
 
               {/* Additional Info Skeleton */}
               <div className="space-y-1">
-                {Array.from({ length: 2 }).map((_, infoIndex) => (
-                  <Skeleton key={`info-skeleton-${index}-${infoIndex}`} className="h-3 w-20" />
+                {['info-1', 'info-2'].map((infoId) => (
+                  <Skeleton key={`plan-${String.fromCharCode(65 + index)}-${infoId}`} className="h-3 w-20" />
                 ))}
               </div>
 

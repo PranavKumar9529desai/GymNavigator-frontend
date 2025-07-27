@@ -11,7 +11,7 @@ interface ErrorStateProps {
   hash: string | null;
 }
 
-export function ErrorState({ errorMessage, gymName, gymId, hash }: ErrorStateProps) {
+export function ErrorState({ errorMessage, gymName, gymId, hash: _hash }: ErrorStateProps) {
   const handleRetry = () => {
     window.location.reload();
   };

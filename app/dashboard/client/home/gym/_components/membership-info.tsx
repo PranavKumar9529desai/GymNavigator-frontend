@@ -4,17 +4,10 @@ import { Calendar, Clock } from 'lucide-react';
 
 interface MembershipInfoProps {
 	membership: {
-		activeMembership: {
-			id: number;
+		validPeriod: {
 			startDate: string;
 			endDate: string;
-			status: string;
-			plan: {
-				id: number;
-				name: string;
-				price: string;
-				duration: string;
-			};
+			shift: string;
 		} | null;
 	};
 }
@@ -38,7 +31,7 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 			</div>
 
 			<div className="border-l-2 border-blue-200 pl-4">
-				{membership.activeMembership ? (
+				{membership.validPeriod ? (
 					<div className="space-y-4">
 						<div className="grid grid-cols-1 gap-3">
 							<div>
@@ -46,7 +39,7 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 									Plan
 								</p>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{membership.activeMembership.plan.name}
+									{membership.validPeriod.shift}
 								</p>
 							</div>
 							<div>
@@ -54,7 +47,7 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 									Start Date
 								</p>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{formatDate(membership.activeMembership.startDate)}
+									{formatDate(membership.validPeriod.startDate)}
 								</p>
 							</div>
 							<div>
@@ -62,7 +55,7 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 									End Date
 								</p>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{formatDate(membership.activeMembership.endDate)}
+									{formatDate(membership.validPeriod.endDate)}
 								</p>
 							</div>
 							<div>
@@ -71,7 +64,7 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 								</p>
 								<div className="mt-1">
 									<span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium capitalize">
-										{membership.activeMembership.status}
+										Active
 									</span>
 								</div>
 							</div>

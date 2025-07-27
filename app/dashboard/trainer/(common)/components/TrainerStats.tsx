@@ -127,8 +127,8 @@ export default function TrainerStats({ data }: TrainerStatsProps) {
 											<Users className="w-4 h-4 text-blue-600" />
 											<span className="text-slate-700">
 												{activity.name} -{' '}
-												{activity.Validperiod
-													? `${activity.Validperiod.shift} shift`
+												{activity.membership
+													? `${activity.membership.plan.name} plan`
 													: 'New member assigned'}
 											</span>
 										</div>

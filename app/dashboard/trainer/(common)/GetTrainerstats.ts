@@ -44,7 +44,7 @@ export default async function GetTrainerStats(): Promise<TrainerDashboardResult>
 			recentActivities: Array.isArray(recentActivities)
 				? recentActivities.map((activity) => ({
 						name: activity.name,
-						membership: activity.memberships?.[0] || null,
+						membership: activity.membership || null,
 					}))
 				: [],
 		};
