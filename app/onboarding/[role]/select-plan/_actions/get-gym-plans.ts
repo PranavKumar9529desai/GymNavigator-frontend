@@ -15,6 +15,7 @@ interface Plan {
   color?: string;
   icon?: string;
   maxMembers?: number;
+  currentMembers?: number;
   genderCategory: 'MALE' | 'FEMALE' | 'OTHER' | 'ALL';
   minAge?: number;
   maxAge?: number;

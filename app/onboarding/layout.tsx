@@ -7,7 +7,7 @@ export default function OnboardingLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="p-10 my-20">{children}</div>
+		<div className="p-2 my-4">{children}</div>
 		// <GradientBackground className='flex h-screen w-full justify-center items-center'>
 		// 	</GradientBackground>
 	);

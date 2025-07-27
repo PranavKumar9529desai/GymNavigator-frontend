@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react';
 import { updateSessionWithGym } from '../../../../(common)/_actions/session/updateSessionWithGym';
 import type { GymInfo } from '@/types/next-auth';
 import { PlanCard } from './PlanCard';
+import { EnrollmentConfirmation } from './EnrollmentConfirmation';
+import { EnrollmentSuccess } from './EnrollmentSuccess';
 import { enrollInGym } from '../_actions/enroll-in-gym';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -23,6 +25,7 @@ interface Plan {
   color?: string;
   icon?: string;
   maxMembers?: number;
+  currentMembers?: number;
   genderCategory: 'MALE' | 'FEMALE' | 'OTHER' | 'ALL';
   minAge?: number;
   maxAge?: number;
@@ -54,13 +57,20 @@ export function PlanSelectionClient({
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handlePlanSelect = (planId: number) => {
     setSelectedPlanId(planId);
     setErrorMessage(null);
   };
 
-  const handleEnroll = async () => {
+  const handleEnrollClick = () => {
+    if (!selectedPlanId) return;
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmEnrollment = async () => {
     if (!selectedPlanId) return;
     
     setIsEnrolling(true);
@@ -77,14 +87,50 @@ export function PlanSelectionClient({
       
       await updateSessionWithGym(newGym, update);
       
-      // Redirect to dashboard
-      router.push('/dashboard/');
+      // Close confirmation dialog
+      setShowConfirmation(false);
+      
+      // Show success screen
+      setShowSuccess(true);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Failed to enroll in gym');
       setIsEnrolling(false);
       console.error('Error enrolling in gym:', error);
     }
   };
+
+  const handleCloseConfirmation = () => {
+    setShowConfirmation(false);
+    setIsEnrolling(false);
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+    // Redirect to dashboard after a short delay
+    setTimeout(() => {
+      router.push('/dashboard/');
+    }, 500);
+  };
+
+  const handleGoToDashboard = () => {
+    setShowSuccess(false);
+    router.push('/dashboard/');
+  };
+
+  const selectedPlan = plans.find(plan => plan.id === selectedPlanId);
+
+  // Show success screen if enrollment was successful
+  if (showSuccess && selectedPlan) {
+    return (
+      <EnrollmentSuccess
+        isOpen={showSuccess}
+        onClose={handleCloseSuccess}
+        plan={selectedPlan}
+        gym={gym}
+        onGoToDashboard={handleGoToDashboard}
+      />
+    );
+  }
 
   if (plans.length === 0) {
     return (
@@ -116,7 +162,7 @@ export function PlanSelectionClient({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20 py-8 sm:pt-2">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20 py-2 sm:pt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Gym Header */}
         <div className="text-center mb-8">
@@ -138,7 +184,7 @@ export function PlanSelectionClient({
         </div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 px-2">
           {plans.map((plan) => (
             <PlanCard
               key={plan.id}
@@ -164,7 +210,7 @@ export function PlanSelectionClient({
           <div className="text-center">
             <Button
               size="lg"
-              onClick={handleEnroll}
+              onClick={handleEnrollClick}
               disabled={isEnrolling}
               className="px-8 bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500"
             >
@@ -179,6 +225,16 @@ export function PlanSelectionClient({
             </Button>
           </div>
         )}
+
+        {/* Confirmation Dialog */}
+        <EnrollmentConfirmation
+          isOpen={showConfirmation}
+          onClose={handleCloseConfirmation}
+          onConfirm={handleConfirmEnrollment}
+          plan={selectedPlan || null}
+          gym={gym}
+          isEnrolling={isEnrolling}
+        />
       </div>
     </div>
   );
