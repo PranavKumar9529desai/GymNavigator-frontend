@@ -5,14 +5,34 @@ export interface DashboardStats {
 	revenue: number;
 }
 
-export interface ValidPeriod {
+export interface Membership {
+	id: number;
 	startDate: string;
-	shift: string;
+	endDate: string;
+	status: string;
+	plan: {
+		id: number;
+		name: string;
+		price: string;
+		duration: string;
+	};
+}
+
+export interface User {
+	id: number;
+	name: string;
+	email: string;
+	img?: string;
+	isverified: boolean;
+	isallowed: boolean;
+	createdAt: string;
+	userStatus: string;
+	membership: Membership | null;
 }
 
 export interface RecentActivity {
 	name: string;
-	Validperiod: ValidPeriod | null;
+	membership: Membership | null;
 }
 
 export interface DashboardData {

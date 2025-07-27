@@ -43,8 +43,8 @@ export default async function GetTrainerStats(): Promise<TrainerDashboardResult>
 			},
 			recentActivities: Array.isArray(recentActivities)
 				? recentActivities.map((activity) => ({
-						name: activity.name || 'Unknown Member',
-						Validperiod: activity.Validperiod || null,
+						name: activity.name,
+						membership: activity.memberships?.[0] || null,
 					}))
 				: [],
 		};

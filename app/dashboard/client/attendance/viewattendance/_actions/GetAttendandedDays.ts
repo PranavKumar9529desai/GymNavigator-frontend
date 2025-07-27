@@ -20,7 +20,7 @@ export const fetchAttendanceData = async (): Promise<Date[]> => {
 			console.error('Failed to fetch attendance days:', response.data.error);
 			return [];
 		}
-
+        
 		// Convert string dates to Date objects
 		return response.data.data.map((dateStr) => new Date(dateStr));
 	} catch (error) {

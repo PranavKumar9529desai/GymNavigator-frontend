@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Gym Header Skeleton */}
         <div className="text-center mb-8">
@@ -14,7 +14,7 @@ export default function Loading() {
         {/* Plans Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={`plan-skeleton-${index as number}`} className="relative rounded-lg border-2 border-gray-200 p-6">
+            <div key={`plan-skeleton-${index as number}`} className="relative rounded-lg border-2 border-slate-200 p-6 bg-white">
               {/* Featured Badge Skeleton */}
               <Skeleton className="h-6 w-20 mx-auto mb-4" />
               
@@ -35,7 +35,7 @@ export default function Loading() {
                 <Skeleton className="h-5 w-32 mb-3" />
                 <div className="space-y-2">
                   {Array.from({ length: 3 }).map((_, featureIndex) => (
-                    <div key={`feature-skeleton-${index}-${featureIndex as number}`} className="flex items-start">
+                    <div key={`feature-skeleton-${index}-${featureIndex}`} className="flex items-start">
                       <Skeleton className="h-4 w-4 mr-2 mt-1 flex-shrink-0" />
                       <Skeleton className="h-4 w-full" />
                     </div>
@@ -48,7 +48,7 @@ export default function Loading() {
                 <Skeleton className="h-5 w-32 mb-3" />
                 <div className="space-y-1">
                   {Array.from({ length: 2 }).map((_, slotIndex) => (
-                    <Skeleton key={`slot-skeleton-${index}-${slotIndex as number}`} className="h-4 w-24" />
+                    <Skeleton key={`slot-skeleton-${index}-${slotIndex}`} className="h-4 w-24" />
                   ))}
                 </div>
               </div>
@@ -56,7 +56,7 @@ export default function Loading() {
               {/* Additional Info Skeleton */}
               <div className="space-y-1">
                 {Array.from({ length: 2 }).map((_, infoIndex) => (
-                  <Skeleton key={`info-skeleton-${index}-${infoIndex as number}`} className="h-3 w-20" />
+                  <Skeleton key={`info-skeleton-${index}-${infoIndex}`} className="h-3 w-20" />
                 ))}
               </div>
 

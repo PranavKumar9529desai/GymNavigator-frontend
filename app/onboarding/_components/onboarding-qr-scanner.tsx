@@ -34,7 +34,7 @@ export default function OnboardingQrScanner() {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [hasProcessed, setHasProcessed] = useState(false);
-	const [debugMessages, setDebugMessages] = useState<string[]>([]);
+	const [_debugMessages, setDebugMessages] = useState<string[]>([]);
 	const [cameraIndex, setCameraIndex] = useState(0);
 	const [backCameras, setBackCameras] = useState<MediaDeviceInfo[]>([]);
 	const [isCameraLoading, setIsCameraLoading] = useState(false);

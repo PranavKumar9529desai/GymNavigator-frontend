@@ -47,16 +47,16 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
 
   return (
     <Card 
-      className={`relative cursor-pointer transition-all duration-200 ${
+      className={`relative cursor-pointer transition-all duration-200 bg-white ${
         isSelected
           ? 'border-blue-500 shadow-lg scale-105'
-          : 'hover:shadow-md'
-      } ${isFeatured ? 'ring-2 ring-yellow-400' : ''}`}
+          : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
+      } ${isFeatured ? 'ring-2 ring-blue-100' : ''}`}
     >
       {/* Featured Badge */}
       {isFeatured && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-          <Badge variant="secondary" className="bg-yellow-400 text-yellow-900 hover:bg-yellow-400">
+          <Badge className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white border-0">
             Featured
           </Badge>
         </div>
@@ -65,7 +65,7 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
       {/* Selection Indicator */}
       {isSelected && (
         <div className="absolute -top-2 -right-2 z-10">
-          <div className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+          <div className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
             <Check className="w-4 h-4" />
           </div>
         </div>
@@ -73,29 +73,31 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
 
       <CardHeader className="text-center pb-4">
         <div className="mb-2">
-          <IconComponent className="w-8 h-8 mx-auto text-blue-600" />
+          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center mx-auto">
+            <IconComponent className="w-6 h-6 text-white" />
+          </div>
         </div>
-        <CardTitle className="text-xl">{plan.name}</CardTitle>
+        <CardTitle className="text-lg font-semibold text-slate-800">{plan.name}</CardTitle>
         {plan.description && (
-          <p className="text-sm text-muted-foreground">{plan.description}</p>
+          <p className="text-sm text-slate-600">{plan.description}</p>
         )}
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         {/* Price */}
         <div className="text-center">
-          <div className="text-3xl font-bold">{plan.price}</div>
-          <div className="text-sm text-muted-foreground">per {plan.duration}</div>
+          <div className="text-2xl font-bold text-slate-800">{plan.price}</div>
+          <div className="text-sm text-slate-600">per {plan.duration}</div>
         </div>
 
         {/* Features */}
         <div>
-          <h4 className="font-semibold mb-3">What's included:</h4>
+          <h4 className="text-sm font-medium text-slate-800 mb-3">What's included:</h4>
           <ul className="space-y-2">
             {plan.features.map((feature) => (
               <li key={feature.id} className="flex items-start">
-                <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">{feature.description}</span>
+                <Check className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-slate-700">{feature.description}</span>
               </li>
             ))}
           </ul>
@@ -104,10 +106,10 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
         {/* Time Slots */}
         {plan.planTimeSlots.length > 0 && (
           <div>
-            <h4 className="font-semibold mb-3">Available Times:</h4>
+            <h4 className="text-sm font-medium text-slate-800 mb-3">Available Times:</h4>
             <div className="space-y-1">
               {plan.planTimeSlots.map((slot) => (
-                <div key={slot.id} className="text-sm text-muted-foreground">
+                <div key={slot.id} className="text-sm text-slate-600">
                   {slot.startTime} - {slot.endTime}
                 </div>
               ))}
@@ -116,7 +118,7 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
         )}
 
         {/* Additional Info */}
-        <div className="text-xs text-muted-foreground space-y-1">
+        <div className="text-xs text-slate-500 space-y-1">
           {plan.genderCategory !== 'ALL' && (
             <div>Gender: {plan.genderCategory}</div>
           )}
@@ -131,7 +133,11 @@ export function PlanCard({ plan, isSelected, onSelect }: PlanCardProps) {
         {/* Select Button */}
         <Button
           variant={isSelected ? "default" : "outline"}
-          className="w-full"
+          className={`w-full ${
+            isSelected 
+              ? 'bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500' 
+              : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
           onClick={onSelect}
         >
           {isSelected ? 'Selected' : 'Select Plan'}

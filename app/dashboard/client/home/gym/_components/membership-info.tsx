@@ -1,10 +1,22 @@
 'use client';
 
 import { Calendar, Clock } from 'lucide-react';
-import type { GymDetailsData } from '../_actions/get-gym-details';
 
 interface MembershipInfoProps {
-	membership: GymDetailsData['membership'];
+	membership: {
+		activeMembership: {
+			id: number;
+			startDate: string;
+			endDate: string;
+			status: string;
+			plan: {
+				id: number;
+				name: string;
+				price: string;
+				duration: string;
+			};
+		} | null;
+	};
 }
 
 export function MembershipInfo({ membership }: MembershipInfoProps) {
@@ -26,15 +38,23 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 			</div>
 
 			<div className="border-l-2 border-blue-200 pl-4">
-				{membership.validPeriod ? (
+				{membership.activeMembership ? (
 					<div className="space-y-4">
 						<div className="grid grid-cols-1 gap-3">
+							<div>
+								<p className="text-xs font-medium text-blue-600 uppercase tracking-wide">
+									Plan
+								</p>
+								<p className="text-sm font-bold text-slate-800 mt-1">
+									{membership.activeMembership.plan.name}
+								</p>
+							</div>
 							<div>
 								<p className="text-xs font-medium text-blue-600 uppercase tracking-wide">
 									Start Date
 								</p>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{formatDate(membership.validPeriod.startDate)}
+									{formatDate(membership.activeMembership.startDate)}
 								</p>
 							</div>
 							<div>
@@ -42,16 +62,16 @@ export function MembershipInfo({ membership }: MembershipInfoProps) {
 									End Date
 								</p>
 								<p className="text-sm font-bold text-slate-800 mt-1">
-									{formatDate(membership.validPeriod.endDate)}
+									{formatDate(membership.activeMembership.endDate)}
 								</p>
 							</div>
 							<div>
 								<p className="text-xs font-medium text-blue-600 uppercase tracking-wide">
-									Shift
+									Status
 								</p>
 								<div className="mt-1">
 									<span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-medium capitalize">
-										{membership.validPeriod.shift}
+										{membership.activeMembership.status}
 									</span>
 								</div>
 							</div>

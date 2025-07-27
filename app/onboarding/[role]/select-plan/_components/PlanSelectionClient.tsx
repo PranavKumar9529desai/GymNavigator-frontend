@@ -88,24 +88,24 @@ export function PlanSelectionClient({
 
   if (plans.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
         <div className="text-center max-w-md mx-auto p-6">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8 text-yellow-600" />
+          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8 text-blue-600" />
           </div>
           
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-lg font-semibold text-slate-800 mb-2">
             No Plans Available
           </h2>
           
-          <p className="text-gray-600 mb-6">
+          <p className="text-slate-600 mb-6">
             This gym doesn't have any membership plans available at the moment. Please contact the gym directly for more information.
           </p>
           
           <Button
             variant="outline"
             onClick={() => window.history.back()}
-            className="w-full"
+            className="w-full border-slate-200 text-slate-700 hover:bg-slate-50"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Go Back
@@ -116,7 +116,7 @@ export function PlanSelectionClient({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20 py-8 sm:pt-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Gym Header */}
         <div className="text-center mb-8">
@@ -129,10 +129,10 @@ export function PlanSelectionClient({
               />
             </div>
           )}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">
             Welcome to {gym.name}
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-slate-600">
             Choose a membership plan that fits your needs
           </p>
         </div>
@@ -152,7 +152,7 @@ export function PlanSelectionClient({
         {/* Error Message */}
         {errorMessage && (
           <div className="text-center mb-6">
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="max-w-md mx-auto">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>{errorMessage}</AlertDescription>
             </Alert>
@@ -166,7 +166,7 @@ export function PlanSelectionClient({
               size="lg"
               onClick={handleEnroll}
               disabled={isEnrolling}
-              className="px-8"
+              className="px-8 bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500"
             >
               {isEnrolling ? (
                 <>

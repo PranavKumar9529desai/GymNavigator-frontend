@@ -7,9 +7,17 @@ export interface TrainerStats {
 
 export interface RecentActivity {
 	name: string;
-	Validperiod: {
+	membership: {
+		id: number;
 		startDate: string;
-		shift: string;
+		endDate: string;
+		status: string;
+		plan: {
+			id: number;
+			name: string;
+			price: string;
+			duration: string;
+		};
 	} | null;
 }
 

@@ -32,10 +32,14 @@ export const fetchAttendanceData = async (): Promise<AttendanceData> => {
 			return { attendanceDays: [] };
 		}
 
-		// Convert string dates to Date objects
-		const attendanceDays = response.data.data.map(
-			(dateStr) => new Date(dateStr),
-		);
+		// Convert string dates to Date objects and normalize to start of day
+		const attendanceDays = response.data.data.map((dateStr) => {
+			const utcDate = new Date(dateStr);
+			// Normalize to start of day in local timezone
+			return new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate());
+		});
+		
+		console.log('Normalized attendance days:', attendanceDays);
 		return { attendanceDays };
 	} catch (error) {
 		console.error('Error fetching attendance days:', error);

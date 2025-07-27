@@ -17,13 +17,13 @@ export function ErrorState({ errorMessage, gymName, gymId, hash }: ErrorStatePro
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50/30 via-white to-indigo-50/20">
       <div className="text-center max-w-md mx-auto p-6">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <AlertTriangle className="w-8 h-8 text-red-600" />
+        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <AlertTriangle className="w-8 h-8 text-blue-600" />
         </div>
         
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <h2 className="text-lg font-semibold text-slate-800 mb-2">
           Something went wrong
         </h2>
         
@@ -33,23 +33,23 @@ export function ErrorState({ errorMessage, gymName, gymId, hash }: ErrorStatePro
         </Alert>
         
         <div className="space-y-3">
-          <Button onClick={handleRetry} className="w-full">
+          <Button onClick={handleRetry} className="w-full bg-gradient-to-r from-blue-400 to-indigo-400 hover:from-blue-500 hover:to-indigo-500">
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
           </Button>
           
-          <Button variant="outline" onClick={() => window.history.back()} className="w-full">
+          <Button variant="outline" onClick={() => window.history.back()} className="w-full border-slate-200 text-slate-700 hover:bg-slate-50">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Go Back
           </Button>
         </div>
         
         {gymName && (
-          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-            <p className="text-sm text-gray-600">
+          <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <p className="text-sm text-slate-600">
               <strong>Gym:</strong> {gymName}
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-600">
               <strong>Gym ID:</strong> {gymId}
             </p>
           </div>

@@ -7,7 +7,7 @@ export interface AttendanceData {
 	attendance?: {
 		id: number;
 		userId: number;
-		validPeriodId: number;
+		membershipId: number;
 		date: string;
 		scanTime: string;
 		attended: boolean;
@@ -24,7 +24,7 @@ export async function checkUserAttendance(): Promise<AttendanceResponse> {
 	try {
 		const clientAxios = await ClientReqConfig();
 		const response = await clientAxios.get('/attendance/check-attendance');
-
+        console.log("check attendance status" ,response.data);
 		return {
 			success: true,
 			data: response.data.data,

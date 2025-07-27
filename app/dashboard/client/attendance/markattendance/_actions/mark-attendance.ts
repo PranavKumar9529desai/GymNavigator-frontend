@@ -3,21 +3,22 @@
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
 import type { AxiosError } from 'axios';
 
-interface AttendanceResponse {
+export interface MarkAttendanceResponse {
 	success: boolean;
 	data?: {
 		id: number;
 		userId: number;
-		validPeriodId: number;
+		membershipId: number;
 		date: string;
 		scanTime: string;
 		attended: boolean;
 	};
+	message?: string;
 	error?: string;
 	details?: string;
 }
 
-export async function markAttendance(): Promise<AttendanceResponse> {
+export async function markAttendance(): Promise<MarkAttendanceResponse> {
 	try {
 		const now = new Date();
 		const clientUTC = Date.UTC(

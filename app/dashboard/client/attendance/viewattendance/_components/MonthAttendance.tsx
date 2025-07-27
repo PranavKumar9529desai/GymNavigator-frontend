@@ -39,8 +39,10 @@ export default function MonthAttendance({
 	const gymDaysMap = useMemo(() => {
 		const map = new Map<string, boolean>();
 		for (const date of gymAttendanceDays) {
+			// Normalize the date for consistent key generation
+			const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 			map.set(
-				`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+				`${normalizedDate.getFullYear()}-${normalizedDate.getMonth()}-${normalizedDate.getDate()}`,
 				true,
 			);
 		}
@@ -48,7 +50,11 @@ export default function MonthAttendance({
 	}, [gymAttendanceDays]);
 
 	// Memoize today's date to avoid recreation on every render
-	const today = useMemo(() => new Date(), []);
+	const today = useMemo(() => {
+		const now = new Date();
+		// Normalize to start of day for consistent comparison
+		return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	}, []);
 
 	// Progress calculation - memoized to avoid recalculation on each render
 	useMemo(() => {
@@ -69,10 +75,15 @@ export default function MonthAttendance({
 
 		// Count attended days (excluding Sundays)
 		const attendedDays = gymAttendanceDays.filter(
-			(date) =>
-				date.getMonth() === currentDate.getMonth() &&
-				date.getFullYear() === currentDate.getFullYear() &&
-				date.getDay() !== 0, // Exclude Sundays
+			(date) => {
+				// Normalize the attendance date for comparison
+				const normalizedAttendanceDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+				return (
+					normalizedAttendanceDate.getMonth() === currentDate.getMonth() &&
+					normalizedAttendanceDate.getFullYear() === currentDate.getFullYear() &&
+					normalizedAttendanceDate.getDay() !== 0 // Exclude Sundays
+				);
+			}
 		).length;
 
 		// Calculate progress percentage
@@ -87,10 +98,12 @@ export default function MonthAttendance({
 	// Optimized helper functions with memoization
 	const isToday = useCallback(
 		(date: Date) => {
+			// Normalize both dates for comparison
+			const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 			return (
-				date.getDate() === today.getDate() &&
-				date.getMonth() === today.getMonth() &&
-				date.getFullYear() === today.getFullYear()
+				normalizedDate.getDate() === today.getDate() &&
+				normalizedDate.getMonth() === today.getMonth() &&
+				normalizedDate.getFullYear() === today.getFullYear()
 			);
 		},
 		[today],
@@ -98,7 +111,9 @@ export default function MonthAttendance({
 
 	const isGymDay = useCallback(
 		(date: Date) => {
-			const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+			// Normalize the date for consistent key generation
+			const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			const key = `${normalizedDate.getFullYear()}-${normalizedDate.getMonth()}-${normalizedDate.getDate()}`;
 			return gymDaysMap.has(key);
 		},
 		[gymDaysMap],
@@ -106,7 +121,9 @@ export default function MonthAttendance({
 
 	const isMissedDay = useCallback(
 		(date: Date) => {
-			return date < today && !isGymDay(date) && date.getDay() !== 0;
+			// Normalize the date for comparison
+			const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			return normalizedDate < today && !isGymDay(date) && normalizedDate.getDay() !== 0;
 		},
 		[today, isGymDay],
 	);

@@ -20,10 +20,17 @@ export interface DashboardOverviewData {
 		specializations: string | null;
 	} | null;
 	membership: {
-		validPeriod: {
+		activeMembership: {
+			id: number;
 			startDate: string;
 			endDate: string;
-			shift: string;
+			status: string;
+			plan: {
+				id: number;
+				name: string;
+				price: string;
+				duration: string;
+			};
 		} | null;
 		daysRemaining: number;
 	};
