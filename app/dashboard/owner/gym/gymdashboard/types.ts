@@ -1,11 +1,38 @@
-export interface GymDashboardStats {
+// Business Metrics
+export interface GymDashboardBusinessMetrics {
+	currentMonthRevenue: number;
+	previousMonthRevenue: number;
+	monthlyGrowthRate: number;
 	totalMembers: number;
-	activeTrainers: number;
-	todayAttendance: number;
-	revenue: number;
-	expiringMemberships: number;
 	newMembers: number;
+	averageRevenuePerMember: number;
+	todayAttendance: number;
+	attendanceGrowth: number;
+	activeTrainers: number;
+	expiringMemberships: number;
 	inactiveMembers: number;
+}
+
+// Operational Metrics
+export interface GymDashboardOperationalMetrics {
+	onboardingPipeline: {
+		onboarding: number;
+		healthProfile: number;
+		dashboard: number;
+		workoutPlan: number;
+		dietPlan: number;
+	};
+	unassignedUsers: number;
+	trainerWorkload: Array<{
+		id: number;
+		name: string;
+		userCount: number;
+		specializations: string | null;
+		rating: number | null;
+	}>;
+	todayAttendance: number;
+	yesterdayAttendance: number;
+	attendanceGrowth: number;
 }
 
 export interface GymDashboardTrendPoint {
@@ -17,6 +44,7 @@ export interface GymDashboardBreakdown {
 	label: string;
 	value: number;
 	color?: string;
+	count?: number;
 }
 
 export interface GymDashboardRecentSignup {
@@ -70,7 +98,8 @@ export interface GymDashboardDetails {
 }
 
 export interface GymDashboardData {
-	stats: GymDashboardStats;
+	businessMetrics: GymDashboardBusinessMetrics;
+	operationalMetrics: GymDashboardOperationalMetrics;
 	trends: {
 		attendance: GymDashboardTrendPoint[];
 		memberGrowth: GymDashboardTrendPoint[];
@@ -80,6 +109,7 @@ export interface GymDashboardData {
 		membershipTypes: GymDashboardBreakdown[];
 		gender: GymDashboardBreakdown[];
 		planPopularity: GymDashboardBreakdown[];
+		revenueByPlan: GymDashboardBreakdown[];
 	};
 	recentActivities: GymDashboardRecentActivities;
 	gymDetails: GymDashboardDetails;
