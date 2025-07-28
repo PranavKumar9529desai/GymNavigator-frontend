@@ -119,12 +119,12 @@ export default function DumbbellWrapper() {
 
 					{/* Controls */}
 					<OrbitControls
-						enableZoom={false}
-						enablePan={false}
-						minPolarAngle={Math.PI / 2.8}
-						maxPolarAngle={Math.PI / 1.8}
-						minAzimuthAngle={-Math.PI / 10}
-						maxAzimuthAngle={Math.PI / 10}
+						enableZoom={true}
+						enablePan={true}
+						minPolarAngle={Math.PI / 4}
+						maxPolarAngle={Math.PI / 1.2}
+						minAzimuthAngle={-Math.PI / 2}
+						maxAzimuthAngle={Math.PI / 2}
 						target={[0, 0.5, 0]}
 					/>
 

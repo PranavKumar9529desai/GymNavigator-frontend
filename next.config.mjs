@@ -19,6 +19,11 @@ const nextConfig = {
 		viewTransition: true,
 		useCache: true,
 		webVitalsAttribution: ['CLS', 'LCP'],
+		// browserDebugInfoInTerminal : true ,
+		clientSegmentCache : true ,
+		
+
+
 	},
 	eslint: {
 		ignoreDuringBuilds: true,

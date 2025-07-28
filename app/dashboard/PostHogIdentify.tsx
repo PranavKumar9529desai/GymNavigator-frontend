@@ -31,16 +31,10 @@ export default function PostHogIdentify({
 				gym_id: gym?.id,
 				gym_name: gym?.gym_name,
 			};
-			console.log(
-				'[PostHogIdentify] Calling posthog.identify with:',
-				userId,
-				userProps,
-			);
+			
 			posthog.identify(userId, userProps);
 		} else {
-			console.log(
-				'[PostHogIdentify] No userId provided, not calling posthog.identify',
-			);
+			
 		}
 	}, [userId, email, name, role, gym]);
 	return null;
