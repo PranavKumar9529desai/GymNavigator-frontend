@@ -55,11 +55,11 @@ export const metadata: Metadata = {
 		type: "website",
 		images: [
 			{
-				url: "/gymnavigator-og.jpg", // Direct path to OG image in public directory
+				url: `${siteUrl}/gymnavigator-og-1200x630.png`, // Use properly sized image
 				width: 1200,
 				height: 630,
 				alt: "GymNavigator - Modern Gym Management",
-				type: "image/jpeg",
+				type: "image/png",
 			},
 		],
 	},
@@ -68,12 +68,30 @@ export const metadata: Metadata = {
 		title: "GymNavigator - Gym Management System",
 		description:
 			"Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.",
-		images: ["/gymnavigator-og.jpg"],
+		images: [`${siteUrl}/gymnavigator-og-1200x630.png`], // Use properly sized image
 	},
 	other: {
-		"og:image:secure_url": `${siteUrl}/gymnavigator-og.jpg`,
+		"og:image:secure_url": `${siteUrl}/gymnavigator-og-1200x630.png`,
 		"theme-color": "#1e40af",
 		"msapplication-TileColor": "#1e40af",
+		// Additional meta tags for better SEO
+		"og:image:width": "1200",
+		"og:image:height": "630",
+		"og:image:alt": "GymNavigator - Modern Gym Management",
+		"og:image:type": "image/png",
+		"twitter:image:alt": "GymNavigator - Modern Gym Management",
+		// Additional SEO meta tags
+		"og:image:url": `${siteUrl}/gymnavigator-og-1200x630.png`,
+		"twitter:image:width": "1200",
+		"twitter:image:height": "630",
+		"twitter:site": "@gymnavigator",
+		"twitter:creator": "@gymnavigator",
+		// Schema.org structured data hints
+		"application-name": "GymNavigator",
+		"mobile-web-app-capable": "yes",
+		"apple-mobile-web-app-capable": "yes",
+		"apple-mobile-web-app-status-bar-style": "default",
+		"apple-mobile-web-app-title": "GymNavigator",
 	},
 	icons: {
 		icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],
