@@ -1,35 +1,35 @@
-import "@/globals.css";
-import Providers from "@/providers/provider";
-import type { Metadata, Viewport } from "next";
-import { Toaster } from "sonner";
-import type { ToasterProps } from "sonner";
-import { OnlineStatusProvider } from "@/providers/OnlineStatusProvider";
-import RegisterServiceWorker from "@/components/RegisterServiceWorker";
-import OfflineIndicator from "@/components/common/OfflineIndicator";
-import { auth } from "@/app/(auth)/auth"; // Assuming your auth config is in /auth.ts
-import localFont from "next/font/local";
-import ClientMotionProvider from "../providers/ClientMotionProvider";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import { PostHogProvider } from "@/providers/PostHogProvider";
-const siteUrl = "https://gymnavigator.in";
+import '@/globals.css';
+import Providers from '@/providers/provider';
+import type { Metadata, Viewport } from 'next';
+import { Toaster } from 'sonner';
+import type { ToasterProps } from 'sonner';
+import { OnlineStatusProvider } from '@/providers/OnlineStatusProvider';
+import RegisterServiceWorker from '@/components/RegisterServiceWorker';
+import OfflineIndicator from '@/components/common/OfflineIndicator';
+import { auth } from '@/app/(auth)/auth'; // Assuming your auth config is in /auth.ts
+import localFont from 'next/font/local';
+import ClientMotionProvider from '../providers/ClientMotionProvider';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+import { PostHogProvider } from '@/providers/PostHogProvider';
+const siteUrl = 'https://gymnavigator.in';
 
 export const viewport: Viewport = {
-	width: "device-width",
+	width: 'device-width',
 	initialScale: 1,
 	maximumScale: 1,
 };
 
 export const metadata: Metadata = {
 	metadataBase: new URL(siteUrl),
-	title: "GymNavigator - Gym Management System",
+	title: 'GymNavigator - Gym Management System',
 	description:
-		"Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.",
-	applicationName: "GymNavigator",
+		'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
+	applicationName: 'GymNavigator',
 	alternates: {
-		canonical: "/",
+		canonical: '/',
 	},
 	verification: {
-		google: "LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI",
+		google: 'LCLleK9nzppdl_Pl1l1Sd00aXJRgLyfl6Xjc6poUDAI',
 	},
 	robots: {
 		index: true,
@@ -46,65 +46,65 @@ export const metadata: Metadata = {
 		},
 	},
 	openGraph: {
-		title: "GymNavigator - Gym Management System",
+		title: 'GymNavigator - Gym Management System',
 		description:
-			"Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.",
+			'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
 		url: siteUrl,
-		siteName: "GymNavigator",
-		locale: "en_US",
-		type: "website",
+		siteName: 'GymNavigator',
+		locale: 'en_US',
+		type: 'website',
 		images: [
 			{
 				url: `${siteUrl}/gymnavigator-og-1200x630.png`, // Use properly sized image
 				width: 1200,
 				height: 630,
-				alt: "GymNavigator - Modern Gym Management",
-				type: "image/png",
+				alt: 'GymNavigator - Modern Gym Management',
+				type: 'image/png',
 			},
 		],
 	},
 	twitter: {
-		card: "summary_large_image",
-		title: "GymNavigator - Gym Management System",
+		card: 'summary_large_image',
+		title: 'GymNavigator - Gym Management System',
 		description:
-			"Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.",
+			'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
 		images: [`${siteUrl}/gymnavigator-og-1200x630.png`], // Use properly sized image
 	},
 	other: {
-		"og:image:secure_url": `${siteUrl}/gymnavigator-og-1200x630.png`,
-		"theme-color": "#1e40af",
-		"msapplication-TileColor": "#1e40af",
+		'og:image:secure_url': `${siteUrl}/gymnavigator-og-1200x630.png`,
+		'theme-color': '#1e40af',
+		'msapplication-TileColor': '#1e40af',
 		// Additional meta tags for better SEO
-		"og:image:width": "1200",
-		"og:image:height": "630",
-		"og:image:alt": "GymNavigator - Modern Gym Management",
-		"og:image:type": "image/png",
-		"twitter:image:alt": "GymNavigator - Modern Gym Management",
+		'og:image:width': '1200',
+		'og:image:height': '630',
+		'og:image:alt': 'GymNavigator - Modern Gym Management',
+		'og:image:type': 'image/png',
+		'twitter:image:alt': 'GymNavigator - Modern Gym Management',
 		// Additional SEO meta tags
-		"og:image:url": `${siteUrl}/gymnavigator-og-1200x630.png`,
-		"twitter:image:width": "1200",
-		"twitter:image:height": "630",
-		"twitter:site": "@gymnavigator",
-		"twitter:creator": "@gymnavigator",
+		'og:image:url': `${siteUrl}/gymnavigator-og-1200x630.png`,
+		'twitter:image:width': '1200',
+		'twitter:image:height': '630',
+		'twitter:site': '@gymnavigator',
+		'twitter:creator': '@gymnavigator',
 		// Schema.org structured data hints
-		"application-name": "GymNavigator",
-		"mobile-web-app-capable": "yes",
-		"apple-mobile-web-app-capable": "yes",
-		"apple-mobile-web-app-status-bar-style": "default",
-		"apple-mobile-web-app-title": "GymNavigator",
+		'application-name': 'GymNavigator',
+		'mobile-web-app-capable': 'yes',
+		'apple-mobile-web-app-capable': 'yes',
+		'apple-mobile-web-app-status-bar-style': 'default',
+		'apple-mobile-web-app-title': 'GymNavigator',
 	},
 	icons: {
-		icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],
-		apple: [{ url: "/apple-touch-icon.png" }],
+		icon: [{ url: '/favicon.ico' }, { url: '/icon.png', type: 'image/png' }],
+		apple: [{ url: '/apple-touch-icon.png' }],
 		other: [
 			{
-				rel: "mask-icon",
-				url: "/favicon/safari-pinned-tab.svg",
-				color: "#1e40af",
+				rel: 'mask-icon',
+				url: '/favicon/safari-pinned-tab.svg',
+				color: '#1e40af',
 			},
 		],
 	},
-	manifest: "/site.webmanifest",
+	manifest: '/site.webmanifest',
 };
 
 export default async function RootLayout({
@@ -116,8 +116,8 @@ export default async function RootLayout({
 
 	const toasterProps: ToasterProps = {
 		richColors: true,
-		theme: "light",
-		position: "top-right",
+		theme: 'light',
+		position: 'top-right',
 	};
 
 	return (
@@ -132,66 +132,68 @@ export default async function RootLayout({
 						__html: JSON.stringify([
 							// SoftwareApplication schema
 							{
-								"@context": "https://schema.org",
-								"@type": "SoftwareApplication",
-								"name": "GymNavigator",
-								"description": "Multi-tenant gym management system with trainer-client relationship management, QR code attendance tracking, and comprehensive workout and diet planning",
-								"url": "https://gymnavigator.in",
-								"applicationCategory": "BusinessApplication",
-								"operatingSystem": "Web",
-								"offers": {
-									"@type": "Offer",
-									"price": "0",
-									"priceCurrency": "USD"
+								'@context': 'https://schema.org',
+								'@type': 'SoftwareApplication',
+								name: 'GymNavigator',
+								description:
+									'Multi-tenant gym management system with trainer-client relationship management, QR code attendance tracking, and comprehensive workout and diet planning',
+								url: 'https://gymnavigator.in',
+								applicationCategory: 'BusinessApplication',
+								operatingSystem: 'Web',
+								offers: {
+									'@type': 'Offer',
+									price: '0',
+									priceCurrency: 'USD',
 								},
-								"featureList": [
-									"Multi-tenant gym management",
-									"Trainer-client relationship management", 
-									"QR code attendance tracking",
-									"Workout plan creation and assignment",
-									"Diet plan management",
-									"Mobile-first PWA",
-									"User onboarding system"
-								]
+								featureList: [
+									'Multi-tenant gym management',
+									'Trainer-client relationship management',
+									'QR code attendance tracking',
+									'Workout plan creation and assignment',
+									'Diet plan management',
+									'Mobile-first PWA',
+									'User onboarding system',
+								],
 							},
 							// Organization schema
 							{
-								"@context": "https://schema.org",
-								"@type": "Organization",
-								"name": "GymNavigator",
-								"url": "https://gymnavigator.in",
-								"logo": "https://gymnavigator.in/logo.png",
-								"description": "Revolutionary gym management system focusing on trainer-client relationships",
-								"sameAs": [
-									"https://twitter.com/gymnavigator"
-								]
+								'@context': 'https://schema.org',
+								'@type': 'Organization',
+								name: 'GymNavigator',
+								url: 'https://gymnavigator.in',
+								logo: 'https://gymnavigator.in/logo.png',
+								description:
+									'Revolutionary gym management system focusing on trainer-client relationships',
+								sameAs: ['https://twitter.com/gymnavigator'],
 							},
 							// WebSite schema
 							{
-								"@context": "https://schema.org",
-								"@type": "WebSite",
-								"name": "GymNavigator",
-								"url": "https://gymnavigator.in",
-								"potentialAction": {
-									"@type": "SearchAction",
-									"target": "https://gymnavigator.in/search?q={search_term_string}",
-									"query-input": "required name=search_term_string"
-								}
+								'@context': 'https://schema.org',
+								'@type': 'WebSite',
+								name: 'GymNavigator',
+								url: 'https://gymnavigator.in',
+								potentialAction: {
+									'@type': 'SearchAction',
+									target:
+										'https://gymnavigator.in/search?q={search_term_string}',
+									'query-input': 'required name=search_term_string',
+								},
 							},
 							// Service schema
 							{
-								"@context": "https://schema.org",
-								"@type": "Service",
-								"name": "Gym Management System",
-								"description": "Comprehensive gym management solution with trainer delegation, attendance tracking, and nutrition planning",
-								"provider": {
-									"@type": "Organization",
-									"name": "GymNavigator"
+								'@context': 'https://schema.org',
+								'@type': 'Service',
+								name: 'Gym Management System',
+								description:
+									'Comprehensive gym management solution with trainer delegation, attendance tracking, and nutrition planning',
+								provider: {
+									'@type': 'Organization',
+									name: 'GymNavigator',
 								},
-								"serviceType": "Gym Management Software",
-								"areaServed": "Worldwide"
-							}
-						]).replace(/</g, '\\u003c') // XSS protection as per Next.js docs
+								serviceType: 'Gym Management Software',
+								areaServed: 'Worldwide',
+							},
+						]).replace(/</g, '\\u003c'), // XSS protection as per Next.js docs
 					}}
 				/>
 			</head>

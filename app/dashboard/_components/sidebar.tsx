@@ -8,10 +8,10 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import type { MenuItem as BaseMenuItem, SubItem } from './menuItems';
 import { useLucideIcons } from './use-lucide-icons';
-import OwnerAvatar from "../_assests/Gym_Owner.png"
+import OwnerAvatar from '../_assests/Gym_Owner.png';
 import type { Session } from 'next-auth';
 import { usePathname } from 'next/navigation';
-import  ClientAvatar from "../_assests/Client_Avatar.png"
+import ClientAvatar from '../_assests/Client_Avatar.png';
 // Extend the MenuItem type to use iconName instead of icon
 interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
 	iconName: string;
@@ -22,7 +22,7 @@ interface SidebarProps {
 	sessionData: Session;
 }
 
-export default function Sidebar({ menuItems , sessionData  }: SidebarProps) {
+export default function Sidebar({ menuItems, sessionData }: SidebarProps) {
 	const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
 	const router = useRouter();
 	const pathname = usePathname();
@@ -116,11 +116,17 @@ export default function Sidebar({ menuItems , sessionData  }: SidebarProps) {
 					</div>
 					<div className="mt-2 text-center w-full">
 						<div className="flex items-center justify-center gap-1">
-							<span className="text-xs text-slate-300 font-medium">Welcome,</span>
-							<span className="text-base font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm tracking-tight">{sessionData.user.name || sessionData.role}</span>
+							<span className="text-xs text-slate-300 font-medium">
+								Welcome,
+							</span>
+							<span className="text-base font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+								{sessionData.user.name || sessionData.role}
+							</span>
 						</div>
 						{sessionData.role && (
-							<span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-900/60 text-blue-200 tracking-wide uppercase shadow-sm">{sessionData.role}</span>
+							<span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-900/60 text-blue-200 tracking-wide uppercase shadow-sm">
+								{sessionData.role}
+							</span>
 						)}
 						<div className="flex justify-center mt-2">
 							<div className="h-1 w-10 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 animate-pulse-glow shadow-lg" />
@@ -150,35 +156,42 @@ export default function Sidebar({ menuItems , sessionData  }: SidebarProps) {
 									{isActiveParent(item) && (
 										<div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-white to-blue-200 rounded-r-full" />
 									)}
-									
+
 									{/* Icon with background effect */}
-									<div className={`flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-all duration-300
-										${isActiveParent(item) 
-											? 'bg-white/20' 
-											: 'bg-slate-700/50 group-hover:bg-slate-600/50'
-										}`}>
+									<div
+										className={`flex items-center justify-center w-8 h-8 rounded-lg mr-3 transition-all duration-300
+										${
+											isActiveParent(item)
+												? 'bg-white/20'
+												: 'bg-slate-700/50 group-hover:bg-slate-600/50'
+										}`}
+									>
 										<Icon className="w-5 h-5" />
 									</div>
-									
+
 									<span className="font-medium text-sm">{item.name}</span>
-									
+
 									{item.subItems && (
-										<div className={`ml-auto transition-transform duration-300 ${openMenus[item.label] ? 'rotate-180' : ''}`}>
+										<div
+											className={`ml-auto transition-transform duration-300 ${openMenus[item.label] ? 'rotate-180' : ''}`}
+										>
 											<ChevronDown className="w-4 h-4" />
 										</div>
 									)}
 								</button>
-								
+
 								{/* Submenu */}
 								{item.subItems && openMenus[item.label] && (
 									<div className="mt-2 ml-4 pl-4 border-l-2 border-slate-700/50 animate-slide-down">
 										<ul className="space-y-1">
 											{item.subItems.map((subItem, index) => (
-												<li key={subItem.name} 
+												<li
+													key={subItem.name}
 													className="opacity-0 animate-fade-in"
-													style={{ 
-														animation: `fadeIn 0.3s ease-out ${index * 0.05}s forwards` 
-													}}>
+													style={{
+														animation: `fadeIn 0.3s ease-out ${index * 0.05}s forwards`,
+													}}
+												>
 													<button
 														type="button"
 														onClick={() =>
@@ -191,11 +204,14 @@ export default function Sidebar({ menuItems , sessionData  }: SidebarProps) {
 																	: 'text-slate-400 hover:text-white hover:bg-slate-800/30'
 															}`}
 													>
-														<div className={`w-2 h-2 rounded-full mr-3 transition-all duration-300
-															${pathname === subItem.link 
-																? 'bg-blue-400 shadow-lg shadow-blue-400/50 animate-pulse-glow' 
-																: 'bg-slate-600 group-hover:bg-slate-400'
-															}`}/>
+														<div
+															className={`w-2 h-2 rounded-full mr-3 transition-all duration-300
+															${
+																pathname === subItem.link
+																	? 'bg-blue-400 shadow-lg shadow-blue-400/50 animate-pulse-glow'
+																	: 'bg-slate-600 group-hover:bg-slate-400'
+															}`}
+														/>
 														<span className="font-medium">{subItem.name}</span>
 													</button>
 												</li>
@@ -208,7 +224,7 @@ export default function Sidebar({ menuItems , sessionData  }: SidebarProps) {
 					})}
 				</ul>
 			</nav>
-			
+
 			{/* Footer */}
 			<div className="p-4 border-t border-slate-700/50">
 				<button

@@ -37,7 +37,7 @@ export default function AttendanceQRScanner() {
 			if (!hasShownToastRef.current) {
 				hasShownToastRef.current = true;
 				setTimeout(() => {
-					toast.info("Using your preferred camera for attendance scanning.");
+					toast.info('Using your preferred camera for attendance scanning.');
 				}, 1000);
 			}
 		}

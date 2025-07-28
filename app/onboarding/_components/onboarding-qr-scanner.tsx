@@ -62,7 +62,9 @@ export default function OnboardingQrScanner() {
 					setHasUsedSavedCamera(true);
 					// Show toast after a short delay to ensure camera is set up
 					setTimeout(() => {
-						toast.info("Using previously selected camera. Click 'Next Camera' to switch.");
+						toast.info(
+							"Using previously selected camera. Click 'Next Camera' to switch.",
+						);
 					}, 1000);
 				}
 			}
@@ -285,10 +287,7 @@ export default function OnboardingQrScanner() {
 	// Camera switcher UI with improved styling and tooltip
 	const CameraSwitcher = () =>
 		backCameras.length > 1 ? (
-			<div
-				className="group relative"
-				title="Switch to next available camera"
-			>
+			<div className="group relative" title="Switch to next available camera">
 				<button
 					type="button"
 					onClick={() => {
@@ -297,8 +296,10 @@ export default function OnboardingQrScanner() {
 						// Save the new deviceId to localStorage when user manually switches
 						const newDeviceId = backCameras[newIndex].deviceId;
 						localStorage.setItem('preferredCameraDeviceId', newDeviceId);
-						toast.success("Camera switched successfully. Your preference has been saved.");
-						
+						toast.success(
+							'Camera switched successfully. Your preference has been saved.',
+						);
+
 						// Reset scan states
 						setHasProcessed(false);
 						setIsScanning(true);
@@ -333,26 +334,37 @@ export default function OnboardingQrScanner() {
 						/>
 					</svg>
 					<span>Switch Camera</span>
-					
+
 					{/* Camera count indicator */}
 					<span className="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-600 text-xs font-semibold rounded-full">
 						{cameraIndex + 1}/{backCameras.length}
 					</span>
 				</button>
-				
+
 				{/* Tooltip */}
 				<div className="absolute right-0 top-12 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10001">
 					<div className="flex items-start gap-2">
 						<div className="flex-shrink-0 mt-0.5">
-							<svg className="w-3 h-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-label="Information icon" role="img">
+							<svg
+								className="w-3 h-3 text-blue-400"
+								fill="currentColor"
+								viewBox="0 0 20 20"
+								aria-label="Information icon"
+								role="img"
+							>
 								<title>Information</title>
-								<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+								<path
+									fillRule="evenodd"
+									d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+									clipRule="evenodd"
+								/>
 							</svg>
 						</div>
 						<div>
 							<p className="font-medium mb-1">Switch Camera</p>
 							<p className="text-gray-300 leading-relaxed">
-								Click to switch between available cameras. Your preference will be saved for future use.
+								Click to switch between available cameras. Your preference will
+								be saved for future use.
 							</p>
 						</div>
 					</div>

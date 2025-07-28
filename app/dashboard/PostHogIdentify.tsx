@@ -31,10 +31,9 @@ export default function PostHogIdentify({
 				gym_id: gym?.id,
 				gym_name: gym?.gym_name,
 			};
-			
+
 			posthog.identify(userId, userProps);
 		} else {
-			
 		}
 	}, [userId, email, name, role, gym]);
 	return null;

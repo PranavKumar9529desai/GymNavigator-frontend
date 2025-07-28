@@ -36,9 +36,13 @@ export const fetchAttendanceData = async (): Promise<AttendanceData> => {
 		const attendanceDays = response.data.data.map((dateStr) => {
 			const utcDate = new Date(dateStr);
 			// Normalize to start of day in local timezone
-			return new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate());
+			return new Date(
+				utcDate.getFullYear(),
+				utcDate.getMonth(),
+				utcDate.getDate(),
+			);
 		});
-		
+
 		console.log('Normalized attendance days:', attendanceDays);
 		return { attendanceDays };
 	} catch (error) {
