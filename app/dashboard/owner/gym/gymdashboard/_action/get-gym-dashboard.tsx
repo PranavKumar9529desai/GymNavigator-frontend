@@ -18,26 +18,37 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 				monthlyGrowthRate: data.businessMetrics?.monthlyGrowthRate ?? 0,
 				totalMembers: data.businessMetrics?.totalMembers ?? 0,
 				newMembers: data.businessMetrics?.newMembers ?? 0,
-				averageRevenuePerMember: data.businessMetrics?.averageRevenuePerMember ?? 0,
+				averageRevenuePerMember:
+					data.businessMetrics?.averageRevenuePerMember ?? 0,
 				todayAttendance: data.businessMetrics?.todayAttendance ?? 0,
 				attendanceGrowth: data.businessMetrics?.attendanceGrowth ?? 0,
 				activeTrainers: data.businessMetrics?.activeTrainers ?? 0,
 				expiringMemberships: data.businessMetrics?.expiringMemberships ?? 0,
 				inactiveMembers: data.businessMetrics?.inactiveMembers ?? 0,
 			},
-			
+
 			// Operational Metrics
 			operationalMetrics: {
 				onboardingPipeline: {
-					onboarding: data.operationalMetrics?.onboardingPipeline?.onboarding ?? 0,
-					healthProfile: data.operationalMetrics?.onboardingPipeline?.healthProfile ?? 0,
-					dashboard: data.operationalMetrics?.onboardingPipeline?.dashboard ?? 0,
-					workoutPlan: data.operationalMetrics?.onboardingPipeline?.workoutPlan ?? 0,
+					onboarding:
+						data.operationalMetrics?.onboardingPipeline?.onboarding ?? 0,
+					healthProfile:
+						data.operationalMetrics?.onboardingPipeline?.healthProfile ?? 0,
+					dashboard:
+						data.operationalMetrics?.onboardingPipeline?.dashboard ?? 0,
+					workoutPlan:
+						data.operationalMetrics?.onboardingPipeline?.workoutPlan ?? 0,
 					dietPlan: data.operationalMetrics?.onboardingPipeline?.dietPlan ?? 0,
 				},
 				unassignedUsers: data.operationalMetrics?.unassignedUsers ?? 0,
 				trainerWorkload: (data.operationalMetrics?.trainerWorkload || []).map(
-					(trainer: { id: number; name: string; userCount: number; specializations: string | null; rating: number | null }) => ({
+					(trainer: {
+						id: number;
+						name: string;
+						userCount: number;
+						specializations: string | null;
+						rating: number | null;
+					}) => ({
 						id: trainer.id,
 						name: trainer.name,
 						userCount: trainer.userCount,
@@ -49,7 +60,7 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 				yesterdayAttendance: data.operationalMetrics?.yesterdayAttendance ?? 0,
 				attendanceGrowth: data.operationalMetrics?.attendanceGrowth ?? 0,
 			},
-			
+
 			// Enhanced Trends
 			trends: {
 				attendance: (data.trends?.attendance || []).map(
@@ -71,7 +82,7 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 					}),
 				),
 			},
-			
+
 			// Enhanced Breakdowns
 			breakdowns: {
 				membershipTypes: (data.breakdowns?.membershipTypes || []).map(
@@ -96,7 +107,12 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 					}),
 				),
 				revenueByPlan: (data.breakdowns?.revenueByPlan || []).map(
-					(item: { label: string; value: number; color?: string; count?: number }) => ({
+					(item: {
+						label: string;
+						value: number;
+						color?: string;
+						count?: number;
+					}) => ({
 						label: item.label,
 						value: item.value,
 						color: item.color,
@@ -111,7 +127,7 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 					}),
 				),
 			},
-			
+
 			// Recent Activities
 			recentActivities: {
 				recentSignups: (data.recentActivities?.recentSignups || []).map(
@@ -122,7 +138,11 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 					}),
 				),
 				recentAttendance: (data.recentActivities?.recentAttendance || []).map(
-					(att: { id: number; user: { id: number; name: string }; scanTime: string }) => ({
+					(att: {
+						id: number;
+						user: { id: number; name: string };
+						scanTime: string;
+					}) => ({
 						id: att.id,
 						user: { id: att.user.id, name: att.user.name },
 						scanTime: att.scanTime,
@@ -144,7 +164,7 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 					}),
 				),
 			},
-			
+
 			// Gym Details
 			gymDetails: {
 				gym_name: data.gymDetails?.gym_name ?? '',

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import type { GymDashboardData } from '../types';
@@ -14,7 +14,8 @@ interface GymDashboardProps {
 }
 
 export default function GymDashboard({ data }: GymDashboardProps) {
-	const { businessMetrics, operationalMetrics, breakdowns, recentActivities } = data;
+	const { businessMetrics, operationalMetrics, breakdowns, recentActivities } =
+		data;
 
 	return (
 		<div className="space-y-4 p-4 bg-gradient-to-br from-blue-50/40 via-white to-indigo-50/30 min-h-screen">
@@ -25,15 +26,18 @@ export default function GymDashboard({ data }: GymDashboardProps) {
 			<KeyMetrics businessMetrics={businessMetrics} />
 
 			{/* Operational Metrics */}
-			<OperationalMetrics 
-				operationalMetrics={operationalMetrics} 
-				businessMetrics={businessMetrics} 
+			<OperationalMetrics
+				operationalMetrics={operationalMetrics}
+				businessMetrics={businessMetrics}
 			/>
 
 			{/* Revenue & Membership Status Charts */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<RevenueChart breakdowns={breakdowns} />
-				<MembershipStatusDistribution breakdowns={breakdowns} businessMetrics={businessMetrics} />
+				<MembershipStatusDistribution
+					breakdowns={breakdowns}
+					businessMetrics={businessMetrics}
+				/>
 			</div>
 
 			{/* Recent Activities */}

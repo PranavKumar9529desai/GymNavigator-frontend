@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-	Users, 
-	Activity, 
-	UserCheck, 
+import {
+	Users,
+	Activity,
+	UserCheck,
 	UserPlus,
 	ArrowUpRight,
 	ArrowDownRight,
-	IndianRupee
+	IndianRupee,
 } from 'lucide-react';
 import type { GymDashboardData } from '../types';
 
@@ -41,7 +41,9 @@ export default function KeyMetrics({ businessMetrics }: KeyMetricsProps) {
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
 			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-					<CardTitle className="text-sm font-medium text-slate-600">Monthly Revenue</CardTitle>
+					<CardTitle className="text-sm font-medium text-slate-600">
+						Monthly Revenue
+					</CardTitle>
 					<div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
 						<IndianRupee className="h-4 w-4 text-white" />
 					</div>
@@ -52,14 +54,19 @@ export default function KeyMetrics({ businessMetrics }: KeyMetricsProps) {
 					</div>
 					<div className="flex items-center text-xs text-slate-600 mt-1">
 						{getTrendIcon(businessMetrics.monthlyGrowthRate)}
-						<span className="ml-1">{formatPercentage(businessMetrics.monthlyGrowthRate)} from last month</span>
+						<span className="ml-1">
+							{formatPercentage(businessMetrics.monthlyGrowthRate)} from last
+							month
+						</span>
 					</div>
 				</CardContent>
 			</Card>
 
 			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-					<CardTitle className="text-sm font-medium text-slate-600">Total Members</CardTitle>
+					<CardTitle className="text-sm font-medium text-slate-600">
+						Total Members
+					</CardTitle>
 					<div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center">
 						<Users className="h-4 w-4 text-white" />
 					</div>
@@ -77,7 +84,9 @@ export default function KeyMetrics({ businessMetrics }: KeyMetricsProps) {
 
 			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-					<CardTitle className="text-sm font-medium text-slate-600">Today's Attendance</CardTitle>
+					<CardTitle className="text-sm font-medium text-slate-600">
+						Today's Attendance
+					</CardTitle>
 					<div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
 						<Activity className="h-4 w-4 text-white" />
 					</div>
@@ -88,14 +97,19 @@ export default function KeyMetrics({ businessMetrics }: KeyMetricsProps) {
 					</div>
 					<div className="flex items-center text-xs text-slate-600 mt-1">
 						{getTrendIcon(businessMetrics.attendanceGrowth)}
-						<span className="ml-1">{formatPercentage(businessMetrics.attendanceGrowth)} from yesterday</span>
+						<span className="ml-1">
+							{formatPercentage(businessMetrics.attendanceGrowth)} from
+							yesterday
+						</span>
 					</div>
 				</CardContent>
 			</Card>
 
 			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-					<CardTitle className="text-sm font-medium text-slate-600">Active Trainers</CardTitle>
+					<CardTitle className="text-sm font-medium text-slate-600">
+						Active Trainers
+					</CardTitle>
 					<div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
 						<UserCheck className="h-4 w-4 text-white" />
 					</div>
@@ -111,4 +125,4 @@ export default function KeyMetrics({ businessMetrics }: KeyMetricsProps) {
 			</Card>
 		</div>
 	);
-} 
+}

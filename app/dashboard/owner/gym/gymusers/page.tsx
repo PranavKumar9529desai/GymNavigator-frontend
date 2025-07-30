@@ -1,4 +1,4 @@
-import GymUsersClient from "./_components/GymUsersClient";
+import GymUsersClient from './_components/GymUsersClient';
 
 export default async function Page() {
 	// Data fetching will be handled in the client component for SSR/CSR flexibility

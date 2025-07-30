@@ -122,7 +122,6 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en">
-			
 			<body>
 				<PostHogProvider>
 					<Providers session={session}>

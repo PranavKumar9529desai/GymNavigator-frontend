@@ -187,9 +187,9 @@ export const DietSummaryCard = ({ dietPlan }: DietSummaryCardProps) => {
 									labelLine
 									label={(props) =>
 										props && typeof props.midAngle === 'number'
-										// @ts-ignore 
-										// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-											? renderCustomizedLabel(props as any)
+											? // @ts-ignore
+												// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+												renderCustomizedLabel(props as any)
 											: null
 									}
 									outerRadius={65}

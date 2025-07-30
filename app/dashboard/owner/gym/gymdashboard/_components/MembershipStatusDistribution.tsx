@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import {
 	Cell,
 	ResponsiveContainer,
 	Tooltip,
-	Legend
+	Legend,
 } from 'recharts';
 import type { GymDashboardData } from '../types';
 
@@ -17,12 +17,15 @@ interface MembershipStatusDistributionProps {
 	businessMetrics: GymDashboardData['businessMetrics'];
 }
 
-export default function MembershipStatusDistribution({ breakdowns, businessMetrics }: MembershipStatusDistributionProps) {
+export default function MembershipStatusDistribution({
+	breakdowns,
+	businessMetrics,
+}: MembershipStatusDistributionProps) {
 	// Color palette for membership statuses
 	const statusColors = {
-		'Active': '#10B981', // Green
-		'Expired': '#EF4444', // Red
-		'Cancelled': '#6B7280', // Gray
+		Active: '#10B981', // Green
+		Expired: '#EF4444', // Red
+		Cancelled: '#6B7280', // Gray
 		'Expiring Soon': '#F59E0B', // Orange
 	};
 
@@ -30,12 +33,23 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 	const pieChartData = breakdowns.membershipStatus.map((item) => ({
 		name: item.label,
 		value: item.value,
-		color: item.color || statusColors[item.label as keyof typeof statusColors] || '#3B82F6',
-		percentage: ((item.value / businessMetrics.totalMembers) * 100).toFixed(1)
+		color:
+			item.color ||
+			statusColors[item.label as keyof typeof statusColors] ||
+			'#3B82F6',
+		percentage: ((item.value / businessMetrics.totalMembers) * 100).toFixed(1),
 	}));
 
 	// Custom tooltip for pie chart
-	const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; value: number; percentage: string } }> }) => {
+	const CustomTooltip = ({
+		active,
+		payload,
+	}: {
+		active?: boolean;
+		payload?: Array<{
+			payload: { name: string; value: number; percentage: string };
+		}>;
+	}) => {
 		if (active && payload && payload.length) {
 			const data = payload[0].payload;
 			return (
@@ -50,15 +64,17 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 	};
 
 	// Custom legend formatter
-	const CustomLegend = ({ payload }: { payload?: Array<{ value: string; color: string }> }) => {
+	const CustomLegend = ({
+		payload,
+	}: { payload?: Array<{ value: string; color: string }> }) => {
 		if (!payload) return null;
-		
+
 		return (
 			<div className="flex flex-wrap justify-center gap-2 mt-4">
 				{payload.map((entry) => (
 					<div key={entry.value} className="flex items-center space-x-1">
-						<div 
-							className="w-3 h-3 rounded-full" 
+						<div
+							className="w-3 h-3 rounded-full"
 							style={{ backgroundColor: entry.color }}
 						/>
 						<span className="text-xs text-slate-600">{entry.value}</span>
@@ -69,15 +85,22 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 	};
 
 	// Don't render if no data
-	if (!breakdowns.membershipStatus || breakdowns.membershipStatus.length === 0) {
+	if (
+		!breakdowns.membershipStatus ||
+		breakdowns.membershipStatus.length === 0
+	) {
 		return (
 			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 				<CardHeader>
-					<CardTitle className="text-lg font-semibold text-slate-800">Membership Status</CardTitle>
+					<CardTitle className="text-lg font-semibold text-slate-800">
+						Membership Status
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="h-64 flex items-center justify-center">
-						<p className="text-slate-500 text-sm">No membership data available</p>
+						<p className="text-slate-500 text-sm">
+							No membership data available
+						</p>
 					</div>
 				</CardContent>
 			</Card>
@@ -87,7 +110,9 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 	return (
 		<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 			<CardHeader>
-				<CardTitle className="text-lg font-semibold text-slate-800">Membership Status</CardTitle>
+				<CardTitle className="text-lg font-semibold text-slate-800">
+					Membership Status
+				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<div className="h-64">
@@ -109,8 +134,8 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 								endAngle={-270}
 							>
 								{pieChartData.map((entry, _index) => (
-									<Cell 
-										key={`cell-${entry.name}`} 
+									<Cell
+										key={`cell-${entry.name}`}
 										fill={entry.color}
 										stroke="#ffffff"
 										strokeWidth={2}
@@ -118,35 +143,50 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 								))}
 							</Pie>
 							<Tooltip content={<CustomTooltip />} />
-							<Legend 
+							<Legend
 								content={<CustomLegend />}
-								verticalAlign="bottom" 
+								verticalAlign="bottom"
 								height={36}
 							/>
 						</PieChart>
 					</ResponsiveContainer>
 				</div>
-				
+
 				{/* Detailed breakdown below chart */}
 				<div className="mt-4 space-y-2">
 					{breakdowns.membershipStatus.map((item, _index) => {
-						const percentage = ((item.value / businessMetrics.totalMembers) * 100).toFixed(1);
-						const color = item.color || statusColors[item.label as keyof typeof statusColors] || '#3B82F6';
-						
+						const percentage = (
+							(item.value / businessMetrics.totalMembers) *
+							100
+						).toFixed(1);
+						const color =
+							item.color ||
+							statusColors[item.label as keyof typeof statusColors] ||
+							'#3B82F6';
+
 						return (
-							<div key={item.label} className="flex items-center justify-between p-2 bg-gradient-to-r from-slate-50/50 to-blue-50/50 rounded-lg border border-slate-100">
+							<div
+								key={item.label}
+								className="flex items-center justify-between p-2 bg-gradient-to-r from-slate-50/50 to-blue-50/50 rounded-lg border border-slate-100"
+							>
 								<div className="flex items-center space-x-3">
-									<div 
-										className="w-4 h-4 rounded-full shadow-sm" 
+									<div
+										className="w-4 h-4 rounded-full shadow-sm"
 										style={{ backgroundColor: color }}
 									/>
 									<div>
-										<span className="text-sm font-medium text-slate-800">{item.label}</span>
-										<div className="text-xs text-slate-500">{item.value} members</div>
+										<span className="text-sm font-medium text-slate-800">
+											{item.label}
+										</span>
+										<div className="text-xs text-slate-500">
+											{item.value} members
+										</div>
 									</div>
 								</div>
 								<div className="text-right">
-									<div className="font-semibold text-slate-800">{percentage}%</div>
+									<div className="font-semibold text-slate-800">
+										{percentage}%
+									</div>
 									<div className="text-xs text-slate-500">of total</div>
 								</div>
 							</div>
@@ -156,4 +196,4 @@ export default function MembershipStatusDistribution({ breakdowns, businessMetri
 			</CardContent>
 		</Card>
 	);
-} 
+}
