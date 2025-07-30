@@ -110,6 +110,7 @@ export interface GymDashboardData {
 		gender: GymDashboardBreakdown[];
 		planPopularity: GymDashboardBreakdown[];
 		revenueByPlan: GymDashboardBreakdown[];
+		membershipStatus: GymDashboardBreakdown[];
 	};
 	recentActivities: GymDashboardRecentActivities;
 	gymDetails: GymDashboardDetails;

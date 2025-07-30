@@ -103,6 +103,13 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 						count: item.count,
 					}),
 				),
+				membershipStatus: (data.breakdowns?.membershipStatus || []).map(
+					(item: { label: string; value: number; color?: string }) => ({
+						label: item.label,
+						value: item.value,
+						color: item.color,
+					}),
+				),
 			},
 			
 			// Recent Activities

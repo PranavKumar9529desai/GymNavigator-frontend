@@ -124,7 +124,6 @@ export default async function RootLayout({
 		<html lang="en">
 			<head>
 				{/* JSON-LD Structured Data for SEO */}
-				{/* biome-ignore lint/security/noDangerouslySetInnerHtml: This is the official Next.js recommended approach for JSON-LD */}
 				<script
 					type="application/ld+json"
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>

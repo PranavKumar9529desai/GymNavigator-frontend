@@ -6,7 +6,7 @@ import DashboardHeader from './DashboardHeader';
 import KeyMetrics from './KeyMetrics';
 import OperationalMetrics from './OperationalMetrics';
 import RevenueChart from './RevenueChart';
-import MemberDistribution from './MemberDistribution';
+import MembershipStatusDistribution from './MembershipStatusDistribution';
 import RecentActivities from './RecentActivities';
 
 interface GymDashboardProps {
@@ -30,10 +30,10 @@ export default function GymDashboard({ data }: GymDashboardProps) {
 				businessMetrics={businessMetrics} 
 			/>
 
-			{/* Revenue & Growth Charts */}
+			{/* Revenue & Membership Status Charts */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<RevenueChart breakdowns={breakdowns} />
-				<MemberDistribution breakdowns={breakdowns} businessMetrics={businessMetrics} />
+				<MembershipStatusDistribution breakdowns={breakdowns} businessMetrics={businessMetrics} />
 			</div>
 
 			{/* Recent Activities */}

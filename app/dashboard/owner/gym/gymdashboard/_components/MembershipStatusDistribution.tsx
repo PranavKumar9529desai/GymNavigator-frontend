@@ -12,29 +12,25 @@ import {
 } from 'recharts';
 import type { GymDashboardData } from '../types';
 
-interface MemberDistributionProps {
+interface MembershipStatusDistributionProps {
 	breakdowns: GymDashboardData['breakdowns'];
 	businessMetrics: GymDashboardData['businessMetrics'];
 }
 
-export default function MemberDistribution({ breakdowns, businessMetrics }: MemberDistributionProps) {
-	// Beautiful color palette using react-colorful inspired colors
-	const colors = [
-		'#3B82F6', // Blue
-		'#EF4444', // Red
-		'#10B981', // Emerald
-		'#F59E0B', // Amber
-		'#8B5CF6', // Violet
-		'#EC4899', // Pink
-		'#06B6D4', // Cyan
-		'#84CC16', // Lime
-	];
+export default function MembershipStatusDistribution({ breakdowns, businessMetrics }: MembershipStatusDistributionProps) {
+	// Color palette for membership statuses
+	const statusColors = {
+		'Active': '#10B981', // Green
+		'Expired': '#EF4444', // Red
+		'Cancelled': '#6B7280', // Gray
+		'Expiring Soon': '#F59E0B', // Orange
+	};
 
-	// Prepare data for pie chart with better colors and formatting
-	const pieChartData = breakdowns.gender.map((item, index) => ({
+	// Prepare data for pie chart
+	const pieChartData = breakdowns.membershipStatus.map((item) => ({
 		name: item.label,
 		value: item.value,
-		color: item.color || colors[index % colors.length],
+		color: item.color || statusColors[item.label as keyof typeof statusColors] || '#3B82F6',
 		percentage: ((item.value / businessMetrics.totalMembers) * 100).toFixed(1)
 	}));
 
@@ -72,10 +68,26 @@ export default function MemberDistribution({ breakdowns, businessMetrics }: Memb
 		);
 	};
 
+	// Don't render if no data
+	if (!breakdowns.membershipStatus || breakdowns.membershipStatus.length === 0) {
+		return (
+			<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+				<CardHeader>
+					<CardTitle className="text-lg font-semibold text-slate-800">Membership Status</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="h-64 flex items-center justify-center">
+						<p className="text-slate-500 text-sm">No membership data available</p>
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
+
 	return (
 		<Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
 			<CardHeader>
-				<CardTitle className="text-lg font-semibold text-slate-800">Member Distribution</CardTitle>
+				<CardTitle className="text-lg font-semibold text-slate-800">Membership Status</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<div className="h-64">
@@ -86,9 +98,9 @@ export default function MemberDistribution({ breakdowns, businessMetrics }: Memb
 								cx="50%"
 								cy="50%"
 								labelLine={false}
-								label={({ name, percentage }) => `${name} ${percentage}%`}
+								label={({ percentage }) => `${percentage}%`}
 								outerRadius={80}
-								innerRadius={20}
+								innerRadius={10}
 								fill="#8884d8"
 								dataKey="value"
 								stroke="#ffffff"
@@ -96,7 +108,7 @@ export default function MemberDistribution({ breakdowns, businessMetrics }: Memb
 								startAngle={90}
 								endAngle={-270}
 							>
-								{pieChartData.map((entry, index) => (
+								{pieChartData.map((entry, _index) => (
 									<Cell 
 										key={`cell-${entry.name}`} 
 										fill={entry.color}
@@ -117,14 +129,16 @@ export default function MemberDistribution({ breakdowns, businessMetrics }: Memb
 				
 				{/* Detailed breakdown below chart */}
 				<div className="mt-4 space-y-2">
-					{breakdowns.gender.map((item, index) => {
+					{breakdowns.membershipStatus.map((item, _index) => {
 						const percentage = ((item.value / businessMetrics.totalMembers) * 100).toFixed(1);
+						const color = item.color || statusColors[item.label as keyof typeof statusColors] || '#3B82F6';
+						
 						return (
 							<div key={item.label} className="flex items-center justify-between p-2 bg-gradient-to-r from-slate-50/50 to-blue-50/50 rounded-lg border border-slate-100">
 								<div className="flex items-center space-x-3">
 									<div 
 										className="w-4 h-4 rounded-full shadow-sm" 
-										style={{ backgroundColor: item.color || colors[index % colors.length] }}
+										style={{ backgroundColor: color }}
 									/>
 									<div>
 										<span className="text-sm font-medium text-slate-800">{item.label}</span>
