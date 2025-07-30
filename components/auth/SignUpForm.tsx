@@ -245,14 +245,23 @@ export default function SignUpForm() {
 												<SelectValue placeholder="Select your Role" />
 											</SelectTrigger>
 										</FormControl>
-										<SelectContent className="z-50 bg-blue-950/30 backdrop-blur-md border-blue-500/30 text-white">
-											<SelectItem value="owner" className="hover:bg-blue-800/50">
+										<SelectContent className="z-50 bg-blue-950/80 backdrop-blur-md border-blue-500/30 text-white">
+											<SelectItem
+												value="owner"
+												className="bg-blue-950/30 text-white hover:bg-blue-800/60 focus:bg-blue-800/60 hover:text-white focus:text-white"
+											>
 												Gym Owner
 											</SelectItem>
-											<SelectItem value="trainer" className="hover:bg-blue-800/50">
+											<SelectItem
+												value="trainer"
+												className="bg-blue-950/30 text-white hover:bg-blue-800/60 focus:bg-blue-800/60 hover:text-white focus:text-white"
+											>
 												Trainer
 											</SelectItem>
-											<SelectItem value="client" className="hover:bg-blue-800/50">
+											<SelectItem
+												value="client"
+												className="bg-blue-950/30 text-white hover:bg-blue-800/60 focus:bg-blue-800/60 hover:text-white focus:text-white"
+											>
 												Client
 											</SelectItem>
 										</SelectContent>
