@@ -2,11 +2,11 @@
 
 import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
 import { AxiosError } from 'axios';
-import type { ApiResult, LoginResponseData, SignUpRequest } from '@/lib/api/types';
+import type { ApiResult, BaseUser, SignUpRequest } from '@/lib/api/types';
 
 export async function signUpWithCredentials(
 	userData: SignUpRequest
-): Promise<ApiResult<LoginResponseData>> {
+): Promise<ApiResult<BaseUser>> {
 	try {
 		const axiosInstance = await AuthReqConfig();
 		const response = await axiosInstance.post('/signup/createaccount', userData);

@@ -61,7 +61,14 @@ export default function SignInForm() {
 				const { message, code } = parseAuthError(result.error);
 
 				setError(message);
-				toast.error('Sign in failed', { description: message });
+				// Make error toasts more prominent and persistent
+				toast.error('Sign in failed', { 
+					description: message,
+					action: {
+						label: '×',
+						onClick: () => toast.dismiss()
+					}
+				});
 
 				// // Map error codes to user-friendly toast messages
 				// switch (errorCode) {
@@ -100,6 +107,10 @@ export default function SignInForm() {
 			setError('An unexpected error occurred');
 			toast.error('Sign in error', {
 				description: 'An unexpected error occurred',
+				action: {
+					label: '×',
+					onClick: () => toast.dismiss()
+				}
 			});
 		} finally {
 			setLoading(false);
@@ -122,7 +133,13 @@ export default function SignInForm() {
 		} catch (error) {
 			console.error('Failed to sign in with Google:', error);
 			setError('Failed to sign in with Google');
-			toast.error('Google Sign-in failed', { description: 'Please try again' });
+			toast.error('Google Sign-in failed', { 
+				description: 'Please try again',
+				action: {
+					label: '×',
+					onClick: () => toast.dismiss()
+				}
+			});
 		} finally {
 			setLoading(false);
 		}

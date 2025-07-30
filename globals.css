@@ -273,3 +273,55 @@
 		background: transparent;
 	}
 }
+
+/* Custom Toast Dismiss Button Styles */
+[data-sonner-toast] [data-action] {
+	background-color: transparent !important;
+	color: rgb(220 38 38) !important;
+	border: none !important;
+	padding: 8px !important;
+	font-size: 22px !important;
+	font-weight: bold !important;
+	transition: all 0.2s ease !important;
+	box-shadow: none !important;
+	width: 32px !important;
+	height: 32px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	line-height: 1 !important;
+}
+
+[data-sonner-toast] [data-action]:hover {
+	background-color: transparent !important;
+	color: rgb(185 28 28) !important;
+	transform: scale(1.1) !important;
+	box-shadow: none !important;
+}
+
+[data-sonner-toast] [data-action]:focus {
+	outline: none !important;
+
+	box-shadow: none !important;
+}
+
+/* Error toast specific styling */
+[data-sonner-toast][data-type="error"] [data-action] {
+	background-color: transparent !important;
+	color: rgb(220 38 38) !important;
+}
+
+[data-sonner-toast][data-type="error"] [data-action]:hover {
+	background-color: transparent !important;
+	color: rgb(185 28 28) !important;
+}
+
+[data-sonner-toast][data-type="error"] [data-action]:focus {
+	box-shadow: none !important;
+}
+
+/* Fix icon alignment in toast header */
+[data-sonner-toast] [data-icon] {
+	align-self: flex-start !important;
+	margin-top: 2px !important;
+}

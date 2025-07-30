@@ -7,6 +7,12 @@ export interface GymInfo {
   gym_name: string;
 }
 
+export interface BaseUser {
+  id: string | number;
+  name: string;
+  email: string;
+}
+
 export interface UserData {
   id: string;
   name: string;

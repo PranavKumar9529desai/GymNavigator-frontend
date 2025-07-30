@@ -65,19 +65,60 @@ export default function SignUpForm() {
 				if (result?.error) {
 					// Try to parse the error message
 					let errorMessage = 'Registration failed';
+					let isExistingUser = false;
 					
 					try {
 						const errorData = JSON.parse(result.error);
 						errorMessage = errorData.message || errorMessage;
+						
+						// Check for specific error types
+						if (errorData.code === 'USER_EXISTS' || 
+							errorData.message?.toLowerCase().includes('already exists') ||
+							errorData.message?.toLowerCase().includes('user exists') ||
+							result.error.toLowerCase().includes('already exists') ||
+							result.error.toLowerCase().includes('user exists')) {
+							isExistingUser = true;
+							errorMessage = 'An account with this email already exists. Please sign in instead.';
+						}
 					} catch {
-						// If parsing fails, use the raw error
-						errorMessage = result.error;
+						// If parsing fails, check the raw error message
+						const rawError = result.error.toLowerCase();
+						
+						// Handle NextAuth's CredentialSignin error for existing users
+						if (rawError === 'credentialsignin' || 
+							rawError.includes('credential') ||
+							rawError.includes('already exists') || 
+							rawError.includes('user exists') ||
+							rawError.includes('duplicate') ||
+							rawError.includes('email taken')) {
+							isExistingUser = true;
+							errorMessage = 'An account with this email already exists. Please sign in instead.';
+						} else {
+							errorMessage = result.error;
+						}
 					}
 					
 					setErrorType('fail');
 					setError(errorMessage);
 					toast.dismiss();
-					toast.error('Registration failed', { description: errorMessage });
+					
+					if (isExistingUser) {
+						toast.error('Account Already Exists', { 
+							description: 'Please sign in with your existing account or use a different email address.',
+							action: {
+								label: '×',
+								onClick: () => toast.dismiss()
+							}
+						});
+					} else {
+						toast.error('Registration failed', { 
+							description: errorMessage,
+							action: {
+								label: '×',
+								onClick: () => toast.dismiss()
+							}
+						});
+					}
 				} else {
 					setErrorType('success');
 					setError('');
@@ -93,6 +134,10 @@ export default function SignUpForm() {
 				toast.dismiss();
 				toast.error('Registration error', {
 					description: 'An unexpected error occurred',
+					action: {
+						label: '×',
+						onClick: () => toast.dismiss()
+					}
 				});
 			}
 		});
@@ -104,6 +149,10 @@ export default function SignUpForm() {
 		if (!selectedRole) {
 			toast.error('Role selection required', {
 				description: 'Please select a role before continuing with Google',
+				action: {
+					label: '×',
+					onClick: () => toast.dismiss()
+				}
 			});
 			form.setError('role', {
 				type: 'manual',
@@ -117,16 +166,7 @@ export default function SignUpForm() {
 
 	return (
 		<div className="w-full max-w-md mx-auto p-8 rounded-xl shadow-xl">
-			{error && errorType && (
-				<div className="h-8 sm:mb-4 mb-2">
-					<FormError
-						FormErrorProps={{
-							message: error,
-							type: errorType,
-						}}
-					/>
-				</div>
-			)}
+			
 
 			<div className="space-y-8">
 				<Form {...form}>

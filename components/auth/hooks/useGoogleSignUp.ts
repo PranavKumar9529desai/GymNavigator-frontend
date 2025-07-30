@@ -25,10 +25,32 @@ export function useGoogleSignUp() {
 				await storeGoogleSignupRole(selectedRole);
 
 				// Pass the role as a state parameter to Google auth
-				await signIn('google', {
-					redirect: true,
+				const result = await signIn('google', {
+					redirect: false,
 					callbackUrl: '/dashboard',
 				});
+
+				toast.dismiss();
+
+				if (result?.error) {
+					// Handle specific error cases
+					if (result.error.includes('AccessDenied')) {
+						toast.error('Account Already Exists', {
+							description: 'This email is already registered. Please sign in instead.',
+						});
+						// Redirect to signin page after a short delay
+						setTimeout(() => {
+							router.push('/signin');
+						}, 2000);
+					} else {
+						toast.error('Google sign-in failed', {
+							description: 'Could not connect to Google. Please try again.',
+						});
+					}
+				} else if (result?.url) {
+					// Successful sign-in, redirect to the callback URL
+					router.push(result.url);
+				}
 			} catch (error) {
 				toast.dismiss();
 				toast.error('Google sign-in failed', {

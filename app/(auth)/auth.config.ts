@@ -12,7 +12,7 @@ import { getGoogleSignupRole } from '../(common)/_actions/auth/google-role-serve
 import { signInWithGoogle } from '../(common)/_actions/auth/signin-with-google';
 import { checkUserExists } from '../(common)/_actions/auth/check-user-exists';
 import { signUpWithGoogle } from '../(common)/_actions/auth/signup-with-google';
-import type { Rolestype, GymInfo } from '@/lib/api/types';
+import type { Rolestype, GymInfo, BaseUser } from '@/lib/api/types';
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {
@@ -68,12 +68,13 @@ export default {
 							return null;
 						}
 
-						const userData = signupResult.data;
+						const userData: BaseUser = signupResult.data;
+						// Signup returns BaseUser directly, not LoginResponseData
 						return {
-							id: userData.user.id,
-							name: userData.user.name,
-							email: userData.user.email,
-							role: userData.user.role as Rolestype,
+							id: String(userData.id),
+							name: userData.name,
+							email: userData.email,
+							role: role as Rolestype,
 						};
 					}
 
@@ -229,6 +230,16 @@ export default {
 
 					if (!signupResult.success) {
 						logger.error('Failed to create Google user:', signupResult.error);
+						
+						// Check if the error is due to user already existing
+						const errorMessage = signupResult.error?.message || '';
+						if (errorMessage.toLowerCase().includes('already exists') || 
+							errorMessage.toLowerCase().includes('user exists') ||
+							errorMessage.toLowerCase().includes('duplicate')) {
+							// Return a specific error URL for existing users
+							return '/auth/error?error=AccessDenied';
+						}
+						
 						return false;
 					}
 

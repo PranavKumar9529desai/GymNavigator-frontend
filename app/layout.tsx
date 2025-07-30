@@ -118,6 +118,7 @@ export default async function RootLayout({
 		richColors: true,
 		theme: 'light',
 		position: 'top-right',
+		duration: 3000, // 30 seconds - toasts will stay longer for important messages
 	};
 
 	return (
