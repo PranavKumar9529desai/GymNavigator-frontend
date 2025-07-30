@@ -1,9 +1,5 @@
-import RegisterForm from './Registration Form/RegisterForm';
+import SignUpForm from '@/components/auth/SignUpForm';
 
 export default function SignUp() {
-	return (
-		<>
-			<RegisterForm />
-		</>
-	);
+	return <SignUpForm />;
 }

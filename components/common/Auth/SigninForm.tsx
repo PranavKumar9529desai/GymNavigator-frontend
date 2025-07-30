@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import GoogleButton from '../../ui/googleButton';
 // Make sure the types are imported (no need to explicitly import the global declarations)
 import '@/types/credential-management';
+import { parseAuthError } from '@/lib/utils/auth-error-parser';
 
 // After successful login, store the credentials
 const storeCredentials = async (email: string, password: string) => {
@@ -57,10 +58,10 @@ export default function SignInForm() {
 				// Parse the error JSON if it exists
 				console.log('SignIn error:', result.error);
 				toast.dismiss();
-				const errorMessage = 'Failed to sign in ,Check your credentials';
-				const _errorCode = 'UNKNOWN_ERROR';
+				const { message, code } = parseAuthError(result.error);
 
-				setError(errorMessage);
+				setError(message);
+				toast.error('Sign in failed', { description: message });
 
 				// // Map error codes to user-friendly toast messages
 				// switch (errorCode) {
@@ -91,7 +92,7 @@ export default function SignInForm() {
 					description: 'Redirecting to dashboard...',
 				});
 				await storeCredentials(email, password);
-				// router.refresh();
+				Router.push('/dashboard');
 			}
 		} catch (error) {
 			toast.dismiss();
@@ -102,11 +103,6 @@ export default function SignInForm() {
 			});
 		} finally {
 			setLoading(false);
-			toast.dismiss();
-			toast.success('Welcome back!', {
-				description: 'Redirecting to dashboard...',
-			});
-			Router.push('/dashboard');
 		}
 	};
 
@@ -127,13 +123,8 @@ export default function SignInForm() {
 			console.error('Failed to sign in with Google:', error);
 			setError('Failed to sign in with Google');
 			toast.error('Google Sign-in failed', { description: 'Please try again' });
-			setLoading(false);
 		} finally {
-			toast.dismiss();
-			toast.success('Welcome back!', {
-				description: 'Redirecting to dashboard...',
-			});
-			Router.refresh();
+			setLoading(false);
 		}
 	};
 

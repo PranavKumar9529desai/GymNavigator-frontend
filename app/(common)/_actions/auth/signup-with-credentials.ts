@@ -1,17 +1,66 @@
 'use server';
 
-import {
-	type ApiResult,
-	type SignupResponseType,
-	signupClient,
-} from '@/lib/AxiosInstance/Signup/sign-up-client';
+import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
+import { AxiosError } from 'axios';
+import type { ApiResult, LoginResponseData, SignUpRequest } from '@/lib/api/types';
 
-export default async function SignupSA(
-	role: string,
-	name: string,
-	email: string,
-	password: string,
-): Promise<ApiResult<SignupResponseType>> {
-	console.log('Signing up user with credentials:', { role, name, email });
-	return signupClient.signupWithCredentials(role, name, email, password);
+export async function signUpWithCredentials(
+	userData: SignUpRequest
+): Promise<ApiResult<LoginResponseData>> {
+	try {
+		const axiosInstance = await AuthReqConfig();
+		const response = await axiosInstance.post('/signup/createaccount', userData);
+
+		// Handle successful response
+		if (response.data.success) {
+			return {
+				success: true,
+				data: response.data.data,
+			};
+		}
+
+		// Handle error response from API
+		return {
+			success: false,
+			error: {
+				code: 'API_ERROR',
+				message: response.data.error || 'Failed to create account',
+			},
+		};
+	} catch (error: unknown) {
+		// Handle network or unexpected errors
+		console.error('Error creating account:', error);
+
+		let errorMessage = 'An error occurred while creating account';
+
+		if (error instanceof AxiosError) {
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				const responseData = error.response.data;
+				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+					// Use the specific error message from the backend
+					errorMessage = responseData.message as string;
+				} else {
+					errorMessage = error.response.data?.error || error.message;
+				}
+			} else if (error.request) {
+				// The request was made but no response was received
+				errorMessage = 'No response received from server.';
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				errorMessage = error.message;
+			}
+		} else if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+
+		return {
+			success: false,
+			error: {
+				code: 'REQUEST_FAILED',
+				message: errorMessage,
+			},
+		};
+	}
 }

@@ -5,21 +5,14 @@ import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 
-import SignupSA from '@/app/(common)/_actions/auth/signup-with-credentials';
+import { signInWithCredentials } from '../(common)/_actions/auth/signin-with-credentials';
+import { signUpWithCredentials } from '../(common)/_actions/auth/signup-with-credentials';
 import { getUserByEmail } from '../(common)/_actions/auth/get-userinfo';
 import { getGoogleSignupRole } from '../(common)/_actions/auth/google-role-server-action';
-import SigninSA from '../(common)/_actions/auth/signin-with-credentials';
-import { checkUserExists } from '..//(common)/_actions/auth/check-user-exists';
-import SigninGoogleSA from '..//(common)/_actions/auth/signin-with-google';
-import type { GymInfo, Rolestype } from '@/types/next-auth';
-import SignupWithGoogle from '../(common)/_actions/auth/signup-with-google';
-
-// Import the relevant types from the auth client
-import type {
-	ApiResult,
-	SigninResponseType,
-	UserInfoResponse,
-} from '@/lib/AxiosInstance/Signin/sign-in-client';
+import { signInWithGoogle } from '../(common)/_actions/auth/signin-with-google';
+import { checkUserExists } from '../(common)/_actions/auth/check-user-exists';
+import { signUpWithGoogle } from '../(common)/_actions/auth/signup-with-google';
+import type { Rolestype, GymInfo } from '@/lib/api/types';
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {
@@ -31,90 +24,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // Centralized logger that respects environment
 const logger = {
-	// biome-ignore lint/suspicious/noExplicitAny: Logger needs to accept any argument types
-	log: (...args: any[]) => !isProduction && console.log(...args),
-	// biome-ignore lint/suspicious/noExplicitAny: Logger needs to accept any argument types
-	error: (...args: any[]) => console.error(...args),
-};
-
-// Centralized error handler
-const createError = (message: string, errorCode: string) => {
-	return new Error(JSON.stringify({ message, error: errorCode }));
-};
-
-// Auth handlers extracted for better organization
-const authHandlers = {
-	// Handle sign-in attempt
-	async handleSignIn(email: string, password: string): Promise<User> {
-		const userFromDB = await getUserByEmail(email);
-		console.log('User from DB in signin handler:', userFromDB);
-
-		if (!userFromDB || !userFromDB.success) {
-			throw createError('User not found', 'USER_NOT_FOUND');
-		}
-
-		const result = await SigninSA(email, password);
-
-		if (!result.success || !result.data) {
-			throw createError(
-				result.error?.message || 'Failed to login',
-				result.error?.code || 'LOGIN_FAILED',
-			);
-		}
-
-		const userData = result.data;
-		console.log('User data from signin handler', userData);
-
-		return {
-			id: userData.user.id,
-			name: userData.user.name,
-			email: userData.user.email,
-			role: userData.user.role as Rolestype,
-			gym: userData.user.gym
-				? {
-						gym_name: userData.user.gym.name,
-						id: String(userData.user.gym.id),
-					}
-				: undefined,
-		};
-	},
-
-	// Handle sign-up attempt
-	async handleSignUp(
-		role: string,
-		name: string,
-		email: string,
-		password: string,
-	): Promise<User> {
-		console.log('signup handler is called');
-
-		// Use the appropriate method from signup client instead
-		const userExistsResult = await checkUserExists(email);
-		if (userExistsResult.success && userExistsResult.data === true) {
-			throw createError('User already exists', 'USER_EXISTS');
-		}
-
-		const signupResult = await SignupSA(role, name, email, password);
-
-		// Check if the API call was successful and contains data
-		if (!signupResult.success || !signupResult.data) {
-			throw createError(
-				signupResult.error?.message || 'Failed to create user',
-				signupResult.error?.code || 'SIGNUP_FAILED',
-			);
-		}
-
-		// Extract the user data from the API result
-		const userData = signupResult.data;
-		console.log('User data from signup handler:', userData);
-
-		return {
-			id: userData.id,
-			name: userData.name,
-			email: userData.email,
-			role: role as Rolestype,
-		};
-	},
+	log: (...args: unknown[]) => !isProduction && console.log(...args),
+	error: (...args: unknown[]) => console.error(...args),
 };
 
 export default {
@@ -130,10 +41,8 @@ export default {
 			},
 			async authorize(credentials): Promise<User | null> {
 				if (!credentials?.email || !credentials?.password) {
-					throw createError(
-						'Email and password are required',
-						'INVALID_CREDENTIALS',
-					);
+					// Return null to trigger NextAuth's default error handling
+					return null;
 				}
 
 				const { email, password, name, role } = credentials as {
@@ -147,14 +56,56 @@ export default {
 				const isSignUp = Boolean(role && name);
 
 				try {
-					// Route to appropriate handler
+					// Route to appropriate server action
 					if (isSignUp && role && name) {
-						return await authHandlers.handleSignUp(role, name, email, password);
+						const signupResult = await signUpWithCredentials({ role: role as Rolestype, name, email, password });
+						
+						if (!signupResult.success || !signupResult.data) {
+							// Log the error for debugging
+							logger.error('Signup failed:', signupResult.error);
+							
+							// Return null to trigger NextAuth's default error handling
+							return null;
+						}
+
+						const userData = signupResult.data;
+						return {
+							id: userData.user.id,
+							name: userData.user.name,
+							email: userData.user.email,
+							role: userData.user.role as Rolestype,
+						};
 					}
-					return await authHandlers.handleSignIn(email, password);
+
+					// Handle sign-in
+					const signinResult = await signInWithCredentials({ email, password });
+					console.log('🔐 [AuthConfig] signinResult:', signinResult);
+					
+					if (!signinResult.success || !signinResult.data) {
+						// Log the error for debugging
+						logger.error('Sign-in failed:', signinResult.error);
+						
+						// Return null to trigger NextAuth's default error handling
+						return null;
+					}
+
+					const userData = signinResult.data;
+					return {
+						id: userData.user.id,
+						name: userData.user.name,
+						email: userData.user.email,
+						role: userData.user.role as Rolestype,
+						gym: userData.user.gym
+							? {
+									gym_name: userData.user.gym.gym_name,
+									id: String(userData.user.gym.id),
+								}
+							: undefined,
+					};
 				} catch (error) {
 					logger.error('Authentication error:', error);
-					throw error;
+					// Return null to trigger NextAuth's default error handling
+					return null;
 				}
 			},
 		}),
@@ -233,7 +184,7 @@ export default {
 			credentials?: Record<string, unknown>;
 		}) {
 			const { user, account, profile } = params;
-			console.log('user is received from the signin callback', user);
+			logger.log('user is received from the signin callback', user);
 
 			// Only process special cases (like Google)
 			if (!account || account.provider !== 'google' || !user?.email) {
@@ -242,15 +193,12 @@ export default {
 
 			try {
 				// Optimize by fetching user data only once for Google sign-in
-				const userFromDb: ApiResult<UserInfoResponse> = await getUserByEmail(
-					user.email,
-				);
-
-				console.log('userFromDb is from the signin callback', userFromDb);
+				const userFromDb = await getUserByEmail(user.email);
+				logger.log('userFromDb is from the signin callback', userFromDb);
 
 				// Handle the case where the user doesn't exist (needs signup)
 				if (userFromDb.success && userFromDb.data && !userFromDb.data.exists) {
-					console.log('New Google user, creating account');
+					logger.log('New Google user, creating account');
 
 					// Get name from profile or user object
 					const userName =
@@ -265,20 +213,19 @@ export default {
 						return '/selectrole';
 					}
 
-					console.log('Signing up with Google:', {
+					logger.log('Signing up with Google:', {
 						name: userName,
 						email: user.email,
 						role: selectedRole,
 					});
 
 					// Create a new user with Google signup
-					const signupResult = await SignupWithGoogle(
-						userName,
-						user.email,
-						selectedRole as Rolestype,
+					const signupResult = await signUpWithGoogle(
+						{ name: userName, email: user.email, role: selectedRole as Rolestype },
+						selectedRole
 					);
 
-					console.log('Google signup result:', signupResult);
+					logger.log('Google signup result:', signupResult);
 
 					if (!signupResult.success) {
 						logger.error('Failed to create Google user:', signupResult.error);
@@ -286,7 +233,7 @@ export default {
 					}
 
 					// After successful signup, proceed with signin
-					const response = await SigninGoogleSA(user.email);
+					const response = await signInWithGoogle(user.email);
 
 					if (response.success && response.data) {
 						// Store the user data from the backend in the user object
@@ -298,7 +245,7 @@ export default {
 						// Add custom properties for gym info
 						(user as ExtendedUser).gymInfo = response.data.user.gym
 							? {
-									gym_name: response.data.user.gym.name,
+									gym_name: response.data.user.gym.gym_name,
 									id: String(response.data.user.gym.id),
 								}
 							: undefined;
@@ -311,9 +258,7 @@ export default {
 
 				// Handle the case where the user exists
 				if (userFromDb.success && userFromDb.data && userFromDb.data.exists) {
-					const response: ApiResult<SigninResponseType> = await SigninGoogleSA(
-						user.email,
-					);
+					const response = await signInWithGoogle(user.email);
 
 					if (response.success && response.data) {
 						// Store the user data from the backend in the user object
@@ -325,7 +270,7 @@ export default {
 						// Add custom properties for gym info
 						(user as ExtendedUser).gymInfo = response.data.user.gym
 							? {
-									gym_name: response.data.user.gym.name,
+									gym_name: response.data.user.gym.gym_name,
 									id: String(response.data.user.gym.id),
 								}
 							: undefined;

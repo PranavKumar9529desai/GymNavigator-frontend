@@ -1,18 +1,64 @@
 'use server';
 
-import {
-	type ApiResult,
-	signupClient,
-} from '@/lib/AxiosInstance/Signup/sign-up-client';
+import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
+import { AxiosError } from 'axios';
+import type { ApiResult } from '@/lib/api/types';
 
-/**
- * Server action to check if a user email already exists in the system
- * @param email The email address to check
- * @returns Response indicating whether the email exists
- */
-export async function checkUserExists(
-	email: string,
-): Promise<ApiResult<boolean>> {
-	console.log('Checking if email exists:', email);
-	return signupClient.checkUserExists(email);
+export async function checkUserExists(email: string): Promise<ApiResult<boolean>> {
+	try {
+		const axiosInstance = await AuthReqConfig();
+		const response = await axiosInstance.post('/signup/isexists', { email });
+
+		// Handle successful response
+		if (response.data.success) {
+			return {
+				success: true,
+				data: response.data.data?.exists || false,
+			};
+		}
+
+		// Handle error response from API
+		return {
+			success: false,
+			error: {
+				code: 'API_ERROR',
+				message: response.data.error || 'Failed to check user existence',
+			},
+		};
+	} catch (error: unknown) {
+		// Handle network or unexpected errors
+		console.error('Error checking user existence:', error);
+
+		let errorMessage = 'An error occurred while checking user existence';
+
+		if (error instanceof AxiosError) {
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				const responseData = error.response.data;
+				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+					// Use the specific error message from the backend
+					errorMessage = responseData.message as string;
+				} else {
+					errorMessage = error.response.data?.error || error.message;
+				}
+			} else if (error.request) {
+				// The request was made but no response was received
+				errorMessage = 'No response received from server.';
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				errorMessage = error.message;
+			}
+		} else if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+
+		return {
+			success: false,
+			error: {
+				code: 'REQUEST_FAILED',
+				message: errorMessage,
+			},
+		};
+	}
 }

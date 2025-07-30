@@ -1,19 +1,64 @@
 'use server';
 
-import {
-	type ApiResult,
-	type UserInfoResponse,
-	authClient,
-} from '@/lib/AxiosInstance/Signin/sign-in-client';
+import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
+import { AxiosError } from 'axios';
+import type { ApiResult, UserInfoResponse } from '@/lib/api/types';
 
-/**
- * Server action to check if a user email exists in the system
- * @param email The email address to check
- * @returns Response indicating whether the email exsists and any associated role
- */
-export async function getUserByEmail(
-	email: string,
-): Promise<ApiResult<UserInfoResponse>> {
-	console.log('Checking email existence for:', email);
-	return authClient.getUserInfo(email);
+export async function getUserByEmail(email: string): Promise<ApiResult<UserInfoResponse>> {
+	try {
+		const axiosInstance = await AuthReqConfig();
+		const response = await axiosInstance.get(`/login/getuserinfo?email=${encodeURIComponent(email)}`);
+
+		// Handle successful response
+		if (response.data.success) {
+			return {
+				success: true,
+				data: response.data.data,
+			};
+		}
+
+		// Handle error response from API
+		return {
+			success: false,
+			error: {
+				code: 'API_ERROR',
+				message: response.data.error || 'Failed to get user info',
+			},
+		};
+	} catch (error: unknown) {
+		// Handle network or unexpected errors
+		console.error('Error getting user info:', error);
+
+		let errorMessage = 'An error occurred while getting user info';
+
+		if (error instanceof AxiosError) {
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				const responseData = error.response.data;
+				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+					// Use the specific error message from the backend
+					errorMessage = responseData.message as string;
+				} else {
+					errorMessage = error.response.data?.error || error.message;
+				}
+			} else if (error.request) {
+				// The request was made but no response was received
+				errorMessage = 'No response received from server.';
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				errorMessage = error.message;
+			}
+		} else if (error instanceof Error) {
+			errorMessage = error.message;
+		}
+
+		return {
+			success: false,
+			error: {
+				code: 'REQUEST_FAILED',
+				message: errorMessage,
+			},
+		};
+	}
 }
