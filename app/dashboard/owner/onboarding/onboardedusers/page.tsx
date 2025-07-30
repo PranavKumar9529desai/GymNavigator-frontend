@@ -1,7 +1,5 @@
-import { Suspense } from 'react';
 import { getOnboardingUsersServer } from './_actions/GetOnBoardingUser';
 import OnboardedUsersClient from './_components/OnboardedUsersClient';
-import Loading from './loading';
 
 export const dynamic = 'force-dynamic';
 

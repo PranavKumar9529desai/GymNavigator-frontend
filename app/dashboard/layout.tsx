@@ -2,7 +2,6 @@ import { IsOwner } from '@/lib/is-owner'; // Assuming path alias @/lib
 import { IsTrainer } from '@/lib/is-trainer'; // Assuming path alias @/lib
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { unstable_ViewTransition as ViewTransition } from 'react';
 import type React from 'react';
 import { auth } from '../(auth)/auth';
 import DashboardBottomNav from './_components/DashboardBottomNav';
@@ -14,8 +13,8 @@ import Sidebar from './_components/sidebar';
 import { preloadCommonIcons } from './_components/common-icons';
 import { IsClient } from '@/lib/is-client';
 import type { Metadata } from 'next';
-import PostHogIdentify from './PostHogIdentify';
-
+import PostHogIdentify from '../(home)/_component/PostHogIdentify';
+import { unstable_ViewTransition as ViewTransition } from 'react';
 export async function generateMetadata(): Promise<Metadata> {
 	const session = await auth();
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';
@@ -170,6 +169,7 @@ export default async function Layout({
 					{/* Original Content */}
 					<div className="container mx-auto px-2 py-4 md:py-6 max-w-7xl">
 						<ViewTransition>{children}</ViewTransition>
+						
 					</div>
 				</div>
 			</div>
