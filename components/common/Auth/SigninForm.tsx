@@ -93,11 +93,11 @@ export default function SignInForm() {
 				// 		});
 				// }
 			} else if (result?.ok) {
-				toast.dismiss();
-
+				
 				toast.success('Welcome back!', {
 					description: 'Redirecting to dashboard...',
 				});
+				toast.dismiss();
 				await storeCredentials(email, password);
 				Router.push('/dashboard');
 			}

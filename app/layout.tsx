@@ -2,7 +2,6 @@ import '@/globals.css';
 import Providers from '@/providers/provider';
 import type { Metadata, Viewport } from 'next';
 import { Toaster } from 'sonner';
-import type { ToasterProps } from 'sonner';
 import { OnlineStatusProvider } from '@/providers/OnlineStatusProvider';
 import RegisterServiceWorker from '@/components/RegisterServiceWorker';
 import OfflineIndicator from '@/components/common/OfflineIndicator';
@@ -11,7 +10,16 @@ import localFont from 'next/font/local';
 import ClientMotionProvider from '../providers/ClientMotionProvider';
 import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import { PostHogProvider } from '@/providers/PostHogProvider';
+
 const siteUrl = 'https://gymnavigator.in';
+
+// Default toast configuration
+const toastConfig = {
+	duration: 4000,
+	position: 'top-right' as const,
+	richColors: true,
+	// closeButton: true,
+};
 
 export const viewport: Viewport = {
 	width: 'device-width',
@@ -114,13 +122,6 @@ export default async function RootLayout({
 }>) {
 	const session = await auth(); // Fetch the session on the server
 
-	const toasterProps: ToasterProps = {
-		richColors: true,
-		theme: 'light',
-		position: 'top-right',
-		duration: 3000, // 30 seconds - toasts will stay longer for important messages
-	};
-
 	return (
 		<html lang="en">
 			<body>
@@ -132,7 +133,7 @@ export default async function RootLayout({
 							<ClientMotionProvider>
 								{children}
 								<RegisterServiceWorker />
-								<Toaster {...toasterProps} />
+								<Toaster {...toastConfig} />
 							</ClientMotionProvider>
 						</OnlineStatusProvider>
 					</Providers>

@@ -20,7 +20,7 @@ import { addMonths, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { validateUserValidity } from './actions/typecheck';
 
@@ -146,8 +146,6 @@ export function UserValidityPeriod({
 
 	return (
 		<div className="w-full max-w-3xl mx-auto p-6 sm:p-8  rounded-xl space-y-6 sm:space-y-8 ">
-			<Toaster position="top-right" />
-
 			{/* Header Section with Avatar - Made responsive */}
 			<div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6 pb-6 border-b border-gray-200 w-ful b">
 				<Avatar className="w-24 h-24 sm:w-28 sm:h-28 ring-2 ring-gray-100 mb-4 sm:mb-0 border mx-auto">

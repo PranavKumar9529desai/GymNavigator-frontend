@@ -17,7 +17,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { m } from 'framer-motion';
 import { UserCheck, UserX, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { AssignTrainerToUsers } from './AssignTrainerToUsers';
 interface UserTrainerAssignmentProps {
 	users: UserType[];
@@ -319,7 +319,6 @@ export default function TrainerAssignment({
 				User-Trainer Assignment
 			</m.h1>
 
-			<Toaster position="top-right" />
 			<m.div
 				className="grid grid-cols-1 md:grid-cols-3 gap-6"
 				variants={itemVariants}
