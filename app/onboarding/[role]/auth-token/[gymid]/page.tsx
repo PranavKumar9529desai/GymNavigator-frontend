@@ -18,7 +18,7 @@ interface TrainerAuthPageProps {
 
 export default async function TrainerAuthPage({ params, searchParams }: TrainerAuthPageProps) {
 	const { gymid } = await params;
-	const { gymname, hash } = await searchParams;
+	const { gymname, hash: _hash } = await searchParams;
 
 	// Try to fetch gym data, but don't fail if it doesn't work
 	let gym = null;
