@@ -25,7 +25,7 @@ import {
 	TooltipContent,
 	TooltipProvider,
 } from '@/components/ui/tooltip';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useState } from 'react';
 
 import type { GymData } from '../types/gym-types';
@@ -35,7 +35,6 @@ interface GymHeaderProps {
 }
 
 export function GymHeader({ gymData }: GymHeaderProps) {
-	const { toast } = useToast();
 	const [copied, setCopied] = useState(false);
 
 	if (!gymData) {
@@ -46,17 +45,10 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 		try {
 			await navigator.clipboard.writeText(gymData.gymauthtoken);
 			setCopied(true);
-			toast({
-				title: "Auth Token Copied!",
-				description: "The authentication token has been copied to your clipboard.",
-			});
+			toast.success("Auth token copied successfully!");
 			setTimeout(() => setCopied(false), 2000);
-		} catch (error) {
-			toast({
-				title: "Copy Failed",
-				description: "Failed to copy auth token to clipboard.",
-				variant: "destructive",
-			});
+		} catch (_error) {
+			toast.error("Failed to copy auth token");
 		}
 	};
 

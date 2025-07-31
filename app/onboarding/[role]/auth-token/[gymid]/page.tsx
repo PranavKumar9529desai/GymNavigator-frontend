@@ -24,7 +24,7 @@ export default async function TrainerAuthPage({ params, searchParams }: TrainerA
 	let gym = null;
 	try {
 		gym = await fetchGymById(gymid);
-	} catch (error) {
+	} catch (_error) {
 		console.log('Could not fetch gym details, using query parameters');
 	}
 

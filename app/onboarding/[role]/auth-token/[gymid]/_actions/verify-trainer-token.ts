@@ -25,7 +25,7 @@ export async function verifyTrainerToken(
 	try {
 		const trainerAxios = await TrainerReqConfig();
 
-		const response = await trainerAxios.post('/auth/verify-token', {
+		const response = await trainerAxios.post('/onboarding/verify-token', {
 			gymId: request.gymId,
 			authToken: request.authToken,
 		});

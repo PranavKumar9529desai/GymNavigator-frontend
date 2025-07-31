@@ -149,7 +149,7 @@ export default function OnboardingQrScanner() {
 							);
 							toast.success('QR code scanned successfully');
 							setIsSuccess(true);
-							const userRole = localStorage.getItem('userRole') || 'client';
+							const _userRole = localStorage.getItem('userRole') || 'client';
 							// Store the used deviceId in localStorage
 							if (deviceId) {
 								localStorage.setItem('preferredCameraDeviceId', deviceId);

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,6 +20,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mail, Phone, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { verifyTrainerToken } from '../_actions/verify-trainer-token';
+import { updateSessionWithGym } from '@/app/(common)/_actions/session/updateSessionWithGym';
+import type { GymInfo } from '@/types/next-auth';
 
 interface Gym {
 	id: string;
@@ -48,6 +51,7 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 	const [isContactExpanded, setIsContactExpanded] = useState(false);
 	const [pinValue, setPinValue] = useState('');
 	const router = useRouter();
+	const { update } = useSession();
 
 	const form = useForm<AuthTokenFormData>({
 		resolver: zodResolver(authTokenSchema),
@@ -67,12 +71,24 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 			});
 
 			if (result.success) {
-				// Redirect to trainer dashboard on success
-				router.push('/dashboard/trainer');
+				// Update session with gym information
+				const gymInfo: GymInfo = {
+					id: gym.id,
+					gym_name: gym.name,
+				};
+
+				const sessionUpdateResult = await updateSessionWithGym(gymInfo, update);
+				
+				if (sessionUpdateResult.success) {
+					// Redirect to trainer dashboard on success
+					router.push('/dashboard/trainer');
+				} else {
+					setError('Failed to update session. Please try again.');
+				}
 			} else {
 				setError(result.message);
 			}
-		} catch (err) {
+		} catch (_err) {
 			setError('An unexpected error occurred. Please try again.');
 		} finally {
 			setIsLoading(false);
@@ -124,7 +140,7 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 					<FormField
 						control={form.control}
 						name="authToken"
-						render={({ field }) => (
+						render={({ field: _field }) => (
 							<FormItem>
 								<FormLabel className="text-sm font-medium text-slate-700 block text-center mb-4">
 									Authentication Token
