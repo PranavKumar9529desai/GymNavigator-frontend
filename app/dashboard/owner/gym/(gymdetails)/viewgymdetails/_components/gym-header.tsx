@@ -16,6 +16,8 @@ import {
 	Key,
 	Trophy,
 	Crown,
+	Copy,
+	Check,
 } from 'lucide-react';
 import {
 	Tooltip,
@@ -23,6 +25,8 @@ import {
 	TooltipContent,
 	TooltipProvider,
 } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 import type { GymData } from '../types/gym-types';
 
@@ -31,9 +35,30 @@ interface GymHeaderProps {
 }
 
 export function GymHeader({ gymData }: GymHeaderProps) {
+	const { toast } = useToast();
+	const [copied, setCopied] = useState(false);
+
 	if (!gymData) {
 		return null; // Or render a loading/placeholder state if needed
 	}
+
+	const handleCopyAuthToken = async () => {
+		try {
+			await navigator.clipboard.writeText(gymData.gymauthtoken);
+			setCopied(true);
+			toast({
+				title: "Auth Token Copied!",
+				description: "The authentication token has been copied to your clipboard.",
+			});
+			setTimeout(() => setCopied(false), 2000);
+		} catch (error) {
+			toast({
+				title: "Copy Failed",
+				description: "Failed to copy auth token to clipboard.",
+				variant: "destructive",
+			});
+		}
+	};
 
 	return (
 		<>
@@ -117,25 +142,28 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 								{gymData.gymauthtoken && (
 									<button
 										type="button"
-										className="text-left flex items-center gap-3 col-span-1 sm:col-span-2 lg:col-span-1 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors"
-										onClick={() => {
-											navigator.clipboard.writeText(gymData.gymauthtoken);
-											// Optional: Add toast notification here
-										}}
+										className="text-left flex items-center gap-3 col-span-1 sm:col-span-2 lg:col-span-1 cursor-pointer hover:bg-gray-50 p-2 rounded-md transition-colors group"
+										onClick={handleCopyAuthToken}
 										onKeyDown={(e) => {
 											if (e.key === 'Enter' || e.key === ' ') {
-												navigator.clipboard.writeText(gymData.gymauthtoken);
-												// Optional: Add toast notification here
+												handleCopyAuthToken();
 											}
 										}}
 										aria-label="Copy Auth Token"
 									>
 										<Key className="h-6 w-6 text-gray-600" />
-										<div>
+										<div className="flex-1 min-w-0">
 											<p className="text-xs text-gray-500">Auth Token</p>
 											<p className="font-mono text-sm truncate">
 												{gymData.gymauthtoken}
 											</p>
+										</div>
+										<div className="flex-shrink-0">
+											{copied ? (
+												<Check className="h-4 w-4 text-green-600" />
+											) : (
+												<Copy className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+											)}
 										</div>
 									</button>
 								)}

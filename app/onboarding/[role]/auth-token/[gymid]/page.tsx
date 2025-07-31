@@ -42,44 +42,49 @@ export default async function TrainerAuthPage({ params, searchParams }: TrainerA
 	return (
 		<div className="flex flex-col items-center justify-center min-h-[80vh] p-4">
 			<div className="w-full max-w-md space-y-6">
-				{/* Gym Information Card */}
-				<Card className="border-blue-200 bg-gradient-to-br from-blue-50/50 to-indigo-50/30">
-					<CardHeader className="text-center pb-4">
-						<div className="flex items-center justify-center mb-4">
-							{gym.img ? (
-								<Image
-									src={gym.img}
-									alt={`${gym.name} logo`}
-									width={80}
-									height={80}
-									className="rounded-lg object-cover"
-								/>
-							) : (
-								<div className="w-20 h-20 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
-									<Building2 className="h-10 w-10 text-white" />
-								</div>
-							)}
-						</div>
-						<div className="space-y-2">
-							<h1 className="text-xl font-bold text-slate-800">{gym.name}</h1>
-							<Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
-								Trainer Onboarding
-							</Badge>
-						</div>
-					</CardHeader>
-					<CardContent className="space-y-4">
-						<div className="flex items-center justify-center gap-4 text-xs text-slate-500">
-							<div className="flex items-center gap-1">
-								<MapPin className="h-3 w-3" />
-								<span>Gym ID: {gym.id}</span>
+				{/* Gym Information Card - Improved Layout */}
+				<div className="text-center space-y-4">
+					{/* Gym Logo/Icon */}
+					<div className="flex items-center justify-center">
+						{gym.img ? (
+							<Image
+								src={gym.img}
+								alt={`${gym.name} logo`}
+								width={80}
+								height={80}
+								className="rounded-xl object-cover shadow-sm"
+							/>
+						) : (
+							<div className="w-20 h-20 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-sm">
+								<Building2 className="h-10 w-10 text-white" />
 							</div>
-							<div className="flex items-center gap-1">
-								<Users className="h-3 w-3" />
-								<span>Trainer Role</span>
+						)}
+					</div>
+					
+					{/* Gym Name and Badge */}
+					<div className="space-y-3">
+						<h1 className="text-2xl font-bold text-slate-800">{gym.name}</h1>
+						<Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100 px-3 py-1">
+							Trainer Onboarding
+						</Badge>
+					</div>
+					
+					{/* Gym Details */}
+					<div className="flex items-center justify-center gap-6 text-sm text-slate-600">
+						<div className="flex items-center gap-2">
+							<div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center">
+								<MapPin className="h-3 w-3 text-slate-500" />
 							</div>
+							<span>Gym ID: {gym.id}</span>
 						</div>
-					</CardContent>
-				</Card>
+						<div className="flex items-center gap-2">
+							<div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center">
+								<Users className="h-3 w-3 text-slate-500" />
+							</div>
+							<span>Trainer Role</span>
+						</div>
+					</div>
+				</div>
 
 				{/* Authentication Form */}
 				<Card>
