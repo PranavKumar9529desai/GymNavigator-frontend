@@ -18,7 +18,7 @@ export function useGoogleSignUp() {
 		}
 
 		startTransition(async () => {
-			const loadingToast = toast.loading('Connecting to Google...');
+			const _loadingToast = toast.loading('Connecting to Google...');
 
 			try {
 				// Store the role in a server-side cookie

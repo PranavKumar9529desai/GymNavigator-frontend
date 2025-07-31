@@ -1,5 +1,5 @@
 'use client';
-import SignupWithGoogle from '@/app/(common)/_actions/auth/signup-with-google';
+import { signUpWithGoogle } from '@/app/(common)/_actions/auth/signup-with-google';
 import { updateSessionWithRole } from '@/app/(common)/_actions/session/updateSessionWithRole';
 import type { Rolestype } from '@/types/next-auth';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,14 +11,13 @@ import {
 } from '@/components/ui/dialog';
 import type {
 	ApiResult,
-	GoogleSignupResponseType,
-} from '@/lib/AxiosInstance/Signup/sign-up-client';
+	LoginResponseData,
+} from '@/lib/api/types';
 import { useSession } from '@/node_modules/next-auth/react';
 import { AnimatePresence, m } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import SigninResponseType from '@/app/(common)/_actions/auth/signup-with-google';
 const roles = [
 	{
 		title: 'Gym Owner',
@@ -50,16 +49,19 @@ export default function SelectRole() {
 		console.log('role is this ', role);
 		try {
 			if (session?.user?.name && session?.user?.email) {
-				const response: ApiResult<GoogleSignupResponseType> =
-					await SignupWithGoogle(
-						session?.user?.name,
-						session?.user?.email,
-						role as Rolestype,
+				const response: ApiResult<LoginResponseData> =
+					await signUpWithGoogle(
+						{
+							name: session.user.name,
+							email: session.user.email,
+							role: role as Rolestype,
+						},
+						role,
 					);
 
-				if (response?.data?.name && response.data?.role) {
+				if (response?.data?.user?.name && response.data?.user?.role) {
 					// @ts-ignore
-					await updateSessionWithRole(response.data.role as Rolestype, update);
+					await updateSessionWithRole(response.data.user.role as Rolestype, update);
 				}
 			}
 

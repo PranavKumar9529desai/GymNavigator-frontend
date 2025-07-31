@@ -31,8 +31,8 @@ import { registerSchema, type RegisterFormValues } from '@/components/auth/schem
 import { useGoogleSignUp } from '@/components/auth/hooks/useGoogleSignUp';
 
 export default function SignUpForm() {
-	const [error, setError] = useState<string>('');
-	const [errorType, setErrorType] = useState<'success' | 'fail' | null>();
+	const [_error, setError] = useState<string>('');
+	const [_errorType, setErrorType] = useState<'success' | 'fail' | null>();
 	const [isPending, startTransition] = useTransition();
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
@@ -51,7 +51,7 @@ export default function SignUpForm() {
 
 	const handleSubmit = async (values: RegisterFormValues) => {
 		startTransition(async () => {
-			const loadingToast = toast.loading('Creating your account...');
+			const _loadingToast = toast.loading('Creating your account...');
 
 			try {
 				const result = await signIn('credentials', {
@@ -128,7 +128,7 @@ export default function SignUpForm() {
 					});
 					router.push('/dashboard');
 				}
-			} catch (error) {
+			} catch (_error) {
 				setErrorType('fail');
 				setError('An unexpected error occurred');
 				toast.dismiss();

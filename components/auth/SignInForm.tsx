@@ -43,7 +43,7 @@ export default function SignInForm() {
 
 	const handleSubmit = async (values: SignInFormValues) => {
 		startTransition(async () => {
-			const loadingToast = toast.loading('Signing you in...');
+			const _loadingToast = toast.loading('Signing you in...');
 
 			try {
 				const result = await signIn('credentials', {
@@ -56,7 +56,7 @@ export default function SignInForm() {
 
 				if (result?.error) {
 					// Parse the error message using our utility function
-					const { message: errorMessage, code: errorCode } = parseAuthError(result.error);
+					const { message: errorMessage } = parseAuthError(result.error);
 					
 					toast.dismiss();
 					toast.error('Sign in failed', { description: errorMessage });
@@ -70,7 +70,7 @@ export default function SignInForm() {
 					await storeCredentials(values.email, values.password);
 					router.push('/dashboard');
 				}
-			} catch (error) {
+			} catch (_error) {
 				toast.dismiss();
 				toast.error('Sign in error', {
 					description: 'An unexpected error occurred',

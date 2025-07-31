@@ -5,11 +5,11 @@ import { toast } from 'sonner';
 
 export function useGoogleSignIn() {
 	const [isPending, startTransition] = useTransition();
-	const router = useRouter();
+	const _router = useRouter();
 
 	const handleGoogleSignIn = async () => {
 		startTransition(async () => {
-			const loadingToast = toast.loading('Connecting to Google...');
+			const _loadingToast = toast.loading('Connecting to Google...');
 
 			try {
 				await signIn('google', {

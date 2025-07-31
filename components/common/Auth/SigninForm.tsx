@@ -58,7 +58,7 @@ export default function SignInForm() {
 				// Parse the error JSON if it exists
 				console.log('SignIn error:', result.error);
 				toast.dismiss();
-				const { message, code } = parseAuthError(result.error);
+				const { message } = parseAuthError(result.error);
 
 				setError(message);
 				// Make error toasts more prominent and persistent
