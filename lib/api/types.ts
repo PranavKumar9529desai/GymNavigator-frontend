@@ -53,6 +53,7 @@ export interface ApiResult<T> {
 export interface SignInRequest {
   email: string;
   password: string;
+  [key: string]: unknown;
 }
 
 export interface SignUpRequest {
@@ -60,16 +61,19 @@ export interface SignUpRequest {
   email: string;
   password: string;
   role: Rolestype;
+  [key: string]: unknown;
 }
 
 export interface GoogleSignUpRequest {
   name: string;
   email: string;
   role: Rolestype;
+  [key: string]: unknown;
 }
 
 export interface EmailCheckRequest {
   email: string;
+  [key: string]: unknown;
 }
 
 // Environment configuration

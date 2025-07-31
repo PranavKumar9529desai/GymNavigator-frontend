@@ -122,10 +122,7 @@ export function UserValidityPeriod({
 				if (updateResult.user) {
 					console.log('before toast');
 
-					toast.success(`Validity period updated for ${userName}`, {
-						duration: 3000,
-						position: 'top-center',
-					});
+					toast.success(`Validity period updated for ${userName}`);
 
 					// Add delay before navigation to show the success toast
 					setTimeout(() => {
