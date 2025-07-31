@@ -53,6 +53,7 @@ export default function SignInForm() {
 				email,
 				password,
 			});
+			console.log("the result of the signin is", result)
 			console.log('SignIn result: from SigninForm', result);
 			if (result?.error) {
 				// Parse the error JSON if it exists
@@ -70,28 +71,7 @@ export default function SignInForm() {
 					},
 				});
 
-				// // Map error codes to user-friendly toast messages
-				// switch (errorCode) {
-				// 	case 'USER_NOT_FOUND':
-				// 		toast.error('Account not found', {
-				// 			description: 'No account found with this email address',
-				// 		});
-				// 		break;
-				// 	case 'INVALID_CREDENTIALS':
-				// 		toast.error('Invalid credentials', {
-				// 			description: 'The email or password you entered is incorrect',
-				// 		});
-				// 		break;
-				// 	case 'SERVER_ERROR':
-				// 		toast.error('Server error', {
-				// 			description: 'Please try again later',
-				// 		});
-				// 		break;
-				// 	default:
-				// 		toast.error('Sign in failed', {
-				// 			description: errorMessage,
-				// 		});
-				// }
+		
 			} else if (result?.ok) {
 				toast.success('Welcome back!', {
 					description: 'Redirecting to dashboard...',

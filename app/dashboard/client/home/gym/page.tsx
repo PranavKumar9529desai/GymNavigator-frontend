@@ -7,7 +7,7 @@ export default async function GymPage() {
 	if (!data) {
 		return (
 			<div className="p-4">
-				<div className="text-center py-8">
+			<div className="text-center py-8">
 					<h2 className="text-xl font-semibold text-muted-foreground">
 						Unable to load gym details
 					</h2>

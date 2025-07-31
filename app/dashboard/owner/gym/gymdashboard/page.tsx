@@ -1,3 +1,4 @@
+// "use cache"
 import React from 'react';
 import { getGymDashboardData } from './_action/get-gym-dashboard';
 import GymDashboard from './_components/GymDashboard';

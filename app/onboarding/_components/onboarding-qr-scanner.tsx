@@ -155,9 +155,16 @@ export default function OnboardingQrScanner() {
 								localStorage.setItem('preferredCameraDeviceId', deviceId);
 							}
 							setTimeout(() => {
-								router.push(
-									`/onboarding/${userRole}/select-plan?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
-								);
+								const userRole = localStorage.getItem('userRole') || 'client';
+								if (userRole === 'trainer') {
+									router.push(
+										`/onboarding/trainer/auth-token/${gymid}?gymname=${gymname}&hash=${hash}`,
+									);
+								} else {
+									router.push(
+										`/onboarding/${userRole}/select-plan?gymname=${gymname}&hash=${hash}&gymid=${gymid}`,
+									);
+								}
 							}, 1000);
 						} else {
 							throw new Error('Invalid QR code: Not an onboarding QR code');
