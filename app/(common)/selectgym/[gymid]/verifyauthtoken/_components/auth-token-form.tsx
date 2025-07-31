@@ -2,7 +2,7 @@
 
 import type { gym } from '@/app/(common)/selectgym/_components/SelectGym';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { PinInput } from '@/components/ui/pin-input';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import Image from 'next/image';
@@ -24,10 +24,10 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!authToken.trim()) {
+		if (!authToken.trim() || authToken.length !== 7) {
 			toast({
 				title: 'Error',
-				description: 'Authentication token is required',
+				description: 'Please enter a valid 7-character authentication token',
 				variant: 'destructive',
 			});
 			return;
@@ -72,6 +72,10 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
 		}
 	};
 
+	const handlePinChange = (value: string) => {
+		setAuthToken(value);
+	};
+
 	if (isRedirecting) {
 		return (
 			<div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 text-center">
@@ -105,35 +109,37 @@ export function AuthTokenForm({ gym }: AuthTokenFormProps) {
 					<Image src={gym.img} alt={gym.name} fill className="object-cover" />
 				</div>
 				<h2 className="text-xl font-bold text-gray-900">{gym.name}</h2>
-				<p className="text-sm text-gray-500 mt-1">
-					Enter gym authentication token
+				<p className="text-sm text-gray-500 mt-1 text-center">
+					Enter the 7-character authentication token
 				</p>
 			</div>
 
 			<form onSubmit={handleSubmit} className="space-y-6">
-				<div className="space-y-2">
+				<div className="space-y-4">
 					<label
 						htmlFor="authToken"
-						className="block text-sm font-medium text-gray-700"
+						className="block text-sm font-medium text-gray-700 text-center"
 					>
 						Authentication Token
 					</label>
-					<Input
-						id="authToken"
-						type="text"
-						value={authToken}
-						onChange={(e) => setAuthToken(e.target.value)}
-						placeholder="Enter your gym token"
-						className="w-full py-5"
-						required
-						disabled={isLoading}
-					/>
+					<div className="flex justify-center">
+						<PinInput
+							length={7}
+							value={authToken}
+							onChange={handlePinChange}
+							disabled={isLoading}
+							regexCriteria={/^[A-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]$/}
+						/>
+					</div>
+					<p className="text-xs text-gray-500 text-center">
+						Enter the 7-character token provided by your gym
+					</p>
 				</div>
 
 				<Button
 					type="submit"
 					className="w-full py-6 text-lg"
-					disabled={isLoading}
+					disabled={isLoading || authToken.length !== 7}
 				>
 					{isLoading ? (
 						<>

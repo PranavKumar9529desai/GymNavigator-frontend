@@ -3,6 +3,7 @@ import { updateSessionWithGym } from '@/app/(common)/_actions/session/updateSess
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { PinInput } from '@/components/ui/pin-input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/node_modules/next-auth/react';
 import { AnimatePresence, m } from 'framer-motion';
@@ -110,24 +111,9 @@ export default function AuthTokenSubmission() {
 		return <GymFormSkeleton />;
 	}
 
-	const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value.toUpperCase(); // Convert to uppercase
-		// Only allow letters and numbers, max 10 characters
-		if (/^[A-Z0-9]*$/.test(value) && value.length <= 10) {
-			setAuthToken(value);
-			setError('');
-		}
-	};
-
-	const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-		e.preventDefault();
-		const pastedText = e.clipboardData.getData('text').toUpperCase();
-		if (pastedText.length <= 10 && /^[A-Z0-9]*$/.test(pastedText)) {
-			setAuthToken(pastedText);
-			setError('');
-		} else {
-			setError('Invalid token format');
-		}
+	const handleTokenChange = (value: string) => {
+		setAuthToken(value);
+		setError('');
 	};
 
 	const handleSubmit = async () => {
@@ -228,21 +214,16 @@ export default function AuthTokenSubmission() {
 									<Shield className="h-12 w-12 text-blue-600" />
 								</div>
 
-								<div className="space-y-2">
-									<Input
-										type="text"
-										value={authToken}
-										onChange={handleTokenChange}
-										onPaste={handlePaste}
-										placeholder="Enter auth token (e.g., YSS59CTP37)"
-										className={`text-center text-xl tracking-[0.5em] h-14 font-mono ${
-											error ? 'border-red-500' : 'border-gray-200'
-										}`}
-										style={{ letterSpacing: '0.5em' }}
-										maxLength={10}
-										autoComplete="off"
-										spellCheck="false"
-									/>
+								<div className="space-y-4">
+									<div className="flex justify-center">
+										<PinInput
+											length={7}
+											value={authToken}
+											onChange={handleTokenChange}
+											disabled={loading}
+											regexCriteria={/^[A-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]$/}
+										/>
+									</div>
 
 									{error && (
 										<m.div
@@ -256,15 +237,15 @@ export default function AuthTokenSubmission() {
 									)}
 
 									<p className="text-xs text-gray-500 text-center mt-2">
-										Token format: 10 characters, letters and numbers only
+										Token format: 7 characters, letters, numbers, and special characters
 									</p>
 								</div>
 
 								<Button
 									onClick={handleSubmit}
-									disabled={loading || authToken.length !== 10}
+									disabled={loading || authToken.length !== 7}
 									className={`w-full py-6 text-lg font-medium transition-all duration-200 ${
-										loading || authToken.length !== 10
+										loading || authToken.length !== 7
 											? 'bg-gray-100 text-gray-400'
 											: 'bg-blue-600 hover:bg-blue-700 text-white'
 									}`}
