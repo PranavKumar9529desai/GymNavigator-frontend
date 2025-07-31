@@ -2,26 +2,30 @@
 
 import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
 import { AxiosError } from 'axios';
-import type { ApiResult, LoginResponseData, SignInRequest } from '@/lib/api/types';
+import type {
+	ApiResult,
+	LoginResponseData,
+	SignInRequest,
+} from '@/lib/api/types';
 
 export async function signInWithCredentials(
-	credentials: SignInRequest
+	credentials: SignInRequest,
 ): Promise<ApiResult<LoginResponseData>> {
-	console.log('🚀 [signInWithCredentials] Called with:', { 
-		email: credentials.email, 
-		password: credentials.password ? '***' : 'undefined' 
+	console.log('🚀 [signInWithCredentials] Called with:', {
+		email: credentials.email,
+		password: credentials.password ? '***' : 'undefined',
 	});
-	
+
 	try {
 		const axiosInstance = await AuthReqConfig();
 		console.log('📡 [signInWithCredentials] Making request to /login/login');
-		
+
 		const response = await axiosInstance.post('/login/login', credentials);
-		console.log('📥 [signInWithCredentials] Response received:', { 
+		console.log('📥 [signInWithCredentials] Response received:', {
 			status: response.status,
 			success: response.data?.success,
 			message: response.data?.message,
-			hasData: !!response.data?.data
+			hasData: !!response.data?.data,
 		});
 
 		// Handle successful response
@@ -34,7 +38,10 @@ export async function signInWithCredentials(
 		}
 
 		// Handle error response from API
-		console.log('❌ [signInWithCredentials] API returned error:', response.data);
+		console.log(
+			'❌ [signInWithCredentials] API returned error:',
+			response.data,
+		);
 		return {
 			success: false,
 			error: {
@@ -53,14 +60,18 @@ export async function signInWithCredentials(
 				status: error.response?.status,
 				statusText: error.response?.statusText,
 				data: error.response?.data,
-				message: error.message
+				message: error.message,
 			});
-			
+
 			if (error.response) {
 				// The request was made and the server responded with a status code
 				// that falls out of the range of 2xx
 				const responseData = error.response.data;
-				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+				if (
+					responseData &&
+					typeof responseData === 'object' &&
+					'message' in responseData
+				) {
 					// Use the specific error message from the backend
 					errorMessage = responseData.message as string;
 				} else {

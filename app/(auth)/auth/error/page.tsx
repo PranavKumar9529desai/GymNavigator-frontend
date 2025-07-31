@@ -5,7 +5,13 @@ import Link from 'next/link';
 import { AlertTriangle, ArrowLeft, UserX } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
 
 export default function AuthErrorPage() {
 	const searchParams = useSearchParams();
@@ -24,7 +30,8 @@ export default function AuthErrorPage() {
 			case 'Configuration':
 				return {
 					title: 'Configuration Error',
-					description: 'There was a problem with the authentication configuration.',
+					description:
+						'There was a problem with the authentication configuration.',
 					icon: AlertTriangle,
 					action: 'Try Again',
 					href: '/signup',
@@ -70,9 +77,7 @@ export default function AuthErrorPage() {
 				<CardContent className="space-y-4">
 					<div className="flex flex-col gap-3">
 						<Button asChild className="w-full">
-							<Link href={errorDetails.href}>
-								{errorDetails.action}
-							</Link>
+							<Link href={errorDetails.href}>{errorDetails.action}</Link>
 						</Button>
 						<Button variant="outline" asChild className="w-full">
 							<Link href="/signup">
@@ -85,4 +90,4 @@ export default function AuthErrorPage() {
 			</Card>
 		</div>
 	);
-} 
+}

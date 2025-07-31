@@ -4,7 +4,9 @@ import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
 import { AxiosError } from 'axios';
 import type { ApiResult } from '@/lib/api/types';
 
-export async function checkUserExists(email: string): Promise<ApiResult<boolean>> {
+export async function checkUserExists(
+	email: string,
+): Promise<ApiResult<boolean>> {
 	try {
 		const axiosInstance = await AuthReqConfig();
 		const response = await axiosInstance.post('/signup/isexists', { email });
@@ -36,7 +38,11 @@ export async function checkUserExists(email: string): Promise<ApiResult<boolean>
 				// The request was made and the server responded with a status code
 				// that falls out of the range of 2xx
 				const responseData = error.response.data;
-				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+				if (
+					responseData &&
+					typeof responseData === 'object' &&
+					'message' in responseData
+				) {
 					// Use the specific error message from the backend
 					errorMessage = responseData.message as string;
 				} else {

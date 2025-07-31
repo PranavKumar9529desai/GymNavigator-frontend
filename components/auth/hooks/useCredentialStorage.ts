@@ -1,5 +1,8 @@
 // After successful login, store the credentials
-const storeCredentials = async (email: string, password: string): Promise<void> => {
+const storeCredentials = async (
+	email: string,
+	password: string,
+): Promise<void> => {
 	// Check if Credential Management API is supported
 	if ('credentials' in navigator && window.PasswordCredential) {
 		try {
@@ -20,4 +23,4 @@ export function useCredentialStorage() {
 	return {
 		storeCredentials,
 	};
-} 
+}

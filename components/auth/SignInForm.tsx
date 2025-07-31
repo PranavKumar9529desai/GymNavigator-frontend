@@ -20,7 +20,10 @@ import {
 } from '@/components/ui/form';
 import FormError from '@/components/ui/form-error';
 import GoogleButton from '@/components/ui/googleButton';
-import { signInSchema, type SignInFormValues } from '@/components/auth/schemas/signin-schema';
+import {
+	signInSchema,
+	type SignInFormValues,
+} from '@/components/auth/schemas/signin-schema';
 import { useGoogleSignIn } from '@/components/auth/hooks/useGoogleSignIn';
 import { useCredentialStorage } from '@/components/auth/hooks/useCredentialStorage';
 import { parseAuthError } from '@/lib/utils/auth-error-parser';
@@ -29,7 +32,7 @@ export default function SignInForm() {
 	const [isPending, startTransition] = useTransition();
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
-	
+
 	const { handleGoogleSignIn } = useGoogleSignIn();
 	const { storeCredentials } = useCredentialStorage();
 
@@ -52,12 +55,12 @@ export default function SignInForm() {
 					password: values.password,
 				});
 
-                console.log('🔐 [SignInForm] result:', result);
+				console.log('🔐 [SignInForm] result:', result);
 
 				if (result?.error) {
 					// Parse the error message using our utility function
 					const { message: errorMessage } = parseAuthError(result.error);
-					
+
 					toast.dismiss();
 					toast.error('Sign in failed', { description: errorMessage });
 				} else if (result?.ok) {
@@ -65,7 +68,7 @@ export default function SignInForm() {
 					toast.success('Welcome back!', {
 						description: 'Redirecting to dashboard...',
 					});
-					
+
 					// Store credentials for future use
 					await storeCredentials(values.email, values.password);
 					router.push('/dashboard');
@@ -83,7 +86,10 @@ export default function SignInForm() {
 		<div className="md:flex justify-center px-4 sm:px-6 lg:px-8">
 			<div className="w-full max-w-md p-8 rounded-xl">
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+					<form
+						onSubmit={form.handleSubmit(handleSubmit)}
+						className="space-y-6"
+					>
 						<FormField
 							control={form.control}
 							name="email"
@@ -130,7 +136,9 @@ export default function SignInForm() {
 											type="button"
 											onClick={() => setShowPassword(!showPassword)}
 											className="absolute right-3 top-3 text-blue-400 hover:text-blue-300"
-											aria-label={showPassword ? 'Hide password' : 'Show password'}
+											aria-label={
+												showPassword ? 'Hide password' : 'Show password'
+											}
 										>
 											{showPassword ? (
 												<EyeOff className="h-5 w-5" />
@@ -169,11 +177,14 @@ export default function SignInForm() {
 
 				<div className="mt-6 text-center text-sm text-gray-300">
 					Don&apos;t have an account?{' '}
-					<a href="/signup" className="font-medium text-blue-400 hover:text-blue-300">
+					<a
+						href="/signup"
+						className="font-medium text-blue-400 hover:text-blue-300"
+					>
 						Sign up
 					</a>
 				</div>
 			</div>
 		</div>
 	);
-} 
+}

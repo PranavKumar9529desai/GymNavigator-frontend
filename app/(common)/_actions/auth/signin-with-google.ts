@@ -4,10 +4,14 @@ import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
 import { AxiosError } from 'axios';
 import type { ApiResult, SigninResponseType } from '@/lib/api/types';
 
-export async function signInWithGoogle(email: string): Promise<ApiResult<SigninResponseType>> {
+export async function signInWithGoogle(
+	email: string,
+): Promise<ApiResult<SigninResponseType>> {
 	try {
 		const axiosInstance = await AuthReqConfig();
-		const response = await axiosInstance.get(`/login/google?email=${encodeURIComponent(email)}`);
+		const response = await axiosInstance.get(
+			`/login/google?email=${encodeURIComponent(email)}`,
+		);
 
 		// Handle successful response
 		if (response.data.success) {
@@ -36,7 +40,11 @@ export async function signInWithGoogle(email: string): Promise<ApiResult<SigninR
 				// The request was made and the server responded with a status code
 				// that falls out of the range of 2xx
 				const responseData = error.response.data;
-				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+				if (
+					responseData &&
+					typeof responseData === 'object' &&
+					'message' in responseData
+				) {
 					// Use the specific error message from the backend
 					errorMessage = responseData.message as string;
 				} else {

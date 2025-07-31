@@ -46,9 +46,18 @@ interface ChartTooltipContentProps {
 	active?: boolean;
 	payload?: ChartPayloadItem[];
 	label?: string | number;
-	labelFormatter?: (value: unknown, payload: ChartPayloadItem[]) => React.ReactNode;
+	labelFormatter?: (
+		value: unknown,
+		payload: ChartPayloadItem[],
+	) => React.ReactNode;
 	labelClassName?: string;
-	formatter?: (value: number, name: string, item: ChartPayloadItem, index: number, payload: unknown) => React.ReactNode;
+	formatter?: (
+		value: number,
+		name: string,
+		item: ChartPayloadItem,
+		index: number,
+		payload: unknown,
+	) => React.ReactNode;
 	color?: string;
 	className?: string;
 }

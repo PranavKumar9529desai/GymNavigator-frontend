@@ -9,10 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
-import type {
-	ApiResult,
-	LoginResponseData,
-} from '@/lib/api/types';
+import type { ApiResult, LoginResponseData } from '@/lib/api/types';
 import { useSession } from '@/node_modules/next-auth/react';
 import { AnimatePresence, m } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
@@ -49,19 +46,21 @@ export default function SelectRole() {
 		console.log('role is this ', role);
 		try {
 			if (session?.user?.name && session?.user?.email) {
-				const response: ApiResult<LoginResponseData> =
-					await signUpWithGoogle(
-						{
-							name: session.user.name,
-							email: session.user.email,
-							role: role as Rolestype,
-						},
-						role,
-					);
+				const response: ApiResult<LoginResponseData> = await signUpWithGoogle(
+					{
+						name: session.user.name,
+						email: session.user.email,
+						role: role as Rolestype,
+					},
+					role,
+				);
 
 				if (response?.data?.user?.name && response.data?.user?.role) {
 					// @ts-ignore
-					await updateSessionWithRole(response.data.user.role as Rolestype, update);
+					await updateSessionWithRole(
+						response.data.user.role as Rolestype,
+						update,
+					);
 				}
 			}
 

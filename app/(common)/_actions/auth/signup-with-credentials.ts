@@ -5,11 +5,14 @@ import { AxiosError } from 'axios';
 import type { ApiResult, BaseUser, SignUpRequest } from '@/lib/api/types';
 
 export async function signUpWithCredentials(
-	userData: SignUpRequest
+	userData: SignUpRequest,
 ): Promise<ApiResult<BaseUser>> {
 	try {
 		const axiosInstance = await AuthReqConfig();
-		const response = await axiosInstance.post('/signup/createaccount', userData);
+		const response = await axiosInstance.post(
+			'/signup/createaccount',
+			userData,
+		);
 
 		// Handle successful response
 		if (response.data.success) {
@@ -38,7 +41,11 @@ export async function signUpWithCredentials(
 				// The request was made and the server responded with a status code
 				// that falls out of the range of 2xx
 				const responseData = error.response.data;
-				if (responseData && typeof responseData === 'object' && 'message' in responseData) {
+				if (
+					responseData &&
+					typeof responseData === 'object' &&
+					'message' in responseData
+				) {
 					// Use the specific error message from the backend
 					errorMessage = responseData.message as string;
 				} else {

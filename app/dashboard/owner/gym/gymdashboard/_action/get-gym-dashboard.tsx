@@ -6,6 +6,7 @@ export async function getGymDashboardData(): Promise<GymDashboardData> {
 	try {
 		const ownerAxios = await OwnerReqConfig();
 		const response = await ownerAxios.get('/dashboard/getdashboarddata');
+		console.log('response.data', response.data);
 		// biome-ignore lint/suspicious/noExplicitAny: API response is dynamic
 		const data = (response as { data: { data: any } }).data?.data;
 		console.log('data returned from the getdashboard route', data);

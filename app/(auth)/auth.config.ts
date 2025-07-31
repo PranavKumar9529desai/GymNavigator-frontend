@@ -58,12 +58,17 @@ export default {
 				try {
 					// Route to appropriate server action
 					if (isSignUp && role && name) {
-						const signupResult = await signUpWithCredentials({ role: role as Rolestype, name, email, password });
-						
+						const signupResult = await signUpWithCredentials({
+							role: role as Rolestype,
+							name,
+							email,
+							password,
+						});
+
 						if (!signupResult.success || !signupResult.data) {
 							// Log the error for debugging
 							logger.error('Signup failed:', signupResult.error);
-							
+
 							// Return null to trigger NextAuth's default error handling
 							return null;
 						}
@@ -81,11 +86,11 @@ export default {
 					// Handle sign-in
 					const signinResult = await signInWithCredentials({ email, password });
 					console.log('🔐 [AuthConfig] signinResult:', signinResult);
-					
+
 					if (!signinResult.success || !signinResult.data) {
 						// Log the error for debugging
 						logger.error('Sign-in failed:', signinResult.error);
-						
+
 						// Return null to trigger NextAuth's default error handling
 						return null;
 					}
@@ -222,24 +227,30 @@ export default {
 
 					// Create a new user with Google signup
 					const signupResult = await signUpWithGoogle(
-						{ name: userName, email: user.email, role: selectedRole as Rolestype },
-						selectedRole
+						{
+							name: userName,
+							email: user.email,
+							role: selectedRole as Rolestype,
+						},
+						selectedRole,
 					);
 
 					logger.log('Google signup result:', signupResult);
 
 					if (!signupResult.success) {
 						logger.error('Failed to create Google user:', signupResult.error);
-						
+
 						// Check if the error is due to user already existing
 						const errorMessage = signupResult.error?.message || '';
-						if (errorMessage.toLowerCase().includes('already exists') || 
+						if (
+							errorMessage.toLowerCase().includes('already exists') ||
 							errorMessage.toLowerCase().includes('user exists') ||
-							errorMessage.toLowerCase().includes('duplicate')) {
+							errorMessage.toLowerCase().includes('duplicate')
+						) {
 							// Return a specific error URL for existing users
 							return '/auth/error?error=AccessDenied';
 						}
-						
+
 						return false;
 					}
 

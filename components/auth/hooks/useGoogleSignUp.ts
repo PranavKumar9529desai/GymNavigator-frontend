@@ -36,7 +36,8 @@ export function useGoogleSignUp() {
 					// Handle specific error cases
 					if (result.error.includes('AccessDenied')) {
 						toast.error('Account Already Exists', {
-							description: 'This email is already registered. Please sign in instead.',
+							description:
+								'This email is already registered. Please sign in instead.',
 						});
 						// Redirect to signin page after a short delay
 						setTimeout(() => {
@@ -65,4 +66,4 @@ export function useGoogleSignUp() {
 		handleGoogleSignUp,
 		isPending,
 	};
-} 
+}

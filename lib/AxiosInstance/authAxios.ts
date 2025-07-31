@@ -10,4 +10,4 @@ export const AuthReqConfig = async (): Promise<AxiosInstance> => {
 	});
 
 	return authAxios;
-}; 
+};

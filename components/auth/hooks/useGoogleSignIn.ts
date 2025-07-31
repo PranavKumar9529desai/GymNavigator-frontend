@@ -17,8 +17,8 @@ export function useGoogleSignIn() {
 				});
 			} catch (error) {
 				toast.dismiss();
-				toast.error('Google Sign-in failed', { 
-					description: 'Please try again' 
+				toast.error('Google Sign-in failed', {
+					description: 'Please try again',
 				});
 				console.error('Failed to sign in with Google:', error);
 			}
@@ -29,4 +29,4 @@ export function useGoogleSignIn() {
 		handleGoogleSignIn,
 		isPending,
 	};
-} 
+}
