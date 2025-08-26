@@ -1,10 +1,10 @@
 'use client';
 
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import SettingsHeader from './SettingsHeader';
 import SettingsItemSkeleton from './_components/SettingsItemSkeleton';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
 
 export default function Loading() {
 	const renderCategorySkeleton = (index: number) => (

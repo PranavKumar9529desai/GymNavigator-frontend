@@ -5,9 +5,9 @@ import type { AxiosResponse } from 'axios';
 import { revalidatePath } from 'next/cache';
 import type {
 	FitnessPlan,
+	PricingFormData,
 	UpdateAmenitiesRequest,
 	UpdateAmenitiesResponse,
-	PricingFormData,
 } from '../types/gym-types';
 
 // Overview section update

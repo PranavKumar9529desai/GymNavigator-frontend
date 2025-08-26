@@ -1,9 +1,9 @@
-import { useTransition } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { storeGoogleSignupRole } from '@/app/(common)/_actions/auth/google-role-server-action';
 import type { Rolestype } from '@/lib/api/types';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
 
 export function useGoogleSignUp() {
 	const [isPending, startTransition] = useTransition();

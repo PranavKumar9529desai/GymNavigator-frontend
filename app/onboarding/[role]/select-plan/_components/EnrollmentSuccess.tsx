@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { CheckCircle, ArrowLeft, Dumbbell } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Dumbbell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

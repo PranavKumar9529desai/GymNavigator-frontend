@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { SingleWorkout } from './_components/excercise';
 import {
-	GetExcerciseDetails,
 	type Exercise,
+	GetExcerciseDetails,
 } from './actions/get-excercise-details';
 
 // Proper Next.js 15 page params type

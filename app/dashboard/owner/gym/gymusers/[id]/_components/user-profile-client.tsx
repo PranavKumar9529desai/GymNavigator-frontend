@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -9,16 +8,17 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { AlertCircle, UserX, Heart, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertCircle, Heart, UserX, Users } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { UserHeader } from './user-header';
-import { OverviewTab } from './overview-tab';
-import { HealthTab } from './health-tab';
-import { AttendanceTab } from './attendance-tab';
-import { TrainerTab } from './trainer-tab';
+import { useState } from 'react';
 import type { UserProfileResponse } from '../_action/get-user-profile';
+import { AttendanceTab } from './attendance-tab';
+import { HealthTab } from './health-tab';
+import { OverviewTab } from './overview-tab';
+import { TrainerTab } from './trainer-tab';
+import { UserHeader } from './user-header';
 
 interface UserProfileClientProps {
 	profileData: UserProfileResponse;

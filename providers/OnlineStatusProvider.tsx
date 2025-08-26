@@ -1,11 +1,11 @@
 'use client';
 
 import {
+	type ReactNode,
 	createContext,
 	useContext,
 	useEffect,
 	useState,
-	type ReactNode,
 } from 'react';
 
 interface OnlineStatusContextType {

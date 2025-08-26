@@ -1,15 +1,15 @@
 import '@/globals.css';
-import Providers from '@/providers/provider';
-import type { Metadata, Viewport } from 'next';
-import { Toaster } from 'sonner';
-import { OnlineStatusProvider } from '@/providers/OnlineStatusProvider';
+import { auth } from '@/app/(auth)/auth'; // Assuming your auth config is in /auth.ts
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 import RegisterServiceWorker from '@/components/RegisterServiceWorker';
 import OfflineIndicator from '@/components/common/OfflineIndicator';
-import { auth } from '@/app/(auth)/auth'; // Assuming your auth config is in /auth.ts
-import localFont from 'next/font/local';
-import ClientMotionProvider from '../providers/ClientMotionProvider';
-import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+import { OnlineStatusProvider } from '@/providers/OnlineStatusProvider';
 import { PostHogProvider } from '@/providers/PostHogProvider';
+import Providers from '@/providers/provider';
+import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
+import { Toaster } from 'sonner';
+import ClientMotionProvider from '../providers/ClientMotionProvider';
 
 const siteUrl = 'https://gymnavigator.in';
 
@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 // JSON-LD Structured Data for GymNavigator
 const generateStructuredData = () => {
 	const baseUrl = siteUrl;
-	
+
 	return [
 		{
 			'@context': 'https://schema.org',
@@ -38,30 +38,30 @@ const generateStructuredData = () => {
 			name: 'GymNavigator',
 			url: baseUrl,
 			logo: `${baseUrl}/icon.png`,
-			description: 'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
+			description:
+				'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
 			foundingDate: '2024',
 			contactPoint: {
 				'@type': 'ContactPoint',
 				contactType: 'customer service',
-				url: baseUrl
+				url: baseUrl,
 			},
-			sameAs: [
-				'https://twitter.com/gymnavigator'
-			]
+			sameAs: ['https://twitter.com/gymnavigator'],
 		},
 		{
 			'@context': 'https://schema.org',
 			'@type': 'WebApplication',
 			name: 'GymNavigator',
 			url: baseUrl,
-			description: 'Multi-tenant, mobile-first PWA for gym management that revolutionizes how gyms operate by focusing on trainer-client relationships.',
+			description:
+				'Multi-tenant, mobile-first PWA for gym management that revolutionizes how gyms operate by focusing on trainer-client relationships.',
 			applicationCategory: 'BusinessApplication',
 			operatingSystem: 'Web Browser, iOS, Android',
 			offers: {
 				'@type': 'Offer',
 				price: '0',
 				priceCurrency: 'INR',
-				description: 'Free tier available with premium features'
+				description: 'Free tier available with premium features',
 			},
 			featureList: [
 				'Multi-tenant gym management',
@@ -70,12 +70,12 @@ const generateStructuredData = () => {
 				'Workout and diet plan management',
 				'Mobile-first PWA design',
 				'Offline capabilities',
-				'Real-time attendance tracking'
+				'Real-time attendance tracking',
 			],
 			author: {
 				'@type': 'Organization',
-				name: 'GymNavigator'
-			}
+				name: 'GymNavigator',
+			},
 		},
 		{
 			'@context': 'https://schema.org',
@@ -83,19 +83,20 @@ const generateStructuredData = () => {
 			name: 'GymNavigator Mobile App',
 			applicationCategory: 'BusinessApplication',
 			operatingSystem: 'iOS, Android, Web',
-			description: 'Mobile-first gym management application with offline capabilities and QR code integration.',
+			description:
+				'Mobile-first gym management application with offline capabilities and QR code integration.',
 			offers: {
 				'@type': 'Offer',
 				price: '0',
-				priceCurrency: 'INR'
+				priceCurrency: 'INR',
 			},
 			featureList: [
 				'QR code scanning for attendance',
 				'Offline workout access',
 				'Real-time sync',
 				'Push notifications',
-				'Mobile-optimized interface'
-			]
+				'Mobile-optimized interface',
+			],
 		},
 		{
 			'@context': 'https://schema.org',
@@ -103,9 +104,10 @@ const generateStructuredData = () => {
 			name: 'Gym Management System',
 			provider: {
 				'@type': 'Organization',
-				name: 'GymNavigator'
+				name: 'GymNavigator',
 			},
-			description: 'Comprehensive gym management solution including member management, attendance tracking, workout planning, and diet management.',
+			description:
+				'Comprehensive gym management solution including member management, attendance tracking, workout planning, and diet management.',
 			serviceType: 'Gym Management Software',
 			areaServed: 'Worldwide',
 			hasOfferCatalog: {
@@ -117,52 +119,56 @@ const generateStructuredData = () => {
 						itemOffered: {
 							'@type': 'Service',
 							name: 'Member Management',
-							description: 'Comprehensive member onboarding and management system'
-						}
+							description:
+								'Comprehensive member onboarding and management system',
+						},
 					},
 					{
 						'@type': 'Offer',
 						itemOffered: {
 							'@type': 'Service',
 							name: 'Attendance Tracking',
-							description: 'QR code-based attendance system with real-time tracking'
-						}
+							description:
+								'QR code-based attendance system with real-time tracking',
+						},
 					},
 					{
 						'@type': 'Offer',
 						itemOffered: {
 							'@type': 'Service',
 							name: 'Workout Management',
-							description: 'Create and assign workout plans to clients'
-						}
+							description: 'Create and assign workout plans to clients',
+						},
 					},
 					{
 						'@type': 'Offer',
 						itemOffered: {
 							'@type': 'Service',
 							name: 'Diet Management',
-							description: 'Comprehensive diet planning and grocery list generation'
-						}
-					}
-				]
-			}
+							description:
+								'Comprehensive diet planning and grocery list generation',
+						},
+					},
+				],
+			},
 		},
 		{
 			'@context': 'https://schema.org',
 			'@type': 'LocalBusiness',
 			name: 'GymNavigator',
-			description: 'Digital gym management platform serving gym owners, trainers, and clients worldwide.',
+			description:
+				'Digital gym management platform serving gym owners, trainers, and clients worldwide.',
 			url: baseUrl,
 			telephone: '+91-800-GYM-NAV',
 			email: 'support@gymnavigator.in',
 			address: {
 				'@type': 'PostalAddress',
-				addressCountry: 'IN'
+				addressCountry: 'IN',
 			},
 			geo: {
 				'@type': 'GeoCoordinates',
 				latitude: '20.5937',
-				longitude: '78.9629'
+				longitude: '78.9629',
 			},
 			openingHours: 'Mo-Su 00:00-23:59',
 			priceRange: '₹₹',
@@ -171,9 +177,9 @@ const generateStructuredData = () => {
 			areaServed: 'Worldwide',
 			serviceArea: {
 				'@type': 'Country',
-				name: 'Worldwide'
-			}
-		}
+				name: 'Worldwide',
+			},
+		},
 	];
 };
 

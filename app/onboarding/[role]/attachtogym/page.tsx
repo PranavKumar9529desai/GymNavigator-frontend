@@ -1,10 +1,10 @@
 'use client';
 
+import type { GymInfo } from '@/types/next-auth';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { updateSessionWithGym } from '../../../(common)/_actions/session/updateSessionWithGym';
-import type { GymInfo } from '@/types/next-auth';
 import { attachRoleToGym } from '../_actions/attach-role-to-gym';
 import { ErrorState } from './components/ErrorState';
 import { LoadingState } from './components/LoadingState';

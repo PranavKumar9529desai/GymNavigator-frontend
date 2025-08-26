@@ -1,8 +1,8 @@
 'use server';
 
 import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
-import { AxiosError } from 'axios';
 import type { ApiResult, UserInfoResponse } from '@/lib/api/types';
+import { AxiosError } from 'axios';
 
 export async function getUserByEmail(
 	email: string,

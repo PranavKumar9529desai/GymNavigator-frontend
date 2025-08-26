@@ -1,16 +1,6 @@
 'use client';
 
-import {
-	User,
-	Heart,
-	Target,
-	Activity,
-	Scale,
-	Ruler,
-	Utensils,
-	AlertCircle,
-	Clock,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import {
 	Card,
 	CardContent,
@@ -18,7 +8,17 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+	Activity,
+	AlertCircle,
+	Clock,
+	Heart,
+	Ruler,
+	Scale,
+	Target,
+	User,
+	Utensils,
+} from 'lucide-react';
 
 interface UserProfile {
 	id: number;

@@ -1,17 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import {
-	Search,
-	Utensils,
-	Clock,
-	Target,
-	ChefHat,
-	Filter,
-	Leaf,
-	Drumstick,
-	Loader2,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -20,8 +10,6 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
 	Select,
 	SelectContent,
@@ -29,8 +17,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { attachDietPlanToUser } from '../../dietassignedusers/_actions /AttachDietPlanToUser';
 import { toast } from '@/hooks/use-toast';
+import {
+	ChefHat,
+	Clock,
+	Drumstick,
+	Filter,
+	Leaf,
+	Loader2,
+	Search,
+	Target,
+	Utensils,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { attachDietPlanToUser } from '../../dietassignedusers/_actions /AttachDietPlanToUser';
 
 interface DietPlan {
 	id: number;

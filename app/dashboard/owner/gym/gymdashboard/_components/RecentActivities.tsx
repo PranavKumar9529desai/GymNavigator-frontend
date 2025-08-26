@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus, Activity, UserCheck } from 'lucide-react';
+import { Activity, UserCheck, UserPlus } from 'lucide-react';
+import React from 'react';
 import type { GymDashboardData } from '../types';
 
 interface RecentActivitiesProps {

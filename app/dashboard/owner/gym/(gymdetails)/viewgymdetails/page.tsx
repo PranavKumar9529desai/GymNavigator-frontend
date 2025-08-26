@@ -1,12 +1,12 @@
+import { Suspense } from 'react';
+import { unstable_ViewTransition as ViewTransition } from 'react';
+import FetchGymDetailsSA from './_actions/GetGymDetails';
+import { getAllGymTabData } from './_actions/get-gym-tab-data';
 import { GymHeader } from './_components/gym-header';
 import { GymTabs } from './_components/tabs/gym-tabs';
 import { ViewGymDetailsClient } from './_components/view-gym-details-client';
-import FetchGymDetailsSA from './_actions/GetGymDetails';
-import { getAllGymTabData } from './_actions/get-gym-tab-data';
-import type { GymData } from './types/gym-types';
-import { Suspense } from 'react';
 import Loading from './loading';
-import { unstable_ViewTransition as ViewTransition } from 'react';
+import type { GymData } from './types/gym-types';
 
 // Helper to format address object to string
 interface AddressObj {

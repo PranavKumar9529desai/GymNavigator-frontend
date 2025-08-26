@@ -53,7 +53,7 @@ export default function SignInForm() {
 				email,
 				password,
 			});
-			console.log("the result of the signin is", result)
+			console.log('the result of the signin is', result);
 			console.log('SignIn result: from SigninForm', result);
 			if (result?.error) {
 				// Parse the error JSON if it exists
@@ -70,8 +70,6 @@ export default function SignInForm() {
 						onClick: () => toast.dismiss(),
 					},
 				});
-
-		
 			} else if (result?.ok) {
 				toast.success('Welcome back!', {
 					description: 'Redirecting to dashboard...',

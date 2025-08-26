@@ -1,29 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-	Search,
-	Plus,
-	MoreVertical,
-	Edit,
-	Trash2,
-	Users,
-	Calendar,
-	Target,
-	TrendingUp,
-	Copy,
-	Eye,
-	Star,
-	Download,
-	ChevronDown,
-	ChevronUp,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -31,6 +11,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
 import {
 	Select,
 	SelectContent,
@@ -38,7 +20,25 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Progress } from '@/components/ui/progress';
+import {
+	Calendar,
+	ChevronDown,
+	ChevronUp,
+	Copy,
+	Download,
+	Edit,
+	Eye,
+	MoreVertical,
+	Plus,
+	Search,
+	Star,
+	Target,
+	Trash2,
+	TrendingUp,
+	Users,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import type { ViewDietPlan } from '../_action/get-all-view-diets';
 
 interface DietManagementProps {

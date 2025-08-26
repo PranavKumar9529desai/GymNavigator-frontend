@@ -1,16 +1,16 @@
 'use client';
 
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-	Users,
 	Activity,
+	ArrowDownRight,
+	ArrowUpRight,
+	IndianRupee,
 	UserCheck,
 	UserPlus,
-	ArrowUpRight,
-	ArrowDownRight,
-	IndianRupee,
+	Users,
 } from 'lucide-react';
+import React from 'react';
 import type { GymDashboardData } from '../types';
 
 interface KeyMetricsProps {

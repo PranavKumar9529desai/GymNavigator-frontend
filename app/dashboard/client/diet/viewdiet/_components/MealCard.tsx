@@ -4,14 +4,14 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
 import type { Meal } from '../_actions/get-todays-diet';
-import { NutritionCard } from './NutritionCard';
 import {
 	BreakfastIcon,
+	DefaultMealIcon,
+	DinnerIcon,
 	LunchIcon,
 	SnackIcon,
-	DinnerIcon,
-	DefaultMealIcon,
 } from './MealIcons';
+import { NutritionCard } from './NutritionCard';
 
 interface MealCardProps {
 	meal: Meal;

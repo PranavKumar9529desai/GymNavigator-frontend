@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { DollarSign, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import type { AdditionalService } from '../_action/create-pricing-plan';
 
 export interface AdditionalServiceCardProps {

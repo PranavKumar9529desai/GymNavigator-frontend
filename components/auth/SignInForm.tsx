@@ -1,15 +1,20 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
+import { useCredentialStorage } from '@/components/auth/hooks/useCredentialStorage';
+import { useGoogleSignIn } from '@/components/auth/hooks/useGoogleSignIn';
+import {
+	type SignInFormValues,
+	signInSchema,
+} from '@/components/auth/schemas/signin-schema';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
 	Form,
 	FormControl,
@@ -20,12 +25,7 @@ import {
 } from '@/components/ui/form';
 import FormError from '@/components/ui/form-error';
 import GoogleButton from '@/components/ui/googleButton';
-import {
-	signInSchema,
-	type SignInFormValues,
-} from '@/components/auth/schemas/signin-schema';
-import { useGoogleSignIn } from '@/components/auth/hooks/useGoogleSignIn';
-import { useCredentialStorage } from '@/components/auth/hooks/useCredentialStorage';
+import { Input } from '@/components/ui/input';
 import { parseAuthError } from '@/lib/utils/auth-error-parser';
 
 export default function SignInForm() {

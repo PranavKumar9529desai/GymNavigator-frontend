@@ -1,11 +1,11 @@
 'use server';
 
 import { ClientReqConfig } from '@/lib/AxiosInstance/clientAxios';
+import { revalidatePath } from 'next/cache';
 import {
 	HealthProfile,
 	type UserHealthprofile,
 } from './get-client-healthprofie';
-import { revalidatePath } from 'next/cache';
 
 export interface UpdateHealthProfileResponse {
 	success: boolean;

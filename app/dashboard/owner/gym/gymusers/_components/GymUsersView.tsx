@@ -1,20 +1,9 @@
-import type {
-	GymUsersApiResponse,
-	GymUser,
-	GymTrainer,
-} from './GymUsersClient';
-import { useState } from 'react';
+import { MoreActions } from '@/components/MoreAction';
 import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
-import {
-	User,
-	UserCheck,
-	Users,
-	Dumbbell,
-	User as UserIcon,
-} from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
 	Select,
 	SelectContent,
@@ -22,11 +11,22 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { GymUserMobileCard } from './GymUserMobileCard';
-import { MoreActions } from '@/components/MoreAction';
-import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
 import type { Row } from '@tanstack/react-table';
+import {
+	Dumbbell,
+	User,
+	UserCheck,
+	User as UserIcon,
+	Users,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { GymUserMobileCard } from './GymUserMobileCard';
+import type {
+	GymTrainer,
+	GymUser,
+	GymUsersApiResponse,
+} from './GymUsersClient';
 
 interface GymUsersViewProps {
 	data: GymUsersApiResponse;

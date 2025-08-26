@@ -1,16 +1,16 @@
+import { Button } from '@/components/ui/button';
 import { ChevronRight, Pencil } from 'lucide-react';
-import {
-	gethealthprofileById,
-	type UserHealthprofile,
-} from './_actions/get-client-healthprofie'; // Import UserHealthprofile type
 import Link from 'next/link'; // Import Link
 import { Suspense } from 'react'; // Import Suspense for cleaner loading states (optional but good practice)
-import GeneralDisplay from './display/GeneralDisplay';
+import {
+	type UserHealthprofile,
+	gethealthprofileById,
+} from './_actions/get-client-healthprofie'; // Import UserHealthprofile type
 import ActivityDisplay from './display/ActivityDisplay';
 import DietaryDisplay from './display/DietaryDisplay';
+import GeneralDisplay from './display/GeneralDisplay';
 import MedicalDisplay from './display/MedicalDisplay';
 import ReligiousDisplay from './display/ReligiousDisplay';
-import { Button } from '@/components/ui/button';
 
 // Define props interface to accept searchParams
 interface HealthProfileProps {

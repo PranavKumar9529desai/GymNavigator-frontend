@@ -1,15 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { Edit } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import type { GymTabData } from '../hooks/useGymData';
+import type { GymData } from '../types/gym-types';
 import { EditGymDrawer } from './edit-gym-drawer';
 import { EditGymSheet } from './edit-gym-sheet';
-import type { GymData } from '../types/gym-types';
-import type { GymTabData } from '../hooks/useGymData';
-import { useRouter } from 'next/navigation';
 import { ViewGymDetailsEditButton } from './view-gym-details-edit-button';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 interface ViewGymDetailsClientProps {
 	gymData: GymData | null;

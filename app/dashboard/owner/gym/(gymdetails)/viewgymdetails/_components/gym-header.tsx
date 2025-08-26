@@ -3,30 +3,30 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
-	Mail,
-	Phone,
-	User,
-	Users,
-	Star,
-	Edit3,
-	Dumbbell,
-	UserCheck,
-	Globe,
-	MapPin,
-	Key,
-	Trophy,
-	Crown,
-	Copy,
-	Check,
-} from 'lucide-react';
-import {
 	Tooltip,
-	TooltipTrigger,
 	TooltipContent,
 	TooltipProvider,
+	TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { toast } from 'sonner';
+import {
+	Check,
+	Copy,
+	Crown,
+	Dumbbell,
+	Edit3,
+	Globe,
+	Key,
+	Mail,
+	MapPin,
+	Phone,
+	Star,
+	Trophy,
+	User,
+	UserCheck,
+	Users,
+} from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import type { GymData } from '../types/gym-types';
 
@@ -45,10 +45,10 @@ export function GymHeader({ gymData }: GymHeaderProps) {
 		try {
 			await navigator.clipboard.writeText(gymData.gymauthtoken);
 			setCopied(true);
-			toast.success("Auth token copied successfully!");
+			toast.success('Auth token copied successfully!');
 			setTimeout(() => setCopied(false), 2000);
 		} catch (_error) {
-			toast.error("Failed to copy auth token");
+			toast.error('Failed to copy auth token');
 		}
 	};
 

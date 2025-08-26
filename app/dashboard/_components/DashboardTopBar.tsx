@@ -1,11 +1,11 @@
 'use client';
 
+import type { GymInfo, Rolestype } from '@/types/next-auth';
 import { useSession } from 'next-auth/react';
 import { Suspense } from 'react';
 import { Skeleton } from '../../../components/ui/skeleton';
 import TopBar from './TopBar';
 import { useDashboardMenu } from './use-dashboard-menu';
-import type { Rolestype, GymInfo } from '@/types/next-auth';
 
 interface UserSession {
 	user: {

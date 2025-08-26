@@ -1,8 +1,8 @@
 'use client';
 
-import OnboardedUsers from './OnboardedUsers';
 import type { OnBordingUser } from '../_actions/GetOnBoardingUser';
 import Loading from '../loading';
+import OnboardedUsers from './OnboardedUsers';
 
 interface OnboardedUsersClientProps {
 	initialData?: {

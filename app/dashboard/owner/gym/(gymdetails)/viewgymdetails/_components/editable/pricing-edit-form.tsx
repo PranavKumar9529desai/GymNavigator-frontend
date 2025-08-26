@@ -1,14 +1,10 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
@@ -16,50 +12,54 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { motion, AnimatePresence } from 'framer-motion';
-import { HexColorPicker } from 'react-colorful';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-	Plus,
-	Trash2,
-	Star,
-	Crown,
-	Dumbbell,
-	Users,
-	Calendar,
-	DollarSign,
-	Palette,
-	Sparkles,
-	X,
-	GripVertical,
-	Target,
 	Award,
+	Calendar,
+	Crown,
+	DollarSign,
+	Dumbbell,
+	GripVertical,
+	Palette,
+	Plus,
+	Sparkles,
+	Star,
+	Target,
+	Trash2,
+	Users,
+	X,
 	Zap,
 } from 'lucide-react';
+import { useEffect, useState, useTransition } from 'react';
+import { HexColorPicker } from 'react-colorful';
+import { toast } from 'sonner';
+import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
 import type {
-	GymData,
-	FitnessPlan,
 	AdditionalService,
+	FitnessPlan,
+	GymData,
 	PricingFormData,
 } from '../../types/gym-types';
-import { useState, useEffect, useTransition } from 'react';
-import { updateGymPricing } from '../../_actions/submit-gym-tabs-form';
-import { toast } from 'sonner';
 
 import {
 	DndContext,
-	closestCenter,
+	type DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
+	closestCenter,
 	useSensor,
 	useSensors,
-	type DragEndEvent,
 } from '@dnd-kit/core';
 import {
-	arrayMove,
 	SortableContext,
+	arrayMove,
 	sortableKeyboardCoordinates,
-	verticalListSortingStrategy,
 	useSortable,
+	verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { feature } from '../../types/gym-types';

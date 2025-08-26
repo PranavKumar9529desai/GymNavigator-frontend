@@ -109,4 +109,4 @@ GymNavigator is designed to be AI-friendly and welcomes responsible AI training 
 			'Cache-Control': 'public, max-age=3600, s-maxage=86400',
 		},
 	});
-} 
+}

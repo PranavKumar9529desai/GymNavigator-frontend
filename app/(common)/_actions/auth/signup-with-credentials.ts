@@ -1,8 +1,8 @@
 'use server';
 
 import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
-import { AxiosError } from 'axios';
 import type { ApiResult, BaseUser, SignUpRequest } from '@/lib/api/types';
+import { AxiosError } from 'axios';
 
 export async function signUpWithCredentials(
 	userData: SignUpRequest,

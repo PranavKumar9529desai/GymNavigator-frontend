@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 
-import Loader from './loading';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
+import Loader from './loading';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

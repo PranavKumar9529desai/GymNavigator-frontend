@@ -1,6 +1,6 @@
-import { Heart, BookOpen } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { BookOpen, Heart } from 'lucide-react';
 import type { UserHealthprofile } from '../_actions/get-client-healthprofie';
 
 interface ReligiousDisplayProps {

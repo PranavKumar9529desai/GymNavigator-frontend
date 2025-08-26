@@ -7,20 +7,20 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import {
-	LineChart,
-	Line,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	ResponsiveContainer,
-} from 'recharts';
 import {
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Progress } from '@/components/ui/progress';
+import {
+	CartesianGrid,
+	Line,
+	LineChart,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 interface HealthData {
 	weight: number;

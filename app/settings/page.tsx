@@ -1,13 +1,13 @@
 'use client';
 
-import { type ReactElement, useMemo, Suspense } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSession } from 'next-auth/react';
-import { settingsMenuItems, type Role, type MenuItem } from './menuitems';
+import { type ReactElement, Suspense, useMemo } from 'react';
 import SettingsHeader from './SettingsHeader';
 import SettingsItem from './_components/SettingsItem';
 import SettingsItemSkeleton from './_components/SettingsItemSkeleton';
 import SettingsTitle from './_components/SettingsTitle';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { type MenuItem, type Role, settingsMenuItems } from './menuitems';
 
 function LoadingSettingsItems() {
 	return (

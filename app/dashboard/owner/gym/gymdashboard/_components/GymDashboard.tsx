@@ -4,10 +4,10 @@ import React from 'react';
 import type { GymDashboardData } from '../types';
 import DashboardHeader from './DashboardHeader';
 import KeyMetrics from './KeyMetrics';
-import OperationalMetrics from './OperationalMetrics';
-import RevenueChart from './RevenueChart';
 import MembershipStatusDistribution from './MembershipStatusDistribution';
+import OperationalMetrics from './OperationalMetrics';
 import RecentActivities from './RecentActivities';
+import RevenueChart from './RevenueChart';
 
 interface GymDashboardProps {
 	data: GymDashboardData;

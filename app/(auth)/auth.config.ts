@@ -5,14 +5,14 @@ import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 
-import { signInWithCredentials } from '../(common)/_actions/auth/signin-with-credentials';
-import { signUpWithCredentials } from '../(common)/_actions/auth/signup-with-credentials';
+import type { BaseUser, GymInfo, Rolestype } from '@/lib/api/types';
+import { checkUserExists } from '../(common)/_actions/auth/check-user-exists';
 import { getUserByEmail } from '../(common)/_actions/auth/get-userinfo';
 import { getGoogleSignupRole } from '../(common)/_actions/auth/google-role-server-action';
+import { signInWithCredentials } from '../(common)/_actions/auth/signin-with-credentials';
 import { signInWithGoogle } from '../(common)/_actions/auth/signin-with-google';
-import { checkUserExists } from '../(common)/_actions/auth/check-user-exists';
+import { signUpWithCredentials } from '../(common)/_actions/auth/signup-with-credentials';
 import { signUpWithGoogle } from '../(common)/_actions/auth/signup-with-google';
-import type { Rolestype, GymInfo, BaseUser } from '@/lib/api/types';
 
 // Extended User interface to include gymInfo property
 interface ExtendedUser extends User {

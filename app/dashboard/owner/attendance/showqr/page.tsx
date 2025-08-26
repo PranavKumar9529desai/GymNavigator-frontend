@@ -1,9 +1,9 @@
-import FetchGymDetailsSA from '../../gym/(gymdetails)/viewgymdetails/_actions/GetGymDetails';
+import GymQRCode from '@/components/gym-owner/QrCode';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { GetAttendanceQrData } from './GetAttendanceQrData';
-import GymQRCode from '@/components/gym-owner/QrCode';
 import { Suspense } from 'react';
+import FetchGymDetailsSA from '../../gym/(gymdetails)/viewgymdetails/_actions/GetGymDetails';
+import { GetAttendanceQrData } from './GetAttendanceQrData';
 import Loading from './loading';
 
 export default async function AttendanceComponent() {

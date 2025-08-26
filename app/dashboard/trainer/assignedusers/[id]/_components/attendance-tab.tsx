@@ -7,21 +7,21 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { CalendarDays } from 'lucide-react';
-import {
-	BarChart,
-	Bar,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	ResponsiveContainer,
-} from 'recharts';
 import {
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Separator } from '@/components/ui/separator';
+import { CalendarDays } from 'lucide-react';
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 interface AttendanceTabProps {
 	weeklyAttendance: Array<{ day: string; attended: number }>;

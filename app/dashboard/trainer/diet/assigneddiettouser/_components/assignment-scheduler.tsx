@@ -1,17 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { format } from 'date-fns';
-import {
-	Calendar as CalendarIcon,
-	Clock,
-	ArrowLeft,
-	CheckCircle,
-	User,
-	Utensils,
-	Target,
-	FileText,
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
 	Card,
 	CardContent,
@@ -19,17 +10,26 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import {
+	ArrowLeft,
+	Calendar as CalendarIcon,
+	CheckCircle,
+	Clock,
+	FileText,
+	Target,
+	User,
+	Utensils,
+} from 'lucide-react';
+import { useState } from 'react';
 
 interface DietPlan {
 	id: number;

@@ -1,15 +1,19 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from 'lucide-react';
 
+import { useGoogleSignUp } from '@/components/auth/hooks/useGoogleSignUp';
+import {
+	type RegisterFormValues,
+	registerSchema,
+} from '@/components/auth/schemas/register-schema';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
 	Form,
 	FormControl,
@@ -18,6 +22,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
+import FormError from '@/components/ui/form-error';
+import GoogleButton from '@/components/ui/googleButton';
+import { Input } from '@/components/ui/input';
 import {
 	Select,
 	SelectContent,
@@ -25,13 +32,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import FormError from '@/components/ui/form-error';
-import GoogleButton from '@/components/ui/googleButton';
-import {
-	registerSchema,
-	type RegisterFormValues,
-} from '@/components/auth/schemas/register-schema';
-import { useGoogleSignUp } from '@/components/auth/hooks/useGoogleSignUp';
 
 export default function SignUpForm() {
 	const [_error, setError] = useState<string>('');

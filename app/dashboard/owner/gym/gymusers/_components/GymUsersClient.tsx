@@ -1,9 +1,9 @@
 'use client';
 
-import { getGymUsers } from '../_actions/get-gym-users';
 import { useEffect, useState } from 'react';
-import GymUsersView from './GymUsersView';
+import { getGymUsers } from '../_actions/get-gym-users';
 import Loading from '../loading';
+import GymUsersView from './GymUsersView';
 
 export interface GymUser {
 	id: number;

@@ -1,16 +1,16 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import type { AmenityCategory } from '../../types/gym-types';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Loader2, Plus } from 'lucide-react';
 import type React from 'react';
 import { useEffect, useState, useTransition } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
-import { Loader2, Plus } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import { getAmenitiesData } from '../../_actions/amenity-actions';
 import { updateGymAmenities } from '../../_actions/submit-gym-tabs-form';
-import { toast } from 'sonner';
+import type { AmenityCategory } from '../../types/gym-types';
 
 // Simplified props interface
 interface AmenitiesEditFormProps {

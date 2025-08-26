@@ -16,8 +16,8 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { AssignedUser } from '../_actiions/GetuserassignedTotrainers';
 import { AssignedUserToTrainersAction } from '../[id]/_components/assigned-users-to-trainer-action';
+import type { AssignedUser } from '../_actiions/GetuserassignedTotrainers';
 
 const columns: ColumnDef<AssignedUser>[] = [
 	{

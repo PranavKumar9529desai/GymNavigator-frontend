@@ -2,9 +2,9 @@
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
 import type {
-	GymData,
-	FitnessPlan,
 	AdditionalService,
+	FitnessPlan,
+	GymData,
 } from '../../../types/gym-types';
 
 // Fetch gym details

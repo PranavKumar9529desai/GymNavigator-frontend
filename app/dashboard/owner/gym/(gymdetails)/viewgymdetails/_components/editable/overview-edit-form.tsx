@@ -1,14 +1,14 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import type { GymData } from '../../types/gym-types';
-import { useState, useEffect, useTransition } from 'react';
-import { updateGymOverview } from '../../_actions/submit-gym-tabs-form';
-import { toast } from 'sonner';
-import { ImageIcon, Building2, Phone, Mail } from 'lucide-react';
+import { Building2, ImageIcon, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
+import { useEffect, useState, useTransition } from 'react';
+import { toast } from 'sonner';
+import { updateGymOverview } from '../../_actions/submit-gym-tabs-form';
+import type { GymData } from '../../types/gym-types';
 
 interface OverviewEditFormProps {
 	data: GymData;

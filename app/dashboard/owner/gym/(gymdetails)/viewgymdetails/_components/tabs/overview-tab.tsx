@@ -3,20 +3,20 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import {
-	Users,
-	TrendingUp,
-	Calendar,
-	Target,
-	Clock,
 	Award,
-	Heart,
-	User,
+	Calendar,
+	Clock,
 	Dumbbell,
+	Heart,
+	Target,
+	TrendingUp,
+	User,
 	UserCheck,
+	Users,
 } from 'lucide-react';
 import {
-	TrainerUserBarChart,
 	type Trainer,
+	TrainerUserBarChart,
 } from '../charts/trainer-user-bar-chart';
 
 function UserCard({

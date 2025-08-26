@@ -1,6 +1,7 @@
 // src/app/diet-page/components/DietPlanner/DietControls.tsx
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,9 +19,8 @@ import {
 	SparklesIcon,
 } from 'lucide-react';
 import type React from 'react';
-import type { DayOfWeek } from './DietPlanner';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import type { DayOfWeek } from './DietPlanner';
 
 interface DietControlsProps {
 	onGenerate: (location: { country: string; state: string }) => void;

@@ -1,10 +1,10 @@
 'use client';
 
-import type * as React from 'react';
 import { Clock } from 'lucide-react';
+import type * as React from 'react';
 import type { TodaysDiet } from '../_actions/get-todays-diet';
-import { MealCard } from './MealCard';
 import { DietSummaryCard } from './DietSummaryCard';
+import { MealCard } from './MealCard';
 
 export default function TodaysDietComponent({
 	todaysDiet: data,

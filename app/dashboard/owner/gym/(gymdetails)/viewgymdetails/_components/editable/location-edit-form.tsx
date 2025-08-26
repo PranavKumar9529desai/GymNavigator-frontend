@@ -1,15 +1,15 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import type { GymData, GymLocation } from '../../types/gym-types';
-import { useState, useEffect, useTransition } from 'react';
-import { useGetLocationFromCoordinates } from '../../_actions/get-location-from-coordinates';
-import { useGetCoordinatesFromLocation } from '../../_actions/get-co-ordinates-from-location';
 import { MapPin } from 'lucide-react';
-import { updateGymLocation } from '../../_actions/submit-gym-tabs-form';
+import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import { useGetCoordinatesFromLocation } from '../../_actions/get-co-ordinates-from-location';
+import { useGetLocationFromCoordinates } from '../../_actions/get-location-from-coordinates';
+import { updateGymLocation } from '../../_actions/submit-gym-tabs-form';
+import type { GymData, GymLocation } from '../../types/gym-types';
 
 interface LocationEditFormProps {
 	data: GymData;

@@ -9,12 +9,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import {
 	statusBadgeVariants,
 	statusColorClasses,
 	statusLabels,
 } from '@/lib/constants/status-variants';
+import { cn } from '@/lib/utils';
 import type { UserType } from './OnboardedUsers';
 import { UserActions } from './user-onboarding-actions';
 

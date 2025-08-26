@@ -3,10 +3,10 @@
 
 import type { Trainer } from '../_actions/get-gym-tab-data';
 import type {
-	FitnessPlan,
 	AdditionalService,
-	GymLocation,
 	AmenityCategory,
+	FitnessPlan,
+	GymLocation,
 } from '../types/gym-types';
 
 // Define GymTabData type based on getAllGymTabData return type

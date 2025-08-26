@@ -1,25 +1,25 @@
 'use client';
-import { TabsContent, TabsList, TabsTrigger, Tabs } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { m } from 'framer-motion';
 import {
-	TrendingUp,
-	Dumbbell,
-	MapPin,
 	DollarSign,
+	Dumbbell,
 	type LucideIcon,
+	MapPin,
+	TrendingUp,
 } from 'lucide-react';
+import type { Trainer } from '../../_actions/get-gym-tab-data';
+import type {
+	AdditionalService,
+	AmenityCategory,
+	FitnessPlan,
+	GymLocation,
+} from '../../types/gym-types';
 import { AmenitiesTab } from './amenities-tab';
 import { LocationTab } from './location-tab';
 import { OverviewTab } from './overview-tab';
 import { PricingTab } from './pricing-tab';
-import { Separator } from '@/components/ui/separator';
-import { m } from 'framer-motion';
-import type {
-	AmenityCategory,
-	FitnessPlan,
-	AdditionalService,
-	GymLocation,
-} from '../../types/gym-types';
-import type { Trainer } from '../../_actions/get-gym-tab-data';
 
 interface GymTabsProps {
 	overviewData?: { trainersData?: Trainer[] };

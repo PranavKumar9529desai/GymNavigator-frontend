@@ -16,7 +16,7 @@ export async function fetchGymById(gymId: string): Promise<Gym | null> {
 		const trainerAxios = await TrainerReqConfig();
 
 		const response = await trainerAxios.get(`/onboarding/gym/${gymId}`);
-		console.log(" the response is fetchbyid", response.data)
+		console.log(' the response is fetchbyid', response.data);
 
 		if (!response.data || !response.data.gym) {
 			return null;
@@ -27,4 +27,4 @@ export async function fetchGymById(gymId: string): Promise<Gym | null> {
 		console.error('Error fetching gym:', error);
 		return null;
 	}
-} 
+}

@@ -1,12 +1,12 @@
+import { GradientBackground } from '@/components/theme/GradientBackground';
 import {
 	EnvelopeIcon,
 	MapPinIcon,
 	PhoneIcon,
 } from '@heroicons/react/24/outline';
+import { Box, Container } from '@mui/material';
 import { ClientAnimatedContactInfo } from './ClientAnimatedContactInfo';
 import { ContactForm } from './ContactForm';
-import { GradientBackground } from '@/components/theme/GradientBackground';
-import { Container, Box } from '@mui/material';
 
 const contactInfo = [
 	{

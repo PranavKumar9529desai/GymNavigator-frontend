@@ -1,16 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuTrigger,
 	DropdownMenuLabel,
+	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { MoreHorizontal, MoreVertical, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MoreHorizontal, MoreVertical, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import type { AssignedUser } from '../../_actiions/GetuserassignedTotrainers';
 
 interface UserActionsProps {

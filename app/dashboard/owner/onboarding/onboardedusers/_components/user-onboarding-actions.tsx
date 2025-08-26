@@ -1,29 +1,29 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuTrigger,
 	DropdownMenuLabel,
+	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import {
 	CalendarClock,
 	MoreHorizontal,
 	MoreVertical,
 	User,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import type { UserType } from './OnboardedUsers';
-import { Separator } from '@/components/ui/separator';
 
 interface UserActionsProps {
 	user: UserType;

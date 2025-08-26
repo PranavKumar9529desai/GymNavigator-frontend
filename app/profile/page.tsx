@@ -1,5 +1,5 @@
-import { UserProfileClient } from '../dashboard/trainer/assignedusers/[id]/_components/user-profile-client';
 import { getUserProfile } from '../dashboard/trainer/assignedusers/[id]/_action/get-user-profile-for-trainer';
+import { UserProfileClient } from '../dashboard/trainer/assignedusers/[id]/_components/user-profile-client';
 
 export default function ProfilePage() {
 	return (

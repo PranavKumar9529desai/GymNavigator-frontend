@@ -1,5 +1,7 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -7,9 +9,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Users, Phone, Mail, MapPin, Clock, TrendingUp } from 'lucide-react';
+import { Clock, Mail, MapPin, Phone, TrendingUp, Users } from 'lucide-react';
 
 interface TrainerData {
 	name: string;

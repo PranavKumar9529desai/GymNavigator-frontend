@@ -9,7 +9,7 @@ export default function QrScanLoading() {
 					<Skeleton className="h-5 w-5 rounded" />
 					<Skeleton className="h-4 w-32" />
 				</div>
-				
+
 				{/* QR scanner skeleton */}
 				<div className="space-y-4">
 					<Skeleton className="h-64 w-full rounded-lg" />
@@ -19,4 +19,4 @@ export default function QrScanLoading() {
 			</div>
 		</div>
 	);
-} 
+}

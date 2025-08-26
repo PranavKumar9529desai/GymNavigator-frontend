@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '../../../../components/ui/skeleton';
-import { useLucideIcons } from '../use-lucide-icons';
 import { preloadCommonIcons } from '../common-icons';
+import { useLucideIcons } from '../use-lucide-icons';
 
 interface SubrouteNavProps {
 	subroutes: {

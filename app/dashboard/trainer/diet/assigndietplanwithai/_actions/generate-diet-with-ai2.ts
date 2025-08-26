@@ -2,10 +2,10 @@
 
 import { generateStructuredContent } from '@/lib/AI';
 import {
-	Meal,
 	type DietPlan,
 	type DietPlansByDay,
 	type LocationInfo,
+	Meal,
 	type WeeklyDietPlanSchema,
 	validateWeeklyDietPlanResponse,
 } from '@/lib/AI/types/diet-types';

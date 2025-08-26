@@ -1,21 +1,21 @@
 'use client';
+import { MoreActions } from '@/components/MoreAction';
 import { DataCard } from '@/components/Table/UserCard';
 import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { MoreActions } from '@/components/MoreAction';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
 	ArrowUpDown,
+	ChefHat,
 	Search,
+	Sparkles,
 	UserCheck,
+	UserX,
 	Users,
 	UtensilsCrossed,
-	ChefHat,
-	UserX,
-	Sparkles,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useMemo } from 'react';

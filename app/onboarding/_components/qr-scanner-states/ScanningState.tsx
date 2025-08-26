@@ -1,6 +1,6 @@
 'use client';
-import { QrCode, Camera, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Camera, QrCode, Zap } from 'lucide-react';
 
 interface ScanningStateProps {
 	videoRef: React.RefObject<HTMLVideoElement | null>;

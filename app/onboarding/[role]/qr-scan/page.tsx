@@ -8,11 +8,11 @@ import {
 } from '@/components/ui/card';
 import { AlertTriangle, InfoIcon, ShieldCheck } from 'lucide-react';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import OnboardingQrScanner from '../../_components/onboarding-qr-scanner';
 import RoleStorageManager from '../../_components/role-storage-manager';
 import { getEnrollmentStatus } from '../_actions/get-enrollment-status';
-import Image from 'next/image';
 
 export const metadata: Metadata = {
 	title: 'QR Scan | GymNavigator',
@@ -27,7 +27,7 @@ export default async function QrScanPage({ params }: RoleProps) {
 	const { role } = await params;
 	const enrollmentStatus = await getEnrollmentStatus(role);
 	console.log('Enrollment Status:', enrollmentStatus);
-	
+
 	// If user is already enrolled in a gym, show enrolled status
 	if (enrollmentStatus.isEnrolled) {
 		return (
@@ -120,13 +120,11 @@ export default async function QrScanPage({ params }: RoleProps) {
 					<InfoIcon className="h-5 w-5 text-blue-500 dark:text-blue-400" />
 					<p className="text-sm font-medium">
 						You're onboarding as a{' '}
-						<span className="rounded-md capitalize font-semibold">
-							{role}
-						</span>
+						<span className="rounded-md capitalize font-semibold">{role}</span>
 					</p>
 				</div>
 				<OnboardingQrScanner />
 			</div>
 		</div>
 	);
-} 
+}

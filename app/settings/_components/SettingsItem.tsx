@@ -1,9 +1,9 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 interface SettingsItemProps {
 	icon?: ReactNode;

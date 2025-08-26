@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Dumbbell } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
+import { Dumbbell, Plus } from 'lucide-react';
+import * as React from 'react';
+import type { PlanTimeSlot, PricingPlan } from '../_action/create-pricing-plan';
 import { PlanCard } from './plan-card';
-import type { PricingPlan, PlanTimeSlot } from '../_action/create-pricing-plan';
 
 interface PlansListProps {
 	plans: PricingPlan[];

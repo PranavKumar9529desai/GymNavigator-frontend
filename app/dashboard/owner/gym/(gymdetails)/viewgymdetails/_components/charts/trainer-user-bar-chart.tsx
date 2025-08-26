@@ -1,8 +1,8 @@
 'use client';
 
 import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, XAxis, Tooltip, YAxis } from 'recharts';
 import type { ReactNode } from 'react';
+import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 
 import {
 	Card,

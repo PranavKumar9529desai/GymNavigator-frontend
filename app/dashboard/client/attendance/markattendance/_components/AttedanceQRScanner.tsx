@@ -1,11 +1,11 @@
 'use client';
+import { QR_SCANNER_CONFIG } from '@/app/onboarding/_components/onboarding-qr-scanner';
 import { CheckCircle2, QrCode } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
-import { toast } from 'sonner';
 import QrScanner from 'qr-scanner';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { markAttendance } from '../_actions/mark-attendance';
-import { QR_SCANNER_CONFIG } from '@/app/onboarding/_components/onboarding-qr-scanner';
 
 interface QrValueType {
 	AttendanceAction: {
