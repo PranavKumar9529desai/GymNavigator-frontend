@@ -1,13 +1,8 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
 	Select,
 	SelectContent,
@@ -15,16 +10,21 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
+import { Palette, Plus, Star, Trash2, X } from 'lucide-react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Plus, Trash2, Star, Palette, X } from 'lucide-react';
-import {
-	planColors,
-	planIcons,
-	durationOptions,
-} from './pricing-plan-constants';
 import type { PricingPlan } from '../_action/create-pricing-plan';
 import { PlanTimeSlot } from '../_action/create-pricing-plan';
+import {
+	durationOptions,
+	planColors,
+	planIcons,
+} from './pricing-plan-constants';
 
 const genderOptions = [
 	{ value: 'ALL', label: 'All' },

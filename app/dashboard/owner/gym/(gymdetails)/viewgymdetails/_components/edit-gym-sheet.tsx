@@ -2,8 +2,14 @@
 
 import type React from 'react';
 
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -13,23 +19,17 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from '@/components/ui/sheet';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { TrendingUp, Dumbbell, MapPin, DollarSign } from 'lucide-react';
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DollarSign, Dumbbell, MapPin, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import type { GymData } from '../types/gym-types';
 import type { GymTabData } from '../hooks/useGymData';
+import type { GymData } from '../types/gym-types';
 
-// Import edit form components
-import { OverviewEditForm } from './editable/overview-edit-form';
 import { AmenitiesEditForm } from './editable/amenities-edit-form';
 import { LocationEditForm } from './editable/location-edit-form';
+// Import edit form components
+import { OverviewEditForm } from './editable/overview-edit-form';
 import { PricingEditForm } from './editable/pricing-edit-form';
 
 interface EditGymSheetProps {

@@ -1,7 +1,7 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { Separator } from '@/components/ui/separator';
+import type { ReactNode } from 'react';
 
 interface SettingsCategoryProps {
 	title: string;

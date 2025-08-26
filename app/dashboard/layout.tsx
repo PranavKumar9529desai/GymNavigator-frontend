@@ -1,20 +1,20 @@
+import { IsClient } from '@/lib/is-client';
 import { IsOwner } from '@/lib/is-owner'; // Assuming path alias @/lib
 import { IsTrainer } from '@/lib/is-trainer'; // Assuming path alias @/lib
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type React from 'react';
+import { unstable_ViewTransition as ViewTransition } from 'react';
 import { auth } from '../(auth)/auth';
+import PostHogIdentify from '../(home)/_component/PostHogIdentify';
 import DashboardBottomNav from './_components/DashboardBottomNav';
 import DashboardTopBar from './_components/DashboardTopBar';
-import type { MenuItem } from './_components/menuItems';
-import { getDashboardMenuItems } from './_components/use-dashboard-menu';
-import Sidebar from './_components/sidebar';
 // Import the preload function for performance improvement
 import { preloadCommonIcons } from './_components/common-icons';
-import { IsClient } from '@/lib/is-client';
-import type { Metadata } from 'next';
-import PostHogIdentify from '../(home)/_component/PostHogIdentify';
-import { unstable_ViewTransition as ViewTransition } from 'react';
+import type { MenuItem } from './_components/menuItems';
+import Sidebar from './_components/sidebar';
+import { getDashboardMenuItems } from './_components/use-dashboard-menu';
 export async function generateMetadata(): Promise<Metadata> {
 	const session = await auth();
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gymnavigator.in';

@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
 
 interface PinInputProps {
 	length: number;
@@ -43,7 +43,7 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 			// Handle single character input
 			if (inputValue.length === 1) {
 				const char = inputValue.toUpperCase();
-				
+
 				// Check regex criteria if provided
 				if (regexCriteria && !regexCriteria.test(char)) {
 					return;
@@ -52,7 +52,7 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 				const newValue = value.split('');
 				newValue[index] = char;
 				const newValueString = newValue.join('');
-				
+
 				onChange(newValueString);
 
 				// Move to next input if available
@@ -65,12 +65,12 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 			// Handle paste or multiple characters
 			else if (inputValue.length > 1) {
 				const chars = inputValue.slice(0, length).toUpperCase().split('');
-				
+
 				// Filter by regex criteria if provided
-				const filteredChars = regexCriteria 
-					? chars.filter(char => regexCriteria.test(char))
+				const filteredChars = regexCriteria
+					? chars.filter((char) => regexCriteria.test(char))
 					: chars;
-				
+
 				const newValue = filteredChars.join('').padEnd(length, '');
 				onChange(newValue);
 
@@ -80,12 +80,15 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 			}
 		};
 
-		const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+		const handleKeyDown = (
+			index: number,
+			e: React.KeyboardEvent<HTMLInputElement>,
+		) => {
 			if (disabled) return;
 
 			if (e.key === 'Backspace') {
 				e.preventDefault();
-				
+
 				const newValue = value.split('');
 				if (newValue[index]) {
 					// Clear current input
@@ -133,7 +136,7 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 					const inputRef = (el: HTMLInputElement | null) => {
 						inputRefs.current[index] = el;
 					};
-					
+
 					return (
 						<input
 							key={`pin-input-position-${index + 1}`}
@@ -156,8 +159,8 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 								value[index]
 									? 'border-blue-500 bg-blue-50 text-blue-900'
 									: focusedIndex === index
-									? 'border-blue-500 bg-white text-gray-900'
-									: 'border-gray-300 bg-white text-gray-900 hover:border-gray-400',
+										? 'border-blue-500 bg-white text-gray-900'
+										: 'border-gray-300 bg-white text-gray-900 hover:border-gray-400',
 								inputClassName,
 							)}
 							style={{
@@ -171,4 +174,4 @@ export const PinInput = React.forwardRef<HTMLDivElement, PinInputProps>(
 	},
 );
 
-PinInput.displayName = 'PinInput'; 
+PinInput.displayName = 'PinInput';

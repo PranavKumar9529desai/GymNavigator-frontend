@@ -1,23 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { 
-	Users, 
-	Dumbbell, 
-	Calendar, 
-	BarChart3, 
-	Shield, 
-	CheckCircle,
+import {
 	ArrowRight,
-	Star
+	BarChart3,
+	Calendar,
+	CheckCircle,
+	Dumbbell,
+	Shield,
+	Star,
+	Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface WelcomePageProps {
 	role: string;
@@ -27,84 +27,97 @@ const roleBenefits = {
 	client: {
 		title: 'Welcome to GymNavigator',
 		subtitle: 'Your Personal Fitness Journey Starts Here',
-		description: 'Join your gym and unlock a world of personalized fitness experiences. Track your progress, manage your schedule, and connect with your trainers.',
+		description:
+			'Join your gym and unlock a world of personalized fitness experiences. Track your progress, manage your schedule, and connect with your trainers.',
 		features: [
 			{
 				icon: Calendar,
 				title: 'Personal Dashboard',
-				description: 'Access gym information and your personal fitness overview'
+				description:
+					'Access gym information and your personal fitness overview',
 			},
 			{
 				icon: Dumbbell,
 				title: 'Workout Access',
-				description: 'View assigned workouts from your trainer and browse all available workouts'
+				description:
+					'View assigned workouts from your trainer and browse all available workouts',
 			},
 			{
 				icon: BarChart3,
 				title: 'Diet & Nutrition',
-				description: 'View assigned diet plans, access grocery lists, and get eating out guides'
+				description:
+					'View assigned diet plans, access grocery lists, and get eating out guides',
 			},
 			{
 				icon: Users,
 				title: 'Attendance Management',
-				description: 'View attendance history and mark attendance using QR code scanning'
-			}
-		]
+				description:
+					'View attendance history and mark attendance using QR code scanning',
+			},
+		],
 	},
 	trainer: {
 		title: 'Welcome to GymNavigator',
 		subtitle: 'Empower Your Clients, Grow Your Business',
-		description: 'Join your gym as a trainer and access powerful tools to manage clients, create personalized programs, and deliver exceptional fitness experiences.',
+		description:
+			'Join your gym as a trainer and access powerful tools to manage clients, create personalized programs, and deliver exceptional fitness experiences.',
 		features: [
 			{
 				icon: Users,
 				title: 'Client Management',
-				description: 'View and manage your assigned users/clients efficiently'
+				description: 'View and manage your assigned users/clients efficiently',
 			},
 			{
 				icon: Dumbbell,
 				title: 'Workout System',
-				description: 'Create custom workout plans and assign them to specific clients'
+				description:
+					'Create custom workout plans and assign them to specific clients',
 			},
 			{
 				icon: BarChart3,
 				title: 'Diet Management',
-				description: 'Create detailed diet plans, assign them to clients, and view all plans'
+				description:
+					'Create detailed diet plans, assign them to clients, and view all plans',
 			},
 			{
 				icon: Calendar,
 				title: 'Attendance Tracking',
-				description: 'Monitor today\'s attendance for assigned clients and generate QR codes'
-			}
-		]
+				description:
+					"Monitor today's attendance for assigned clients and generate QR codes",
+			},
+		],
 	},
 	owner: {
 		title: 'Welcome to GymNavigator',
 		subtitle: 'Transform Your Gym Management',
-		description: 'Join GymNavigator as a gym owner and take control of your fitness business with comprehensive management tools.',
+		description:
+			'Join GymNavigator as a gym owner and take control of your fitness business with comprehensive management tools.',
 		features: [
 			{
 				icon: Shield,
 				title: 'Gym Management',
-				description: 'View and manage gym details and settings'
+				description: 'View and manage gym details and settings',
 			},
 			{
 				icon: Users,
 				title: 'Trainer Management',
-				description: 'View all trainers and assign users/clients to specific trainers'
+				description:
+					'View all trainers and assign users/clients to specific trainers',
 			},
 			{
 				icon: Calendar,
 				title: 'User Onboarding',
-				description: 'Onboard new users with QR codes and manage onboarded users'
+				description:
+					'Onboard new users with QR codes and manage onboarded users',
 			},
 			{
 				icon: BarChart3,
 				title: 'Attendance Oversight',
-				description: 'View today\'s attendance across the gym and generate QR codes'
-			}
-		]
-	}
+				description:
+					"View today's attendance across the gym and generate QR codes",
+			},
+		],
+	},
 };
 
 export default function WelcomePage({ role }: WelcomePageProps) {
@@ -112,7 +125,8 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 	const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
 	const router = useRouter();
 
-	const roleData = roleBenefits[role as keyof typeof roleBenefits] || roleBenefits.client;
+	const roleData =
+		roleBenefits[role as keyof typeof roleBenefits] || roleBenefits.client;
 
 	const handleContinue = () => {
 		if (acceptedTerms && acceptedPrivacy) {
@@ -151,7 +165,10 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 
 				{/* Role Badge */}
 				<div className="flex justify-center mb-6">
-					<Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-sm px-4 py-2">
+					<Badge
+						variant="outline"
+						className="bg-blue-50 text-blue-700 border-blue-200 text-sm px-4 py-2"
+					>
 						Onboarding as {role.charAt(0).toUpperCase() + role.slice(1)}
 					</Badge>
 				</div>
@@ -165,9 +182,7 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 						<CardTitle className="text-xl font-bold text-slate-800">
 							{roleData.title}
 						</CardTitle>
-						<p className="text-slate-600 font-medium">
-							{roleData.subtitle}
-						</p>
+						<p className="text-slate-600 font-medium">{roleData.subtitle}</p>
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<p className="text-center text-slate-600 leading-relaxed">
@@ -179,7 +194,10 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 				{/* Features Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
 					{roleData.features.map((feature) => (
-						<Card key={feature.title} className="border-blue-100 bg-white/60 backdrop-blur-sm">
+						<Card
+							key={feature.title}
+							className="border-blue-100 bg-white/60 backdrop-blur-sm"
+						>
 							<CardContent className="p-4">
 								<div className="flex items-start space-x-3">
 									<div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center flex-shrink-0">
@@ -213,38 +231,48 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 								<Checkbox
 									id="terms"
 									checked={acceptedTerms}
-									onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+									onCheckedChange={(checked) =>
+										setAcceptedTerms(checked as boolean)
+									}
 									className="mt-1"
 								/>
-								<label htmlFor="terms" className="text-sm text-slate-700 leading-relaxed">
+								<label
+									htmlFor="terms"
+									className="text-sm text-slate-700 leading-relaxed"
+								>
 									I accept the{' '}
-									<Link 
-										href="/terms" 
-										target="_blank" 
+									<Link
+										href="/terms"
+										target="_blank"
 										className="text-blue-600 hover:text-blue-700 underline font-medium"
 									>
 										Terms of Service
-									</Link>
-									{' '}and agree to comply with all applicable terms and conditions.
+									</Link>{' '}
+									and agree to comply with all applicable terms and conditions.
 								</label>
 							</div>
 							<div className="flex items-start space-x-3">
 								<Checkbox
 									id="privacy"
 									checked={acceptedPrivacy}
-									onCheckedChange={(checked) => setAcceptedPrivacy(checked as boolean)}
+									onCheckedChange={(checked) =>
+										setAcceptedPrivacy(checked as boolean)
+									}
 									className="mt-1"
 								/>
-								<label htmlFor="privacy" className="text-sm text-slate-700 leading-relaxed">
+								<label
+									htmlFor="privacy"
+									className="text-sm text-slate-700 leading-relaxed"
+								>
 									I have read and agree to the{' '}
-									<Link 
-										href="/privacy" 
-										target="_blank" 
+									<Link
+										href="/privacy"
+										target="_blank"
 										className="text-blue-600 hover:text-blue-700 underline font-medium"
 									>
 										Privacy Policy
-									</Link>
-									{' '}regarding the collection and use of my personal information.
+									</Link>{' '}
+									regarding the collection and use of my personal information.
 								</label>
 							</div>
 						</div>
@@ -275,10 +303,11 @@ export default function WelcomePage({ role }: WelcomePageProps) {
 				{/* Footer Note */}
 				<div className="text-center mt-6">
 					<p className="text-xs text-slate-500">
-						By continuing, you agree to our terms and acknowledge our privacy policy.
+						By continuing, you agree to our terms and acknowledge our privacy
+						policy.
 					</p>
 				</div>
 			</div>
 		</div>
 	);
-} 
+}

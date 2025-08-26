@@ -1,8 +1,8 @@
 // "use cache"
 import React from 'react';
+import { unstable_ViewTransition as ViewTransition } from 'react';
 import { getGymDashboardData } from './_action/get-gym-dashboard';
 import GymDashboard from './_components/GymDashboard';
-import { unstable_ViewTransition as ViewTransition } from 'react';
 
 export default async function GymDashboardPage() {
 	// biome-ignore lint/suspicious/noExplicitAny: dashboard data is dynamic

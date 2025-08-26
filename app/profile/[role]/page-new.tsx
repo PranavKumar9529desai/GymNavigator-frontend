@@ -1,6 +1,6 @@
 import { auth } from '@/app/(auth)/auth';
-import { redirect } from 'next/navigation';
 import type { Rolestype } from '@/types/next-auth';
+import { redirect } from 'next/navigation';
 
 interface PageProps {
 	params: Promise<{ role: string }>;

@@ -1,7 +1,7 @@
-import type React from 'react';
-import { auth } from '../../(auth)/auth';
 import Image from 'next/image';
 import Link from 'next/link';
+import type React from 'react';
+import { auth } from '../../(auth)/auth';
 import NotOnboardedImage from '../_components/not-onboarded/_assests/not-onboarded.png';
 
 export default async function layout({

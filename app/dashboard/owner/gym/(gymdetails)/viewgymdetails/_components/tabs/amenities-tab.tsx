@@ -1,40 +1,40 @@
 'use client';
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
-	Check,
-	Dumbbell,
-	Users,
-	Heart,
-	Waves,
+	type AmenityCategoryDefinition,
+	PREDEFINED_AMENITY_CATEGORIES,
+} from '@/lib/constants/amenities';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
 	Baby,
-	Star,
+	Calendar,
+	Check,
+	ChevronDown,
+	Clock,
+	Dumbbell,
 	Edit3,
 	Filter,
-	Search,
-	ChevronDown,
-	Calendar,
-	Clock,
-	MapPin,
+	Heart,
 	Info,
+	MapPin,
+	Search,
+	Star,
+	Users,
+	Waves,
 } from 'lucide-react';
-import {
-	PREDEFINED_AMENITY_CATEGORIES,
-	type AmenityCategoryDefinition,
-} from '@/lib/constants/amenities';
-import { useState, useMemo } from 'react';
-import { Input } from '@/components/ui/input';
+import { useMemo, useState } from 'react';
 
 interface AmenitiesTabProps {
 	categories?: AmenityCategoryDefinition[];

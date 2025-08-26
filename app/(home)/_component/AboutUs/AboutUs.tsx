@@ -1,3 +1,4 @@
+import { GradientBackground } from '@/components/theme/GradientBackground';
 import {
 	BuildingOfficeIcon,
 	SparklesIcon,
@@ -5,7 +6,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { ClientAnimatedFeature } from './ClientAnimatedFeature';
 import { ClientAnimatedStats } from './ClientAnimatedStats';
-import { GradientBackground } from '@/components/theme/GradientBackground';
 
 const features = [
 	{

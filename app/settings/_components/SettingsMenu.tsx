@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import type { MenuItem } from '../menuitems';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import { memo } from 'react';
+import type { MenuItem } from '../menuitems';
 
 interface SettingsMenuProps {
 	items: MenuItem[];

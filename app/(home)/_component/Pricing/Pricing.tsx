@@ -1,6 +1,6 @@
+import { GradientBackground } from '@/components/theme/GradientBackground';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { ClientAnimatedPricingCard } from './ClientAnimatedPricingCard';
-import { GradientBackground } from '@/components/theme/GradientBackground';
 
 const plans = [
 	{

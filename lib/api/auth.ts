@@ -1,13 +1,13 @@
 import { apiCall } from './client';
 import type {
 	ApiResult,
+	EmailCheckRequest,
+	GoogleSignUpRequest,
+	LoginResponseData,
 	SignInRequest,
 	SignUpRequest,
-	GoogleSignUpRequest,
-	EmailCheckRequest,
-	LoginResponseData,
-	UserInfoResponse,
 	SigninResponseType,
+	UserInfoResponse,
 } from './types';
 
 // Auth API endpoints

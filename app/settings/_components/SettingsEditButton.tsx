@@ -1,7 +1,7 @@
 'use client';
 
-import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
+import type { ButtonHTMLAttributes } from 'react';
 
 interface SettingsEditButtonProps
 	extends ButtonHTMLAttributes<HTMLButtonElement> {

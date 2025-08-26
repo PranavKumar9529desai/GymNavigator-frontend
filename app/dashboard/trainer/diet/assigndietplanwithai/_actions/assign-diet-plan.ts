@@ -3,8 +3,8 @@
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
 import { toast } from 'sonner';
 import type {
-	AssignWeeklyDietPayload,
 	AssignSingleDietPayload,
+	AssignWeeklyDietPayload,
 } from '../../diet-types'; // Adjust import path as needed
 
 // interface AssignDietPlanParams {

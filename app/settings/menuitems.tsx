@@ -1,19 +1,19 @@
-import type { ReactNode } from 'react';
 import {
-	Settings,
-	UserCog,
-	CreditCard,
-	Heart,
-	User,
-	Building,
-	Dumbbell,
 	Bell,
-	Shield,
-	UserCircle,
-	UserCheck,
+	Building,
 	CalendarClock,
+	CreditCard,
+	Dumbbell,
+	Heart,
 	MessageSquare,
+	Settings,
+	Shield,
+	User,
+	UserCheck,
+	UserCircle,
+	UserCog,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 export type Role = 'owner' | 'client' | 'trainer';
 

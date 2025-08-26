@@ -7,23 +7,23 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Flame, Clock, Target, Zap } from 'lucide-react';
-import {
-	LineChart,
-	Line,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	ResponsiveContainer,
-	PieChart,
-	Pie,
-	Cell,
-} from 'recharts';
 import {
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Clock, Flame, Target, Zap } from 'lucide-react';
+import {
+	CartesianGrid,
+	Cell,
+	Line,
+	LineChart,
+	Pie,
+	PieChart,
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 interface OverviewTabProps {
 	attendanceData: Array<{ month: string; visits: number }>;

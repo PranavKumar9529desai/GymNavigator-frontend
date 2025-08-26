@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
-import { redirect } from 'next/navigation';
 import { TrainerReqConfig } from '@/lib/AxiosInstance/trainerAxios';
+import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { DietAssignmentClient } from './_components/diet-assignment-client';
 import { LoadingSkeleton } from './_components/loading-skeleton';
 

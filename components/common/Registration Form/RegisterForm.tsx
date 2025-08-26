@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import posthog from 'posthog-js';
 import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -29,7 +30,6 @@ import {
 } from '../../ui/select';
 import SignIn from '../Auth/SigninForm';
 import { type RegisterFormValues, registerSchema } from './register-schema';
-import posthog from 'posthog-js';
 
 // Remove the formSchema definition as it's now in register-schema.ts
 

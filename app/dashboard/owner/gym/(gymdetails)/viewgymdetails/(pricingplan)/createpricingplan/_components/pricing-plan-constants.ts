@@ -12,14 +12,14 @@ export const planColors = [
 
 // Plan icon options
 import {
-	Dumbbell,
-	Star,
-	Crown,
-	Users,
-	Target,
 	Award,
-	Zap,
+	Crown,
+	Dumbbell,
 	Sparkles,
+	Star,
+	Target,
+	Users,
+	Zap,
 } from 'lucide-react';
 
 export const planIcons = [

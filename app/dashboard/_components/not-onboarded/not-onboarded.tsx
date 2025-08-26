@@ -1,6 +1,6 @@
+import type { Rolestype } from '@/types/next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Rolestype } from '@/types/next-auth';
 
 import NotOnboardedImage from './_assests/not-onboarded.png';
 export default function NotOnboarded({ role }: { role: Rolestype }) {

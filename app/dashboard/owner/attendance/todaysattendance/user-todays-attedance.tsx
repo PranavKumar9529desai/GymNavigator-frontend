@@ -3,6 +3,7 @@
 import { DataCard } from '@/components/Table/UserCard';
 import { DataTable } from '@/components/Table/UsersTable';
 import { StatusCard } from '@/components/common/StatusCard';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,13 +13,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import {
+	AttendanceType,
 	attendanceBadgeVariants,
 	attendanceColorClasses,
 	attendanceLabels,
 	getAttendanceStatus,
-	AttendanceType,
 } from '@/lib/constants/attendance-variants';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';

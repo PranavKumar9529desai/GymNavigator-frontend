@@ -1,7 +1,7 @@
-import { UserCircle2, Ruler, Weight, CalendarDays } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { CalendarDays, Ruler, UserCircle2, Weight } from 'lucide-react';
 import type { UserHealthprofile } from '../_actions/get-client-healthprofie';
 
 interface GeneralDisplayProps {

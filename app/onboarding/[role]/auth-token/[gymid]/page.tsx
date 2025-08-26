@@ -1,10 +1,10 @@
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Building2, MapPin, Users } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Building2, MapPin, Users } from 'lucide-react';
-import TrainerAuthForm from './_components/trainer-auth-form';
 import { fetchGymById } from './_actions/fetch-gym-by-id';
+import TrainerAuthForm from './_components/trainer-auth-form';
 
 export const metadata: Metadata = {
 	title: 'Trainer Authentication | GymNavigator',
@@ -16,7 +16,10 @@ interface TrainerAuthPageProps {
 	searchParams: Promise<{ gymname?: string; hash?: string }>;
 }
 
-export default async function TrainerAuthPage({ params, searchParams }: TrainerAuthPageProps) {
+export default async function TrainerAuthPage({
+	params,
+	searchParams,
+}: TrainerAuthPageProps) {
 	const { gymid } = await params;
 	const { gymname, hash: _hash } = await searchParams;
 
@@ -35,7 +38,7 @@ export default async function TrainerAuthPage({ params, searchParams }: TrainerA
 			name: gymname || 'Gym',
 			img: '',
 			phone: undefined,
-			email: undefined
+			email: undefined,
 		};
 	}
 
@@ -60,15 +63,18 @@ export default async function TrainerAuthPage({ params, searchParams }: TrainerA
 							</div>
 						)}
 					</div>
-					
+
 					{/* Gym Name and Badge */}
 					<div className="space-y-3">
 						<h1 className="text-2xl font-bold text-slate-800">{gym.name}</h1>
-						<Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100 px-3 py-1">
+						<Badge
+							variant="secondary"
+							className="bg-blue-50 text-blue-600 border-blue-100 px-3 py-1"
+						>
 							Trainer Onboarding
 						</Badge>
 					</div>
-					
+
 					{/* Gym Details */}
 					<div className="flex items-center justify-center gap-6 text-sm text-slate-600">
 						<div className="flex items-center gap-2">
@@ -105,4 +111,4 @@ export default async function TrainerAuthPage({ params, searchParams }: TrainerA
 			</div>
 		</div>
 	);
-} 
+}

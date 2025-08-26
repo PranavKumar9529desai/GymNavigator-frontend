@@ -1,4 +1,4 @@
-import { Clock, Coffee, UtensilsCrossed, Utensils } from 'lucide-react';
+import { Clock, Coffee, Utensils, UtensilsCrossed } from 'lucide-react';
 
 interface MealTiming {
 	name: string;

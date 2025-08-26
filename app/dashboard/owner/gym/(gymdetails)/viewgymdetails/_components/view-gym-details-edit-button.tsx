@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import {
 	Tooltip,
-	TooltipTrigger,
 	TooltipContent,
+	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Edit } from 'lucide-react';
 import type React from 'react';

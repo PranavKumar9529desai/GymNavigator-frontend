@@ -1,5 +1,5 @@
+import type { GymInfo, Rolestype } from '@/lib/api/types';
 import type { User } from 'next-auth';
-import type { Rolestype, GymInfo } from '@/lib/api/types';
 
 // Extended User interface for GymNavigator
 export interface ExtendedUser extends User {

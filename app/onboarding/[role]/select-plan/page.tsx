@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
 import { auth } from '@/app/(auth)/auth';
+import { redirect } from 'next/navigation';
 import { getGymPlans } from './_actions/get-gym-plans';
-import { PlanSelectionClient } from './_components/PlanSelectionClient';
 import { ErrorState } from './_components/ErrorState';
+import { PlanSelectionClient } from './_components/PlanSelectionClient';
 
 interface PageProps {
 	searchParams: {

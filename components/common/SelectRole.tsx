@@ -1,7 +1,6 @@
 'use client';
 import { signUpWithGoogle } from '@/app/(common)/_actions/auth/signup-with-google';
 import { updateSessionWithRole } from '@/app/(common)/_actions/session/updateSessionWithRole';
-import type { Rolestype } from '@/types/next-auth';
 import { Card, CardContent } from '@/components/ui/card';
 import {
 	Dialog,
@@ -11,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import type { ApiResult, LoginResponseData } from '@/lib/api/types';
 import { useSession } from '@/node_modules/next-auth/react';
+import type { Rolestype } from '@/types/next-auth';
 import { AnimatePresence, m } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';

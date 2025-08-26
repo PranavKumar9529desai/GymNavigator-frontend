@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -8,8 +7,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { QrCode, MoreHorizontal, Users, Calendar } from 'lucide-react';
+import { Calendar, MoreHorizontal, QrCode, Users } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 
 export default function DashboardHeader() {
 	return (

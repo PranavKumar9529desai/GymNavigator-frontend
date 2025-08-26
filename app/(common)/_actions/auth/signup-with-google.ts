@@ -1,12 +1,12 @@
 'use server';
 
 import { AuthReqConfig } from '@/lib/AxiosInstance/authAxios';
-import { AxiosError } from 'axios';
 import type {
 	ApiResult,
-	LoginResponseData,
 	GoogleSignUpRequest,
+	LoginResponseData,
 } from '@/lib/api/types';
+import { AxiosError } from 'axios';
 
 export async function signUpWithGoogle(
 	userData: GoogleSignUpRequest,

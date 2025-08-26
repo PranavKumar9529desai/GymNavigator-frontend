@@ -1,5 +1,5 @@
-import DietManagement from './_components/view-all-diet';
 import { getAllViewDietPlans } from './_action/get-all-view-diets';
+import DietManagement from './_components/view-all-diet';
 
 export default async function Page() {
 	// Fetch diet plans data using server action

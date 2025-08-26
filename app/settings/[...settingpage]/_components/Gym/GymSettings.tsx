@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Clock, MapPin, Settings } from 'lucide-react';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -10,37 +15,32 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Separator } from '@/components/ui/separator';
 import {
 	Sheet,
+	SheetClose,
 	SheetContent,
 	SheetDescription,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-	SheetClose,
 } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { Clock, MapPin, Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 // Import form components
 import EditGeneralInfoForm from './EditGeneralInfoForm';
-import EditOperatingHoursForm from './EditOperatingHoursForm';
 import EditLocationForm from './EditLocationForm';
+import EditOperatingHoursForm from './EditOperatingHoursForm';
 
 // Import server actions
 import {
 	getGymSettings,
 	updateGymGeneralInfo,
-	updateGymOperatingHours,
 	updateGymLocation,
+	updateGymOperatingHours,
 } from '../../_actions/gym-settings';
 
 // Helper function to format time from 24h to 12h format

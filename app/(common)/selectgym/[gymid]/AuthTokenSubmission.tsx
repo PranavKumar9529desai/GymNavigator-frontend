@@ -6,13 +6,13 @@ import { Input } from '@/components/ui/input';
 import { PinInput } from '@/components/ui/pin-input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from '@/node_modules/next-auth/react';
+import type { GymInfo } from '@/types/next-auth';
 import { AnimatePresence, m } from 'framer-motion';
 import { AlertCircle, CheckCircle2, Loader2, Shield } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { GymInfo } from '@/types/next-auth';
 import { VerifyAuthToken } from '../_actions/VerifyAuthToken';
 import type { gym } from '../_components/SelectGym';
 import { fetchGymById } from './_actions/fetch-gym-by-id';
@@ -237,7 +237,8 @@ export default function AuthTokenSubmission() {
 									)}
 
 									<p className="text-xs text-gray-500 text-center mt-2">
-										Token format: 7 characters, letters, numbers, and special characters
+										Token format: 7 characters, letters, numbers, and special
+										characters
 									</p>
 								</div>
 

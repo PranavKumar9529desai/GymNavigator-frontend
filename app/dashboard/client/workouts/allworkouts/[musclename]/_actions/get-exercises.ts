@@ -1,7 +1,7 @@
 'use server';
 
-import type { Excercisetype } from '../actions/getSIngleMuscle';
 import axios from 'axios';
+import type { Excercisetype } from '../actions/getSIngleMuscle';
 
 // Define interface for the API response exercise structure
 interface ExerciseApiResponse {

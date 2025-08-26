@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Search, UserCheck, UserX, Users } from 'lucide-react';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { TodayAttendanceResponse } from './getTodayAttendance';
 
 const formatShift = (shift: 'MORNING' | 'EVENING'): 'Morning' | 'Evening' => {

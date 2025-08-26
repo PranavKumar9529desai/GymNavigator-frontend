@@ -1,8 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -11,10 +8,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { UserHealthProfileCard } from './user-health-profile-card';
-import { DietPlanSelector } from './diet-plan-selector';
-import { AssignmentScheduler } from './assignment-scheduler';
 import { toast } from '@/hooks/use-toast';
+import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { AssignmentScheduler } from './assignment-scheduler';
+import { DietPlanSelector } from './diet-plan-selector';
+import { UserHealthProfileCard } from './user-health-profile-card';
 
 interface UserProfile {
 	id: number;

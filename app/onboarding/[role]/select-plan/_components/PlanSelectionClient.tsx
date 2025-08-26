@@ -1,17 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { updateSessionWithGym } from '../../../../(common)/_actions/session/updateSessionWithGym';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import type { GymInfo } from '@/types/next-auth';
-import { PlanCard } from './PlanCard';
+import { AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { updateSessionWithGym } from '../../../../(common)/_actions/session/updateSessionWithGym';
+import { enrollInGym } from '../_actions/enroll-in-gym';
 import { EnrollmentConfirmation } from './EnrollmentConfirmation';
 import { EnrollmentSuccess } from './EnrollmentSuccess';
-import { enrollInGym } from '../_actions/enroll-in-gym';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react';
+import { PlanCard } from './PlanCard';
 
 interface Plan {
 	id: number;

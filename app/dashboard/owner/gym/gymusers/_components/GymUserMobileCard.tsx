@@ -1,11 +1,11 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { MoreActions } from '@/components/MoreAction';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { MoreActions } from '@/components/MoreAction';
-import { User as UserIcon, Dumbbell } from 'lucide-react';
-import type { GymUser, GymTrainer } from './GymUsersClient';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dumbbell, User as UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import type { GymTrainer, GymUser } from './GymUsersClient';
 
 interface GymUserMobileCardProps {
 	user: GymUser | GymTrainer;

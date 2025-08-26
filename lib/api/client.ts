@@ -3,7 +3,7 @@ import axios, {
 	type AxiosResponse,
 	type AxiosError,
 } from 'axios';
-import type { ApiResult, ApiError, ApiConfig } from './types';
+import type { ApiConfig, ApiError, ApiResult } from './types';
 
 // Default API configuration
 const defaultConfig: ApiConfig = {

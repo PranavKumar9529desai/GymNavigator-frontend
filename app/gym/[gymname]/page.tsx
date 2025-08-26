@@ -1,9 +1,9 @@
+import type { GymData } from '@/app/dashboard/owner/gym/(gymdetails)/viewgymdetails/types/gym-types';
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import React from 'react';
 import FetchGymData from './FetchGymData';
 import Gym from './Gym';
-import type { Metadata } from 'next';
-import { headers } from 'next/headers';
-import type { GymData } from '@/app/dashboard/owner/gym/(gymdetails)/viewgymdetails/types/gym-types';
 
 // Reintroduce generateStaticParams for static generation
 interface GymNameResponse {

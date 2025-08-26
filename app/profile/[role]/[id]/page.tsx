@@ -1,5 +1,3 @@
-import { getUserProfile } from './_action/get-user-profile-for-client';
-import { UserProfileClient } from './_components/user-profile-client';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -9,6 +7,8 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import Link from 'next/link';
+import { getUserProfile } from './_action/get-user-profile-for-client';
+import { UserProfileClient } from './_components/user-profile-client';
 
 interface PageProps {
 	params: Promise<{ id: string; role: string }>;

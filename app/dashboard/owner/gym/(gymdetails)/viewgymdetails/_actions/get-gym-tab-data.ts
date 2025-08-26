@@ -3,9 +3,9 @@
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import type { AxiosResponse } from 'axios';
 import type {
-	FitnessPlan,
 	AdditionalService,
 	AmenityCategory,
+	FitnessPlan,
 	GymLocation,
 } from '../types/gym-types';
 

@@ -1,18 +1,18 @@
 'use client';
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-	Dumbbell,
-	Star,
-	Crown,
-	Users,
-	Target,
 	Award,
-	Zap,
+	Crown,
+	Dumbbell,
 	Sparkles,
+	Star,
+	Target,
+	Users,
+	Zap,
 } from 'lucide-react';
-import type { FitnessPlan, AdditionalService } from '../../types/gym-types';
+import type { AdditionalService, FitnessPlan } from '../../types/gym-types';
 
 // Icon mapping for pricing plans
 const iconMap = {

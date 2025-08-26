@@ -1,16 +1,16 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
-import { toast } from 'sonner';
-import QrScanner from 'qr-scanner';
-import { ProcessingState } from './qr-scanner-states/ProcessingState';
-import { SuccessState } from './qr-scanner-states/SuccessState';
-import { ScanningState } from './qr-scanner-states/ScanningState';
 import {
 	getBackCameraDeviceIdByIndex,
 	getBackCameras,
 } from '@/utils/selectBestCamera';
+import { useRouter } from 'next/navigation';
+import QrScanner from 'qr-scanner';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
+import { toast } from 'sonner';
+import { ProcessingState } from './qr-scanner-states/ProcessingState';
+import { ScanningState } from './qr-scanner-states/ScanningState';
+import { SuccessState } from './qr-scanner-states/SuccessState';
 
 interface QrValueType {
 	OnboardingAction: {

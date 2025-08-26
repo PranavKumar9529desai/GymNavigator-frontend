@@ -9,18 +9,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UserMobileCard } from './UserMobileCard';
-import { UserActions } from './user-onboarding-actions';
-import { useToast } from '@/hooks/use-toast';
-import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Search, User, UserCheck, Users } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import {
-	statusColorClasses,
-	statusLabels,
-} from '@/lib/constants/status-variants';
-import React, { useEffect, useState, useTransition } from 'react';
-import { updateActivePeriod } from '../_actions/mutations';
 import { Input } from '@/components/ui/input';
 import {
 	Select,
@@ -29,6 +17,18 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
+import {
+	statusColorClasses,
+	statusLabels,
+} from '@/lib/constants/status-variants';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Search, User, UserCheck, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState, useTransition } from 'react';
+import { updateActivePeriod } from '../_actions/mutations';
+import { UserMobileCard } from './UserMobileCard';
+import { UserActions } from './user-onboarding-actions';
 
 export interface UserType {
 	id: number;

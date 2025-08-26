@@ -1,11 +1,11 @@
 import { auth } from '@/app/(auth)/auth';
+import type { Rolestype } from '@/types/next-auth';
 import Link from 'next/link';
 import type React from 'react';
+import DashboardTopBar from '../_components/DashboardTopBar';
 import NotOnboarded from '../_components/not-onboarded/not-onboarded';
 import { getIsWorkoutAndDietAssignedStatus } from './_actions/get-isworkoutanddietassigned-status';
 import ClientLayout from './_components/ClientLayout';
-import DashboardTopBar from '../_components/DashboardTopBar';
-import type { Rolestype } from '@/types/next-auth';
 
 export const dynamic = 'force-dynamic';
 

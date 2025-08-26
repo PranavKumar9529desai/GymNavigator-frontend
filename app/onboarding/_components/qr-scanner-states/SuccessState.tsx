@@ -1,5 +1,5 @@
 'use client';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export function SuccessState() {
 	return (

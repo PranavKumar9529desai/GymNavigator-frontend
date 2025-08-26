@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
 import { auth } from '@/app/(auth)/auth';
-import SettingsMenu from './_components/SettingsMenu';
 import DashboardBottomNav from '@/app/dashboard/_components/DashboardBottomNav';
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import SettingsMenu from './_components/SettingsMenu';
 import { settingsMenuItems } from './menuitems';
 
 export const metadata: Metadata = {

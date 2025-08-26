@@ -2,16 +2,16 @@
 import IconImage from '@/assests/gym-manager.webp';
 import { signOut } from '@/node_modules/next-auth/react';
 import { ChevronDown, ChevronRight, LogOut } from 'lucide-react';
+import type { Session } from 'next-auth';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import ClientAvatar from '../_assests/Client_Avatar.png';
+import OwnerAvatar from '../_assests/Gym_Owner.png';
 import type { MenuItem as BaseMenuItem, SubItem } from './menuItems';
 import { useLucideIcons } from './use-lucide-icons';
-import OwnerAvatar from '../_assests/Gym_Owner.png';
-import type { Session } from 'next-auth';
-import { usePathname } from 'next/navigation';
-import ClientAvatar from '../_assests/Client_Avatar.png';
 // Extend the MenuItem type to use iconName instead of icon
 interface MenuItem extends Omit<BaseMenuItem, 'icon'> {
 	iconName: string;

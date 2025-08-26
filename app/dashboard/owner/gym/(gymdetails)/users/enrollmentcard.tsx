@@ -1,15 +1,15 @@
-import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import {
+	AlertTriangle,
 	Calendar,
+	CheckCircle,
 	Clock,
 	User,
-	CheckCircle,
-	AlertTriangle,
 	XCircle,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React from 'react';
 import type { Enrollment } from './types';
 
 const statusConfig = {

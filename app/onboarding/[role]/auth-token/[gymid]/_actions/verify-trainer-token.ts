@@ -46,12 +46,14 @@ export async function verifyTrainerToken(
 		};
 	} catch (error: unknown) {
 		console.error('Error verifying trainer token:', error);
-		const errorMessage = error && typeof error === 'object' && 'response' in error 
-			? (error.response as { data?: { message?: string } })?.data?.message || 'Network error occurred'
-			: 'Network error occurred';
+		const errorMessage =
+			error && typeof error === 'object' && 'response' in error
+				? (error.response as { data?: { message?: string } })?.data?.message ||
+					'Network error occurred'
+				: 'Network error occurred';
 		return {
 			success: false,
 			message: errorMessage,
 		};
 	}
-} 
+}

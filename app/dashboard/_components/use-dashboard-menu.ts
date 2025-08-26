@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import type { MenuItem } from './menuItems';
 import {
+	ClientDashboardMenuItems,
 	OwnerDashboardMenuItems,
 	TrainerDashboardMenuItems,
-	ClientDashboardMenuItems,
 } from './menuItems';
 
 // Role type for the application

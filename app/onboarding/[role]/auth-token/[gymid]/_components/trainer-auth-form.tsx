@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { updateSessionWithGym } from '@/app/(common)/_actions/session/updateSessionWithGym';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PinInput } from '@/components/ui/pin-input';
+import { Card, CardContent } from '@/components/ui/card';
 import {
 	Form,
 	FormControl,
@@ -16,12 +12,22 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { verifyTrainerToken } from '../_actions/verify-trainer-token';
-import { updateSessionWithGym } from '@/app/(common)/_actions/session/updateSessionWithGym';
+import { PinInput } from '@/components/ui/pin-input';
 import type { GymInfo } from '@/types/next-auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+	ChevronDown,
+	ChevronUp,
+	Mail,
+	MessageCircle,
+	Phone,
+} from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { verifyTrainerToken } from '../_actions/verify-trainer-token';
 
 interface Gym {
 	id: string;
@@ -40,7 +46,10 @@ const authTokenSchema = z.object({
 	authToken: z
 		.string()
 		.length(7, 'Authentication token must be exactly 7 characters')
-		.regex(/^[A-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]+$/, 'Token contains invalid characters'),
+		.regex(
+			/^[A-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]+$/,
+			'Token contains invalid characters',
+		),
 });
 
 type AuthTokenFormData = z.infer<typeof authTokenSchema>;
@@ -78,7 +87,7 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 				};
 
 				const sessionUpdateResult = await updateSessionWithGym(gymInfo, update);
-				
+
 				if (sessionUpdateResult.success) {
 					// Redirect to trainer dashboard on success
 					router.push('/dashboard/trainer');
@@ -131,7 +140,8 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 					</h2>
 				</div>
 				<p className="text-sm text-slate-600">
-					Please enter the 7-character authentication token provided by your gym administrator to complete your onboarding.
+					Please enter the 7-character authentication token provided by your gym
+					administrator to complete your onboarding.
 				</p>
 			</div>
 
@@ -228,7 +238,10 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 								</div>
 							</div>
 							<div className="flex items-center gap-2">
-								<Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 text-xs">
+								<Badge
+									variant="outline"
+									className="bg-orange-50 text-orange-700 border-orange-200 text-xs"
+								>
 									Contact
 								</Badge>
 								{isContactExpanded ? (
@@ -248,8 +261,10 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 											<Phone className="h-4 w-4 text-orange-600" />
 										</div>
 										<div className="flex-1">
-											<p className="text-xs font-medium text-slate-700">Phone</p>
-											<a 
+											<p className="text-xs font-medium text-slate-700">
+												Phone
+											</p>
+											<a
 												href={`tel:${gym.phone}`}
 												className="text-sm text-orange-600 hover:text-orange-700 font-medium"
 											>
@@ -258,15 +273,17 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 										</div>
 									</div>
 								)}
-								
+
 								{gym.email && (
 									<div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg border border-orange-100">
 										<div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
 											<Mail className="h-4 w-4 text-orange-600" />
 										</div>
 										<div className="flex-1">
-											<p className="text-xs font-medium text-slate-700">Email</p>
-											<a 
+											<p className="text-xs font-medium text-slate-700">
+												Email
+											</p>
+											<a
 												href={`mailto:${gym.email}`}
 												className="text-sm text-orange-600 hover:text-orange-700 font-medium"
 											>
@@ -282,4 +299,4 @@ export default function TrainerAuthForm({ gym }: TrainerAuthFormProps) {
 			)}
 		</div>
 	);
-} 
+}

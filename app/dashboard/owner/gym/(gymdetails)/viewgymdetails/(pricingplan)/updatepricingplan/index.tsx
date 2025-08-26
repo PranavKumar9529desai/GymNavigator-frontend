@@ -1,15 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, DollarSign } from 'lucide-react';
+import BackButton from '@/components/back/back-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft, DollarSign } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { usePricingData } from './hooks/usePricingData';
-import { PricingEditForm } from './components/PricingEditForm';
-import { Loading, FeedbackError } from '../../components/Feedback';
+import { FeedbackError, Loading } from '../../components/Feedback';
 import type { GymData } from '../../types/gym-types';
-import BackButton from '@/components/back/back-button';
+import { PricingEditForm } from './components/PricingEditForm';
+import { usePricingData } from './hooks/usePricingData';
 
 export default function PricingTab() {
 	const router = useRouter();

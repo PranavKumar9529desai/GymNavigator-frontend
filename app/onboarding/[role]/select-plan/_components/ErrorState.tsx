@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react';
 
 interface ErrorStateProps {

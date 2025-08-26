@@ -1,6 +1,6 @@
 'use client';
-import { useEffect } from 'react';
 import posthog from 'posthog-js';
+import { useEffect } from 'react';
 
 type GymInfo = {
 	id: string;

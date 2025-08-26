@@ -1,12 +1,12 @@
 'use client';
 
+import type { GymInfo, Rolestype } from '@/types/next-auth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, LogOut, Settings, User, UserCircle } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { type FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Rolestype, GymInfo } from '@/types/next-auth';
+import { type FC, useState } from 'react';
 import UserAvatarImage from '../../_assests/user-avtar.jpg';
 interface MenuItem {
 	label: string;

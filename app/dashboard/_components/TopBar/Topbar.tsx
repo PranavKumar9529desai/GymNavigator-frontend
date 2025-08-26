@@ -1,5 +1,6 @@
 'use client'; // Keep for usePathname
 
+import type { GymInfo, Rolestype } from '@/types/next-auth';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import type { FC } from 'react';
@@ -11,7 +12,6 @@ import NotificationButton from './NotificationButton';
 import QRCodeButton from './QRCodeButton';
 import SubrouteNav from './SubrouteNav';
 import UserMenuButton from './UserMenuButton';
-import type { Rolestype, GymInfo } from '@/types/next-auth';
 
 interface UserSession {
 	user: {

@@ -1,7 +1,6 @@
-import type React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
 	Tooltip,
 	TooltipContent,
@@ -9,20 +8,21 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
+	Award,
+	Calendar,
 	Check,
+	Clock,
 	Dumbbell,
 	Heart,
-	Star,
-	Zap,
-	Target,
-	Users,
-	Calendar,
-	Clock,
-	TrendingUp,
 	Shield,
-	Award,
 	Sparkles,
+	Star,
+	Target,
+	TrendingUp,
+	Users,
+	Zap,
 } from 'lucide-react';
+import type React from 'react';
 
 interface Plan {
 	id: number;

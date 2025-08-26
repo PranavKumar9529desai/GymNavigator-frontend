@@ -1,14 +1,14 @@
 'use client';
 
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
 import {
-	PieChart,
-	Pie,
 	Cell,
+	Legend,
+	Pie,
+	PieChart,
 	ResponsiveContainer,
 	Tooltip,
-	Legend,
 } from 'recharts';
 import type { GymDashboardData } from '../types';
 

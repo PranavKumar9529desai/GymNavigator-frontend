@@ -1,7 +1,7 @@
 import GymSettings from './_components/Gym/GymSettings';
 import PaymentSettings from './_components/Gym/Payments/PaymentSettings';
-import TrainerSettings from './_components/Trainer/TrainerSettings';
 import HealthProfile2 from './_components/Healthprofile/heathprofile';
+import TrainerSettings from './_components/Trainer/TrainerSettings';
 
 export default async function SettingPage({
 	params,

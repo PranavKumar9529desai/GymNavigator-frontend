@@ -1,6 +1,6 @@
-import type { GymDashboardData } from '../types';
 import { OwnerReqConfig } from '@/lib/AxiosInstance/ownerAxios';
 import { AxiosError, type AxiosResponse } from 'axios';
+import type { GymDashboardData } from '../types';
 
 export async function getGymDashboardData(): Promise<GymDashboardData> {
 	try {

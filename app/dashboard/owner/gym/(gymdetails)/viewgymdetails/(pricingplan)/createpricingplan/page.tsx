@@ -1,5 +1,5 @@
-import CreatePricingPlan from './_components/pricing-plan';
 import BackButton from '@/components/back/back-button';
+import CreatePricingPlan from './_components/pricing-plan';
 
 export default function Page() {
 	return (
